@@ -8,6 +8,7 @@ class Order extends Model
 {
     protected $fillable = [
         'customer_id',
+        'shop_id',
         'user_id'
     ];
 
@@ -24,6 +25,10 @@ class Order extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class);
     }
 
     public function getCustomerName()

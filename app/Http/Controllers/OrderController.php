@@ -16,7 +16,7 @@ class OrderController extends Controller
         if($request->end_date) {
             $orders = $orders->where('created_at', '<=', $request->end_date . ' 23:59:59');
         }
-        $orders = $orders->with(['items', 'payments', 'customer'])->latest()->paginate(10);
+        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->latest()->paginate(10);
 
         $total = $orders->map(function($i) {
             return $i->total();
@@ -33,6 +33,7 @@ class OrderController extends Controller
         $order = Order::create([
             'customer_id' => $request->customer_id,
             'user_id' => $request->user()->id,
+            'shop_id' => $request->shop_id,
         ]);
 
         $cart = $request->user()->cart()->get();

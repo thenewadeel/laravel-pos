@@ -15,6 +15,8 @@ class Cart extends Component {
             search: "",
             customer_id: "",
             translations: {}, 
+            shops:[],
+            shop_id:''
         };
 
         this.loadCart = this.loadCart.bind(this);
@@ -23,10 +25,12 @@ class Cart extends Component {
         this.handleChangeQty = this.handleChangeQty.bind(this);
         this.handleEmptyCart = this.handleEmptyCart.bind(this);
 
+        this.loadShops = this.loadShops.bind(this);
         this.loadProducts = this.loadProducts.bind(this);
         this.handleChangeSearch = this.handleChangeSearch.bind(this);
         this.handleSeach = this.handleSeach.bind(this);
         this.setCustomerId = this.setCustomerId.bind(this);
+        this.setShopId = this.setShopId.bind(this);
         this.handleClickSubmit = this.handleClickSubmit.bind(this);
         this.loadTranslations = this.loadTranslations.bind(this);
     }
@@ -37,6 +41,7 @@ class Cart extends Component {
         this.loadCart();
         this.loadProducts();
         this.loadCustomers();
+        this.loadShops();
     }
 
     // load the transaltions for the react component
@@ -53,6 +58,13 @@ class Cart extends Component {
         axios.get(`/admin/customers`).then((res) => {
             const customers = res.data;
             this.setState({ customers });
+        });
+    }
+    loadShops() {
+        axios.get(`/admin/shops`).then((res) => {
+            const shops = res.data;
+            this.setState({ shops });
+            console.log('shops returnd:',shops)
         });
     }
 
@@ -186,6 +198,9 @@ class Cart extends Component {
     setCustomerId(event) {
         this.setState({ customer_id: event.target.value });
     }
+    setShopId(event) {
+        this.setState({ shop_id: event.target.value });
+    }
     handleClickSubmit() {
         Swal.fire({
             title: this.state.translations["received_amount"],
@@ -196,11 +211,14 @@ class Cart extends Component {
             confirmButtonText: this.state.translations["confirm_pay"],
             showLoaderOnConfirm: true,
             preConfirm: (amount) => {
+                let postObj={
+                    customer_id: this.state.customer_id,
+                    shop_id: this.state.shop_id,
+                    amount,
+                };
+                // console.log({postObj});
                 return axios
-                    .post("/admin/orders", {
-                        customer_id: this.state.customer_id,
-                        amount,
-                    })
+                    .post("/admin/orders", postObj)
                     .then((res) => {
                         this.loadCart();
                         return res.data;
@@ -217,12 +235,24 @@ class Cart extends Component {
         });
     }
     render() {
-        const { cart, products, customers, barcode, translations} = this.state;
+        const { cart, products, customers, barcode, translations,shops} = this.state;
         return (
             <div className="row">
                 <div className="col-md-6 col-lg-4">
                     <div className="row mb-2">
                         <div className="col">
+                        <select
+                                className="form-control"
+                                onChange={this.setShopId}
+                            >
+                                <option value="">ASDASDASD</option>
+                                {shops.map((shp) => (
+                                    <option
+                                        key={shp.id}
+                                        value={shp.id}
+                                    >{`${shp.name} ${shp.description}`}</option>
+                                ))}
+                            </select>
                             <form onSubmit={this.handleScanBarcode}>
                                 <input
                                     type="text"

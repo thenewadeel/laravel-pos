@@ -60,7 +60,8 @@ class ProductController extends Controller
             'barcode' => $request->barcode,
             'price' => $request->price,
             'quantity' => $request->quantity,
-            'status' => $request->status
+            'status' => $request->status,
+            'category' => $request->category
         ]);
 
         if (!$product) {
@@ -106,6 +107,7 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->quantity = $request->quantity;
         $product->status = $request->status;
+        $product->category = $request->category;
 
         if ($request->hasFile('image')) {
             // Delete old image

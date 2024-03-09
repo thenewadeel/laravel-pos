@@ -23,6 +23,16 @@
                 @enderror
             </div>
 
+            <div class="form-group">
+                <label for="category">{{ "Category" }}</label>
+                <input type="text" name="category" class="form-control @error('category') is-invalid @enderror" id="category"
+                    placeholder="{{ "Category Name" }}" value="{{ old('category', $product->category) }}">
+                @error('category')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
 
             <div class="form-group">
                 <label for="description">{{ __('product.Description') }}</label>

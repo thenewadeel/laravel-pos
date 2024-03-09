@@ -45,7 +45,7 @@
                 @foreach ($orders as $order)
                 <tr>
                     <td>{{$order->id}}</td>
-                    <td>{{$order->shop->name}}</td>
+                    <td>{{$order->shop->name??"Unknown"}}</td>
                     <td>{{$order->getCustomerName()}}</td>
                     <td>{{ config('settings.currency_symbol') }} {{$order->formattedTotal()}}</td>
                     <td>{{ config('settings.currency_symbol') }} {{$order->formattedReceivedAmount()}}</td>
@@ -67,6 +67,7 @@
             </tbody>
             <tfoot>
                 <tr>
+                    <th></th>
                     <th></th>
                     <th></th>
                     <th>{{ config('settings.currency_symbol') }} {{ number_format($total, 2) }}</th>

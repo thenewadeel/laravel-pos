@@ -8,6 +8,7 @@
 
 @section('content')
 <div class="card">
+    {{-- {{var_dump($orders)}} --}}
     <div class="card-body">
         <div class="row">
             <div class="col-md-7"></div>

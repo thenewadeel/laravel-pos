@@ -11,8 +11,10 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Maatwebsite\Excel\Concerns\WithDrawings;
 
-class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize, WithColumnFormatting //,WithStyles
+class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize, WithColumnFormatting, WithDrawings //,WithStyles
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -50,6 +52,17 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
             'E' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             // 'C' => NumberFormat::FORMAT_CURRENCY_EUR_INTEGER,
         ];
+    }
+    public function drawings()
+    {
+        $drawing = new Drawing();
+        $drawing->setName('Logo');
+        $drawing->setDescription('This is my logo');
+        $drawing->setPath(public_path('/images/logo.png'));
+        $drawing->setHeight(90);
+        $drawing->setCoordinates('B3');
+
+        return $drawing;
     }
     // public function styles()
     // {

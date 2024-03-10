@@ -7,6 +7,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +16,9 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
+Route::get('users/export/', [UsersController::class, 'export']);
+Route::get('users/download/', [UsersController::class, 'downloadinExcel']);
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');

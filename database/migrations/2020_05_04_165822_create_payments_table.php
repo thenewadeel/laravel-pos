@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 8, 4);
+            $table->decimal('amount', 14, 4);
             $table->foreignId('order_id');
             $table->foreignId('user_id');
             $table->timestamps();

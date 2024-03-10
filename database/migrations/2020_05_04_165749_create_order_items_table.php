@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->decimal('price', 8, 4);
+            $table->decimal('price', 14, 4);
             $table->integer('quantity')->default(1);
             $table->foreignId('order_id');
             $table->foreignId('product_id');

@@ -14,17 +14,17 @@ class SettingsSeeder extends Seeder
      */
     public function run()
     {
-        $data = [
-            ['key' => 'app_name', 'value' => env('APP_NAME', 'Laravel-POS'),],
-            ['key' => 'currency_symbol', 'value' => 'Rs '],
-        ];
+        // $data = [
+        //     // ['key' => 'app_name', 'value' => env('APP_NAME', 'Laravel-POS'),],
+        //     ['key' => 'currency_symbol', 'value' => 'Rs '],
+        // ];
 
-        foreach ($data as $value) {
-            Setting::updateOrCreate([
-                'key' => $value['key']
-            ], [
-                'value' => $value['value']
-            ]);
-        }
+        // foreach ($data as $value) {
+        //     Setting::updateOrCreate([
+        //         'key' => $value['key']
+        //     ], [
+        //         'value' => $value['value']
+        //     ]);
+        // }
     }
 }

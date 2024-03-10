@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Shop;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -35,7 +36,13 @@ class ShopSeeder extends Seeder
                 'name' => $shop,
                 'description' => 'desc',
                 'image' => '',
-                'status' => true
+                'user_id' => User::Create([
+                    'email' => str_replace(' ', '', $shop),
+                    'first_name' => "generic",
+                    'last_name' => "generic",
+                    'type' => 'cashier',
+                    'password' => bcrypt('1234')
+                ])->id,
             ]);
         };
     }

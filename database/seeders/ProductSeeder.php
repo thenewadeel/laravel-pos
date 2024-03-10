@@ -22,12 +22,12 @@ class ProductSeeder extends Seeder
             Product::updateOrCreate([
                 'name' => $dir->name,
                 'description' => $dir->make,
+                'category' => $dir->category,
                 'image' => '',
-                'status' => true,
                 'barcode' => $faker->ean13(),
                 'price' => $dir->price,
                 'quantity' => '99',
-                'category' => $dir->category,
+                'aval_status' => true,
             ]);
         }
     }

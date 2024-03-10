@@ -20,8 +20,10 @@ return new class extends Migration
             $table->text('category')->nullable();
             $table->string('image')->nullable();
             $table->string('barcode')->unique()->nullable();
-            $table->decimal('price', 8, 2);
-            $table->boolean('status')->default(true);
+            $table->decimal('price', 14, 2);
+            $table->integer('quantity')->default('1');
+            $table->boolean('aval_status')->default(true);
+
             $table->timestamps();
         });
     }

@@ -69,7 +69,7 @@ class Cart extends Component {
     }
 
     loadProducts(search = "") {
-        const query = !!search ? `?search=${search}` : "";
+        const query = (!!search ? `?search=${search}&` : "?")+"itemCount=55";
         axios.get(`/admin/products${query}`).then((res) => {
             const products = res.data.data;
             this.setState({ products });
@@ -374,7 +374,8 @@ class Cart extends Component {
                                 key={p.id}
                                 className="item"
                             >
-                                <img src={p.image_url} alt="" />
+                                {/* {console.log({"p":p.image_url})} */}
+                                <img src={p.image_url==="/storage/"?"/images/defaultItem.png":p.image_url} alt="" />
                                 <h5
                                     style={
                                         window.APP.warning_quantity > p.quantity

@@ -22,7 +22,11 @@ class ProductController extends Controller
         if ($request->search) {
             $products = $products->where('name', 'LIKE', "%{$request->search}%");
         }
-        $products = $products->latest()->paginate(10);
+        $itemsPerPage = 10;
+        if ($request->itemCount) {
+            $itemsPerPage = $request->itemCount;
+        }
+        $products = $products->latest()->paginate($itemsPerPage);
         if (request()->wantsJson()) {
             return ProductResource::collection($products);
         }
@@ -119,7 +123,7 @@ class ProductController extends Controller
             // Save to Database
             $product->image = $image_path;
         }
-
+        error_log("jfgjgfcj");
         if (!$product->save()) {
             return redirect()->back()->with('error', __('product.error_updating'));
         }

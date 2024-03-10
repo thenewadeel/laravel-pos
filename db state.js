@@ -433,15 +433,37 @@ let dumped = [
 
 const restructured = dumped.reduce((acc, obj) => {
     if (!acc[obj.table_name]) {
-        acc[obj.table_name] = {
-            // table_name: obj.table_name,
-            columns: [],
-        };
+        acc[obj.table_name] = "";
+
+        // {
+        //     // table_name: obj.table_name,
+        //     columns: "",
+        // };
     }
-    acc[obj.table_name].columns.push({
-        name: obj.column_name,
-        type: obj.data_type,
-    });
+    acc[obj.table_name] += obj.column_name + ",";
+    // .push({
+    //     name: obj.column_name,
+    //     type: obj.data_type,
+    // });
     return acc;
 }, {});
 console.log({ restructured });
+
+let restructured_Result = {
+    password_resets: "email,token,created_at,",
+    settings: "id,key,value,created_at,updated_at,",
+    customers:
+        "id,first_name,last_name,email,phone,address,avatar,user_id,created_at,updated_at,",
+    shops: "id,name,description,image,status,created_at,updated_at,",
+    migrations: "id,migration,batch,",
+    user_cart: "user_id,product_id,quantity,",
+    order_items: "id,price,quantity,order_id,product_id,created_at,updated_at,",
+    users: "id,first_name,last_name,email,email_verified_at,password,remember_token,created_at,updated_at,",
+    personal_access_tokens:
+        "id,tokenable_type,tokenable_id,name,token,abilities,last_used_at,expires_at,created_at,updated_at,",
+    products:
+        "id,name,description,category,image,barcode,price,quantity,status,created_at,updated_at,",
+    orders: "id,customer_id,user_id,created_at,updated_at,shop_id,",
+    failed_jobs: "id,connection,queue,payload,exception,failed_at,",
+    payments: "id,amount,order_id,user_id,created_at,updated_at,",
+};

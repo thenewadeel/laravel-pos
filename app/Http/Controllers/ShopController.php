@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Shop;
+use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
@@ -14,10 +15,6 @@ class ShopController extends Controller
             $shops = $shops->where('name', 'LIKE', "%{$request->search}%");
         }
         $shops = $shops->all();
-        // if (request()->wantsJson()) {
-        //     return ProductResource::collection($shops);
-        // }
-        return $shops;
-        // view('shops.index')->with('shops', $shops);
+        return  view('shop.index')->with('shops', $shops, 'user', Auth::user());
     }
 }

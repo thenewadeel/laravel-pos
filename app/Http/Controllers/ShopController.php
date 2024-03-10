@@ -15,6 +15,6 @@ class ShopController extends Controller
             $shops = $shops->where('name', 'LIKE', "%{$request->search}%");
         }
         $shops = $shops->all();
-        return  view('shop.index')->with('shops', $shops, 'user', Auth::user());
+        return  view('shop.index')->with('shops', $shops);
     }
 }

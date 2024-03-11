@@ -18,8 +18,12 @@
                 <a href="#" class="d-block">{{ auth()->user()->getFullname() }}</a>
             </div>
         </div>
-
-        <!-- Sidebar Menu -->
+@if(auth()->user()->type=='admin')
+<h1>Admin is here</h1>
+@else
+<h2>wtf</h2>
+@endif
+<!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item has-treeview">
@@ -29,15 +33,21 @@
                     </a>
                 </li>
                 <li class="nav-item has-treeview">
-                    <a href="{{ route('products.index') }}" class="nav-link {{ activeSegment('products') }}">
-                        <i class="nav-icon fas fa-th-large"></i>
-                        <p>{{ __('product.title') }}</p>
-                    </a>
-                </li>
-                <li class="nav-item has-treeview">
                     <a href="{{ route('cart.index') }}" class="nav-link {{ activeSegment('cart') }}">
                         <i class="nav-icon fas fa-cart-plus"></i>
                         <p>{{ __('cart.title') }}</p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="{{ route('shops.index') }}" class="nav-link {{ activeSegment('shops') }}">
+                        <i class="nav-icon fas fa-cart-plus"></i>
+                        <p>{{ 'Shops' }}</p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="{{ route('products.index') }}" class="nav-link {{ activeSegment('products') }}">
+                        <i class="nav-icon fas fa-th-large"></i>
+                        <p>{{ __('product.title') }}</p>
                     </a>
                 </li>
                 <li class="nav-item has-treeview">
@@ -47,6 +57,11 @@
                     </a>
                 </li>
                 <li class="nav-item has-treeview">
+                    <a href="{{ route('users.index') }}" class="nav-link {{ activeSegment('users') }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>{{ "Users" }}</p>
+                    </a>
+                </li><li class="nav-item has-treeview">
                     <a href="{{ route('customers.index') }}" class="nav-link {{ activeSegment('customers') }}">
                         <i class="nav-icon fas fa-users"></i>
                         <p>{{ __('customer.title') }}</p>
@@ -56,6 +71,11 @@
                     <a href="{{ route('settings.index') }}" class="nav-link {{ activeSegment('settings') }}">
                         <i class="nav-icon fas fa-cogs"></i>
                         <p>{{ __('settings.title') }}</p>
+                    </a>
+                </li><li class="nav-item has-treeview">
+                    <a href="{{ route('reports.index') }}" class="nav-link {{ activeSegment('reports') }}">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>{{ 'Reports' }}</p>
                     </a>
                 </li>
                 <li class="nav-item">

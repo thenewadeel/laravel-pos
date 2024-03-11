@@ -8,15 +8,13 @@ use Illuminate\Support\Facades\Storage;
 class Customer extends Model
 {
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'name',
+        'membership_number',
         'email',
         'phone',
         'address',
         'avatar',
-        'user_id',
     ];
-
     public function getAvatarUrl()
     {
         return Storage::url($this->avatar);

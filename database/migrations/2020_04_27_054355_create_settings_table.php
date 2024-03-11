@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('key')->unique();
             $table->text('value')->nullable();
             $table->timestamps();
-            $table->foreignId('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 

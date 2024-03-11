@@ -52,4 +52,8 @@ class User extends Authenticatable
     {
         return 'https://www.gravatar.com/avatar/' . md5($this->email);
     }
+    public function shops()
+    {
+        return $this->hasMany(Shop::class);
+    }
 }

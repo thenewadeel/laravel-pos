@@ -16,4 +16,9 @@ class Product extends Model
         'status',
         'category'
     ];
+
+    public function shops()
+    {
+        return $this->hasMany(Shop::class);
+    }
 }

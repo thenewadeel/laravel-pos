@@ -33,7 +33,7 @@ class Order extends Model
 
     public function getCustomerName()
     {
-        if($this->customer) {
+        if ($this->customer) {
             return $this->customer->first_name . ' ' . $this->customer->last_name;
         }
         return __('customer.working');
@@ -41,7 +41,7 @@ class Order extends Model
 
     public function total()
     {
-        return $this->items->map(function ($i){
+        return $this->items->map(function ($i) {
             return $i->price;
         })->sum();
     }
@@ -53,7 +53,7 @@ class Order extends Model
 
     public function receivedAmount()
     {
-        return $this->payments->map(function ($i){
+        return $this->payments->map(function ($i) {
             return $i->amount;
         })->sum();
     }
@@ -61,5 +61,15 @@ class Order extends Model
     public function formattedReceivedAmount()
     {
         return number_format($this->receivedAmount(), 2);
+    }
+
+    public function balance()
+    {
+        return $this->total() - $this->receivedAmount();
+    }
+
+    public function formattedBalance()
+    {
+        return number_format($this->balance(), 2);
     }
 }

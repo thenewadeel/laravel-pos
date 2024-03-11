@@ -4,6 +4,7 @@
 @section('content-header', __('product.Edit_Product'))
 
 @section('content')
+    @include('layouts.partials.alert.error', ['errors' => $errors])
 
     <div class="card">
         <div class="card-body">

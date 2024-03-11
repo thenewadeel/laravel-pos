@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
 @endsection
 @section('content')
+    @include('layouts.partials.alert.error', ['errors' => $errors])
     <div class="card user-list">
         <div class="card-body">
             <table class="table">

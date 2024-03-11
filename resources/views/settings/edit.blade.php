@@ -4,6 +4,8 @@
 @section('content-header', __('settings.Update_Settings'))
 
 @section('content')
+    @include('layouts.partials.alert.error', ['errors' => $errors])
+
     <div class="card">
         <div class="card-body">
             <form action="{{ route('settings.store') }}" method="post">

@@ -4,6 +4,7 @@
 @section('content-header', __('user.Create_User'))
 
 @section('content')
+    @include('layouts.partials.alert.error', ['errors' => $errors])
 
     <div class="card">
         <div class="card-body">

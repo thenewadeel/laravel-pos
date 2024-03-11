@@ -7,6 +7,8 @@
 @endsection
 
 @section('content')
+    @include('layouts.partials.alert.error', ['errors' => $errors])
+
     <div class="card">
         {{-- {{var_dump($orders)}} --}}
         <div class="card-body">

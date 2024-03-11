@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
 @endsection
 @section('content')
+    @include('layouts.partials.alert.error', ['errors' => $errors])
+
     <div class="card">
         <div class="card-body">
             <table class="table">
@@ -16,8 +18,8 @@
                     <tr>
                         <th>{{ __('customer.ID') }}</th>
                         <th>{{ __('customer.Avatar') }}</th>
-                        <th>{{ __('customer.First_Name') }}</th>
-                        <th>{{ __('customer.Last_Name') }}</th>
+                        <th>{{ __('customer.Name') }}</th>
+                        <th>{{ __('customer.membership_number') }}</th>
                         <th>{{ __('customer.Email') }}</th>
                         <th>{{ __('customer.Phone') }}</th>
                         <th>{{ __('customer.Address') }}</th>
@@ -32,8 +34,8 @@
                             <td>
                                 <img width="50" src="{{ $customer->getAvatarUrl() }}" alt="">
                             </td>
-                            <td>{{ $customer->first_name }}</td>
-                            <td>{{ $customer->last_name }}</td>
+                            <td>{{ $customer->name }}</td>
+                            <td>{{ $customer->membership_number }}</td>
                             <td>{{ $customer->email }}</td>
                             <td>{{ $customer->phone }}</td>
                             <td>{{ $customer->address }}</td>

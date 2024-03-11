@@ -51,13 +51,14 @@ class CustomerController extends Controller
         }
 
         $customer = Customer::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'name' => $request->name,
+            // 'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
             'avatar' => $avatar_path,
-            'user_id' => $request->user()->id,
+            'membership_number' => $request->membership_number,
+            // 'user_id' => $request->user()->id,
         ]);
 
         if (!$customer) {
@@ -101,6 +102,7 @@ class CustomerController extends Controller
         $customer->email = $request->email;
         $customer->phone = $request->phone;
         $customer->address = $request->address;
+        $customer->membership_number = $request->membership_number;
 
         if ($request->hasFile('avatar')) {
             // Delete old avatar
@@ -127,8 +129,8 @@ class CustomerController extends Controller
 
         $customer->delete();
 
-       return response()->json([
-           'success' => true
-       ]);
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

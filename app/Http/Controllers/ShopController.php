@@ -17,4 +17,13 @@ class ShopController extends Controller
         $shops = $shops->all();
         return  view('shop.index')->with('shops', $shops);
     }
+    public function listOfShops(Request $request)
+    {
+        $shops = new Shop();
+        if ($request->search) {
+            $shops = $shops->where('name', 'LIKE', "%{$request->search}%");
+        }
+        $shops = $shops->all();
+        return   $shops;
+    }
 }

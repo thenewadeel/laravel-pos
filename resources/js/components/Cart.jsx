@@ -46,7 +46,7 @@ class Cart extends Component {
 
     // load the transaltions for the react component
     loadTranslations() {
-        axios.get("/admin/locale/cart").then((res) => {
+        axios.get("/locale/cart").then((res) => {
             const translations = res.data;
             this.setState({ translations });
         }).catch((error) => {
@@ -55,13 +55,13 @@ class Cart extends Component {
     }
 
     loadCustomers() {
-        axios.get(`/admin/customers`).then((res) => {
+        axios.get(`/customers`).then((res) => {
             const customers = res.data;
             this.setState({ customers });
         });
     }
     loadShops() {
-        axios.get(`/admin/shops`).then((res) => {
+        axios.get(`/listOfShops`).then((res) => {
             const shops = res.data;
             this.setState({ shops });
             console.log('shops returnd:',shops)
@@ -70,7 +70,7 @@ class Cart extends Component {
 
     loadProducts(search = "") {
         const query = (!!search ? `?search=${search}&` : "?")+"itemCount=55";
-        axios.get(`/admin/products${query}`).then((res) => {
+        axios.get(`/products${query}`).then((res) => {
             const products = res.data.data;
             this.setState({ products });
         });
@@ -83,7 +83,7 @@ class Cart extends Component {
     }
 
     loadCart() {
-        axios.get("/admin/cart").then((res) => {
+        axios.get("/cart").then((res) => {
             const cart = res.data;
             this.setState({ cart });
         });
@@ -94,7 +94,7 @@ class Cart extends Component {
         const { barcode } = this.state;
         if (!!barcode) {
             axios
-                .post("/admin/cart", { barcode })
+                .post("/cart", { barcode })
                 .then((res) => {
                     this.loadCart();
                     this.setState({ barcode: "" });
@@ -116,7 +116,7 @@ class Cart extends Component {
         if (!qty) return;
 
         axios
-            .post("/admin/cart/change-qty", { product_id, quantity: qty })
+            .post("/cart/change-qty", { product_id, quantity: qty })
             .then((res) => {})
             .catch((err) => {
                 Swal.fire("Error!", err.response.data.message, "error");
@@ -129,14 +129,14 @@ class Cart extends Component {
     }
     handleClickDelete(product_id) {
         axios
-            .post("/admin/cart/delete", { product_id, _method: "DELETE" })
+            .post("/cart/delete", { product_id, _method: "DELETE" })
             .then((res) => {
                 const cart = this.state.cart.filter((c) => c.id !== product_id);
                 this.setState({ cart });
             });
     }
     handleEmptyCart() {
-        axios.post("/admin/cart/empty", { _method: "DELETE" }).then((res) => {
+        axios.post("/cart/empty", { _method: "DELETE" }).then((res) => {
             this.setState({ cart: [] });
         });
     }
@@ -184,7 +184,7 @@ class Cart extends Component {
             }
 
             axios
-                .post("/admin/cart", { barcode })
+                .post("/cart", { barcode })
                 .then((res) => {
                     // this.loadCart();
                     console.log(res);
@@ -218,7 +218,7 @@ class Cart extends Component {
                 };
                 // console.log({postObj});
                 return axios
-                    .post("/admin/orders", postObj)
+                    .post("/orders", postObj)
                     .then((res) => {
                         this.loadCart();
                         return res.data;
@@ -245,6 +245,7 @@ class Cart extends Component {
                                 className="form-control"
                                 onChange={this.setShopId}
                             >
+                                {/* {console.log(shops)} */}
                                 <option value="">ASDASDASD</option>
                                 {shops.map((shp) => (
                                     <option

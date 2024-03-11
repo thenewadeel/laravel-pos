@@ -29,13 +29,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 
-
+        Route::get('/export', [UsersController::class, 'export']);
+        Route::get('/download', [UsersController::class, 'downloadinExcel']);
 
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
         Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
         Route::post('/cart/change-qty', [CartController::class, 'changeQty']);
         Route::delete('/cart/delete', [CartController::class, 'delete']);
         Route::delete('/cart/empty', [CartController::class, 'empty']);
+        Route::get('/listOfShops', [ShopController::class, 'listOfShops'])->name('shops.list');
 
         // Transaltions route for React component
         Route::get('/locale/{type}', function ($type) {
@@ -44,12 +46,3 @@ Route::middleware('auth')->group(function () {
         });
     });
 });
-
-Route::group(['middleware' => 'auth'], function () {
-    Route::get('/export', [UsersController::class, 'export']);
-    Route::get('/download', [UsersController::class, 'downloadinExcel']);
-});
-
-// Route::get('/{type?}', function ($type = 'admin') {
-//     return view('app', ['type' => $type]);
-// })->middleware('auth')->where('type', '(admin|admin-lte|lte)');

@@ -18,8 +18,8 @@
                     <th>{{ __('user.Name') }}</th>
                     <th>{{ "Type" }}</th>
                     <th>{{ __('user.eMail') }}</th>
+                    <th>{{ __('user.Shops') }}</th>
                     <th>{{ __('user.Created_At') }}</th>
-                    <th>{{ __('user.Updated_At') }}</th>
                     <th>{{ __('user.Actions') }}</th>
                 </tr>
             </thead>
@@ -32,8 +32,16 @@
                         <span class="right badge badge-{{ $user->type ? 'success' : 'danger' }}">{{$user->type  }}</span>
                     </td>
                     <td>{{$user->email}}</td>
+                    <td>
+                    @if(($user->type=='cashier'))
+                        @foreach ($user->shops as $shop)
+                            {{$shop->name}} , 
+                        @endforeach
+                    @else 
+                        -
+                    @endif
+                    </td>
                     <td>{{$user->created_at}}</td>
-                    <td>{{$user->updated_at}}</td>
                     <td>
                         <a href="{{ route('users.edit', $user) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
                         <button class="btn btn-danger btn-delete" data-url="{{route('users.destroy', $user)}}"><i class="fas fa-trash"></i></button>

@@ -23,7 +23,7 @@ class UsersController extends Controller
         if ($request->itemCount) {
             $itemsPerPage = $request->itemCount;
         }
-        $users = $users->latest()->paginate($itemsPerPage);
+        $users = $users->with(['shops'])->latest()->paginate($itemsPerPage);
         if (request()->wantsJson()) {
             return UserResource::collection($users);
         }

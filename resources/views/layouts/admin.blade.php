@@ -18,9 +18,9 @@
     @yield('css')
     <script>
         window.APP = <?php echo json_encode([
-                            'currency_symbol' => config('settings.currency_symbol'),
-                            'warning_quantity' => config('settings.warning_quantity')
-                        ]) ?>
+            'currency_symbol' => config('settings.currency_symbol'),
+            'warning_quantity' => config('settings.warning_quantity'),
+        ]); ?>
     </script>
 </head>
 
@@ -61,6 +61,9 @@
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
             <!-- Control sidebar content goes here -->
+            <div style="margin: 1em; text-justify: newspaper">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Deserunt voluptates totam aliquam dolores error voluptatum pariatur ipsam alias, nisi animi commodi
+                eligendi quis quasi maxime facere architecto at iusto sit.</div>
         </aside>
         <!-- /.control-sidebar -->
     </div>

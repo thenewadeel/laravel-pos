@@ -17,19 +17,19 @@ Auth::routes();
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-
-    Route::namespace('Admin')->prefix('admin')->group(function () {
+    Route::resources([
+        'products'   => ProductController::class,
+        'customers'   => CustomerController::class,
+        'orders'      => OrderController::class,
+        'users'       => UsersController::class,
+        'shops'       => ShopController::class,
+        'reports'     => ReportsController::class
+    ]);
+    Route::namespace('Admin')->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 
-        Route::resources([
-            'products'   => ProductController::class,
-            'customers'   => CustomerController::class,
-            'orders'      => OrderController::class,
-            'users'       => UsersController::class,
-            'shops'       => ShopController::class,
-            'reports'     => ReportsController::class
-        ]);
+
 
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
         Route::post('/cart', [CartController::class, 'store'])->name('cart.store');

@@ -43,15 +43,22 @@
             </div>
 
             <div class="form-group">
-                <label for="type">{{ __('user.Type') }}</label>
+                {{-- <label for="type">{{ __('user.Type') }}</label>
                 <textarea name="type" class="form-control @error('type') is-invalid @enderror"
-                    id="type" placeholder="{{ __('user.Type') }}">{{ old('type', $user->type) }}</textarea>
+                    id="type" placeholder="{{ __('user.Type') }}">{{ old('type', $user->type) }}</textarea> --}}
+@include ('layouts.partials.selector', [
+    'name' => 'type',
+    'selected' => old('type', $user->type),
+    'options' => ['admin' => 'admin', 'cashier' => 'cashier', 'accountant' => 'accountant']
+]);
                 @error('type')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
                 @enderror
             </div>
+
+
 
             <div class="form-group">
                 <label for="password">{{ __('user.Password') }}</label>

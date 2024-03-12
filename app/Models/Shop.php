@@ -12,7 +12,7 @@ class Shop extends Model
         'name',
         'description',
         'image',
-        'status'
+        // 'status'
     ];
 
     public function products()

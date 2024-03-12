@@ -93,27 +93,42 @@ class UsersController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->email = $request->email;
-        $user->type = $request->type;
-        $user->password = $request->password;
+        // Validation (essential for security and data integrity)
+        $this->validate($request, [
+            'first_name' => 'sometimes|nullable|string|max:255',
+            'last_name' => 'sometimes|nullable|string|max:255',
+            'email' => 'sometimes|nullable|unique:users,email,' . $user->id,
+            'type' => 'sometimes|nullable|string|in:user,admin,cashier',
+            'password' => 'sometimes|nullable|string|min:8|confirmed',
+            'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Example image validation
+        ]);
 
+        // Update only provided attributes
+        $user->update([
+            'first_name' => $request->input('first_name', $user->first_name),
+            'last_name' => $request->input('last_name', $user->last_name),
+            'email' => $request->input('email', $user->email),
+            'type' => $request->input('type', $user->type),
+            'password' => $request->input('password') ? bcrypt($request->password) : $user->password,
+        ]);
+
+        // Handle image upload if provided
         if ($request->hasFile('image')) {
             // Delete old image
             if ($user->image) {
                 Storage::delete($user->image);
             }
-            // Store image
+            // Store new image
             $image_path = $request->file('image')->store('users', 'public');
-            // Save to Database
             $user->image = $image_path;
         }
-        // error_log("jfgjgfcj");
-        if (!$user->save()) {
-            return redirect()->back()->with('error', __('user.error_updating'));
+
+        // Save changes
+        if ($user->save()) {
+            return redirect()->route('users.index')->with('success', __('user.success_updating'));
         }
-        return redirect()->route('users.index')->with('success', __('user.success_updating'));
+
+        return redirect()->back()->with('error', __('user.error_updating'));
     }
 
     /**

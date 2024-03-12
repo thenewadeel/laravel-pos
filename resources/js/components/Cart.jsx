@@ -58,13 +58,14 @@ class Cart extends Component {
     }
 
     loadCustomers() {
-        axios.get(`/customers`).then((res) => {
+        axios.get(`/listOfCustomers`).then((res) => {
+            // console.log({res});
             const customers = res.data;
             this.setState({ customers });
         });
     }
     loadShops() {
-        axios.get(`/listOf`).then((res) => {
+        axios.get(`/listOfShops`).then((res) => {
             const shops = res.data;
             this.setState({ shops });
             console.log("shops returnd:", shops);
@@ -279,8 +280,8 @@ class Cart extends Component {
                                 {customers.map((cus) => (
                                     <option
                                         key={cus.id}
-                                        value={cus.id}
-                                    >{`${cus.first_name} ${cus.last_name}`}</option>
+                                        value={cus.name}
+                                    >{`${cus.id} - ${cus.name}`}</option>
                                 ))}
                             </select>
                         </div>

@@ -38,6 +38,7 @@
                         <th>{{ __('order.ID') }}</th>
                         <th>{{ 'Shop' }}</th>
                         <th>{{ __('order.Customer_Name') }}</th>
+                        <th>{{ __('order.User_Name') }}</th>
                         <th>{{ __('order.Total') }}</th>
                         <th>{{ __('order.Received_Amount') }}</th>
                         <th>{{ __('order.Status') }}</th>
@@ -51,6 +52,7 @@
                             <td>{{ $order->id }}</td>
                             <td>{{ $order->shop->name ?? 'Unknown' }}</td>
                             <td>{{ $order->getCustomerName() }}</td>
+                            <td>{{ $order->getUserName() }}</td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedTotal() }}</td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedReceivedAmount() }}</td>
                             <td>
@@ -72,6 +74,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th></th>

@@ -280,7 +280,7 @@ class Cart extends Component {
                                 {customers.map((cus) => (
                                     <option
                                         key={cus.id}
-                                        value={cus.name}
+                                        value={cus.id}
                                     >{`${cus.id} - ${cus.name}`}</option>
                                 ))}
                             </select>

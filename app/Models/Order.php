@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Order extends Model
 {
@@ -26,6 +27,11 @@ class Order extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function shop()
     {
         return $this->belongsTo(Shop::class);
@@ -33,8 +39,17 @@ class Order extends Model
 
     public function getCustomerName()
     {
+        // Log::info($this->customer);
         if ($this->customer) {
-            return $this->customer->first_name . ' ' . $this->customer->last_name;
+            return $this->customer->name;
+        }
+        return __('customer.working');
+    }
+    public function getUserName()
+    {
+        // Log::info($this->user);
+        if ($this->user) {
+            return $this->user->first_name;
         }
         return __('customer.working');
     }

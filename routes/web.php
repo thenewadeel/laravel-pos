@@ -25,6 +25,9 @@ Route::middleware('auth')->group(function () {
         'shops'       => ShopController::class,
         'reports'     => ReportsController::class
     ]);
+
+    Route::get('/shops/listOf', [ShopController::class, 'listOf'])->name('shops.list');
+
     Route::namespace('Admin')->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
@@ -37,7 +40,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/cart/change-qty', [CartController::class, 'changeQty']);
         Route::delete('/cart/delete', [CartController::class, 'delete']);
         Route::delete('/cart/empty', [CartController::class, 'empty']);
-        Route::get('/listOfShops', [ShopController::class, 'listOfShops'])->name('shops.list');
 
         // Transaltions route for React component
         Route::get('/locale/{type}', function ($type) {

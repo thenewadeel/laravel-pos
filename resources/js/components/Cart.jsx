@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { createRoot } from 'react-dom';
+import React, { Component } from "react";
+import { createRoot } from "react-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { sum } from "lodash";
@@ -14,9 +14,9 @@ class Cart extends Component {
             barcode: "",
             search: "",
             customer_id: "",
-            translations: {}, 
-            shops:[],
-            shop_id:''
+            translations: {},
+            shops: [],
+            shop_id: "",
         };
 
         this.loadCart = this.loadCart.bind(this);
@@ -46,12 +46,15 @@ class Cart extends Component {
 
     // load the transaltions for the react component
     loadTranslations() {
-        axios.get("/locale/cart").then((res) => {
-            const translations = res.data;
-            this.setState({ translations });
-        }).catch((error) => {
-            console.error("Error loading translations:", error);
-        });
+        axios
+            .get("/locale/cart")
+            .then((res) => {
+                const translations = res.data;
+                this.setState({ translations });
+            })
+            .catch((error) => {
+                console.error("Error loading translations:", error);
+            });
     }
 
     loadCustomers() {
@@ -61,15 +64,15 @@ class Cart extends Component {
         });
     }
     loadShops() {
-        axios.get(`/listOfShops`).then((res) => {
+        axios.get(`/listOf`).then((res) => {
             const shops = res.data;
             this.setState({ shops });
-            console.log('shops returnd:',shops)
+            console.log("shops returnd:", shops);
         });
     }
 
     loadProducts(search = "") {
-        const query = (!!search ? `?search=${search}&` : "?")+"itemCount=55";
+        const query = (!!search ? `?search=${search}&` : "?") + "itemCount=55";
         axios.get(`/products${query}`).then((res) => {
             const products = res.data.data;
             this.setState({ products });
@@ -206,12 +209,12 @@ class Cart extends Component {
             title: this.state.translations["received_amount"],
             input: "text",
             inputValue: this.getTotal(this.state.cart),
-            cancelButtonText: this.state.translations['cancel_pay'],
+            cancelButtonText: this.state.translations["cancel_pay"],
             showCancelButton: true,
             confirmButtonText: this.state.translations["confirm_pay"],
             showLoaderOnConfirm: true,
             preConfirm: (amount) => {
-                let postObj={
+                let postObj = {
                     customer_id: this.state.customer_id,
                     shop_id: this.state.shop_id,
                     amount,
@@ -235,13 +238,14 @@ class Cart extends Component {
         });
     }
     render() {
-        const { cart, products, customers, barcode, translations,shops} = this.state;
+        const { cart, products, customers, barcode, translations, shops } =
+            this.state;
         return (
             <div className="row">
                 <div className="col-md-6 col-lg-4">
                     <div className="row mb-2">
                         <div className="col">
-                        <select
+                            <select
                                 className="form-control"
                                 onChange={this.setShopId}
                             >
@@ -269,7 +273,9 @@ class Cart extends Component {
                                 className="form-control"
                                 onChange={this.setCustomerId}
                             >
-                                <option value="">{translations["general_customer"]}</option>
+                                <option value="">
+                                    {translations["general_customer"]}
+                                </option>
                                 {customers.map((cus) => (
                                     <option
                                         key={cus.id}
@@ -286,7 +292,9 @@ class Cart extends Component {
                                     <tr>
                                         <th>{translations["product_name"]}</th>
                                         <th>{translations["quantity"]}</th>
-                                        <th className="text-right">{translations["price"]}</th>
+                                        <th className="text-right">
+                                            {translations["price"]}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -376,7 +384,14 @@ class Cart extends Component {
                                 className="item"
                             >
                                 {/* {console.log({"p":p.image_url})} */}
-                                <img src={p.image_url==="/storage/"?"/images/defaultItem.png":p.image_url} alt="" />
+                                <img
+                                    src={
+                                        p.image_url === "/storage/"
+                                            ? "/images/defaultItem.png"
+                                            : p.image_url
+                                    }
+                                    alt=""
+                                />
                                 <h5
                                     style={
                                         window.APP.warning_quantity > p.quantity
@@ -397,7 +412,7 @@ class Cart extends Component {
 
 export default Cart;
 
-const root = document.getElementById('cart');
+const root = document.getElementById("cart");
 if (root) {
     const rootInstance = createRoot(root);
     rootInstance.render(<Cart />);

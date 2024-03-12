@@ -24,9 +24,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="app_description">{{ __('settings.App_name') }}</label>
+                    <label for="app_description">{{ __('settings.app_description') }}</label>
                     <textarea name="app_description" class="form-control @error('app_description') is-invalid @enderror"
-                        id="app_description" placeholder="{{ __('settings.App_name') }}">{{ old('app_description', config('settings.app_description')) }}</textarea>
+                        id="app_description" placeholder="{{ __('settings.app_description') }}">{{ old('app_description', config('settings.app_description')) }}</textarea>
                     @error('app_description')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -47,10 +47,10 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="warning_quantity">{{ __('settings.Currency_symbol') }}</label>
+                    <label for="warning_quantity">{{ __('settings.warning_quantity') }}</label>
                     <input type="text" name="warning_quantity"
                         class="form-control @error('warning_quantity') is-invalid @enderror" id="warning_quantity"
-                        placeholder="{{ __('settings.Currency_symbol') }}"
+                        placeholder="{{ __('settings.warning_quantity') }}"
                         value="{{ old('warning_quantity', config('settings.warning_quantity')) }}">
                     @error('warning_quantity')
                         <span class="invalid-feedback" role="alert">

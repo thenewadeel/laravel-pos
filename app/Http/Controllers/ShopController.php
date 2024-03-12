@@ -33,7 +33,7 @@ class ShopController extends Controller
         }
         return  view('shop.index')->with('shops', $shops);
     }
-    public function listOfShops(Request $request)
+    public function listOf(Request $request)
     {
         $shops = new Shop();
         if ($request->search) {

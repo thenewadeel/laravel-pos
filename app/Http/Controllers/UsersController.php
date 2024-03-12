@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
@@ -43,17 +44,17 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        // $image_path = '';
+        $image_path = '';
 
-        // if ($request->hasFile('image')) {
-        //     $image_path = $request->file('image')->store('users', 'public');
-        // }
+        if ($request->hasFile('image')) {
+            $image_path = $request->file('image')->store('users', 'public');
+        }
 
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            // 'image' => $image_path,
+            'image' => $image_path,
             'password' => $request->password,
             'type' => $request->type,
         ]);
@@ -91,16 +92,16 @@ class UsersController extends Controller
         $user->type = $request->type;
         $user->password = $request->password;
 
-        // if ($request->hasFile('image')) {
-        //     // Delete old image
-        //     if ($user->image) {
-        //         Storage::delete($user->image);
-        //     }
-        //     // Store image
-        //     $image_path = $request->file('image')->store('users', 'public');
-        //     // Save to Database
-        //     $user->image = $image_path;
-        // }
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if ($user->image) {
+                Storage::delete($user->image);
+            }
+            // Store image
+            $image_path = $request->file('image')->store('users', 'public');
+            // Save to Database
+            $user->image = $image_path;
+        }
         // error_log("jfgjgfcj");
         if (!$user->save()) {
             return redirect()->back()->with('error', __('user.error_updating'));

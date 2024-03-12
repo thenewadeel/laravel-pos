@@ -77,18 +77,18 @@
                     @enderror
                 </div>
 
-                {{-- <div class="form-group">
-                <label for="image">{{ __('user.Image') }}</label>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" name="image" id="image">
-                    <label class="custom-file-label" for="image">{{ __('user.Choose_file') }}</label>
+                <div class="form-group">
+                    <label for="image">{{ __('user.Image') }}</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="image" id="image">
+                        <label class="custom-file-label" for="image">{{ __('user.Choose_file') }}</label>
+                    </div>
+                    @error('image')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
                 </div>
-                @error('image')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-                @enderror
-            </div> --}}
 
                 <button class="btn btn-primary" type="submit">{{ __('common.Create') }}</button>
             </form>

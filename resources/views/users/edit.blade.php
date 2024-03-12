@@ -12,6 +12,18 @@
                 @csrf
                 @method('PUT')
                 <div class="form-group">
+                    <label for="image">{{ __('user.Image') }}</label>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="image" id="image">
+                        <label class="custom-file-label" for="image">{{ __('user.Choose_file') }}</label>
+                    </div>
+                    @error('image')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="form-group">
                     <label for="first_name">{{ __('user.FName') }}</label>
                     <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror"
                         id="first_name" placeholder="{{ __('user.FName') }}"

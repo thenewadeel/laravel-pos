@@ -37,7 +37,8 @@
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->description }}</td>
                             <td>{{ $product->category }}</td>
-                            <td><img class="product-img" src="{{ Storage::url($product->image) }}" alt=""></td>
+                            <td><img class="product-img" src="{{ Storage::url($product->image) }}" alt=""
+                                    style="width: 64px !important; height: 64px !important;"></td>
                             <td>{{ $product->barcode }}</td>
                             <td>{{ $product->price }}</td>
                             <td>{{ $product->quantity }}</td>

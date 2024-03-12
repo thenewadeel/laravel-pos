@@ -16,6 +16,7 @@
                 <thead>
                     <tr>
                         <th>{{ __('user.ID') }}</th>
+                        <th>{{ __('user.Image') }}</th>
                         <th>{{ __('user.Name') }}</th>
                         <th>{{ 'Type' }}</th>
                         <th>{{ __('user.eMail') }}</th>
@@ -28,6 +29,8 @@
                     @foreach ($users as $user)
                         <tr>
                             <td>{{ $user->id }}</td>
+                            <td><img class="user-img" src="{{ Storage::url($user->image) }}" alt=""
+                                    style="width: 64px !important; height: 64px !important;"></td>
                             <td>{{ $user->first_name }}/ {{ $user->last_name }}</td>
                             <td>
                                 <span

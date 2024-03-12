@@ -110,7 +110,7 @@ class ProductController extends Controller
         $product->barcode = $request->barcode;
         $product->price = $request->price;
         $product->quantity = $request->quantity;
-        $product->status = $request->status;
+        // $product->status = $request->status;
         $product->category = $request->category;
 
         if ($request->hasFile('image')) {

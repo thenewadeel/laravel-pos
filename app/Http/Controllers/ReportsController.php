@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Reports;
 use Illuminate\Http\Request;
+use App\Traits\ListOf;
 
 class ReportsController extends Controller
 {
+    use ListOf;
+
+    protected function getModel(): string
+    {
+        return Reports::class;
+    }
     /**
      * Display a listing of the resource.
      */

@@ -7,9 +7,16 @@ use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ListOf;
 
 class CustomerController extends Controller
 {
+    use ListOf;
+
+    protected function getModel(): string
+    {
+        return Customer::class;
+    }
     /**
      * Display a listing of the resource.
      *

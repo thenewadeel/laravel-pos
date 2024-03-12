@@ -8,9 +8,16 @@ use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ListOf;
 
 class UsersController extends Controller
 {
+    use ListOf;
+
+    protected function getModel(): string
+    {
+        return User::class;
+    }
     /**
      * Display a listing of the resource.
      */

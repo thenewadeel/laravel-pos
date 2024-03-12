@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use App\Traits\ListOf;
 
 class SettingController extends Controller
 {
+    use ListOf;
+
+    protected function getModel(): string
+    {
+        return Setting::class;
+    }
     public function index()
     {
         return view('settings.edit');

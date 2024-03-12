@@ -5,23 +5,31 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderStoreRequest;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Traits\ListOf;
 
 class OrderController extends Controller
 {
-    public function index(Request $request) {
+    use ListOf;
+
+    protected function getModel(): string
+    {
+        return Order::class;
+    }
+    public function index(Request $request)
+    {
         $orders = new Order();
-        if($request->start_date) {
+        if ($request->start_date) {
             $orders = $orders->where('created_at', '>=', $request->start_date);
         }
-        if($request->end_date) {
+        if ($request->end_date) {
             $orders = $orders->where('created_at', '<=', $request->end_date . ' 23:59:59');
         }
         $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->latest()->paginate(10);
 
-        $total = $orders->map(function($i) {
+        $total = $orders->map(function ($i) {
             return $i->total();
         })->sum();
-        $receivedAmount = $orders->map(function($i) {
+        $receivedAmount = $orders->map(function ($i) {
             return $i->receivedAmount();
         })->sum();
 

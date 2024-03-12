@@ -9,9 +9,26 @@ use App\Http\Resources\ShopResource;
 use App\Http\Requests\ShopUpdateRequest;
 use App\Http\Requests\ShopStoreRequest;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ListOf;
 
 class ShopController extends Controller
 {
+    use ListOf;
+
+    protected function getModel(): string
+    {
+        return Shop::class;
+    }
+    public function listOf1(Request $request)
+    {
+        $records = Shop::query();
+
+        if ($request->search) {
+            $records->where('name', 'LIKE', "%{$request->search}%");
+        }
+
+        return $records->get();
+    }
     /**
      * Display a listing of the resource.
      *
@@ -33,15 +50,7 @@ class ShopController extends Controller
         }
         return  view('shop.index')->with('shops', $shops);
     }
-    public function listOf(Request $request)
-    {
-        $shops = new Shop();
-        if ($request->search) {
-            $shops = $shops->where('name', 'LIKE', "%{$request->search}%");
-        }
-        $shops = $shops->all();
-        return   $shops;
-    }
+
     /**
      * Show the form for creating a new resource.
      *

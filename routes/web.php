@@ -26,7 +26,12 @@ Route::middleware('auth')->group(function () {
         'reports'     => ReportsController::class
     ]);
 
-    Route::get('/shops/listOf', [ShopController::class, 'listOf'])->name('shops.list');
+    Route::get('/listOfProducts', [ProductController::class, 'listOf']);
+    Route::get('/listOfCustomers', [CustomerController::class, 'listOf']);
+    Route::get('/listOfOrders', [OrderController::class, 'listOf']);
+    Route::get('/listOfUsers', [UsersController::class, 'listOf']);
+    Route::get('/listOfShops', [ShopController::class, 'listOf']);
+    Route::get('/listOfReports', [ReportsController::class, 'listOf']);
 
     Route::namespace('Admin')->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');

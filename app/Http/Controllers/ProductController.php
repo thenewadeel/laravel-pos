@@ -8,9 +8,16 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\ListOf;
 
 class ProductController extends Controller
 {
+    use ListOf;
+
+    protected function getModel(): string
+    {
+        return Product::class;
+    }
     /**
      * Display a listing of the resource.
      *

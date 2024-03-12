@@ -48,7 +48,7 @@ class ShopController extends Controller
         if (request()->wantsJson()) {
             return ShopResource::collection($shops);
         }
-        return  view('shop.index')->with('shops', $shops);
+        return  view('shops.index')->with('shops', $shops);
     }
 
     /**
@@ -69,6 +69,12 @@ class ShopController extends Controller
      */
     public function store(ShopStoreRequest $request)
     {
+        // dd([
+        //     'name' => $request->name,
+        //     'description' => $request->description,
+        //     // 'image' => $image_path,
+        //     'user_id' => $request->user_id
+        // ]);
         $image_path = '';
 
         if ($request->hasFile('image')) {

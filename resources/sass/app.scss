@@ -1,3 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Nunito");
 
@@ -19,8 +24,8 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
 // AdminLTE
 @import "admin-lte/dist/css/adminlte.min.css";
 
-// DataTables
-@import 'datatables.net-bs4/css/dataTables.bootstrap4.min.css';
+
+// @import 'resources/css/app.css';
 
 .user-cart {
     .card {

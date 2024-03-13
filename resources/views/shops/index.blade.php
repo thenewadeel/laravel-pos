@@ -28,7 +28,7 @@
                     @foreach ($shops as $shop)
                         <tr>
                             <td>{{ $shop->id }}</td>
-                            <td>{{ $shop->name }}</td>
+                            <td><a href="{{ route('shops.show', $shop) }}">{{ $shop->name }}</a></td>
 
                             <td>{{ $shop->description }}</td>
                             <td>

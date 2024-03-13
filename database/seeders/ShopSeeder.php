@@ -38,8 +38,8 @@ class ShopSeeder extends Seeder
                 'image' => '',
                 'user_id' => User::Create([
                     'email' => str_replace(' ', '', $shop),
-                    'first_name' => "cashier",
-                    'last_name' => "generic",
+                    'first_name' => "cashierFN",
+                    'last_name' => "cashierLN",
                     'type' => 'cashier',
                     'password' => bcrypt('1234')
                 ])->id,

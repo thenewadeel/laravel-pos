@@ -100,9 +100,27 @@ class ShopController extends Controller
      * @param  \App\Models\Shop  $shop
      * @return \Illuminate\Http\Response
      */
-    public function show(Shop $shop)
+    public function show(Shop $shop, Request $request)
     {
-        //TODO 
+        $filters = $request->only(['created_at', 'shop_id']);
+        $ordersQ = \App\Models\Order::query();
+
+        if (isset($filters['created_at'])) {
+            $ordersQ->whereDate('created_at', $filters['created_at']);
+        } else {
+            //orders of current month
+            $ordersQ->whereBetween('created_at', [
+                now()->startOfMonth(),
+                now()->endOfMonth()
+            ]);
+        }
+
+        $ordersQ->where('shop_id', $shop->id);
+
+        $orders = $ordersQ->get();
+
+
+        return view('shops.show')->with('shop', $shop)->with('orders', $orders);
     }
 
     /**
@@ -111,6 +129,7 @@ class ShopController extends Controller
      * @param  \App\Models\Shop  $shop
      * @return \Illuminate\Http\Response
      */
+
     public function edit(Shop $shop)
     {
         return view('shops.edit')->with('shop', $shop);

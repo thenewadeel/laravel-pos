@@ -7,8 +7,8 @@
 <div class="form-group">
     <label for="{{ $name }}">{{ __($label) }}</label>
     <select name="{{ $name }}" class="form-control @error($name) is-invalid @enderror" id="{{ $name }}">
-        @foreach ($options as $value => $label)
-            <option value="{{ $value }}" {{ $selected == $value ? 'selected' : '' }}>{{ __($label) }}</option>
+        @foreach ($options as $value => $lab)
+            <option value="{{ $value }}" {{ $selected == $value ? 'selected' : '' }}>{{ __($lab) }}</option>
         @endforeach
     </select>
     @error($name)

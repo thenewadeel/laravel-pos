@@ -14,9 +14,9 @@
                 @method('PUT')
 
                 <div class="form-group">
-                    <label for="name">{{ __('customer.Name') }}</label>
+                    <label for="name">{{ __('Name') }}</label>
                     <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                        id="name" placeholder="{{ __('customer.Name') }}" value="{{ old('name', $customer->name) }}">
+                        id="name" placeholder="{{ __('Name') }}" value="{{ old('name', $customer->name) }}">
                     @error('name')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -25,10 +25,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="membership_number">{{ __('customer.membership_number') }}</label>
+                    <label for="membership_number">{{ 'Membership No' }}</label>
                     <input type="text" name="membership_number"
                         class="form-control @error('membership_number') is-invalid @enderror" id="membership_number"
-                        placeholder="{{ __('customer.membership_number') }}"
+                        placeholder="{{ 'Membership No' }}"
                         value="{{ old('membership_number', $customer->membership_number) }}">
                     @error('membership_number')
                         <span class="invalid-feedback" role="alert">

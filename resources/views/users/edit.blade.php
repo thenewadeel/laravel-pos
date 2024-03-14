@@ -65,7 +65,7 @@
                         'name' => 'type',
                         'selected' => old('type', $user->type),
                         'options' => ['admin' => 'admin', 'cashier' => 'cashier', 'accountant' => 'accountant'],
-                    ]);
+                    ])
                     @error('type')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

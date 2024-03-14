@@ -25,19 +25,23 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (auth()->user()->type == 'cashier') {
+            return redirect()->route('cart.index');
+        }
+
         $orders = Order::with(['items', 'payments'])->get();
         $customers_count = Customer::count();
 
         return view('home', [
             'orders_count' => $orders->count(),
-            'income' => $orders->map(function($i) {
-                if($i->receivedAmount() > $i->total()) {
+            'income' => $orders->map(function ($i) {
+                if ($i->receivedAmount() > $i->total()) {
                     return $i->total();
                 }
                 return $i->receivedAmount();
             })->sum(),
-            'income_today' => $orders->where('created_at', '>=', date('Y-m-d').' 00:00:00')->map(function($i) {
-                if($i->receivedAmount() > $i->total()) {
+            'income_today' => $orders->where('created_at', '>=', date('Y-m-d') . ' 00:00:00')->map(function ($i) {
+                if ($i->receivedAmount() > $i->total()) {
                     return $i->total();
                 }
                 return $i->receivedAmount();

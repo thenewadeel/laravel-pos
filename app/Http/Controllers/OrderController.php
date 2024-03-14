@@ -17,7 +17,10 @@ class OrderController extends Controller
     }
     public function index(Request $request)
     {
-        $orders = new Order();
+        if (auth()->user()->type == 'admin') {
+            $orders = Order::class;
+        } else
+            $orders = Order::where('user_id', auth()->user()->id);
         if ($request->start_date) {
             $orders = $orders->where('created_at', '>=', $request->start_date);
         }

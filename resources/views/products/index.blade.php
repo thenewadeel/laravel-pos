@@ -18,15 +18,15 @@
                     <tr>
                         <th>{{ __('product.ID') }}</th>
                         <th>{{ __('product.Name') }}</th>
-                        <th>{{ 'Make' }}</th>
+                        <th>{{ __('product.Price') }}</th>
+                        {{-- <th>{{ 'Make' }}</th> --}}
                         <th>{{ 'Category' }}</th>
                         <th>{{ __('product.Image') }}</th>
                         <th>{{ __('product.Barcode') }}</th>
-                        <th>{{ __('product.Price') }}</th>
                         <th>{{ __('product.Quantity') }}</th>
                         <th>{{ __('product.Status') }}</th>
                         <th>{{ __('product.Created_At') }}</th>
-                        <th>{{ __('product.Updated_At') }}</th>
+                        <th>{{ __('Last Update') }}</th>
                         <th>{{ __('product.Actions') }}</th>
                     </tr>
                 </thead>
@@ -35,12 +35,12 @@
                         <tr>
                             <td>{{ $product->id }}</td>
                             <td>{{ $product->name }}</td>
-                            <td>{{ $product->description }}</td>
+                            <td>{{ $product->price }}</td>
+                            {{-- <td>{{ $product->description }}</td> --}}
                             <td>{{ $product->category }}</td>
                             <td><img class="product-img" src="{{ Storage::url($product->image) }}" alt=""
                                     style="width: 64px !important; height: 64px !important;"></td>
                             <td>{{ $product->barcode }}</td>
-                            <td>{{ $product->price }}</td>
                             <td>{{ $product->quantity }}</td>
                             <td>
                                 <span

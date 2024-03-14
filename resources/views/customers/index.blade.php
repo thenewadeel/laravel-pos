@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 
-@section('title', __('customer.Customer_List'))
-@section('content-header', __('customer.Customer_List'))
+@section('title', 'Members Index')
+@section('content-header', 'Members Index')
 @section('content-actions')
-    <a href="{{ route('customers.create') }}" class="btn btn-primary">{{ __('customer.Add_Customer') }}</a>
+    <a href="{{ route('customers.create') }}" class="btn btn-primary">{{ __('Add_Customer') }}</a>
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
@@ -16,15 +16,15 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>{{ __('customer.ID') }}</th>
-                        <th>{{ __('customer.Avatar') }}</th>
-                        <th>{{ __('customer.Name') }}</th>
-                        <th>{{ __('customer.membership_number') }}</th>
-                        <th>{{ __('customer.Email') }}</th>
-                        <th>{{ __('customer.Phone') }}</th>
-                        <th>{{ __('customer.Address') }}</th>
+                        <th>{{ __('ID') }}</th>
+                        <th>{{ __('Avatar') }}</th>
+                        <th>{{ __('Name') }}</th>
+                        <th>{{ 'Member#' }}</th>
+                        <th>{{ __('Email') }}</th>
+                        <th>{{ __('Phone') }}</th>
+                        <th>{{ __('Address') }}</th>
                         <th>{{ __('common.Created_At') }}</th>
-                        <th>{{ __('customer.Actions') }}</th>
+                        <th>{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,12 +71,12 @@
                 })
 
                 swalWithBootstrapButtons.fire({
-                    title: {{ __('customer.sure') }},
-                    text: {{ __('customer.really_delete') }},
+                    title: {{ __('sure') }},
+                    text: {{ __('really_delete') }},
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: {{ __('customer.yes_delete') }},
-                    cancelButtonText: {{ __('customer.No') }},
+                    confirmButtonText: {{ __('yes_delete') }},
+                    cancelButtonText: {{ __('No') }},
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {

@@ -16,6 +16,7 @@ return [
     //==========================================
     // General messages
     //==========================================
+    'Customer_List'        => 'Member List',
     'Logout'        => 'Logout',
     'success'       => 'success',
     'Create'        => 'Create',

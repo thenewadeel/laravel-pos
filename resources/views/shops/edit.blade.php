@@ -53,14 +53,14 @@
                         'name' => 'user_id',
                         'selected' => old('user_id', $shop->user_id),
                         'options' => \App\Models\User::pluck('email', 'id')->toArray(),
-                    ]);
+                        'label' => __('shop.User'),
+                    ])
                     @error('type')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
                 </div>
-
                 <button class="btn btn-primary" type="submit">{{ __('common.Update') }}</button>
             </form>
         </div>

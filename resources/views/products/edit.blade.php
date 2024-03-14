@@ -60,7 +60,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group">
+                <div class="form-group hidden">
                     <label for="barcode">{{ __('product.Barcode') }}</label>
                     <input type="text" name="barcode" class="form-control @error('barcode') is-invalid @enderror"
                         id="barcode" placeholder="{{ __('product.Barcode') }}"

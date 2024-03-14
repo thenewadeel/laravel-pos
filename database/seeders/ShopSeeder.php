@@ -15,21 +15,24 @@ class ShopSeeder extends Seeder
     public function run(): void
     {
         foreach ([
-            "The Charcoal Grill",
-            "Fine Dining",
-            "Restaurants",
-            "Brunch",
-            "Coffee Shop",
-            "Party",
-            "Golfee",
+            "Brunch \ Take away",
+            "Restaurant \ Buffet",
+            "Coffee  Shop",
+            "Bakery",
+            "Home  Delivery",
+            "The Midnight Cafe",
+            "Golf Club",
             "Hi Tea",
-            "Home Delivery",
-            "Lodges",
-            "Mid Night Cafe",
-            "Mid Night Cafe Brunch",
-            "Laundry Shop",
-            "Photoshoot",
-            "Roof Top",
+            "Photo Shoot",
+            "Laundry",
+            // "Banquet",
+            // "Function",
+            // "Club Hall Charges",
+            // "Lawn Charges",
+            // "Stage",
+            // "Multimedia",
+            // "Sound",
+            "GR Mess",
         ] as $shop) {
 
             Shop::updateOrCreate([
@@ -37,7 +40,7 @@ class ShopSeeder extends Seeder
                 'description' => 'desc',
                 'image' => '',
                 'user_id' => User::Create([
-                    'email' => str_replace(' ', '', $shop),
+                    'email' => str_replace(' ', '', $shop) . '@qcl.pos',
                     'first_name' => "cashierFN",
                     'last_name' => "cashierLN",
                     'type' => 'cashier',

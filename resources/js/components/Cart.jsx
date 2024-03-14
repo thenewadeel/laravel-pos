@@ -11,7 +11,7 @@ class Cart extends Component {
             cart: [],
             products: [],
             customers: [],
-            barcode: "",
+            id: "",
             search: "",
             customer_id: "",
             translations: {},
@@ -73,7 +73,7 @@ class Cart extends Component {
     }
 
     loadProducts(search = "") {
-        const query = (!!search ? `?search=${search}&` : "?") + "itemCount=55";
+        const query = (!!search ? `?search=${search}&` : "?") + "itemCount=300";
         axios.get(`/products${query}`).then((res) => {
             const products = res.data.data;
             this.setState({ products });
@@ -81,9 +81,9 @@ class Cart extends Component {
     }
 
     handleOnChangeBarcode(event) {
-        const barcode = event.target.value;
-        console.log(barcode);
-        this.setState({ barcode });
+        const id = event.target.value;
+        console.log(id);
+        this.setState({ id });
     }
 
     loadCart() {
@@ -95,13 +95,13 @@ class Cart extends Component {
 
     handleScanBarcode(event) {
         event.preventDefault();
-        const { barcode } = this.state;
-        if (!!barcode) {
+        const { id } = this.state;
+        if (!!id) {
             axios
-                .post("/cart", { barcode })
+                .post("/cart", { id })
                 .then((res) => {
                     this.loadCart();
-                    this.setState({ barcode: "" });
+                    this.setState({ id: "" });
                 })
                 .catch((err) => {
                     Swal.fire("Error!", err.response.data.message, "error");
@@ -154,8 +154,8 @@ class Cart extends Component {
         }
     }
 
-    addProductToCart(barcode) {
-        let product = this.state.products.find((p) => p.barcode === barcode);
+    addProductToCart(id) {
+        let product = this.state.products.find((p) => p.id === id);
         if (!!product) {
             // if product is already in cart
             let cart = this.state.cart.find((c) => c.id === product.id);
@@ -188,7 +188,7 @@ class Cart extends Component {
             }
 
             axios
-                .post("/cart", { barcode })
+                .post("/cart", { id })
                 .then((res) => {
                     // this.loadCart();
                     console.log(res);
@@ -239,7 +239,7 @@ class Cart extends Component {
         });
     }
     render() {
-        const { cart, products, customers, barcode, translations, shops } =
+        const { cart, products, customers, id, translations, shops } =
             this.state;
         return (
             <div className="row">
@@ -251,7 +251,7 @@ class Cart extends Component {
                                 onChange={this.setShopId}
                             >
                                 {/* {console.log(shops)} */}
-                                <option value="">ASDASDASD</option>
+                                {/* <option value="">Shops</option> */}
                                 {shops.map((shp) => (
                                     <option
                                         key={shp.id}
@@ -259,15 +259,15 @@ class Cart extends Component {
                                     >{`${shp.name} ${shp.description}`}</option>
                                 ))}
                             </select>
-                            <form onSubmit={this.handleScanBarcode}>
+                            {/* <form onSubmit={this.handleScanBarcode}>
                                 <input
                                     type="text"
                                     className="form-control"
-                                    placeholder={translations["scan_barcode"]}
-                                    value={barcode}
+                                    placeholder={translations["scan_id"]}
+                                    value={id}
                                     onChange={this.handleOnChangeBarcode}
                                 />
-                            </form>
+                            </form> */}
                         </div>
                         <div className="col">
                             <select
@@ -377,31 +377,41 @@ class Cart extends Component {
                             onKeyDown={this.handleSeach}
                         />
                     </div>
-                    <div className="order-product">
+                    <div className="order-product" style={{overflow:'scroll',height:'calc(80vh)'}}>
                         {products.map((p) => (
                             <div
-                                onClick={() => this.addProductToCart(p.barcode)}
+                                onClick={() => this.addProductToCart(p.id)}
                                 key={p.id}
                                 className="item"
+                                style={{
+                                    border: "2px solid darkgray",
+                                    cursor: "pointer",
+                                    transition: "box-shadow 0.3s",
+                                    "&:hover": {
+                                        border: "4px solid darkgray",
+                                    },
+                                }}
                             >
                                 {/* {console.log({"p":p.image_url})} */}
-                                <img
+                                {/* <img
                                     src={
                                         p.image_url === "/storage/"
                                             ? "/images/defaultItem.png"
                                             : p.image_url
                                     }
-                                    alt=""
-                                />
-                                <h5
+                                    alt="" className="w-64 h-64 border-4 border-red-900"
+                                /> */}
+                                <h3
                                     style={
-                                        window.APP.warning_quantity > p.quantity
-                                            ? { color: "red" }
-                                            : {}
+                                         {padding: "10px", textAlign: "center"}
                                     }
                                 >
-                                    {p.name}({p.quantity})
-                                </h5>
+                                    {p.name}
+                                    <br/>
+                                    <span style={{fontStyle: "italic"}}>
+                                        ({p.price})
+                                        </span>
+                                </h3>
                             </div>
                         ))}
                     </div>

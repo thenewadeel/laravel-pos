@@ -15,8 +15,8 @@ class ShopSeeder extends Seeder
     public function run(): void
     {
         foreach ([
-            "Brunch \ Take away",
-            "Restaurant \ Buffet",
+            "Brunch _ Take away",
+            "Restaurant _ Buffet",
             "Coffee  Shop",
             "Bakery",
             "Home  Delivery",

@@ -20,12 +20,12 @@ class CartController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'barcode' => 'required|exists:products,barcode',
+            'id' => 'required|exists:products,id',
         ]);
-        $barcode = $request->barcode;
+        $id = $request->id;
 
-        $product = Product::where('barcode', $barcode)->first();
-        $cart = $request->user()->cart()->where('barcode', $barcode)->first();
+        $product = Product::where('id', $id)->first();
+        $cart = $request->user()->cart()->where('id', $id)->first();
         if ($cart) {
             // check product quantity
             if ($product->quantity <= $cart->pivot->quantity) {

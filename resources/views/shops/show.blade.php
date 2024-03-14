@@ -3,7 +3,23 @@
 @section('title', __('shop.Shop_List'))
 @section('content-header', __('shop.Shop_List'))
 @section('content-actions')
-    <a href="{{ route('shops.create') }}" class="btn btn-primary">{{ __('shop.Create_Shop') }}</a>
+    {{-- @php
+        $from = now()->subMonths(6)->startOfMonth()->format('Y-m-d');
+        $to = now()->endOfMonth()->format('Y-m-d');
+    @endphp --}}
+    <form method="get" action="{{ route('shops.export', $shop) }}" class="form-inline">
+        {{-- <div class="form-group mr-3">
+            <label for="from">From</label>
+            <input type="date" id="from" name="from" class="form-control" required value="{{ $from }}">
+        </div>
+        <div class="form-group">
+            <label for="to">To</label>
+            <input type="date" id="to" name="to" class="form-control" required value="{{ $to }}">
+        </div> --}}
+        <button type="submit" class="btn btn-success"><i class="fas fa-file-excel"></i> Export to Excel</button>
+    </form>
+
+
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">

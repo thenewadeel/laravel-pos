@@ -33,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/listOfShops', [ShopController::class, 'listOf']);
     Route::get('/listOfReports', [ReportsController::class, 'listOf']);
 
+    Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
+
     Route::namespace('Admin')->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');

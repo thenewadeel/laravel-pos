@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Exports\QueryExport;
 use Illuminate\Http\Request;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
@@ -9,7 +11,12 @@ use App\Http\Resources\ShopResource;
 use App\Http\Requests\ShopUpdateRequest;
 use App\Http\Requests\ShopStoreRequest;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ShopOrdersExport;
+use App\Exports\UsersExport;
 use App\Traits\ListOf;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Illuminate\Support\Facades\Log;
 
 class ShopController extends Controller
 {
@@ -103,8 +110,22 @@ class ShopController extends Controller
     public function show(Shop $shop, Request $request)
     {
         $filters = $request->only(['created_at', 'shop_id']);
-        $ordersQ = \App\Models\Order::query();
+        $orders = $this->getOrders($shop, $filters);
 
+        return view('shops.show')->with('shop', $shop)->with('orders', $orders->get());
+    }
+
+    private function getOrders(Shop $shop, array $filters)
+    {
+        $ordersQ = \App\Models\Order::query();
+        $this->applyFilters($ordersQ, $filters);
+        $ordersQ->where('shop_id', $shop->id);
+
+        return $ordersQ;
+    }
+
+    private function applyFilters($ordersQ, array $filters)
+    {
         if (isset($filters['created_at'])) {
             $ordersQ->whereDate('created_at', $filters['created_at']);
         } else {
@@ -114,14 +135,34 @@ class ShopController extends Controller
                 now()->endOfMonth()
             ]);
         }
-
-        $ordersQ->where('shop_id', $shop->id);
-
-        $orders = $ordersQ->get();
-
-
-        return view('shops.show')->with('shop', $shop)->with('orders', $orders);
     }
+
+
+    public function exportReport(Shop $shop, Request $request)
+    {
+        $filters = $request->only(['created_at', 'shop_id']);
+        $orders = $this->getOrders($shop, $filters);
+
+        return Excel::download(new ShopOrdersExport($orders->get()), 'shop-export.xlsx');
+    }
+
+    /**
+     * Controller that handles the export
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    // public function exportReport(Request $request, Shop $shop)
+    // {
+    //     $from = Carbon::parse($request->input('from'));
+    //     $to = Carbon::parse($request->input('to'));
+
+    //     $query = \App\Models\Order::query();
+    //     $query->where('shop_id', $shop->id);
+    //     $query->whereBetween('created_at', [$from, $to]);
+
+    //     return Excel::download(new QueryExport($query), 'shop-export.xlsx');
+    // }
 
     /**
      * Show the form for editing the specified resource.

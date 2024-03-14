@@ -270,24 +270,57 @@ class Cart extends Component {
                             </form> */}
                         </div>
                         <div className="col">
+                            <div className="input-group">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder={
+                                        translations["general_customer"]
+                                    }
+                                    value={this.state.customer_id}
+                                    onChange={(e) =>
+                                        this.setState({
+                                            customer_id: e.target.value,
+                                        })
+                                    }
+                                />
+                                <div className="input-group-append">
+                                    <button
+                                        className="btn btn-outline-secondary"
+                                        type="button"
+                                        onClick={this.handleSeach}
+                                    >
+                                        <i className="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
                             <select
-                                className="form-control"
+                                className="form-control mt-1"
+                                value={this.state.customer_id || ""}
                                 onChange={this.setCustomerId}
                             >
-                                <option value="">
-                                    {translations["general_customer"]}
-                                </option>
-                                {customers.map((cus) => (
-                                    <option
-                                        key={cus.id}
-                                        value={cus.id}
-                                    >{`${cus.id} - ${cus.name}`}</option>
-                                ))}
+                                {customers
+                                    .filter((cus) =>
+                                        cus.name
+                                            .toLowerCase()
+                                            .includes(
+                                                this.state.search.toLowerCase()
+                                            )
+                                    )
+                                    .map((cus) => (
+                                        <option
+                                            key={cus.id}
+                                            value={cus.id}
+                                        >{`${cus.id} - ${cus.name}`}</option>
+                                    ))}
                             </select>
                         </div>
                     </div>
                     <div className="user-cart">
-                        <div className="card">
+                        <div
+                            className="card"
+                            style={{ minHeight: "600px", overflowY: "scroll" }}
+                        >
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
@@ -377,7 +410,16 @@ class Cart extends Component {
                             onKeyDown={this.handleSeach}
                         />
                     </div>
-                    <div className="order-product" style={{overflow:'scroll',height:'calc(80vh)'}}>
+                    <div
+                        className="order-product"
+                        style={{
+                            overflow: "scroll",
+                            height: "calc(80vh)",
+                            display: "flex",
+                            flexWrap: "wrap",
+                            justifyContent: "space-around",
+                        }}
+                    >
                         {products.map((p) => (
                             <div
                                 onClick={() => this.addProductToCart(p.id)}
@@ -388,7 +430,7 @@ class Cart extends Component {
                                     cursor: "pointer",
                                     transition: "box-shadow 0.3s",
                                     "&:hover": {
-                                        border: "4px solid darkgray",
+                                        border: "40px solid darkgray",
                                     },
                                 }}
                             >
@@ -401,17 +443,18 @@ class Cart extends Component {
                                     }
                                     alt="" className="w-64 h-64 border-4 border-red-900"
                                 /> */}
-                                <h3
-                                    style={
-                                         {padding: "10px", textAlign: "center"}
-                                    }
+                                <div
+                                    style={{
+                                        padding: "10px",
+                                        textAlign: "center",
+                                    }}
                                 >
                                     {p.name}
-                                    <br/>
-                                    <span style={{fontStyle: "italic"}}>
+                                    <br />
+                                    <span style={{ fontStyle: "italic" }}>
                                         ({p.price})
-                                        </span>
-                                </h3>
+                                    </span>
+                                </div>
                             </div>
                         ))}
                     </div>

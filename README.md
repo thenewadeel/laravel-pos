@@ -1,72 +1,74 @@
 <p align="center">
-    <h1 align="center">POS System Using Laravel</h1>
+    <h1 align="center">Laravel Restaurant</h1>
 </p>
 
-The project was created while recording video "[Create POS System Using Laravel](https://www.youtube.com/watch?v=Y_NRk0lOOJc&list=PL2hV0q47BY-G9f5xG9Vq-wGjSyy1BekOv)"
+## Modules
 
-## Installation
+1. POS
+   a. Kitchen
+2. Accounting
+3. Inventory
 
-### Requirements
+### POS Features
 
-For system requirements you [Check Laravel Requirement](https://laravel.com/docs/10.x/deployment#server-requirements)
+[ ] Menu : Display products grouped by their Categories and Cuisines
+[ ] Order Handling via Waiters and Tables
+[ ] Order Status via Kitchen
+[ ] Bill Generation & Printing
+[ ] Payment Handling
+[ ] Discounts & Rebates
 
-### Clone the repository from github.
+[ ] Cashier Flow:
 
-    git clone https://github.com/angkosal/laravel-pos.git [YourDirectoryName]
+a. Handle Customer orders of Products and Qty
+b. Assign the Dishes from the Placed orders to Kitchen
+c. Serve the Prepared Dishes from orders to Customers on their Table, via a Waiter/ Delivery boy
+d. Give Discounts
+e. Register Tips if any
+f. Take Payments
 
-The command installs the project in a directory named `YourDirectoryName`. You can choose a different
-directory name if you want.
+[ ] Chef Flow:
 
-### Install dependencies
+a. View Dishes from Placed Orders
+b. Verify Recipe for the Dish
+c. Mark as Prepared
+d. Register Wastages
 
-Laravel utilizes [Composer](https://getcomposer.org/) to manage its dependencies. So, before using Laravel, make sure you have Composer installed on your machine.
+#### Models
 
-    cd YourDirectoryName
-    composer install
+1. Product [ ]
 
-### Config file
+    1. Name
+    2. Price
+    3. Cuisines (ManytoMany) [ ]
+    4. Category (belongsTo) [ ]
 
-Rename or copy `.env.example` file to `.env` 1.`php artisan key:generate` to generate app key.
+2. Order [ ]
+    1. Table : string
+    2. Waiter / Delivery Boy: User
+    3. Tip Amount
+    4. Customer
+    5. Status : PLACED, PREPARED, SERVED, REJECTED
+    6. Items : Products (hasMany), Qty
+    7. Discount (hasMany)
+    8. Payments (hasMany)
 
-1. Set your database credentials in your `.env` file
-1. Set your `APP_URL` in your `.env` file.
+### Accounting Features
 
-### Database
+[ ] Sales Reports
+[ ] Expenses Records & Reports
+[ ] Holdings Records & Stock Reports
+[ ] Profit & Loss Reports
 
-1. Migrate database table `php artisan migrate`
-1. `php artisan db:seed`, this will initialize settings and create and admin user for you [email: admin@gmail.com - password: admin123]
+### Inventory Features
 
-### Install Node Dependencies
-
-1. `npm install` to install node dependencies
-1. `npm run dev` for development or `npm run build` for production
-
-### Create storage link
-
-`php artisan storage:link`
-
-### Run Server
-
-1. `php artisan serve` or Laravel Homestead
-1. Visit `localhost:8000` in your browser. Email: `admin@gmail.com`, Password: `admin123`.
- <!-- 1. Online demo: [pos.khmernokor.com](https://pos.khmernokor.com/) -->
-
-### Screenshots
-
-#### Product list
-
-![Product list](https://raw.githubusercontent.com/angkosal/laravel-pos/master/screenshots/products_list.png)
-
-#### Create order
-
-![Create order](https://raw.githubusercontent.com/angkosal/laravel-pos/master/screenshots/pos.png)
-
-#### Order list
-
-![Order list](https://raw.githubusercontent.com/angkosal/laravel-pos/master/screenshots/order_list.png)
-
-#### Customer list
-
-![Customer list](https://raw.githubusercontent.com/angkosal/laravel-pos/master/screenshots/customer_list.png)
-
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/angkosal)
+[ ] Stock Management
+a. Items in Qty (Qty as No or Wt based on Item)
+b. Stock Audit 1. Print Stock Correction Form 2. Confirm Stock Correction 3. Record Wastages
+c. Stock Wastages Record
+[ ] Transactions:
+a. Type : UP, DOWN
+b. By User
+c. Items & Qty
+d. Item Rates if any
+[ ] Inventory Reports

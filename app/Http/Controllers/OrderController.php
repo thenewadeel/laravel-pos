@@ -18,7 +18,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->type == 'admin') {
-            $orders = Order::class;
+            $orders = Order::query();
         } else
             $orders = Order::where('user_id', auth()->user()->id);
 

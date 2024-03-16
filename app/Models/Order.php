@@ -18,6 +18,10 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function discounts()
+    {
+        return $this->belongsToMany(Discount::class, 'discount_orders', 'order_id', 'discount_id');
+    }
     public function payments()
     {
         return $this->hasMany(Payment::class);
@@ -60,7 +64,18 @@ class Order extends Model
             return $i->price;
         })->sum();
     }
-
+    public function discountedTotal()
+    {
+        $totalPrice = $this->total();
+        foreach ($this->discounts as $discount) {
+            $totalPrice -= $totalPrice * ($discount->percentage / 100);
+        }
+        return $totalPrice;
+    }
+    public function formattedDiscountedTotal()
+    {
+        return number_format($this->discountedTotal(), 2);
+    }
     public function formattedTotal()
     {
         return number_format($this->total(), 2);

@@ -40,6 +40,8 @@
                         <th>{{ __('order.Customer_Name') }}</th>
                         <th>{{ __('order.User_Name') }}</th>
                         <th>{{ __('order.Total') }}</th>
+                        <th>{{ __('order.Discounts') }}</th>
+                        <th>{{ __('order.DiscountTotal') }}</th>
                         <th>{{ __('order.Received_Amount') }}</th>
                         <th>{{ __('order.Status') }}</th>
                         <th>{{ __('order.To_Pay') }}</th>
@@ -54,6 +56,15 @@
                             <td>{{ $order->getCustomerName() }}</td>
                             <td>{{ $order->getUserName() }}</td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedTotal() }}</td>
+                            <td>
+                                @foreach ($order->discounts()->get() as $discount)
+                                    {{ $discount->name }} ({{ $discount->percentage }}%),
+                                @endforeach
+                            </td>
+                            <td>
+
+                                {{ $order->formattedDiscountedTotal() }}
+                            </td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedReceivedAmount() }}</td>
                             <td>
                                 @if ($order->receivedAmount() == 0)
@@ -67,7 +78,8 @@
                                 @endif
                             </td>
                             <td>{{ config('settings.currency_symbol') }}
-                                {{ number_format($order->total() - $order->receivedAmount(), 2) }}</td>
+                                {{ number_format($order->total() - $order->discountedTotal() - $order->receivedAmount(), 2) }}
+                            </td>
                             <td>{{ $order->created_at }}</td>
                         </tr>
                     @endforeach

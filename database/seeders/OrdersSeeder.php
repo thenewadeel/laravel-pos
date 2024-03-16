@@ -20,7 +20,7 @@ class OrdersSeeder extends Seeder
         $product = \App\Models\Product::all()->random();
 
         // Create a loop for 500 orders
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 250; $i++) {
             $user = \App\Models\User::all()->random();
             $shop = \App\Models\Shop::all()->random();
             $customer = \App\Models\Customer::all()->random();
@@ -29,7 +29,7 @@ class OrdersSeeder extends Seeder
                 'user_id' => $user->id,
                 'shop_id' => $shop->id,
                 'customer_id' => $customer->id,
-                'created_at' => $faker->dateTimeBetween('-1 month', '-1 day'),
+                'created_at' => $faker->dateTimeBetween('-7 day', '-1 day'),
             ]);
 
             // Create 3-5 random products for each order

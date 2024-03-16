@@ -33,5 +33,12 @@ class DiscountSeeder extends Seeder
             $product = \App\Models\Product::inRandomOrder()->first();
             $discount->products()->attach($product->id);
         }
+
+        // Add random discounts to existing orders
+        $orders = \App\Models\Order::all();
+        foreach ($orders as $order) {
+            $discountIds = Discount::inRandomOrder()->limit(rand(0, 3))->pluck('id')->toArray();
+            $order->discounts()->sync($discountIds);
+        }
     }
 }

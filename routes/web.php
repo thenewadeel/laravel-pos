@@ -9,6 +9,8 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CategoryController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +25,8 @@ Route::middleware('auth')->group(function () {
         'orders'      => OrderController::class,
         'users'       => UsersController::class,
         'shops'       => ShopController::class,
-        'reports'     => ReportsController::class
+        'reports'     => ReportsController::class,
+        'categories'  => CategoryController::class
     ]);
 
     Route::get('/listOfProducts', [ProductController::class, 'listOf']);
@@ -36,6 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 
     Route::namespace('Admin')->group(function () {
+
+        Route::post('/catprod', [CategoryController::class, 'catprodstore'])->name('categories.products.store');
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 

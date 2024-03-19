@@ -10,6 +10,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ExpenseController;
 use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,8 @@ Route::middleware('auth')->group(function () {
         'users'       => UsersController::class,
         'shops'       => ShopController::class,
         'reports'     => ReportsController::class,
-        'categories'  => CategoryController::class
+        'categories'  => CategoryController::class,
+        'expenses'    => ExpenseController::class
     ]);
 
     Route::get('/listOfProducts', [ProductController::class, 'listOf']);

@@ -41,8 +41,8 @@ class ShopSeeder extends Seeder
                 'image' => '',
                 'user_id' => User::Create([
                     'email' => str_replace(' ', '', $shop) . '@qcl.pos',
-                    'first_name' => "cashierFN",
-                    'last_name' => "cashierLN",
+                    'first_name' => "CFn" . $shop,
+                    'last_name' => "CLn" . $shop,
                     'type' => 'cashier',
                     'password' => bcrypt('1234')
                 ])->id,

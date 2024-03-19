@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::namespace('Admin')->group(function () {
 
         Route::post('/catprod', [CategoryController::class, 'catprodstore'])->name('categories.products.store');
+        Route::delete('/catprod/{category_id}/{product_id}', [CategoryController::class, 'catproddelete'])->name('categories.products.delete');
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 

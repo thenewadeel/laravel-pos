@@ -114,4 +114,15 @@ class CategoryController extends Controller
         }
         return redirect()->back();
     }
+
+    /**
+     * Delete the specified category-product relation
+     */
+    public function catproddelete(Category $category, $product_id)
+    {
+        CategoryProducts::where('category_id', $category->id)
+            ->where('product_id', $product_id)
+            ->delete();
+        return redirect()->back();
+    }
 }

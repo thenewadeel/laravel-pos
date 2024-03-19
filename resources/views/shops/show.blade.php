@@ -77,8 +77,9 @@
                         <td>{{ $order->balance() }}
                             <?php $totalBalance += $order->balance(); ?>
                         </td>
-                        <td>{{ 'order->discount' }}</td>
+                        <td>{{ $order->discountedTotal() }}</td>
                         <td>{{ $order->total() }}
+                        <td>{{ $order->balance() }}
                             <?php $totalAmount += $order->total(); ?>
                         </td>
                         <td>{{ $order->customer->membership_number }} /

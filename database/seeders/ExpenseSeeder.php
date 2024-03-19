@@ -14,7 +14,7 @@ class ExpenseSeeder extends Seeder
     public function run(): void
     {
         $users = \App\Models\User::all();
-        $heads = ['Food', 'Transportation', 'Entertainment', 'Gifts', 'Miscellaneous'];
+        $heads = ['Catering', 'Maintenance', 'GR Maintenance', 'Beverage', 'Golf Club', 'Hi Tea', 'Midnight Caffe', 'Lundary'];
         $monthAgo = now()->subMonth();
 
         foreach (range(1, 50) as $_) {

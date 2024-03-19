@@ -26,7 +26,7 @@ class ExpenseController extends Controller
             }
         }
 
-        $expenses = $expenses->with(['user'])->latest()->paginate(10);
+        $expenses = $expenses->with(['user'])->latest()->paginate(25);
 
 
 

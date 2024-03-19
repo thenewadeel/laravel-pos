@@ -47,17 +47,30 @@
                             <p>{{ __('product.title') }}</p>
                         </a>
                     </li>
+                    <li class="nav-item has-treeview">
+                        <a href="{{ route('categories.index') }}" class="nav-link {{ activeSegment('categories') }}">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>{{ __('Categories') }}</p>
+                        </a>
+                    </li>
 
+                    <li class="nav-item has-treeview">
+                        <a href="{{ route('customers.index') }}" class="nav-link {{ activeSegment('customers') }}">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>{{ __('customer.title') }}</p>
+                        </a>
+                    </li>
                     <li class="nav-item has-treeview">
                         <a href="{{ route('users.index') }}" class="nav-link {{ activeSegment('users') }}">
                             <i class="nav-icon fas fa-users"></i>
                             <p>{{ 'Users' }}</p>
                         </a>
                     </li>
+
                     <li class="nav-item has-treeview">
-                        <a href="{{ route('customers.index') }}" class="nav-link {{ activeSegment('customers') }}">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>{{ __('customer.title') }}</p>
+                        <a href="{{ route('expenses.index') }}" class="nav-link {{ activeSegment('expenses') }}">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>{{ __('Expenses') }}</p>
                         </a>
                     </li>
                 @endif

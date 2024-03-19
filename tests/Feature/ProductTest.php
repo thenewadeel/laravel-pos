@@ -8,11 +8,10 @@ use Tests\TestCase;
 
 class ProductTest extends TestCase
 {
-    public function test_example(): void
+    public function test_unauth_goes_to_login(): void
     {
         $response = $this->get('/products');
 
-        $response->assertStatus(200);
-        $response->assertSee("table");
+        $response->assertRedirect('/login');
     }
 }

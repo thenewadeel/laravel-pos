@@ -29,7 +29,7 @@ class CustomerController extends Controller
                 Customer::all()
             );
         }
-        $customers = Customer::latest()->paginate(10);
+        $customers = Customer::latest()->paginate(25);
         return view('customers.index')->with('customers', $customers);
     }
 

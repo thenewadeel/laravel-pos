@@ -19,17 +19,18 @@ class OrderController extends Controller
     {
         if (auth()->user()->type == 'admin') {
             $orders = Order::query();
-        } else
+        } else {
             $orders = Order::where('user_id', auth()->user()->id);
 
-        $today = now()->startOfDay();
-        if ($request->start_date && $request->end_date) {
-            $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
-        } else {
-            $orders = $orders->whereDate('created_at', $today);
+            $today = now()->startOfDay();
+            if ($request->start_date && $request->end_date) {
+                $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
+            } else {
+                $orders = $orders->whereDate('created_at', $today);
+            }
         }
 
-        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->latest()->paginate(10);
+        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->paginate(25);
 
         $total = $orders->map(function ($i) {
             return $i->total();

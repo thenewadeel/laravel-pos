@@ -31,7 +31,7 @@
             <td>
                 <ul>
                     @foreach ($category->products()->get() as $product)
-                        <li><a href="{{ route('products.show', $product) }}">{{ $product->name }}</a></li>
+                        <li><a>{{ $product->product->name }}</a></li>
                     @endforeach
                 </ul>
             </td>

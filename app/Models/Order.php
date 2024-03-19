@@ -72,6 +72,14 @@ class Order extends Model
         }
         return $totalPrice;
     }
+    public function discountAmount()
+    {
+        $totalPrice = $this->total();
+        foreach ($this->discounts as $discount) {
+            $totalPrice -= $totalPrice * ($discount->percentage / 100);
+        }
+        return $this->total() - $totalPrice;
+    }
     public function formattedDiscountedTotal()
     {
         return number_format($this->discountedTotal(), 2);
@@ -95,7 +103,7 @@ class Order extends Model
 
     public function balance()
     {
-        return $this->total() - $this->receivedAmount();
+        return $this->discountedTotal() - $this->receivedAmount();
     }
 
     public function formattedBalance()

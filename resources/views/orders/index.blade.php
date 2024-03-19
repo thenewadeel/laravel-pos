@@ -41,7 +41,7 @@
                         <th>{{ __('order.User_Name') }}</th>
                         <th>{{ __('order.Total') }}</th>
                         <th>{{ __('order.Discounts') }}</th>
-                        <th>{{ __('order.DiscountTotal') }}</th>
+                        <th>{{ __('order.DiscountAmount') }}</th>
                         <th>{{ __('order.Received_Amount') }}</th>
                         <th>{{ __('order.Status') }}</th>
                         <th>{{ __('order.To_Pay') }}</th>
@@ -57,13 +57,17 @@
                             <td>{{ $order->getUserName() }}</td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedTotal() }}</td>
                             <td>
-                                @foreach ($order->discounts()->get() as $discount)
-                                    {{ $discount->name }} ({{ $discount->percentage }}%),
-                                @endforeach
+                                @if ($order->discounts()->count() == 0)
+                                    {{ 'None' }}
+                                @else
+                                    @foreach ($order->discounts()->get() as $discount)
+                                        {{ $discount->name }} ({{ $discount->percentage }}%),
+                                    @endforeach
+                                @endif
                             </td>
-                            <td>
+                            <td style="text-align:right;">
 
-                                {{ $order->formattedDiscountedTotal() }}
+                                {{ config('settings.currency_symbol') }} {{ number_format($order->discountAmount(), 2) }}
                             </td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedReceivedAmount() }}</td>
                             <td>
@@ -78,7 +82,7 @@
                                 @endif
                             </td>
                             <td>{{ config('settings.currency_symbol') }}
-                                {{ number_format($order->total() - $order->discountedTotal() - $order->receivedAmount(), 2) }}
+                                {{ number_format($order->balance(), 2) }}
                             </td>
                             <td>{{ $order->created_at }}</td>
                         </tr>
@@ -91,9 +95,18 @@
                         <th></th>
                         <th></th>
                         <th>{{ config('settings.currency_symbol') }} {{ number_format($total, 2) }}</th>
+                        <th></th>
+                        <th></th>
                         <th>{{ config('settings.currency_symbol') }} {{ number_format($receivedAmount, 2) }}</th>
                         <th></th>
-                        <th></th>
+                        <th>{{ config('settings.currency_symbol') }}
+                            {{ number_format(
+                                $orders->sum(function ($order) {
+                                    return $order->balance();
+                                }),
+                                2,
+                            ) }}
+                        </th>
                         <th></th>
                     </tr>
                 </tfoot>

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->timestamps();
 
+            $table->enum('state', ['preparing', 'served', 'closed', 'cancelled'])->default('preparing');
+
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 

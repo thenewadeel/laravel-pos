@@ -3,6 +3,11 @@
 @section('title', __('order.Orders_List'))
 @section('content-header', __('order.Orders_List'))
 @section('content-actions')
+
+    <a href="{{ route('orders.index', ['unpaid' => true]) }}" class="btn btn-info">{{ __('order.Unpaid_Orders') }}</a>
+    <a href="{{ route('orders.index', ['chit' => true]) }}" class="btn btn-warning">{{ __('order.Chit_Orders') }}</a>
+    <a href="{{ route('orders.index', ['discounted' => true]) }}"
+        class="btn btn-secondary">{{ __('order.Discounted_Orders') }}</a>
     <a href="{{ route('cart.index') }}" class="btn btn-primary">{{ __('cart.title') }}</a>
 @endsection
 

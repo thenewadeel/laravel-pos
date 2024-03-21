@@ -30,6 +30,22 @@ class OrderController extends Controller
             }
         }
 
+        $unpaid = $request->has('unpaid') && $request->unpaid == '1';
+        $chit = $request->has('chit') && $request->chit == '1';
+        $discounted = $request->has('discounted') && $request->discounted == '1';
+
+        if ($unpaid) {
+            $orders = $orders->whereDoesntHave('payments');
+        }
+        if ($chit) {
+            // $orders = $orders->where(function ($query) {
+            //     $query->where('balance', '>', 0);
+            // });
+        }
+        if ($discounted) {
+            // $orders = $orders->whereHas('discounts', 'hasAny');
+        }
+
         $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->paginate(25);
 
         $total = $orders->map(function ($i) {

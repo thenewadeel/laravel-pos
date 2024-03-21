@@ -34,7 +34,12 @@ class HomeController extends Controller
 
         return view('home', [
             'orders_count' => $orders->count(),
-            'income' => $orders->map(function ($i) {
+            'sales' => $orders->map(function ($i) {
+                // if ($i->receivedAmount() > $i->total()) {
+                return $i->balance();
+                // }
+                // return $i->receivedAmount();
+            })->sum(), 'income' => $orders->map(function ($i) {
                 if ($i->receivedAmount() > $i->total()) {
                     return $i->total();
                 }

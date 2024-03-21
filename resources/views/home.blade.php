@@ -24,6 +24,20 @@
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
+                        <h3>{{ config('settings.currency_symbol') }} {{ number_format($sales, 2) }}</h3>
+                        <p>{{ __('dashboard.Balance') }}</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="{{ route('orders.index') }}" class="small-box-footer">{{ __('common.More_info') }} <i
+                            class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                    <div class="inner">
                         <h3>{{ config('settings.currency_symbol') }} {{ number_format($income, 2) }}</h3>
                         <p>{{ __('dashboard.Income') }}</p>
                     </div>

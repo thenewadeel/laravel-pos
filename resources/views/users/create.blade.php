@@ -44,16 +44,13 @@
                     @enderror
                 </div>
 
-                <div class="form-group">
-                    <label for="type">{{ __('user.Type') }}</label>
-                    <input name="type" class="form-control @error('type') is-invalid @enderror" id="type"
-                        placeholder="{{ __('user.Type') }}">{{ old('type') }}
-                    @error('type')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
+                @include('layouts.partials.selector', [
+                    'name' => 'type',
+                    'selected' => old('type'),
+                    'options' => ['admin' => 'admin', 'cashier' => 'cashier', 'accountant' => 'accountant'],
+                    'label' => __('user.Type'),
+                    'placeholder' => __('user.Type'),
+                ])
 
                 <div class="form-group">
                     <label for="password">{{ __('user.Password') }}</label>

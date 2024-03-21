@@ -15,17 +15,20 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('table_number')->nullable();
+            $table->string('waiter_name')->nullable();
+
+            $table->enum('state', ['preparing', 'served', 'closed', 'wastage'])->default('preparing');
+            $table->enum('type', ['dine-in', 'take-away', 'delivery'])->default('dine-in');
+
             $table->foreignId('customer_id')->nullable();
             $table->foreignId('user_id');
-            $table->timestamps();
-
-            $table->enum('state', ['preparing', 'served', 'closed', 'cancelled'])->default('preparing');
+            $table->foreignId('shop_id')->nullable();
 
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('set null');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
-            $table->foreignId('shop_id')->nullable();
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

@@ -74,12 +74,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="avatar">{{ __('customer.Avatar') }}</label>
+                    <label for="photo">{{ __('customer.photo') }}</label>
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="avatar" id="avatar">
-                        <label class="custom-file-label" for="avatar">{{ __('customer.Choose_file') }}</label>
+                        <input type="file" class="custom-file-input" name="photo" id="photo">
+                        <label class="custom-file-label" for="photo">{{ __('customer.Choose_file') }}</label>
                     </div>
-                    @error('avatar')
+                    @error('photo')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>

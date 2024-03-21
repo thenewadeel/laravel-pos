@@ -35,7 +35,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        // 'email_verified_at' => 'datetime',
     ];
 
     public function cart()
@@ -48,9 +48,9 @@ class User extends Authenticatable
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getAvatar()
+    public function getphoto()
     {
-        return 'https://www.gravatar.com/avatar/' . md5($this->email);
+        return 'https://www.grphoto.com/photo/' . md5($this->email);
     }
     public function shops()
     {

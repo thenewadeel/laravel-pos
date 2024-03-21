@@ -13,10 +13,10 @@ class Customer extends Model
         'email',
         'phone',
         'address',
-        'avatar',
+        'photo',
     ];
-    public function getAvatarUrl()
+    public function getphotoUrl()
     {
-        return Storage::url($this->avatar);
+        return Storage::url($this->photo);
     }
 }

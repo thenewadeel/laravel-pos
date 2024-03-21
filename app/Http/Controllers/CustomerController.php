@@ -51,10 +51,10 @@ class CustomerController extends Controller
      */
     public function store(CustomerStoreRequest $request)
     {
-        $avatar_path = '';
+        $photo_path = '';
 
-        if ($request->hasFile('avatar')) {
-            $avatar_path = $request->file('avatar')->store('customers', 'public');
+        if ($request->hasFile('photo')) {
+            $photo_path = $request->file('photo')->store('customers', 'public');
         }
 
         $customer = Customer::create([
@@ -63,7 +63,7 @@ class CustomerController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'address' => $request->address,
-            'avatar' => $avatar_path,
+            'photo' => $photo_path,
             'membership_number' => $request->membership_number,
             // 'user_id' => $request->user()->id,
         ]);
@@ -111,15 +111,15 @@ class CustomerController extends Controller
         $customer->address = $request->address;
         $customer->membership_number = $request->membership_number;
 
-        if ($request->hasFile('avatar')) {
-            // Delete old avatar
-            if ($customer->avatar) {
-                Storage::delete($customer->avatar);
+        if ($request->hasFile('photo')) {
+            // Delete old photo
+            if ($customer->photo) {
+                Storage::delete($customer->photo);
             }
-            // Store avatar
-            $avatar_path = $request->file('avatar')->store('customers', 'public');
+            // Store photo
+            $photo_path = $request->file('photo')->store('customers', 'public');
             // Save to Database
-            $customer->avatar = $avatar_path;
+            $customer->photo = $photo_path;
         }
 
         if (!$customer->save()) {
@@ -130,8 +130,8 @@ class CustomerController extends Controller
 
     public function destroy(Customer $customer)
     {
-        if ($customer->avatar) {
-            Storage::delete($customer->avatar);
+        if ($customer->photo) {
+            Storage::delete($customer->photo);
         }
 
         $customer->delete();

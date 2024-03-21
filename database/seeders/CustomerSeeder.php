@@ -1634,7 +1634,7 @@ class CustomerSeeder extends Seeder
 
             Customer::updateOrCreate([
                 'name' => $entry["Title"],
-                'avatar' => '',
+                'photo' => '',
                 'membership_number' => $entry["Id"],
                 'email' => $faker->email,
                 'phone' => $faker->phoneNumber,

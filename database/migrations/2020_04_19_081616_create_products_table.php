@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->text('category')->nullable();
+            // $table->text('category')->nullable();
             $table->string('image')->nullable();
-            $table->string('barcode')->unique()->nullable();
+            // $table->string('barcode')->unique()->nullable();
             $table->decimal('price', 14, 2);
-            $table->integer('quantity')->default('1');
+            $table->integer('quantity')->default('1000');
             $table->boolean('aval_status')->default(true);
 
             $table->timestamps();

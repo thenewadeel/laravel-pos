@@ -17,7 +17,7 @@
                 <thead>
                     <tr>
                         <th>{{ __('ID') }}</th>
-                        <th>{{ __('Avatar') }}</th>
+                        <th>{{ __('photo') }}</th>
                         <th>{{ __('Name') }}</th>
                         <th>{{ 'Member#' }}</th>
                         <th>{{ __('Email') }}</th>
@@ -32,7 +32,7 @@
                         <tr>
                             <td>{{ $customer->id }}</td>
                             <td>
-                                <img width="50" src="{{ $customer->getAvatarUrl() }}" alt="">
+                                <img width="50" src="{{ $customer->getphotoUrl() }}" alt="">
                             </td>
                             <td>{{ $customer->name }}</td>
                             <td>{{ $customer->membership_number }}</td>

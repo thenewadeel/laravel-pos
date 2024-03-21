@@ -37,7 +37,7 @@ return [
     'Email'             => 'Email',
     'Phone'             => 'Phone',
     'Address'           => 'Address',
-    'Avatar'            => 'Avatar',
+    'photo'            => 'photo',
     'Choose_file'       => 'Choose file',
     'Update_Customer'   => 'Update Customer',
     'Customer_List'     => 'Customer List',

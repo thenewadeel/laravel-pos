@@ -29,7 +29,7 @@ class CustomerStoreRequest extends FormRequest
             'email' => 'nullable|email',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
-            'avatar' => 'nullable|image',
+            'photo' => 'nullable|image',
         ];
     }
 }

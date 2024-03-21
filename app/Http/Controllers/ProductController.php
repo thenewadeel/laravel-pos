@@ -33,7 +33,7 @@ class ProductController extends Controller
         if ($request->itemCount) {
             $itemsPerPage = $request->itemCount;
         }
-        $products = $products->latest()->paginate($itemsPerPage);
+        $products = $products->with('categories')->latest()->paginate($itemsPerPage);
         if (request()->wantsJson()) {
             return ProductResource::collection($products);
         }

@@ -3,7 +3,21 @@
 @section('title', __('product.Product_List'))
 @section('content-header', __('product.Product_List'))
 @section('content-actions')
-    <a href="{{ route('products.create') }}" class="btn btn-primary">{{ __('product.Create_Product') }}</a>
+    <div>
+        <form method="GET" class="form-inline ml-3" action="{{ route('products.index') }}">
+            @csrf
+            <div class="input-group input-group-sm">
+                <input type="search" name="search" class="form-control form-control-navbar"
+                    placeholder="{{ __('product.Search_Product') }}" value="{{ request('search') }}">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-navbar">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <a href="{{ route('products.create') }}" class="btn btn-primary">{{ __('product.Create_Product') }}</a>
+    </div>
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">
@@ -33,11 +47,11 @@
                 <tbody>
                     @foreach ($products as $product)
                         <tr>
-                            <td>{{ $product->id }}</td>
+                            <td title="{{ $product }}">{{ $product->id }}</td>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->price }}</td>
                             {{-- <td>{{ $product->description }}</td> --}}
-                            <td>{{ $product->category }}</td>
+                            <td>{{ $product->categoryNames()->pluck('name')->implode(', ') }}</td>
                             <td><img class="product-img" src="{{ Storage::url($product->image) }}" alt=""
                                     style="width: 64px !important; height: 64px !important;"></td>
                             <td>{{ $product->barcode }}</td>

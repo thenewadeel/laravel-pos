@@ -7,9 +7,16 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CategoryProducts;
+use App\Traits\ListOf;
 
 class CategoryController extends Controller
 {
+    use ListOf;
+
+    protected function getModel(): string
+    {
+        return Category::class;
+    }
     /**
      * Display a listing of the resource.
      */

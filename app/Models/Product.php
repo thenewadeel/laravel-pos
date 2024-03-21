@@ -26,4 +26,8 @@ class Product extends Model
     {
         return $this->hasMany(CategoryProducts::class);
     }
+    public function categoryNames()
+    {
+        return $this->hasManyThrough(Category::class, CategoryProducts::class, 'product_id', 'id', 'id', 'category_id');
+    }
 }

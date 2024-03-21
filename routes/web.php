@@ -11,7 +11,9 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\InventoryItemController;
 use App\Models\Category;
+use App\Models\InventoryItem;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +30,8 @@ Route::middleware('auth')->group(function () {
         'shops'       => ShopController::class,
         'reports'     => ReportsController::class,
         'categories'  => CategoryController::class,
-        'expenses'    => ExpenseController::class
+        'expenses'    => ExpenseController::class,
+        'inventoryItems' => InventoryItemController::class
     ]);
 
     Route::get('/listOfProducts', [ProductController::class, 'listOf']);
@@ -37,6 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/listOfUsers', [UsersController::class, 'listOf']);
     Route::get('/listOfShops', [ShopController::class, 'listOf']);
     Route::get('/listOfReports', [ReportsController::class, 'listOf']);
+    Route::get('/listOfCategories', [CategoryController::class, 'listOf']);
+    Route::get('/listOfinventoryItems', [InventoryItemController::class, 'listOf']);
 
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 

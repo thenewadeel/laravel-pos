@@ -56,7 +56,7 @@
                     swalWithBootstrapButtons.fire({
                         title: {{ __('common.sure') }},
                         text: {{ __('common.really_delete') }},
-                        icon: {{ __('common.Create') }} 'warning',
+                        icon: {{ __('common.Create') }},
                         showCancelButton: true,
                         confirmButtonText: {{ __('common.yes_delete') }},
                         cancelButtonText: {{ __('common.No') }},

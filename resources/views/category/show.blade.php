@@ -20,9 +20,10 @@
     <div class="card">
         <h3>Products</h3>
         <div>
+            {{-- {{ $category }} --}}
             @foreach ($category->products()->with(['product'])->get() as $product)
                 <div class="d-flex align-items-center justify-content-between">
-                    <a href="{{ route('products.show', $product->product->id) }}">{{ $product->product->name }}</a>
+                    {{ $product->product->name }}
                     <form method="post"
                         action="{{ route('categories.products.delete', ['category_id' => $category->id, 'product_id' => $product->product->id]) }}">
                         @csrf
@@ -54,6 +55,7 @@
 
             </div>
             <div class="card-body">
+
                 <div class="form-group mb-3">
                     <label for="product-filter" class="form-label">Filter Products</label>
                     <input id="product-filter" class="form-control" type="text"
@@ -61,14 +63,11 @@
                     var filter = this.value.toLowerCase();
                     var list = document.getElementById('product-list');
                     var items = list.getElementsByTagName('li');
+                    // console.log(items);
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i];
                         var name = item.innerText.toLowerCase();
-                        if (name.indexOf(filter) > -1) {
-                            item.style.display = 'list-item';
-                        } else {
-                            item.style.display = 'none';
-                        }
+                        item.style.display = name.indexOf(filter) > -1 ? 'list-item' : 'none';
                     }
                     ">
                 </div>

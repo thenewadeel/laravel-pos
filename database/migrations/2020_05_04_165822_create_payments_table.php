@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->decimal('amount', 14, 4);
-            $table->decimal('tip', 14, 4);
+            $table->decimal('tip', 14, 4)->default(0.00);
 
             $table->foreignId('order_id');
             $table->foreignId('user_id');

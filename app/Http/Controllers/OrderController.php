@@ -94,4 +94,22 @@ class OrderController extends Controller
         ]);
         return 'success';
     }
+    public function print($id)
+    {
+        $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
+            ->findOrFail($id);
+        $html = 'Order ID: ' . $order->id . "\n";
+        $html .= 'Customer: ' . $order->customer->name . "\n";
+        $html .= 'Date: ' . $order->created_at . "\n";
+        $html .= 'Items: ' . "\n";
+        foreach ($order->items as $item) {
+            if ($item->pivot) {
+                $html .= '- ' . $item->product->name . ' x ' . $item->pivot->quantity . "\n";
+            }
+        }
+        // $html .= 'Total: ' . $order->total() . "\n";
+        // -$html .= 'Received: ' . $order->receivedAmount() . "\n";
+        return response($html, 200)
+            ->header('Content-Type', 'text/plain');
+    }
 }

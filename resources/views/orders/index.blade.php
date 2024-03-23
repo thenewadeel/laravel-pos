@@ -144,6 +144,8 @@
                                 {{ number_format($order->balance(), 2) }}
                             </td>
                             <td>{{ $order->created_at }}</td>
+                            <td><a href="{{ route('orders.print', $order) }}" class="btn btn-primary btn-sm"><i
+                                        class="fas fa-print"></i></a></td>
                         </tr>
                     @endforeach
                 </tbody>

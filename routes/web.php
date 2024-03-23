@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/listOfCategories', [CategoryController::class, 'listOf']);
     Route::get('/listOfinventoryItems', [InventoryItemController::class, 'listOf']);
 
+    Route::get('/orders/print/{order}', [OrderController::class, 'print'])->name('orders.print');
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 
     Route::namespace('Stockboy')->prefix('inventory')->group(function () {

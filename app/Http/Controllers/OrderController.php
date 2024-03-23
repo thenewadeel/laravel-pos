@@ -6,6 +6,8 @@ use App\Http\Requests\OrderStoreRequest;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Traits\ListOf;
+use Barryvdh\DomPDF\Facade\Pdf;
+// use PDF;
 
 class OrderController extends Controller
 {
@@ -111,5 +113,13 @@ class OrderController extends Controller
         // -$html .= 'Received: ' . $order->receivedAmount() . "\n";
         return response($html, 200)
             ->header('Content-Type', 'text/plain');
+    }
+
+    public function printPdf($id)
+    {
+        $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
+            ->findOrFail($id);
+        $pdf = Pdf::loadView('pdf.order', compact('order'));
+        return $pdf->download('order_' . $order->id . '.pdf');
     }
 }

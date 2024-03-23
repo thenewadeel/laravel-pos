@@ -17,33 +17,45 @@ class OrderController extends Controller
     }
     public function index(Request $request)
     {
+
+
+        // logger('asdasdasd');
         if (auth()->user()->type == 'admin') {
             $orders = Order::query();
         } else {
             $orders = Order::where('user_id', auth()->user()->id);
         }
-        $today = now()->startOfDay();
-        if ($request->start_date && $request->end_date) {
-            $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
-        } else {
-            $orders = $orders->whereDate('created_at', $today);
+        if ($request->has('state')) {
+            $filters = array_intersect(['preparing', 'served', 'closed', 'wastage'], $request->state);
+            $orders = $orders->whereIn('state', $filters);
         }
 
+        if ($request->has('type')) {
+            $filters = array_intersect(['dine-in', 'take-away', 'delivery'], $request->type);
+            $orders = $orders->whereIn('type', $filters);
+        }
+        // $today = now()->startOfDay();
+        // if ($request->start_date && $request->end_date) {
+        //     $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
+        // } else {
+        //     $orders = $orders->whereDate('created_at', $today);
+        // }
+
         $unpaid = $request->has('unpaid') && $request->unpaid == '1';
-        $chit = $request->has('chit') && $request->chit == '1';
-        $discounted = $request->has('discounted') && $request->discounted == '1';
+        // $chit = $request->has('chit') && $request->chit == '1';
+        // $discounted = $request->has('discounted') && $request->discounted == '1';
 
         if ($unpaid) {
             $orders = $orders->whereDoesntHave('payments');
         }
-        if ($chit) {
-            // $orders = $orders->where(function ($query) {
-            //     $query->where('balance', '>', 0);
-            // });
-        }
-        if ($discounted) {
-            // $orders = $orders->whereHas('discounts', 'hasAny');
-        }
+        // if ($chit) {
+        //     // $orders = $orders->where(function ($query) {
+        //     //     $query->where('balance', '>', 0);
+        //     // });
+        // }
+        // if ($discounted) {
+        //     // $orders = $orders->whereHas('discounts', 'hasAny');
+        // }
 
         $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->paginate(25);
 

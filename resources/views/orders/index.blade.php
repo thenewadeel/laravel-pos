@@ -5,9 +5,9 @@
 @section('content-actions')
 
     <a href="{{ route('orders.index', ['unpaid' => true]) }}" class="btn btn-info">{{ __('order.Unpaid_Orders') }}</a>
-    <a href="{{ route('orders.index', ['chit' => true]) }}" class="btn btn-warning">{{ __('order.Chit_Orders') }}</a>
+    {{-- <a href="{{ route('orders.index', ['chit' => true]) }}" class="btn btn-warning">{{ __('order.Chit_Orders') }}</a>
     <a href="{{ route('orders.index', ['discounted' => true]) }}"
-        class="btn btn-secondary">{{ __('order.Discounted_Orders') }}</a>
+        class="btn btn-secondary">{{ __('order.Discounted_Orders') }}</a> --}}
     <a href="{{ route('cart.index') }}" class="btn btn-primary">{{ __('cart.title') }}</a>
 @endsection
 
@@ -37,6 +37,7 @@
                     </form>
                 </div>
             </div>
+            {{ $orders[0] }}
             <table class="table">
                 <thead>
                     <tr>
@@ -44,6 +45,56 @@
                         <th>{{ 'Shop' }}</th>
                         <th>{{ __('order.Customer_Name') }}</th>
                         <th>{{ __('order.User_Name') }}</th>
+                        <th>{{ __('order.Type') }}<span class="fas fa-caret-down" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false"></span>
+                            <div class="dropdown-menu">
+                                <form method="GET" class="px-3 py-0" action="{{ route('orders.index') }}">
+                                    @csrf
+                                    <div class="form-check">
+                                        @foreach (['dine-in', 'take-away', 'delivery'] as $type)
+                                            <label class="form-check-label">
+                                                @php
+                                                    $checked = false;
+                                                    if (request()->has('type')) {
+                                                        $checked = in_array($type, request()->input('type', []));
+                                                    }
+                                                @endphp
+                                                <input class="form-check-input" type="checkbox" name="type[]"
+                                                    value="{{ $type }}" {{ $checked ? 'checked' : '' }}>
+                                                {{ __("order.$type") }}
+                                            </label><br>
+                                        @endforeach
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <button type="submit" class="dropdown-item btn btn-link">Filter</button>
+                                </form>
+                            </div>
+                        </th>
+                        <th>{{ __('order.State') }}<span class="fas fa-caret-down" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false"></span>
+                            <div class="dropdown-menu">
+                                <form method="GET" class="px-3 py-0" action="{{ route('orders.index') }}">
+                                    @csrf
+                                    <div class="form-check">
+                                        @foreach (['preparing', 'served', 'closed', 'wastage'] as $state)
+                                            <label class="form-check-label">
+                                                @php
+                                                    $checked = false;
+                                                    if (request()->has('state')) {
+                                                        $checked = in_array($state, request()->input('state', []));
+                                                    }
+                                                @endphp
+                                                <input class="form-check-input" type="checkbox" name="state[]"
+                                                    value="{{ $state }}" {{ $checked ? 'checked' : '' }}>
+                                                {{ __("order.$state") }}
+                                            </label><br>
+                                        @endforeach
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <button type="submit" class="dropdown-item btn btn-link">Filter</button>
+                                </form>
+                            </div>
+                        </th>
                         <th>{{ __('order.Total') }}</th>
                         <th>{{ __('order.Discounts') }}</th>
                         <th>{{ __('order.DiscountAmount') }}</th>
@@ -51,6 +102,7 @@
                         <th>{{ __('order.Status') }}</th>
                         <th>{{ __('order.To_Pay') }}</th>
                         <th>{{ __('order.Created_At') }}</th>
+                        <th>{{ __('order.Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,6 +112,8 @@
                             <td>{{ $order->shop->name ?? 'Unknown' }}</td>
                             <td>{{ $order->getCustomerName() }}</td>
                             <td>{{ $order->getUserName() }}</td>
+                            <td>{{ $order->type ?? 'Unknown' }}</td>
+                            <td>{{ $order->state ?? 'Unknown' }}</td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedTotal() }}</td>
                             <td>
                                 @if ($order->discounts()->count() == 0)

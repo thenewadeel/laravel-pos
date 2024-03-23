@@ -21,13 +21,12 @@ class OrderController extends Controller
             $orders = Order::query();
         } else {
             $orders = Order::where('user_id', auth()->user()->id);
-
-            $today = now()->startOfDay();
-            if ($request->start_date && $request->end_date) {
-                $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
-            } else {
-                $orders = $orders->whereDate('created_at', $today);
-            }
+        }
+        $today = now()->startOfDay();
+        if ($request->start_date && $request->end_date) {
+            $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
+        } else {
+            $orders = $orders->whereDate('created_at', $today);
         }
 
         $unpaid = $request->has('unpaid') && $request->unpaid == '1';

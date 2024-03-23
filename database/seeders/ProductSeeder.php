@@ -276,9 +276,9 @@ class ProductSeeder extends Seeder
                 // 'description' => $productSpecimen->make,
                 // 'category' => $productSpecimen->category,
                 // 'image' => "images/{$imageName}",
-                'barcode' => $faker->ean13(),
+                // 'barcode' => $faker->ean13(),
                 'price' => $productSpecimen['price'],
-                'quantity' => '99',
+                'quantity' => '999',
                 'aval_status' => true,
             ]);
         }

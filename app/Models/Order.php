@@ -12,6 +12,9 @@ class Order extends Model
         'shop_id',
         'user_id',
         'state',
+        'type',
+        'table_number',
+        'waiter_name',
     ];
 
     public function items()

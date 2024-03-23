@@ -18,9 +18,9 @@
     <div class="container ">
         <h3>Displaying {{ $modelName ? $modelName : 'Model' }} : {{ $modelObject->name }}</h3>
         <div class="row flex flex-row  max-w-md">
-            <div class="px-4">
+            {{-- <div class="px-4">
                 <label for="created_at">Date</label>
-            </div>
+            </div> --}}
             <div class="flex items-center">
 
                 @yield('content-details')

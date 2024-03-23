@@ -17,12 +17,12 @@
 @endsection
 
 @section('content-details')
-    <div class="card">
+    <div class="card p-2">
         <h3>Products</h3>
         <div>
             {{-- {{ $category }} --}}
             @foreach ($category->products()->with(['product'])->get() as $product)
-                <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center justify-content-between ">
                     {{ $product->product->name }}
                     <form method="post"
                         action="{{ route('categories.products.delete', ['category_id' => $category->id, 'product_id' => $product->product->id]) }}">
@@ -67,7 +67,14 @@
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i];
                         var name = item.innerText.toLowerCase();
-                        item.style.display = name.indexOf(filter) > -1 ? 'list-item' : 'none';
+                        var classes='list-group-item d-flex justify-content-between align-items-center';
+                        if(!(name.indexOf(filter) > -1)){
+                            item.style.display = 'none';
+item.className='';
+                        }else{
+                            item.style.display = 'list-item';
+                            item.className=classes;
+                        }
                     }
                     ">
                 </div>

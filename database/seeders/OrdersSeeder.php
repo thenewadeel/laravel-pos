@@ -29,17 +29,22 @@ class OrdersSeeder extends Seeder
                 'user_id' => $user->id,
                 'shop_id' => $shop->id,
                 'customer_id' => $customer->id,
+                'table_number' => $faker->randomElement(['1', '2', '3', '4', '5']),
+                'waiter_name' => $faker->name,
+                'state' => $faker->randomElement(['preparing', 'served', 'closed', 'wastage']),
+                'type' => $faker->randomElement(['dine-in', 'take-away', 'delivery']),
                 'created_at' => $faker->dateTimeBetween('-7 day', '-1 day'),
             ]);
 
             // Create 3-5 random products for each order
             $products = Product::all()->random(random_int(1, 5));
             foreach ($products as $product) {
+                $qty = random_int(1, 5);
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
-                    'price' => $product->price,
-                    'quantity' => random_int(1, 5),
+                    'price' => $product->price * $qty,
+                    'quantity' => $qty,
                 ]);
             }
         }

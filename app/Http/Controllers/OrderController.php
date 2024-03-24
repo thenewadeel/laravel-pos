@@ -73,10 +73,14 @@ class OrderController extends Controller
 
     public function store(OrderStoreRequest $request)
     {
+        logger($request);
         $order = Order::create([
             'customer_id' => $request->customer_id,
             'user_id' => $request->user()->id,
             'shop_id' => $request->shop_id,
+            'table_number' => $request->table_number,
+            'waiter_name' => $request->waiter_name,
+            'type' => $request->order_type
         ]);
 
         $cart = $request->user()->cart()->get();
@@ -90,10 +94,12 @@ class OrderController extends Controller
             $item->save();
         }
         $request->user()->cart()->detach();
-        $order->payments()->create([
-            'amount' => $request->amount,
-            'user_id' => $request->user()->id,
-        ]);
+        if ($request->amount) {
+            $order->payments()->create([
+                'amount' => $request->amount,
+                'user_id' => $request->user()->id,
+            ]);
+        }
         return 'success';
     }
     public function print($id)
@@ -120,6 +126,7 @@ class OrderController extends Controller
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
         $pdf = Pdf::loadView('pdf.order', compact('order'));
+        $pdf->setPaper([0, 0, 226.7, 700.7], 'portrait'); // A4, 70% scale
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 }

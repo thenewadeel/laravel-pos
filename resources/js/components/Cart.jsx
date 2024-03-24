@@ -17,6 +17,9 @@ class Cart extends Component {
             translations: {},
             shops: [],
             shop_id: "",
+            waiter_name: "",
+            table_number: "",
+            order_type: "dine-in",
         };
 
         this.loadCart = this.loadCart.bind(this);
@@ -31,7 +34,11 @@ class Cart extends Component {
         this.handleSeach = this.handleSeach.bind(this);
         this.setCustomerId = this.setCustomerId.bind(this);
         this.setShopId = this.setShopId.bind(this);
+        this.setWaiterName = this.setWaiterName.bind(this);
+        this.setTableNumber = this.setTableNumber.bind(this);
+        this.setOrderType = this.setOrderType.bind(this);
         this.handleClickSubmit = this.handleClickSubmit.bind(this);
+        this.handleClickSave = this.handleClickSave.bind(this);
         this.loadTranslations = this.loadTranslations.bind(this);
     }
 
@@ -205,6 +212,51 @@ class Cart extends Component {
     setShopId(event) {
         this.setState({ shop_id: event.target.value });
     }
+    setWaiterName(event) {
+        this.setState({ waiter_name: event.target.value });
+    }
+    setTableNumber(event) {
+        this.setState({ table_number: event.target.value });
+    }
+    setOrderType(event) {
+        this.setState({ order_type: event.target.value });
+    }
+    handleClickSave() {
+        Swal.fire({
+            title: "Saved Order",
+            // input: "text",
+            // inputValue: this.getTotal(this.state.cart),
+            // cancelButtonText: this.state.translations["cancel_pay"],
+            // showCancelButton: true,
+            confirmButtonText: "OK",
+            showLoaderOnConfirm: true,
+            preConfirm: (amount) => {
+                let postObj = {
+                    customer_id: this.state.customer_id,
+                    shop_id: this.state.shop_id,
+                    // amount,
+                    table_number: this.state.table_number,
+                    waiter_name: this.state.waiter_name,
+                    order_type: this.state.order_type,
+                };
+                // console.log({postObj});
+                return axios
+                    .post("/orders", postObj)
+                    .then((res) => {
+                        this.loadCart();
+                        return res.data;
+                    })
+                    .catch((err) => {
+                        Swal.showValidationMessage(err.response.data.message);
+                    });
+            },
+            allowOutsideClick: () => !Swal.isLoading(),
+        }).then((result) => {
+            if (result.value) {
+                //
+            }
+        });
+    }
     handleClickSubmit() {
         Swal.fire({
             title: this.state.translations["received_amount"],
@@ -219,6 +271,9 @@ class Cart extends Component {
                     customer_id: this.state.customer_id,
                     shop_id: this.state.shop_id,
                     amount,
+                    table_number: this.state.table_number,
+                    waiter_name: this.state.waiter_name,
+                    order_type: this.state.order_type,
                 };
                 // console.log({postObj});
                 return axios
@@ -244,82 +299,109 @@ class Cart extends Component {
         return (
             <div className="row">
                 <div className="col-md-6 col-lg-4">
-                    <div className="row mb-2">
-                        <div className="col">
+                    <div className="col ">
+                        {/* <div className="col"> */}
+                        <select
+                            className="form-control"
+                            onChange={this.setShopId}
+                        >
+                            {/* {console.log(shops)} */}
+                            {/* <option value="">Shops</option> */}
+                            {shops.map((shp) => (
+                                <option
+                                    key={shp.id}
+                                    value={shp.id}
+                                >{`${shp.name}`}</option>
+                            ))}
+                        </select>
+
+                        <div className="">
+                            {/* <label htmlFor="waiter_name">{"waiter_name"}</label> */}
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="waiter_name"
+                                value={this.state.waiter_name}
+                                onChange={this.setWaiterName}
+                                placeholder="Waiter Name"
+                            />
+                        </div>
+
+                        <div className="">
+                            {/* <label htmlFor="table_number"> */}
+                            {/* {translations["table_number"]} */}
+                            {/* </label> */}
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="table_number"
+                                value={this.state.table_number}
+                                onChange={this.setTableNumber}
+                                placeholder="Table Number"
+                            />
+                        </div>
+
+                        <div className="input-group">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder={translations["general_customer"]}
+                                value={this.state.customer_id}
+                                onChange={(e) =>
+                                    this.setState({
+                                        customer_id: e.target.value,
+                                    })
+                                }
+                            />
+                            <div className="input-group-append">
+                                <button
+                                    className="btn btn-outline-secondary"
+                                    type="button"
+                                    onClick={this.handleSeach}
+                                >
+                                    <i className="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <select
+                            className="form-control mt-1"
+                            value={this.state.customer_id || ""}
+                            onChange={this.setCustomerId}
+                        >
+                            {customers
+                                .filter((cus) =>
+                                    cus.name
+                                        .toLowerCase()
+                                        .includes(
+                                            this.state.search.toLowerCase()
+                                        )
+                                )
+                                .map((cus) => (
+                                    <option
+                                        key={cus.id}
+                                        value={cus.id}
+                                    >{`${cus.id} - ${cus.name}`}</option>
+                                ))}
+                        </select>
+                        <div>
                             <select
                                 className="form-control"
-                                onChange={this.setShopId}
+                                onChange={this.setOrderType}
+                                placeholder="Order Type"
                             >
-                                {/* {console.log(shops)} */}
-                                {/* <option value="">Shops</option> */}
-                                {shops.map((shp) => (
-                                    <option
-                                        key={shp.id}
-                                        value={shp.id}
-                                    >{`${shp.name} ${shp.description}`}</option>
-                                ))}
-                            </select>
-                            {/* <form onSubmit={this.handleScanBarcode}>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder={translations["scan_id"]}
-                                    value={id}
-                                    onChange={this.handleOnChangeBarcode}
-                                />
-                            </form> */}
-                        </div>
-                        <div className="col">
-                            <div className="input-group">
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder={
-                                        translations["general_customer"]
-                                    }
-                                    value={this.state.customer_id}
-                                    onChange={(e) =>
-                                        this.setState({
-                                            customer_id: e.target.value,
-                                        })
-                                    }
-                                />
-                                <div className="input-group-append">
-                                    <button
-                                        className="btn btn-outline-secondary"
-                                        type="button"
-                                        onClick={this.handleSeach}
-                                    >
-                                        <i className="fa fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <select
-                                className="form-control mt-1"
-                                value={this.state.customer_id || ""}
-                                onChange={this.setCustomerId}
-                            >
-                                {customers
-                                    .filter((cus) =>
-                                        cus.name
-                                            .toLowerCase()
-                                            .includes(
-                                                this.state.search.toLowerCase()
-                                            )
-                                    )
-                                    .map((cus) => (
-                                        <option
-                                            key={cus.id}
-                                            value={cus.id}
-                                        >{`${cus.id} - ${cus.name}`}</option>
-                                    ))}
+                                {/* <option value="">{"order_type"}</option> */}
+                                <option value="dine-in">{"dine-in"}</option>
+                                <option value="take-away">{"take-away"}</option>
+                                <option value="delivery">{"delivery"}</option>
                             </select>
                         </div>
+                        {/* </div> */}
                     </div>
-                    <div className="user-cart">
+                    <div className="user-cart mx-3">
                         <div
                             className="card"
-                            style={{ minHeight: "600px", overflowY: "scroll" }}
+                            style={{ minHeight: "400px", overflowY: "scroll" }}
                         >
                             <table className="table table-striped">
                                 <thead>
@@ -370,15 +452,14 @@ class Cart extends Component {
                             </table>
                         </div>
                     </div>
-
-                    <div className="row">
+                    <div className="row  text-lg">
                         <div className="col">{translations["total"]}:</div>
                         <div className="col text-right">
                             {window.APP.currency_symbol} {this.getTotal(cart)}
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col">
+                    <div className="col ">
+                        <div className="col m-2">
                             <button
                                 type="button"
                                 className="btn btn-danger btn-block"
@@ -388,14 +469,24 @@ class Cart extends Component {
                                 {translations["cancel"]}
                             </button>
                         </div>
-                        <div className="col">
+                        <div className="col m-2">
                             <button
                                 type="button"
-                                className="btn btn-primary btn-block"
+                                className="btn btn-info btn-block"
+                                disabled={!cart.length}
+                                onClick={this.handleClickSave}
+                            >
+                                {"Save"}
+                            </button>
+                        </div>
+                        <div className="col m-2">
+                            <button
+                                type="button"
+                                className="btn btn-success btn-block"
                                 disabled={!cart.length}
                                 onClick={this.handleClickSubmit}
                             >
-                                {translations["checkout"]}
+                                {"Pay"}
                             </button>
                         </div>
                     </div>
@@ -417,7 +508,7 @@ class Cart extends Component {
                             height: "calc(80vh)",
                             display: "flex",
                             flexWrap: "wrap",
-                            justifyContent: "space-around",
+                            justifyContent: "space-between",
                         }}
                     >
                         {products.map((p) => (
@@ -445,7 +536,7 @@ class Cart extends Component {
                                 /> */}
                                 <div
                                     style={{
-                                        padding: "10px",
+                                        padding: "4px",
                                         textAlign: "center",
                                     }}
                                 >

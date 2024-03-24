@@ -13,8 +13,8 @@ class DiscountSeeder extends Seeder
      */
     public function run(): void
     {
-        $percentages = [40];
-        $names = ['MCM Cte',];
+        $percentages = [40, 50, 20];
+        $names = ['MCM Cte', 'Staff', 'Special'];
         $count = count($percentages);
         for ($i = 0; $i < $count; $i++) {
             $randomIndex = rand(0, $count - 1);

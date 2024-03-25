@@ -41,79 +41,43 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>{{ __('order.ID') }}</th>
-                        <th>{{ 'Shop' }}</th>
+                        {{-- <th>{{ __('order.ID') }}</th> --}}
+                        <th>{{ __('order.POS_Number') }}</th>
+                        <th>{{ __('order.Date') }}</th>
                         <th>{{ __('order.Customer_Name') }}</th>
-                        <th>{{ __('order.User_Name') }}</th>
-                        <th>{{ __('order.Type') }}<span class="fas fa-caret-down" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"></span>
-                            <div class="dropdown-menu">
-                                <form method="GET" class="px-3 py-0" action="{{ route('orders.index') }}">
-                                    @csrf
-                                    <div class="form-check">
-                                        @foreach (['dine-in', 'take-away', 'delivery'] as $type)
-                                            <label class="form-check-label">
-                                                @php
-                                                    $checked = false;
-                                                    if (request()->has('type')) {
-                                                        $checked = in_array($type, request()->input('type', []));
-                                                    }
-                                                @endphp
-                                                <input class="form-check-input" type="checkbox" name="type[]"
-                                                    value="{{ $type }}" {{ $checked ? 'checked' : '' }}>
-                                                {{ __("order.$type") }}
-                                            </label><br>
-                                        @endforeach
-                                    </div>
-                                    <div class="dropdown-divider"></div>
-                                    <button type="submit" class="dropdown-item btn btn-link">Filter</button>
-                                </form>
-                            </div>
-                        </th>
-                        <th>{{ __('order.State') }}<span class="fas fa-caret-down" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"></span>
-                            <div class="dropdown-menu">
-                                <form method="GET" class="px-3 py-0" action="{{ route('orders.index') }}">
-                                    @csrf
-                                    <div class="form-check">
-                                        @foreach (['preparing', 'served', 'closed', 'wastage'] as $state)
-                                            <label class="form-check-label">
-                                                @php
-                                                    $checked = false;
-                                                    if (request()->has('state')) {
-                                                        $checked = in_array($state, request()->input('state', []));
-                                                    }
-                                                @endphp
-                                                <input class="form-check-input" type="checkbox" name="state[]"
-                                                    value="{{ $state }}" {{ $checked ? 'checked' : '' }}>
-                                                {{ __("order.$state") }}
-                                            </label><br>
-                                        @endforeach
-                                    </div>
-                                    <div class="dropdown-divider"></div>
-                                    <button type="submit" class="dropdown-item btn btn-link">Filter</button>
-                                </form>
-                            </div>
-                        </th>
+                        <th>{{ __('order.Status') }}</th>
                         <th>{{ __('order.Total') }}</th>
                         <th>{{ __('order.Discounts') }}</th>
                         <th>{{ __('order.DiscountAmount') }}</th>
+                        <th>{{ __('order.NetAmount') }}</th>
                         <th>{{ __('order.Received_Amount') }}</th>
-                        <th>{{ __('order.Status') }}</th>
                         <th>{{ __('order.To_Pay') }}</th>
-                        <th>{{ __('order.Created_At') }}</th>
+
+
+                        {{-- <th>{{ 'Shop' }}</th> --}}
+                        <th>{{ __('order.Taken_By') }}</th>
+                        <th>{{ __('order.Closed_By') }}</th>
                         <th>{{ __('order.Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($orders as $order)
                         <tr>
-                            <td>{{ $order->id }}</td>
-                            <td>{{ $order->shop->name ?? 'Unknown' }}</td>
+                            {{-- <td>{{ $order->id }}</td> --}}
+                            <td>{{ $order->POS_number }}</td>
+                            <td>{{ $order->created_at->format('d-M-y') }}</td>
                             <td>{{ $order->getCustomerName() }}</td>
-                            <td>{{ $order->getUserName() }}</td>
-                            <td>{{ $order->type ?? 'Unknown' }}</td>
-                            <td>{{ $order->state ?? 'Unknown' }}</td>
+                            <td>
+                                @if ($order->receivedAmount() == 0)
+                                    <span class="badge badge-danger">{{ __('order.Not_Paid') }}</span>
+                                @elseif($order->receivedAmount() < $order->total())
+                                    <span class="badge badge-warning">{{ __('order.Partial') }}</span>
+                                @elseif($order->receivedAmount() == $order->total())
+                                    <span class="badge badge-success">{{ __('order.Paid') }}</span>
+                                @elseif($order->receivedAmount() > $order->total())
+                                    <span class="badge badge-info">{{ __('order.Change') }}</span>
+                                @endif
+                            </td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedTotal() }}</td>
                             <td>
                                 @if ($order->discounts()->count() == 0)
@@ -128,24 +92,30 @@
 
                                 {{ config('settings.currency_symbol') }} {{ number_format($order->discountAmount(), 2) }}
                             </td>
-                            <td>{{ config('settings.currency_symbol') }} {{ $order->formattedReceivedAmount() }}</td>
-                            <td>
-                                @if ($order->receivedAmount() == 0)
-                                    <span class="badge badge-danger">{{ __('order.Not_Paid') }}</span>
-                                @elseif($order->receivedAmount() < $order->total())
-                                    <span class="badge badge-warning">{{ __('order.Partial') }}</span>
-                                @elseif($order->receivedAmount() == $order->total())
-                                    <span class="badge badge-success">{{ __('order.Paid') }}</span>
-                                @elseif($order->receivedAmount() > $order->total())
-                                    <span class="badge badge-info">{{ __('order.Change') }}</span>
-                                @endif
+                            <td style="text-align:right;">
+
+                                {{ config('settings.currency_symbol') }} {{ number_format($order->balance(), 2) }}
                             </td>
+                            <td>{{ config('settings.currency_symbol') }} {{ $order->formattedReceivedAmount() }}</td>
+
                             <td>{{ config('settings.currency_symbol') }}
                                 {{ number_format($order->balance(), 2) }}
                             </td>
-                            <td>{{ $order->created_at }}</td>
-                            <td><a href="{{ route('orders.print', $order) }}" class="btn btn-primary btn-sm"><i
-                                        class="fas fa-print"></i></a></td>
+
+                            <td>{{ $order->getUserName() }}</td>
+                            <td>{{ $order->payments->first()->user->name ?? 'Unknown' }}</td>
+
+                            <td>
+                                <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{{ route('orders.show', $order) }}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('orders.print', $order) }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-print"></i>
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

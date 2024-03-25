@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            // POS_number and table_number will be filled by model boot method
+            $table->string('POS_number')->nullable();
             $table->string('table_number')->nullable();
             $table->string('waiter_name')->nullable();
 

@@ -7,6 +7,10 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Traits\ListOf;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\User;
+use App\Models\Shop;
+use App\Models\Customer;
+use App\Models\Payment;
 // use PDF;
 
 class OrderController extends Controller
@@ -71,6 +75,78 @@ class OrderController extends Controller
         return view('orders.index', compact('orders', 'total', 'receivedAmount'));
     }
 
+    public function edit(Order $order)
+    {
+        $order = $order->load(['items.product', 'payments', 'customer', 'shop']);
+        $users = User::all();
+
+        $shops = Shop::all();
+        $customers = Customer::all();
+        return view('orders.edit', compact('order', 'shops', 'customers', 'users'));
+    }
+
+
+    public function update(Request $request, Order $order)
+    {
+        $validatedData = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'shop_id' => 'required|exists:shops,id',
+            'type' => 'required|in:dine-in,take-away,delivery',
+            'state' => 'required|in:preparing,served,closed,wastage',
+        ]);
+
+        $order->update($validatedData);
+
+        return redirect()->route('orders.index')->with('success', 'Order updated successfully');
+    }
+
+    public function addPayment(Request $request, Order $order)
+    {
+        // dd($request->all(), $order);
+        // dd('$validatedData');
+        $validatedData = $request->validate([
+            'amount' => 'required|numeric|min:0',
+            // 'order_id' => 'required|exists:orders,id',
+            // 'user_id' => 'required|exists:users,id',
+        ]);
+        $validatedData['order_id'] = $order->id;
+        $validatedData['user_id'] = $request->user()->id;
+        // dd('$validatedData');
+        $order->payments()->create($validatedData);
+
+        return redirect()->route('orders.edit', $order)->with('success', 'Payment added successfully');
+    }
+
+
+    public function destroyPayment(Order $order, Payment $payment)
+    {
+        $payment->delete();
+
+        return redirect()->route('orders.edit', $order)->with('success', 'Payment deleted successfully');
+    }
+
+    public function show(Order $order)
+    {
+
+        // get previous user id
+        $previous = Order::where('id', '<', $order->id)->max('id');
+
+        // get next user id
+        $next = Order::where('id', '>', $order->id)->min('id');
+        // $currentKey = array_search($order->id, $orders);
+        // $next = $currentKey === false ? null : $orders[($currentKey + 1) % count($orders)];
+        // $previous = $currentKey === false ? null : $orders[($currentKey - 1 + count($orders)) % count($orders)];
+        return view('orders.show', [
+            'order' => $order->load([
+                'items.product',
+                'payments',
+                'customer',
+                'shop'
+            ]),
+            'next' => $next,
+            'previous' => $previous,
+        ]);
+    }
     public function store(OrderStoreRequest $request)
     {
         logger($request);
@@ -126,7 +202,7 @@ class OrderController extends Controller
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
         $pdf = Pdf::loadView('pdf.order', compact('order'));
-        $pdf->setPaper([0, 0, 226.7, 700.7], 'portrait'); // A4, 70% scale
+        // $pdf->setPaper([0, 0, 226.7, 700.7], 'portrait'); // A4, 70% scale
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 }

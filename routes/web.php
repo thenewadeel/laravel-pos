@@ -44,6 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/listOfCategories', [CategoryController::class, 'listOf']);
     Route::get('/listOfinventoryItems', [InventoryItemController::class, 'listOf']);
 
+    Route::post('/orders/{order}/addPayment', [OrderController::class, 'addPayment'])->name('orders.payments.store');
+
+    Route::delete('/orders/{order}/payments/{payment}', [OrderController::class, 'destroyPayment'])
+        ->name('orders.payments.destroy');
     Route::get('/orders/print/{order}', [OrderController::class, 'printPdf'])->name('orders.print');
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 

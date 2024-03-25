@@ -34,5 +34,17 @@ return [
     'Partial'           => 'Partial',
     'Paid'              => 'Paid',
     'Change'            => 'Change',
+    'Date'              => 'Date',
+    'POS_Number'        => 'POS Number',
+    'Discounts'         => 'Discounts',
+    'DiscountAmount'    => 'Discount Amount',
+    'NetAmount'         => 'Net Amount',
+    'Taken_By'          => 'Taken By',
+    'Closed_By'         => 'Closed By',
+    'Actions'           => 'Actions',
+    'Edit'              => 'Edit',
+    'Delete'            => 'Delete',
+    'Close'             => 'Close',
+    'Index'             => 'All Orders',
 
 ];

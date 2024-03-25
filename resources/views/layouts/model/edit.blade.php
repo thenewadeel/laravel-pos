@@ -24,13 +24,14 @@
             </form>
         </div>
     </div>
+    @yield('footer-actions')
 @endsection
 
 @section('js')
-    <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+    {{-- <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             bsCustomFileInput.init();
         });
-    </script>
+    </script> --}}
 @endsection

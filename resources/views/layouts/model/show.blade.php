@@ -16,7 +16,7 @@
 @section('content')
     @include('layouts.partials.alert.error', ['errors' => $errors])
     <div class="container ">
-        <h3>Displaying {{ $modelName ? $modelName : 'Model' }} : {{ $modelObject->name }}</h3>
+        {{-- <h3>Displaying {{ $modelName ? $modelName : 'Model' }} : {{ $modelObject->name }}</h3> --}}
         <div class="row flex flex-row  max-w-md">
             {{-- <div class="px-4">
                 <label for="created_at">Date</label>
@@ -25,18 +25,20 @@
 
                 @yield('content-details')
             </div>
+            @yield('footer-actions')
         </div>
 
-        <div class="row">
-            <div class="col-md-2">
-                <strong>{{ __('common.Actions') }}</strong>
+        {{-- @yield('content-actions') --}}
+        {{-- @if (isset($__env->getLastStack()['section']))
+            <div class="row">
+                <div class="col-md-2">
+                    <strong>{{ __('common.Actions') }}</strong>
+                </div>
+                <div class="col-md-10">
+                    @yield('content-actions')
+                </div>
             </div>
-            <div class="col-md-10">
-                @yield('content-actions')
-            </div>
-
-
-        </div>
+        @endif --}}
     @endsection
 
     @section('js')

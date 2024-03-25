@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 class Order extends Model
 {
     protected $fillable = [
+        'POS_number',
         'customer_id',
         'shop_id',
         'user_id',
@@ -16,7 +17,15 @@ class Order extends Model
         'table_number',
         'waiter_name',
     ];
+    protected static function boot()
+    {
+        parent::boot();
 
+        static::created(function ($obj) {
+            $obj->POS_number = sprintf('%04d', (int)Order::where('created_at', '>=', $obj->created_at->startOfMonth())->count() + 1) . '-' . $obj->created_at->format('d-m-Y');
+            $obj->save();
+        });
+    }
     public function items()
     {
         return $this->hasMany(OrderItem::class);

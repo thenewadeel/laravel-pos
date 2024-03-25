@@ -7,9 +7,14 @@
     {{ 'Order:Show' }}
 @endsection
 @section('content-actions')
+    {{-- {{ $order }} --}}
     <div class="mb-2">
         <a href="{{ route('orders.index') }}" class="btn btn-primary">{{ __('order.Index') }}</a>
-        <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary">{{ __('order.Edit') }}</a>
+        @if ($order->state !== 'closed')
+            <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary">{{ __('order.Edit') }}</a>
+        @endif
+        <a href="{{ route('orders.print', $order) }}" class="btn btn-primary ">
+            {{ __('order.Print') }} <i class="fas fa-print"></i></a>
     </div>
 @endsection
 
@@ -94,7 +99,7 @@
             <tr>
                 <th colspan="2">Net Amount Payable</th>
                 <td style="text-align:right" colspan="2">
-                    {{ config('settings.currency_symbol') }}{{ $order->formattedBalance() }}</td>
+                    {{ config('settings.currency_symbol') }}{{ number_format($order->discountedTotal(), 2) }}</td>
             </tr>
 
             <tr>

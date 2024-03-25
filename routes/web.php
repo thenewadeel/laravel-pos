@@ -46,8 +46,14 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/orders/{order}/addPayment', [OrderController::class, 'addPayment'])->name('orders.payments.store');
 
+    Route::put('/orders/{order}/discounts', [OrderController::class, 'updateDiscounts'])
+        ->name('orders.discounts.update');
     Route::delete('/orders/{order}/payments/{payment}', [OrderController::class, 'destroyPayment'])
         ->name('orders.payments.destroy');
+
+    Route::post('/orders/{order}/addItem', [OrderController::class, 'addItem'])->name('order.items.store');
+    Route::delete('/orders/{order}/item/{item}', [OrderController::class, 'destroyItem'])
+        ->name('order.items.destroy');
     Route::get('/orders/print/{order}', [OrderController::class, 'printPdf'])->name('orders.print');
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 

@@ -11,6 +11,9 @@ use App\Models\User;
 use App\Models\Shop;
 use App\Models\Customer;
 use App\Models\Payment;
+use App\Models\Discount;
+use App\Models\OrderItem;
+use App\Models\Product;
 // use PDF;
 
 class OrderController extends Controller
@@ -79,10 +82,11 @@ class OrderController extends Controller
     {
         $order = $order->load(['items.product', 'payments', 'customer', 'shop']);
         $users = User::all();
-
+        $discounts = Discount::all();
         $shops = Shop::all();
         $customers = Customer::all();
-        return view('orders.edit', compact('order', 'shops', 'customers', 'users'));
+        $products = Product::all();
+        return view('orders.edit', compact('order', 'shops', 'customers', 'users', 'discounts', 'products'));
     }
 
 
@@ -114,9 +118,67 @@ class OrderController extends Controller
         // dd('$validatedData');
         $order->payments()->create($validatedData);
 
-        return redirect()->route('orders.edit', $order)->with('success', 'Payment added successfully');
+
+        if ($order->stateLabel() == __('order.Not_Paid')) {
+            $routeString = 'orders.edit';
+            $message = 'Payment added successfully';
+        } elseif ($order->stateLabel() == __('order.Partial')) {
+            $routeString = 'orders.edit';
+            $message = 'Payment added successfully';
+        } elseif ($order->stateLabel() == __('order.Paid')) {
+            $routeString = 'orders.show';
+            $message = 'Payment added successfully';
+            $order->state = 'closed';
+            $order->save();
+        } elseif ($order->stateLabel() == __('order.Change')) {
+            $routeString = 'orders.show';
+            $customerName = $order->customer->name;
+            $message = 'Payment added successfully & Change attributed to ' . $customerName;
+            $order->state = 'closed';
+            $order->save();
+        }
+
+
+        return redirect()->route($routeString, $order)->with('success', $message);
     }
 
+    public function addItem(Request $request, Order $order)
+    {
+        // dd($request);
+        $product = Product::find($request->item);
+
+        $validatedData = $request->validate([
+            'item' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $validatedData['order_id'] = $order->id;
+        $validatedData['user_id'] = $request->user()->id;
+        $validatedData['product_id'] = $product->id;
+        $validatedData['price'] = $product->price * $request->quantity;
+
+        // dd($product);
+        $order->items()->create($validatedData);
+
+        // if ($product) {
+        //     $order->items()->create([
+        //         'price' => $product->price,
+        //         'quantity' => 1,
+        //         'product_id' => $request->item,
+        //     ]);
+        // } else {
+        //     dd($request);
+        // }
+
+        return redirect()->route('orders.edit', $order)->with('success', 'Product added to order successfully');
+    }
+
+    public function destroyItem(Order $order, OrderItem $item)
+    {
+        $item->delete();
+
+        return redirect()->route('orders.edit', $order)->with('success', 'Product deleted from order successfully');
+    }
 
     public function destroyPayment(Order $order, Payment $payment)
     {
@@ -125,14 +187,31 @@ class OrderController extends Controller
         return redirect()->route('orders.edit', $order)->with('success', 'Payment deleted successfully');
     }
 
+    public function updateDiscounts(Order $order, Request $request)
+    {
+        $validatedData = $request->validate([
+            'discountsToAdd' => 'nullable|array',
+            'discountsToAdd.*' => 'nullable|exists:discounts,id',
+        ]);
+        // dd($validatedData);
+        $discountsToAdd = $validatedData['discountsToAdd'] ?? [];
+        $order->discounts()->sync($discountsToAdd);
+
+        return redirect()->route('orders.edit', $order)->with('success', 'Discounts updated successfully');
+    }
     public function show(Order $order)
     {
 
         // get previous user id
-        $previous = Order::where('id', '<', $order->id)->max('id');
+        $previous = Order::where('id', '<', $order->id)
+            ->where('user_id', $order->user_id)
+            ->max('id');
+
 
         // get next user id
-        $next = Order::where('id', '>', $order->id)->min('id');
+        $next = Order::where('id', '>', $order->id)
+            ->where('user_id', $order->user_id)
+            ->min('id');
         // $currentKey = array_search($order->id, $orders);
         // $next = $currentKey === false ? null : $orders[($currentKey + 1) % count($orders)];
         // $previous = $currentKey === false ? null : $orders[($currentKey - 1 + count($orders)) % count($orders)];

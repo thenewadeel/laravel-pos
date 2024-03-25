@@ -8,13 +8,30 @@ use Illuminate\Support\Facades\Log;
 class Order extends Model
 {
     protected $fillable = [
+        // Unique identifier for the order in the POS system
         'POS_number',
+        // The ID of the customer who placed the order
         'customer_id',
+        // The ID of the shop where the order was placed
         'shop_id',
+        // The ID of the user who placed the order
         'user_id',
+        // The state of the order. Possible values: 'preparing', 'served', 'wastage', 'closed'
+        // Possible states:
+        // - 'preparing': The order is being prepared by the staff
+        // - 'served': The order is ready to be delivered to the customer
+        // - 'wastage': The order is not collected by the customer
+        // - 'closed': The order is already delivered to the customer
         'state',
+        // The type of order. Possible values: 'dine-in', 'take-away', 'delivery'
+        // Possible types:
+        // - 'dine-in': The order is placed at the shop's counter
+        // - 'take-away': The order is collected by the customer outside the shop
+        // - 'delivery': The order is delivered to the customer at their specified location
         'type',
+        // The table number where the order is placed
         'table_number',
+        // The name of the waiter who is assigned to this order
         'waiter_name',
     ];
     protected static function boot()
@@ -122,5 +139,18 @@ class Order extends Model
     public function formattedBalance()
     {
         return number_format($this->balance(), 2);
+    }
+
+    public function stateLabel()
+    {
+        if ($this->receivedAmount() == 0) {
+            return __('order.Not_Paid');
+        } elseif ($this->receivedAmount() < $this->discountedTotal()) {
+            return __('order.Partial');
+        } elseif ($this->receivedAmount() == $this->discountedTotal()) {
+            return   __('order.Paid');
+        } elseif ($this->receivedAmount() > $this->discountedTotal()) {
+            return  __('order.Change');
+        }
     }
 }

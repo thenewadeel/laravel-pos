@@ -9,6 +9,9 @@
 @section('content-actions')
     <div class="mb-2">
         <a href="{{ route('orders.index') }}" class="btn btn-primary">{{ __('order.Index') }}</a>
+        {{-- </div>
+    <div class="mb-2"> --}}
+        <a href="{{ route('orders.show', $order) }}" class="btn btn-primary">{{ __('order.Show') }}</a>
     </div>
 @endsection
 
@@ -69,73 +72,193 @@
             @endforeach
         </select>
     </div>
+
     <div class="form-group">
-        <label for="items" class="font-weight-bold">Items:</label>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($order->items as $item)
-                    <tr>
-                        <td>{{ $item->product->name }}</td>
-                        <td>{{ $item->product->price }}</td>
-                        <td>
-                            <input type="number" name="items[{{ $item->id }}][quantity]"
-                                value="{{ $item->quantity }}" class="form-control">
-                        </td>
-                        <td>{{ number_format($item->quantity * $item->product->price, 2) }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <label for="state" class="font-weight-bold">Change Order State:</label>
+        <select name="state" id="state" class="form-control">
+            // - 'preparing': The order is being prepared by the staff
+            // - 'served': The order is ready to be delivered to the customer
+            // - 'wastage': The order is not collected by the customer
+            // - 'closed': The order is already delivered to the customer
+            <option value="preparing" {{ $order->state == 'preparing' ? 'selected' : '' }}>In Preparation</option>
+            <option value="served" {{ $order->state == 'served' ? 'selected' : '' }}>Served</option>
+            <option value="wastage" {{ $order->state == 'wastage' ? 'selected' : '' }}>Cancelled/Wastage</option>
+            <option value="closed" {{ $order->state == 'closed' ? 'selected' : '' }}>Delivered/Closed</option>
+        </select>
+        <p class="text-danger">
+            <strong>⚠ Warning: Changing the state may alter the order in unexpected ways.</strong>
+        </p>
     </div>
+
     {{-- {{ $order }} --}}
-    <div class="form-group">
-        <label for="payments" class="font-weight-bold">Payments:</label>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Received By</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($order->payments as $payment)
-                    <tr>
-                        <td>{{ $payment->created_at }}</td>
-                        <td>{{ $payment->amount }}</td>
-                        <td>{{ $payment->user->getFullName() }}</td>
-                        <td>
-                            <form method="post" action="{{ route('orders.payments.destroy', [$order, $payment]) }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+
 
 
 @endsection
 @section('footer-actions')
-    <form id="payment-form" method="post" action="{{ route('orders.payments.store', $order) }}">
-        <div class="form-inline">
-            <label for="amount" class="mr-2">Amount:</label>
-            <input type="number" step="0.01" name="amount" id="amount" class="form-control mr-2" required>
-            <button form="payment-form" type="submit" class="btn btn-primary">Add Payment</button>
-        </div>
 
-        @csrf
-    </form>
+    <div class="card" id="items">
+        <div class="card-header">
+            <h3>Items</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="items" class="font-weight-bold">Items:</label>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($order->items as $item)
+                            <tr>
+                                <td>{{ $item->product->name }}</td>
+                                <td>{{ $item->product->price }}</td>
+                                <td>
+                                    <input type="number" name="items[{{ $item->id }}][quantity]"
+                                        value="{{ $item->quantity }}" class="form-control">
+                                </td>
+                                <td>{{ number_format($item->quantity * $item->product->price, 2) }}</td>
+                                <td>
+                                    <form action="{{ route('order.items.destroy', [$order, $item]) }}" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <form action="{{ route('order.items.store', $order) }}" method="post"
+                                class="d-flex align-items-center">
+                                @csrf
+                                <td colspan="2">
+                                    <select name="item" id="items-select" class="form-control me-2">
+                                        @foreach ($products as $product)
+                                            <option value="{{ $product->id }}">{{ $product->id }}-{{ $product->name }}
+                                                ({{ config('app.currency_symbol') }}
+                                                {{ number_format($product->price, 2) }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                </td>
+                                <td colspan="2">
+                                    <input type="number" name="quantity" id="quantity-input" class="form-control me-2"
+                                        value="1" min="1">
+                                </td>
+                                <td>
+
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                </td>
+                            </form>
+
+
+
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between" class="card-header">
+            <h3>Discounts</h3>
+            <div class="text-bold text-lg">
+                Total :
+                {{ config('settings.currency_symbol') }}{{ number_format($order->total(), 2) }}
+            </div>
+            <div class="text-bold text-lg">
+                Discount Amount :
+                {{ config('settings.currency_symbol') }}{{ number_format($order->discountAmount(), 2) }}
+            </div>
+            <div class="text-bold text-lg">
+                Net Amount Payable :
+                {{ config('settings.currency_symbol') }}{{ $order->formattedBalance() }}
+            </div>
+        </div>
+        <div class="card-body">
+            {{-- {{ $order->discounts }} --}}
+            <form method="POST" action="{{ route('orders.discounts.update', $order) }}">
+                @csrf
+                @method('PUT')
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Discount</th>
+                            <th>Enabled</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($discounts as $discount)
+                            <tr>
+                                <td>{{ $discount->name }} ({{ $discount->percentage }}%)</td>
+                                <td>
+                                    <input type="checkbox" name="discountsToAdd[]" value="{{ $discount->id }}"
+                                        {{ in_array($discount->id, $order->discounts->pluck('id')->toArray()) ? 'checked' : '' }}>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-primary">Update Discounts</button>
+            </form>
+            <hr>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3>Payments</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                {{-- <label for="payments" class="font-weight-bold">Payments:</label> --}}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Received By</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($order->payments as $payment)
+                            <tr>
+                                <td>{{ $payment->created_at }}</td>
+                                <td>{{ $payment->amount }}</td>
+                                <td>{{ $payment->user->getFullName() }}</td>
+                                <td>
+                                    <form method="post"
+                                        action="{{ route('orders.payments.destroy', [$order, $payment]) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <form id="payment-form" method="post" action="{{ route('orders.payments.store', $order) }}">
+                <div class="form-inline">
+                    <label for="amount" class="mr-2">Amount:</label>
+                    <input type="number" step="0.01" name="amount" id="amount" class="form-control mr-2"
+                        required>
+                    <button form="payment-form" type="submit" class="btn btn-primary">Add Payment</button>
+                </div>
+
+                @csrf
+            </form>
+        </div>
+    </div>
 @endsection

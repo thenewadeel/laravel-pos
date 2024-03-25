@@ -46,5 +46,12 @@ return [
     'Delete'            => 'Delete',
     'Close'             => 'Close',
     'Index'             => 'All Orders',
+    'Closed'            => 'Closed',
+    'Preparing'         => 'Preparing',
+    'Wastage'           => 'Wastage',
+    'Served'            => 'Served',
+    'Show'              => 'Show',
+    'Print'             => 'Print',
+    'Unpaid'            => 'Unpaid',
 
 ];

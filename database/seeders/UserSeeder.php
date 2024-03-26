@@ -24,9 +24,9 @@ class UserSeeder extends Seeder
 
         // Make 3 cashiers
         $types = ['cashier', 'cashier', 'cashier'];
-        $firstNames = ['John', 'Emma', 'David'];
-        $lastNames = ['Doe', 'Smith', 'Johnson'];
-        $emails = ['john@example.com', 'emma@example.com', 'david@example.com'];
+        $firstNames = ['Sultan', 'Mushtaq', 'Ameen'];
+        $lastNames = ['Golden', 'Ali', 'Shah'];
+        $emails = ['john@qcl.pos', 'emma@qcl.pos', 'david@qcl.pos'];
         $passwords = ['password123', 'password123', 'password123'];
 
         foreach (range(0, 2) as $index) {

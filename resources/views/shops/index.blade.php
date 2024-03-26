@@ -27,7 +27,7 @@
                 <tbody>
                     @foreach ($shops as $shop)
                         <tr>
-                            <td>{{ $shop->id }}</td>
+                            <td data-toggle="tooltip" title="{{ $shop }} ">{{ $shop->id }}</td>
                             <td><a href="{{ route('shops.show', $shop) }}">{{ $shop->name }}</a></td>
 
                             <td>{{ $shop->description }}</td>
@@ -35,9 +35,9 @@
                                 <img width="50" src="{{ $shop->image }}" alt="">
                             </td>
                             <td>
-
-                                {{ $shop?->user?->id }}/{{ $shop?->user?->email }}
-
+                                @foreach ($shop->users as $user)
+                                    {{ $user->getFullName() }}({{ $user->email }}),
+                                @endforeach
                             </td>
                             <td>{{ $shop->created_at }}</td>
                             <td>

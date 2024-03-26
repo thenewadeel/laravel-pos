@@ -51,10 +51,13 @@ class ShopController extends Controller
         if ($request->itemCount) {
             $itemsPerPage = $request->itemCount;
         }
-        $shops = $shops->with(['user'])->latest()->paginate($itemsPerPage);
-        if (request()->wantsJson()) {
-            return ShopResource::collection($shops);
-        }
+
+        $shops = $shops->with(['users' => function ($query) use ($request) {
+            if ($request->search) {
+                $query->where('name', 'LIKE', "%{$request->search}%");
+            }
+        }])->paginate($itemsPerPage);
+
         return  view('shops.index')->with('shops', $shops);
     }
 

@@ -102,6 +102,33 @@
             </form>
         </div>
     </div>
+
+    <div class="card">
+        <div class="card-body">
+            {{-- @include('layouts.partials.alert.error', ['errors' => $errors]) --}}
+            {{-- {{ $shops }} --}}
+
+            <h4>{{ __('user.Shops') }}</h4>
+            <form action="{{ route('users.updateShops', $user->id) }}" method="post">
+                @csrf
+                @method('post')
+                <div class="form-group">
+                    @foreach ($shops as $shop)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="shops[]" value="{{ $shop->id }}"
+                                id="shop{{ $shop->id }}" {{ $user->shops->contains($shop) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="shop{{ $shop->id }}">
+                                {{ $shop->name }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+
+                <button type="submit" class="btn btn-primary">{{ __('common.Update') }}</button>
+            </form>
+        </div>
+    </div>
+
 @endsection
 
 @section('js')

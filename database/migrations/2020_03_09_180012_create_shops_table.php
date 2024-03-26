@@ -20,8 +20,8 @@ return new class extends Migration
             // $table->boolean('status')->default(true);
 
             $table->decimal('surcharge_percentage', 5, 2)->default(0)->unsigned()->comment('Percentage of the price');
-            $table->foreignId('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            // $table->foreignId('user_id')->nullable();
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
     }

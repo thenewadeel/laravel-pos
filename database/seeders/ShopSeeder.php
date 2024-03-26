@@ -35,18 +35,19 @@ class ShopSeeder extends Seeder
             "GR Mess",
         ] as $shop) {
 
-            Shop::updateOrCreate([
+            $shopRecord = Shop::updateOrCreate([
                 'name' => $shop,
                 'description' => 'desc',
                 'image' => '',
-                'user_id' => User::Create([
-                    'email' => str_replace(' ', '', $shop) . '@qcl.pos',
-                    'first_name' => "CFn" . $shop,
-                    'last_name' => "CLn" . $shop,
-                    'type' => 'cashier',
-                    'password' => bcrypt('1234')
-                ])->id,
             ]);
+
+            $randomUser = User::where('type', 'cashier')
+                ->inRandomOrder()
+                ->first();
+
+            if ($randomUser) {
+                $randomUser->shops()->save($shopRecord);
+            }
         };
     }
 }

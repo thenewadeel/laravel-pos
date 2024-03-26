@@ -54,6 +54,6 @@ class User extends Authenticatable
     }
     public function shops()
     {
-        return $this->hasMany(Shop::class);
+        return $this->belongsToMany(Shop::class, 'user_shop')->withTimestamps();
     }
 }

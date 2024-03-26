@@ -84,6 +84,9 @@ Route::middleware('auth')->group(function () {
         Route::delete('/cart/delete', [CartController::class, 'delete']);
         Route::delete('/cart/empty', [CartController::class, 'empty']);
 
+        Route::post('/users/{user}/updateShops', [UsersController::class, 'updateShops'])
+            ->name('users.updateShops');
+
         // Transaltions route for React component
         Route::get('/locale/{type}', function ($type) {
             $translations = trans($type);

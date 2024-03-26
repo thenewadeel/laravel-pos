@@ -28,7 +28,8 @@
                 <tbody>
                     @foreach ($users as $user)
                         <tr>
-                            <td>{{ $user->id }}</td>
+                            <td><span class="d-inline-block" data-toggle="tooltip"
+                                    title="{{ $user }} ">{{ $user->id }}</span></td>
                             <td><img class="user-img" src="{{ Storage::url($user->image) }}" alt=""
                                     style="width: 64px !important; height: 64px !important;"></td>
                             <td>{{ $user->first_name }}/ {{ $user->last_name }}</td>

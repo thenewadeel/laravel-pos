@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ListOf;
+use App\Models\Shop;
 
 class UsersController extends Controller
 {
@@ -23,6 +24,7 @@ class UsersController extends Controller
      */
     public function index(Request $request)
     {
+        $shops = Shop::all();
         $users = new User();
         if ($request->search) {
             $users = $users->where('name', 'LIKE', "%{$request->search}%");
@@ -35,7 +37,7 @@ class UsersController extends Controller
         if (request()->wantsJson()) {
             return UserResource::collection($users);
         }
-        return view('users.index')->with('users', $users);
+        return view('users.index')->with('users', $users, 'shops', $shops);
     }
 
     /**
@@ -73,6 +75,37 @@ class UsersController extends Controller
     }
 
     /**
+     * Assign multiple shops to this user via pivot table user_shop.
+     */
+    public function updateShops(User $user, Request $request)
+    {
+
+        if ($request->has('shops')) {
+            $request->validate([
+                'shops' => 'required|array',
+                'shops.*' => 'required|exists:shops,id',
+            ]);
+
+            $user->shops()->sync($request->shops);
+        } else {
+            $user->shops()->detach();
+        }
+
+        return redirect()->back()->with('success', __('user.success_updating_shops'));
+
+
+
+        // dd($request->all());
+        // $request->validate([
+        //     'shop_ids' => 'required|array',
+        //     'shop_ids.*' => 'required|exists:shops,id',
+        // ]);
+        // $user->shops()->sync($request->shop_ids);
+
+        // return redirect()->route('users.edit', $user)->with('success', 'Shop assigned successfully');
+    }
+
+    /**
      * Display the specified resource.
      */
     public function show(User $user)
@@ -85,9 +118,10 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        return view('users.edit')->with('user', $user);
+        $shops = Shop::all();
+        // dd($shops);
+        return view('users.edit', compact('user', 'shops'));
     }
-
     /**
      * Update the specified resource in storage.
      */

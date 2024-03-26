@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/orders/{order}/item/{item}', [OrderController::class, 'destroyItem'])
         ->name('order.items.destroy');
     Route::get('/orders/print/{order}', [OrderController::class, 'printPdf'])->name('orders.print');
+    Route::get('/orders/printPreview/{order}', [OrderController::class, 'printPreview'])->name('orders.print.preview');
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 
     Route::namespace('Stockboy')->prefix('inventory')->group(function () {

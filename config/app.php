@@ -14,7 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-
+    'companyName' => env('COMPANY_NAME', 'Quetta Club Ltd'),
+    'address' => env('COMPANY_ADDRESS', 'Club Road, Quetta'),
     /*
     |--------------------------------------------------------------------------
     | Application Environment

@@ -15,6 +15,8 @@
         @endif
         <a href="{{ route('orders.print', $order) }}" class="btn btn-primary ">
             {{ __('order.Print') }} <i class="fas fa-print"></i></a>
+        {{-- <a href="{{ route('orders.print.preview', $order) }}" class="btn btn-primary ">
+            {{ __('order.Print_Preview') }} <i class="fas fa-print"></i></a> --}}
     </div>
 @endsection
 
@@ -33,11 +35,11 @@
         </div>
         <div class="d-flex justify-content-between">
             <span>Shop:</span>
-            <span>{{ $order->shop->name }}</span>
+            <span>{{ $order?->shop?->name }}</span>
         </div>
         <div class="d-flex justify-content-between">
             <span>Customer:</span>
-            <span>{{ $order->customer->name }}</span>
+            <span>{{ $order?->customer?->name }}</span>
         </div>
         <div class="d-flex justify-content-between">
             <span>Table #:</span>
@@ -124,10 +126,11 @@
         </a>
 
         <span class="h6">{{ $order->POS_number }}</span>
-
-        <a href="{{ route('orders.show', ['order' => $next]) }}"
-            class="btn btn-primary {{ $next == $order->id ? 'disabled' : '' }}">
-            <i class="fas fa-chevron-right"></i>
-        </a>
+        @if ($next)
+            <a href="{{ route('orders.show', ['order' => $next]) }}"
+                class="btn btn-primary {{ $next == $order->id ? 'disabled' : '' }}">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        @endif
     </div>
 @endsection

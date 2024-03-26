@@ -52,6 +52,7 @@ return [
     'Served'            => 'Served',
     'Show'              => 'Show',
     'Print'             => 'Print',
+    'Print_Preview'     => 'Print Preview',
     'Unpaid'            => 'Unpaid',
 
 ];

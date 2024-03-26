@@ -275,13 +275,18 @@ class OrderController extends Controller
         return response($html, 200)
             ->header('Content-Type', 'text/plain');
     }
-
+    public function printPreview($id)
+    {
+        $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
+            ->findOrFail($id);
+        return View('pdf.order', compact('order'));
+    }
     public function printPdf($id)
     {
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
         $pdf = Pdf::loadView('pdf.order', compact('order'));
-        // $pdf->setPaper([0, 0, 226.7, 700.7], 'portrait'); // A4, 70% scale
+        // $pdf->setPaper([0, 0, 80, 197], 'portrait'); // 80mm thermal paper
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 }

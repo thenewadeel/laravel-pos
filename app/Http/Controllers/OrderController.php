@@ -32,7 +32,13 @@ class OrderController extends Controller
         if (auth()->user()->type == 'admin') {
             $orders = Order::query();
         } else {
-            $orders = Order::where('user_id', auth()->user()->id);
+            $u = User::with('shops')->find(auth()->id());
+            // $u = User::with('shops')->find(auth()->id());
+
+
+            $shops = $u->shops()->pluck('shops.id')->toArray();
+            // dd($shops);
+            $orders = Order::whereIn('shop_id', $shops);
         }
         if ($request->has('state')) {
             $filters = array_intersect(['preparing', 'served', 'closed', 'wastage'], $request->state);

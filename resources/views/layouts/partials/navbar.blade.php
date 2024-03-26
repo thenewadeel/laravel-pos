@@ -23,7 +23,7 @@
     --}}
 
     <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
+    {{-- <ul class="navbar-nav ml-auto">
         <!-- Messages Dropdown Menu -->
 
         <!-- Notifications Dropdown Menu -->
@@ -58,6 +58,6 @@
                 <i class="fas fa-th-large"></i>
             </a>
         </li>
-    </ul>
+    </ul> --}}
 </nav>
 <!-- /.navbar -->

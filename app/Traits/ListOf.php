@@ -3,6 +3,8 @@
 namespace App\Traits;
 
 use Illuminate\Http\Request;
+use App\Models\Shop;
+use App\Models\User;
 
 trait ListOf
 {
@@ -20,6 +22,16 @@ trait ListOf
         if ($request && $request->search) {
             $query->where('name', 'LIKE', "%{$request->search}%");
         }
+
+        if ($modelClass === Shop::class) {
+            $u = User::with('shops')->find(auth()->id());
+            $shopsArray = $u->shops()->pluck('shops.id')->toArray();
+
+
+            $query->whereIn('id', $shopsArray);
+        }
+
+
 
         return $query->get();
     }

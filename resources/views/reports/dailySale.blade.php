@@ -179,14 +179,16 @@
                 {{-- TODO : add summary of totals in footer row --}}
                 <tfoot>
                     <tr class="table-danger font-extrabold  text-right">
-                        <td>G. Total</td>
-                        <td>{{ config('settings.currency_symbol') . number_format($totalCash, 2) }}</td>
-                        <td>{{ config('settings.currency_symbol') . number_format($totalChit, 2) }}</td>
-                        <td>{{ config('settings.currency_symbol') . number_format($totalDiscount, 2) }}</td>
-                        {{-- <td></td>
-    <td></td>
-    <td></td> --}}
-                        <td>{{ config('settings.currency_symbol') . number_format($totalAmount, 2) }}</td>
+                        <td colspan="9">
+                            G. Total
+                            Cash: {{ config('settings.currency_symbol') . number_format($totalCash, 2) }}
+                            <br />
+                            Chit: {{ config('settings.currency_symbol') . number_format($totalChit, 2) }}
+                            <br />
+                            Discount: {{ config('settings.currency_symbol') . number_format($totalDiscount, 2) }}
+                            <br />
+                            G. Total Amount:{{ config('settings.currency_symbol') . number_format($totalAmount, 2) }}
+                        </td>
                     </tr>
                 </tfoot>
                 <thead style="display:none">

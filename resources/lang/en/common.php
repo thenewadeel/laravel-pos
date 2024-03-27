@@ -45,5 +45,9 @@ return [
     'no_mins'               => ':mins mins',
     'no_hours'              => ':hours hours',
     'no_days'               => ':days days',
-
+    'Select_Date'    => 'Select Date',
+    'Filter' => 'Filter',
+    'Clear' => 'Clear',
+    'Daily_Sale' => 'Daily Sale',
+    'Download_To_Excel' => 'Download',
 ];

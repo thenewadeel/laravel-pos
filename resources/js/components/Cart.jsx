@@ -75,6 +75,7 @@ class Cart extends Component {
         axios.get(`/listOfShops`).then((res) => {
             const shops = res.data;
             this.setState({ shops });
+            this.setState({ shop_id: shops[0].id });
             console.log("shops returnd:", shops);
         });
     }

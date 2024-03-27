@@ -67,6 +67,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/stockTaking', [InventoryController::class, 'stockTaking'])->name('inventory.stockTaking');
     });
 
+    Route::namespace('Accountant')->group(function () {
+        Route::get('/dailySale', [ReportsController::class, 'dailySale'])->name('reports.dailySale');
+    });
 
     Route::namespace('Admin')->group(function () {
 

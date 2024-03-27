@@ -87,6 +87,14 @@
                         <p>{{ __('order.title') }}</p>
                     </a>
                 </li>
+                @if (auth()->user()->type == 'admin')
+                    <li class="nav-item has-treeview">
+                        <a href="{{ route('reports.dailySale') }}" class="nav-link {{ activeSegment('reports') }}">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>{{ __('Daily Sale') }}</p>
+                        </a>
+                    </li>
+                @endif
                 <li class="nav-item has-treeview">
                     <a href="{{ route('settings.index') }}" class="nav-link {{ activeSegment('settings') }}">
                         <i class="nav-icon fas fa-cogs"></i>

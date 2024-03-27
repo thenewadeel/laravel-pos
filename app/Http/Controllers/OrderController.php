@@ -40,15 +40,15 @@ class OrderController extends Controller
             // dd($shops);
             $orders = Order::whereIn('shop_id', $shops);
         }
-        if ($request->has('state')) {
-            $filters = array_intersect(['preparing', 'served', 'closed', 'wastage'], $request->state);
-            $orders = $orders->whereIn('state', $filters);
-        }
+        // if ($request->has('state')) {
+        //     $filters = array_intersect(['preparing', 'served', 'closed', 'wastage'], $request->state);
+        //     $orders = $orders->whereIn('state', $filters);
+        // }
 
-        if ($request->has('type')) {
-            $filters = array_intersect(['dine-in', 'take-away', 'delivery'], $request->type);
-            $orders = $orders->whereIn('type', $filters);
-        }
+        // if ($request->has('type')) {
+        //     $filters = array_intersect(['dine-in', 'take-away', 'delivery'], $request->type);
+        //     $orders = $orders->whereIn('type', $filters);
+        // }
         // $today = now()->startOfDay();
         // if ($request->start_date && $request->end_date) {
         //     $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
@@ -138,7 +138,7 @@ class OrderController extends Controller
             $order->save();
         } elseif ($order->stateLabel() == __('order.Change')) {
             $routeString = 'orders.show';
-            $customerName = $order->customer->name;
+            $customerName = $order->customer ? $order->customer->name : 'unknown';
             $message = 'Payment added successfully & Change attributed to ' . $customerName;
             $order->state = 'closed';
             $order->save();

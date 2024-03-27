@@ -25,4 +25,6 @@ return [
     'CashierAcct' => 'Cashier User Acct',
     'Created_At' => 'Date',
     'Actions' => 'Actions',
+    'Shop_Name'             => 'Shop Name',
+
 ];

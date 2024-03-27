@@ -64,7 +64,7 @@ class UsersController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'image' => $image_path,
-            'password' => $request->password,
+            'password' => bcrypt($request->password),
             'type' => $request->type,
         ]);
 

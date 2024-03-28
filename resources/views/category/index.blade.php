@@ -36,7 +36,7 @@
                 </ul>
             </td>
             <td>
-                <a href="{{ route('categories.edit', $category) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                {{-- <a href="{{ route('categories.edit', $category) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a> --}}
                 <a class="btn btn-danger btn-delete" href="{{ route('categories.destroy', $category) }}"><i
                         class="fas fa-trash"></i></a>
             </td>

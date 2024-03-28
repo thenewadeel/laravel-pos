@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ShopOrdersExport;
 use App\Exports\UsersExport;
+use App\Models\Category;
 use App\Traits\ListOf;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Illuminate\Support\Facades\Log;
@@ -113,9 +114,12 @@ class ShopController extends Controller
     public function show(Shop $shop, Request $request)
     {
         $filters = $request->only(['created_at', 'shop_id']);
-        $orders = $this->getOrders($shop, $filters);
+        $orders = $this->getOrders($shop, $filters)->get();
 
-        return view('shops.show')->with('shop', $shop)->with('orders', $orders->get());
+        $categories = Category::all();
+
+
+        return view('shops.show', compact('shop',  'categories', 'orders'));
     }
 
     private function getOrders(Shop $shop, array $filters)
@@ -216,6 +220,37 @@ class ShopController extends Controller
             return redirect()->back()->with('error', __('shop.error_updating'));
         }
         return redirect()->route('shops.index')->with('success', __('shop.success_updating'));
+    }
+
+    /**
+     * Assign multiple shops to this user via pivot table user_shop.
+     */
+    public function updateCategories(Shop $shop, Request $request)
+    {
+        // dd($request);
+        if ($request->has('category')) {
+            $request->validate([
+                'category' => 'required|array',
+                'category.*' => 'required|exists:categories,id',
+            ]);
+
+            $shop->categories()->sync($request->category);
+        } else {
+            $shop->categories()->detach();
+        }
+
+        return redirect()->back()->with('success', __('shop.success_updating_categories'));
+
+
+
+        // dd($request->all());
+        // $request->validate([
+        //     'shop_ids' => 'required|array',
+        //     'shop_ids.*' => 'required|exists:shops,id',
+        // ]);
+        // $user->shops()->sync($request->shop_ids);
+
+        // return redirect()->route('users.edit', $user)->with('success', 'Shop assigned successfully');
     }
 
     /**

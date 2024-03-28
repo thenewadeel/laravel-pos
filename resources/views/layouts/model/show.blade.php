@@ -15,16 +15,16 @@
 @endsection
 @section('content')
     @include('layouts.partials.alert.error', ['errors' => $errors])
-    <div class="container ">
+    <div class="container-fluid ">
         {{-- <h3>Displaying {{ $modelName ? $modelName : 'Model' }} : {{ $modelObject->name }}</h3> --}}
-        <div class="row flex flex-row  max-w-md">
+        <div class="row flex flex-row justify-center">
             {{-- <div class="px-4">
                 <label for="created_at">Date</label>
             </div> --}}
-            <div class="flex items-center">
+            {{-- <div class=" "> --}}
 
-                @yield('content-details')
-            </div>
+            @yield('content-details')
+            {{-- </div> --}}
             @yield('footer-actions')
         </div>
 

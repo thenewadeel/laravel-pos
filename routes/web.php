@@ -89,6 +89,8 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/users/{user}/updateShops', [UsersController::class, 'updateShops'])
             ->name('users.updateShops');
+        Route::post('/shops/{shop}/updateCategories', [ShopController::class, 'updateCategories'])
+            ->name('shop.updateCategories');
 
         // Transaltions route for React component
         Route::get('/locale/{type}', function ($type) {

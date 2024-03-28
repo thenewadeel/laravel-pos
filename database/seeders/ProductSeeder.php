@@ -7,6 +7,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 
 class ProductSeeder extends Seeder
 {
@@ -254,6 +256,108 @@ class ProductSeeder extends Seeder
             ["name" => "249 Raisin Bread	", "price" => 130],
             ["name" => "250 Assorted Milkshake	", "price" => 400]
         ];
+        $tokenItems = [
+            [
+                "name" => "Gol Gappay",
+                "description" => "12 Pieces",
+                "price" => 280,
+            ],
+            [
+                "name" => "Dahi Bhallay",
+                "description" => "1 Serving",
+                "price" => 240,
+            ],
+            [
+                "name" => "Nestle Juice",
+                "description" => "Small",
+                "price" => 40,
+            ],
+            [
+                "name" => "Mineral Water",
+                "description" => "Small",
+                "price" => 70,
+            ],
+            [
+                "name" => "Cold Drinks",
+                "description" => "Tin",
+                "price" => 90,
+            ],
+            [
+                "name" => "Tea",
+                "description" => "Cup",
+                "price" => 100,
+            ],
+            [
+                "name" => "Coffee",
+                "description" => "Cup",
+                "price" => 240,
+            ],
+            [
+                "name" => "Ice Cream",
+                "description" => "2 Scoops",
+                "price" => 180,
+            ],
+            [
+                "name" => "Chicken Patty Burger",
+                "description" => "",
+                "price" => 300,
+            ],
+            [
+                "name" => "Zinger Burger",
+                "description" => "",
+                "price" => 400,
+            ],
+            [
+                "name" => "French Fries",
+                "description" => "",
+                "price" => 180,
+            ],
+            [
+                "name" => "Tikka Boti",
+                "description" => "Seekh",
+                "price" => 230,
+            ],
+            [
+                "name" => "Pizza",
+                "description" => "Large",
+                "price" => 1400,
+            ],
+            [
+                "name" => "Halwa",
+                "description" => "Plate",
+                "price" => 160,
+            ],
+            [
+                "name" => "Puri",
+                "description" => "Piece",
+                "price" => 25,
+            ],
+            [
+                "name" => "Channay",
+                "description" => "Plate",
+                "price" => 100,
+            ],
+            [
+                "name" => "Nihari",
+                "description" => "Plate",
+                "price" => 200,
+            ],
+            [
+                "name" => "Lassi",
+                "description" => "Glass",
+                "price" => 240,
+            ],
+            [
+                "name" => "Chicken Biryani",
+                "description" => "Plate",
+                "price" => 230,
+            ],
+            [
+                "name" => "Naan",
+                "description" => "Piece",
+                "price" => 30,
+            ],
+        ];
 
 
         foreach ($directory as $productSpecimen) {
@@ -269,6 +373,25 @@ class ProductSeeder extends Seeder
                 'quantity' => '999',
                 'aval_status' => true,
             ]);
+        }
+
+
+        $category = Category::updateOrCreate([
+            'name' => 'Tokenised Items',
+        ]);
+        foreach ($tokenItems as $productSpecimen) {
+            // dd($productSpecimen);
+
+            $product = Product::updateOrCreate([
+                'name' => $productSpecimen['name'],
+                'description' => $productSpecimen['description'],
+                'price' => $productSpecimen['price'],
+                'quantity' => '999',
+                'aval_status' => true,
+            ]);
+
+
+            DB::insert('insert into category_products (category_id, product_id) values (?, ?)', [$category->id, $product->id]);
         }
     }
 }

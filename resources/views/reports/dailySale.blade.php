@@ -115,8 +115,8 @@
         <th>Online</th> --}}
                                 <th>Amount</th>
                                 <th>Customer Name</th>
-                                <th>Payment Taken By</th>
                                 <th>Order Taken By</th>
+                                <th>Payment Taken By</th>
                             </tr>
                         </thead>
 
@@ -137,7 +137,9 @@
                                     $totalDiscountAmount += $order->discountAmount();
                                     $totalTotal += $order->total();
                                     ?>
-                                    <td title="{{ $order }}">{{ $order->POS_number }}</td>
+                                    <td title="{{ $order->payments }}"><a
+                                            href="{{ route('orders.show', ['order' => $order->id]) }}">{{ $order->POS_number }}</a>
+                                    </td>
                                     <td class="text-right">{{ number_format($order->receivedAmount(), 2) }}</td>
                                     <td class="text-right">{{ number_format($order->balance(), 2) }}</td>
                                     <td class="text-right">{{ number_format($order->discountAmount(), 2) }}</td>
@@ -146,12 +148,12 @@
                     <td>{{ $order->online }}</td> --}}
                                     <td class="text-right">{{ number_format($order->total(), 2) }}</td>
                                     <td>{{ $order->customer ? $order->customer->name : 'unknown' }}</td>
+                                    <td>{{ $order->user->getFullName() }}</td>
                                     <td>
                                         @foreach ($order->payments->groupBy('user_id') as $userId => $payments)
                                             {{ $payments->first()->user->getFullName() . ' - (' . number_format($payments->sum('amount'), 2) . ')' }}<br />
                                         @endforeach
                                     </td>
-                                    <td>{{ $order->user->getFullName() }}</td>
                                 </tr>
                             @endforeach
                             <tr class="table-bordered font-bold  text-right">

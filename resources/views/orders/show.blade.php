@@ -27,7 +27,7 @@
 @endsection
 
 @section('content-details')
-    <div class="card p-2">
+    <div class="card p-2 col-md-4">
         <h4>Order # {{ $order->POS_number }}</h4>
         <div class="d-flex justify-content-between">
             <span>Date Taken:</span>

@@ -291,8 +291,9 @@ class OrderController extends Controller
     {
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
-        $pdf = Pdf::loadView('pdf.order80mm', compact('order'));
-        $pdf->setPaper([0, 0, 80, 180], 'portrait'); // 80mm thermal paper
+        $pdf = Pdf::loadView('pdf.order80mm2', compact('order'));
+        $pdf->set_option('dpi', 72);
+        $pdf->setPaper([0, 0, 204, 650], 'portrait'); // 80mm thermal paper
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 }

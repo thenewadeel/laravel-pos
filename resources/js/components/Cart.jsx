@@ -112,7 +112,7 @@ class Cart extends Component {
                     this.setState({ id: "" });
                 })
                 .catch((err) => {
-                    Swal.fire("Error!", err.response.data.message, "error");
+                    // Swal.fire("Error!", err.response.data.message, "error");
                 });
         }
     }
@@ -131,7 +131,7 @@ class Cart extends Component {
             .post("/cart/change-qty", { product_id, quantity: qty })
             .then((res) => {})
             .catch((err) => {
-                Swal.fire("Error!", err.response.data.message, "error");
+                // Swal.fire("Error!", err.response.data.message, "error");
             });
     }
 
@@ -202,7 +202,7 @@ class Cart extends Component {
                     console.log(res);
                 })
                 .catch((err) => {
-                    Swal.fire("Error!", err.response.data.message, "error");
+                    // Swal.fire("Error!", err.response.data.message, "error");
                 });
         }
     }

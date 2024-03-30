@@ -10,11 +10,11 @@ class Product extends Model
         'name',
         'description',
         'image',
-        'barcode',
+        // 'barcode',
         'price',
         'quantity',
         'status',
-        'category'
+        // 'category'
     ];
 
     public function shops()

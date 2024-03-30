@@ -9,6 +9,8 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ListOf;
+use Illuminate\Support\Facades\Log;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -34,6 +36,22 @@ class ProductController extends Controller
             $itemsPerPage = $request->itemCount;
         }
         $products = $products->with('categories')->latest()->paginate($itemsPerPage);
+        if (request()->wantsJson()) {
+            // logger("asd");
+            return ProductResource::collection($products);
+        }
+        return view('products.index')->with('products', $products);
+    }
+
+    public function productsbyCat(Request $request)
+    {
+        logger(['$request', $request]);
+        $category = Category::with('products.product')->where('name', 'Tokenised Items')->firstOrFail();
+        $catProducts = $category->products;
+        $products = $catProducts->map(function ($product) {
+            return $product->product;
+        });
+        // dd($catProducts->toArray(), $catProducts, $request);
         if (request()->wantsJson()) {
             return ProductResource::collection($products);
         }

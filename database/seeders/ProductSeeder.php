@@ -9,6 +9,7 @@ use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
 use Illuminate\Support\Facades\DB;
+use App\Models\Shop;
 
 class ProductSeeder extends Seeder
 {
@@ -359,7 +360,6 @@ class ProductSeeder extends Seeder
             ],
         ];
 
-
         foreach ($directory as $productSpecimen) {
             // dd($productSpecimen);
 
@@ -375,10 +375,19 @@ class ProductSeeder extends Seeder
             ]);
         }
 
-
         $category = Category::updateOrCreate([
             'name' => 'Tokenised Items',
         ]);
+
+        $shopNames = ["TokenShop1", "TokenShop2", "TokenShop3"];
+        foreach ($shopNames as $shopName) {
+            $shop = Shop::updateOrCreate([
+                'name' => $shopName,
+                'description' => $shopName,
+                'image' => '',
+            ]);
+            $shop->categories()->attach($category);
+        }
         foreach ($tokenItems as $productSpecimen) {
             // dd($productSpecimen);
 

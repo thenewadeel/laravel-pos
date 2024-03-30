@@ -14,6 +14,10 @@ use App\Models\Payment;
 use App\Models\Discount;
 use App\Models\OrderItem;
 use App\Models\Product;
+use Illuminate\Log\Logger;
+use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+use Mike42\Escpos\Printer;
 // use PDF;
 
 class OrderController extends Controller
@@ -261,7 +265,7 @@ class OrderController extends Controller
                 'user_id' => $request->user()->id,
             ]);
         }
-        return 'success';
+        return ['message' => 'success', 'order' => $order];
     }
     public function print($id)
     {
@@ -296,4 +300,41 @@ class OrderController extends Controller
         $pdf->setPaper([0, 0, 204, 650], 'portrait'); // 80mm thermal paper
         return $pdf->download('order_' . $order->id . '.pdf');
     }
+
+
+
+    public function printTokens($id)
+    {
+        Logger(['printTokens func:', $id]);;;
+
+
+
+
+        // $connector = new NetworkPrintConnector("192.168.85.1", 8899);
+        $connector = new NetworkPrintConnector("192.168.0.162", 8899);
+        $printer = new Printer($connector);
+        try {
+            // ... Print stuff
+            $printer->text("Assalam o alaikum!\n");
+            $printer->cut();
+        } finally {
+            $printer->close();
+        }
+        $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
+            ->findOrFail($id);
+        $pdf = Pdf::loadView('pdf.order80mm2', compact('order'));
+        $pdf->set_option('dpi', 72);
+        $pdf->setPaper([0, 0, 204, 650], 'portrait'); // 80mm thermal paper
+        return $pdf->download('order_' . $order->id . '.pdf');
+    }
 }
+// <?php
+// /* Call this file 'hello-world.php' */
+// require __DIR__ . '/vendor/autoload.php';
+
+// use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+// use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+// use Mike42\Escpos\Printer;
+// $connector = new FilePrintConnector("php://stdout");
+
+// $printer -> close();

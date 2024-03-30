@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/orders/{order}/item/{item}', [OrderController::class, 'destroyItem'])
         ->name('order.items.destroy');
     Route::get('/orders/print/{order}', [OrderController::class, 'printPdf'])->name('orders.print');
+    Route::get('/orders/printTokens/{order}', [OrderController::class, 'printTokens'])->name('orders.printTokens');
     Route::get('/orders/printPreview/{order}', [OrderController::class, 'printPreview'])->name('orders.print.preview');
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 
@@ -87,10 +88,18 @@ Route::middleware('auth')->group(function () {
         Route::delete('/cart/delete', [CartController::class, 'delete']);
         Route::delete('/cart/empty', [CartController::class, 'empty']);
 
+        Route::get('/cartTokens', [CartController::class, 'indexTokens'])->name('cart.indexTokens');
+
+
         Route::post('/users/{user}/updateShops', [UsersController::class, 'updateShops'])
             ->name('users.updateShops');
         Route::post('/shops/{shop}/updateCategories', [ShopController::class, 'updateCategories'])
             ->name('shop.updateCategories');
+
+
+        // Route to get products filtered by categories 
+        Route::get('/productsbyCat', [ProductController::class, 'productsbyCat'])
+            ->name('productsbyCat');
 
         // Transaltions route for React component
         Route::get('/locale/{type}', function ($type) {

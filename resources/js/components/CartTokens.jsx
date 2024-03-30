@@ -241,43 +241,46 @@ class Cart extends Component {
                 {/* <pre style={{ maxWidth: "500px", overflowWrap: "break-word" }}>
                     {JSON.stringify(this.state, null, 4)}
                 </pre> */}
-                <div
-                    className="card col-8"
-                    style={{
-                        overflow: "scroll",
-                        height: "calc(30vh)",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <div className="card-header flex flex-row d-row align-middle items-center">
-                        <div className="text-lg font-extrabold font-serif col-8">
-                            Chand Raat Menu
+                <div className="col col-8">
+                    <div
+                        className="card "
+                        style={{
+                            overflow: "scroll",
+                            height: "calc(30vh)",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <div className="card-header flex flex-row d-row align-middle items-center">
+                            <div className="text-lg font-extrabold font-serif col-8">
+                                Chand Raat Menu
+                            </div>
+                            <input
+                                type="text"
+                                className="form-control grow"
+                                placeholder={
+                                    translations["search_product"] + "..."
+                                }
+                                onChange={this.handleChangeSearch}
+                                onKeyDown={this.handleSeach}
+                            />
                         </div>
-                        <input
-                            type="text"
-                            className="form-control grow"
-                            placeholder={translations["search_product"] + "..."}
-                            onChange={this.handleChangeSearch}
-                            onKeyDown={this.handleSeach}
-                        />
-                    </div>
-                    <div className="card-body order-product">
-                        {products.map((p) => (
-                            <div
-                                onClick={() => this.addProductToCart(p.id)}
-                                key={p.id}
-                                className="item"
-                                style={{
-                                    border: "2px solid darkgray",
-                                    cursor: "pointer",
-                                    transition: "box-shadow 0.3s",
-                                    "&:hover": {
-                                        border: "40px solid darkgray",
-                                    },
-                                }}
-                            >
-                                {/* {console.log({"p":p.image_url})} */}
-                                {/* <img
+                        <div className="card-body order-product">
+                            {products.map((p) => (
+                                <div
+                                    onClick={() => this.addProductToCart(p.id)}
+                                    key={p.id}
+                                    className="item"
+                                    style={{
+                                        border: "2px solid darkgray",
+                                        cursor: "pointer",
+                                        transition: "box-shadow 0.3s",
+                                        "&:hover": {
+                                            border: "40px solid darkgray",
+                                        },
+                                    }}
+                                >
+                                    {/* {console.log({"p":p.image_url})} */}
+                                    {/* <img
                                     src={
                                         p.image_url === "/storage/"
                                             ? "/images/defaultItem.png"
@@ -285,24 +288,68 @@ class Cart extends Component {
                                     }
                                     alt="" className="w-64 h-64 border-4 border-red-900"
                                 /> */}
-                                <div
-                                    style={{
-                                        padding: "4px",
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    {p.name}
-                                    <br />
-                                    <span style={{ fontStyle: "italic" }}>
-                                        ({p.price})
-                                    </span>
+                                    <div
+                                        style={{
+                                            padding: "4px",
+                                            textAlign: "center",
+                                        }}
+                                    >
+                                        {p.name}
+                                        <br />
+                                        <span style={{ fontStyle: "italic" }}>
+                                            ({p.price})
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="card-footer">DSA</div>
+                    </div>
+                    <div
+                        className="card "
+                        style={{
+                            overflow: "scroll",
+                            height: "calc(30vh)",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <div className="card-header flex flex-row d-row align-middle items-center">
+                            <div className="text-lg font-extrabold font-serif col-8">
+                                Change Calculator
+                            </div>
+                        </div>
+                        <div className="card-body order-product">
+                            <br />
+                            {/* Amount Total: ${this.getTotal(cart).toFixed(2)} */}
+                            <div className="row  text-lg">
+                                <div className="col">
+                                    {translations["total"]}:
+                                </div>
+                                <div className="col text-right">
+                                    {window.APP.currency_symbol}{" "}
+                                    {this.getTotal(cart)}
                                 </div>
                             </div>
-                        ))}
+                            <br />
+                            Received:
+                            <input
+                                type="number"
+                                value="0"
+                                onChange={(e) => {
+                                    document.getElementById(
+                                        "change"
+                                    ).innerHTML =
+                                        this.getTotal(cart).toFixed(2) - e;
+                                }}
+                            />
+                            <br />
+                            Change: $<span id="change"></span>
+                            <br />
+                        </div>
+                        <div className="card-footer">DSA</div>
                     </div>
-                    <div className="card-footer">DSA</div>
                 </div>
-                <div className="col-md-6 col-lg-4 card ">
+                <div className="col-4 card ">
                     <div className="col card-body">
                         {/* <div className="col"> */}
                         <select

@@ -82,6 +82,12 @@
                     </a>
                 </li>
                 <li class="nav-item has-treeview">
+                    <a href="{{ route('cart.indexTokens') }}" class="nav-link {{ activeSegment('cart') }}">
+                        <i class="nav-icon fas fa-cart-plus"></i>
+                        <p>{{ __('cart.title2') }}</p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
                     <a href="{{ route('orders.index') }}" class="nav-link {{ activeSegment('orders') }}">
                         <i class="nav-icon fas fa-cart-plus"></i>
                         <p>{{ __('order.title') }}</p>

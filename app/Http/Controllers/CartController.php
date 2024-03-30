@@ -16,6 +16,15 @@ class CartController extends Controller
         }
         return view('cart.index');
     }
+    public function indexTokens(Request $request)
+    {
+        if ($request->wantsJson()) {
+            return response(
+                $request->user()->cart()->get()
+            );
+        }
+        return view('cart.indexTokens');
+    }
 
     public function store(Request $request)
     {
@@ -28,20 +37,20 @@ class CartController extends Controller
         $cart = $request->user()->cart()->where('id', $id)->first();
         if ($cart) {
             // check product quantity
-            if ($product->quantity <= $cart->pivot->quantity) {
-                return response([
-                    'message' => __('cart.available', ['quantity' => $product->quantity]),
-                ], 400);
-            }
+            // if ($product->quantity <= $cart->pivot->quantity) {
+            //     return response([
+            //         'message' => __('cart.available', ['quantity' => $product->quantity]),
+            //     ], 400);
+            // }
             // update only quantity
             $cart->pivot->quantity = $cart->pivot->quantity + 1;
             $cart->pivot->save();
         } else {
-            if ($product->quantity < 1) {
-                return response([
-                    'message' => __('cart.outstock'),
-                ], 400);
-            }
+            // if ($product->quantity < 1) {
+            //     return response([
+            //         'message' => __('cart.outstock'),
+            //     ], 400);
+            // }
             $request->user()->cart()->attach($product->id, ['quantity' => 1]);
         }
 
@@ -60,11 +69,11 @@ class CartController extends Controller
 
         if ($cart) {
             // check product quantity
-            if ($product->quantity < $request->quantity) {
-                return response([
-                    'message' => __('cart.available', ['quantity' => $product->quantity]),
-                ], 400);
-            }
+            // if ($product->quantity < $request->quantity) {
+            //     return response([
+            //         'message' => __('cart.available', ['quantity' => $product->quantity]),
+            //     ], 400);
+            // }
             $cart->pivot->quantity = $request->quantity;
             $cart->pivot->save();
         }

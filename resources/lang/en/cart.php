@@ -39,5 +39,6 @@ return [
     'cancel'            => 'Cancel',
     'checkout'          => 'Checkout',
     'search_product'    => 'Search Product',
+    'title2'            => 'Chand Raat',
 
 ];

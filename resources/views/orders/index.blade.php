@@ -71,9 +71,9 @@
                             <td>{{ $order->getCustomerName() }}</td>
                             <td style="vertical-align: middle; text-align: center;">
                                 @if ($order->state == 'preparing')
-                                    <span class="badge badge-success">{{ __('order.Preparing') }}</span>
+                                    {{-- <span class="badge badge-success">{{ __('order.Preparing') }}</span> --}}
                                 @elseif($order->state == 'served')
-                                    <span class="badge badge-warning">{{ __('order.Served') }}</span>
+                                    {{-- <span class="badge badge-warning">{{ __('order.Served') }}</span> --}}
                                 @elseif($order->state == 'wastage')
                                     <span class="badge badge-dark">{{ __('order.Wastage') }}</span>
                                 @elseif($order->state == 'closed')

@@ -15,9 +15,11 @@ use App\Models\Discount;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Log\Logger;
-use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use App\Jobs\PrintOrderTokensJob;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
+use Exception;
+
 // use PDF;
 
 class OrderController extends Controller
@@ -138,15 +140,15 @@ class OrderController extends Controller
         } elseif ($order->stateLabel() == __('order.Paid')) {
             $routeString = 'orders.show';
             $message = 'Payment added successfully';
-            $order->state = 'closed';
-            $order->save();
+            // $order->state = 'closed';
+            // $order->save();
         } elseif ($order->stateLabel() == __('order.Change')) {
             $routeString = 'orders.show';
             $customerName = $order->customer ? $order->customer->name : 'unknown';
             $message = 'Payment added successfully & Change attributed to ' . $customerName;
-            $order->state = 'closed';
-            $order->save();
         }
+        $order->state = 'closed';
+        $order->save();
 
 
         return redirect()->route($routeString, $order)->with('success', $message);
@@ -295,7 +297,9 @@ class OrderController extends Controller
     {
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
-        $pdf = Pdf::loadView('pdf.order80mm2', compact('order'));
+        $orderStatus = $this->getOrderStatus($order);
+
+        $pdf = Pdf::loadView('pdf.order80mm2', compact('order', 'orderStatus'));
         $pdf->set_option('dpi', 72);
         $pdf->setPaper([0, 0, 204, 650], 'portrait'); // 80mm thermal paper
         return $pdf->download('order_' . $order->id . '.pdf');
@@ -310,31 +314,83 @@ class OrderController extends Controller
 
 
 
-        // $connector = new NetworkPrintConnector("192.168.85.1", 8899);
-        $connector = new NetworkPrintConnector("192.168.0.162", 8899);
-        $printer = new Printer($connector);
-        try {
-            // ... Print stuff
-            $printer->text("Assalam o alaikum!\n");
-            $printer->cut();
-        } finally {
-            $printer->close();
-        }
+        // Use laravel queue to handle printing
+        // This will prevent blocking the HTTP request
+        // PrintOrderTokensJob::dispatch($id);
+        // dispatch(PrintOrderTokensJob::makeJob($id));
+
+
+        return $this->downloadOrderTokensPDF($id);
+    }
+    /**
+     * Download a PDF of the order with the given ID
+     *
+     * @param int $id The ID of the order to download
+     * @return \Illuminate\Http\Response The PDF file
+     */
+    public function downloadOrderPDF($id)
+    {
+        Logger(['downloadOrderPDF:', $id]);;;
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
-        $pdf = Pdf::loadView('pdf.order80mm2', compact('order'));
+        $orderStatus = $this->getOrderStatus($order);
+        $pdf = Pdf::loadView('pdf.order80mm2', compact('order', 'orderStatus'));
         $pdf->set_option('dpi', 72);
         $pdf->setPaper([0, 0, 204, 650], 'portrait'); // 80mm thermal paper
         return $pdf->download('order_' . $order->id . '.pdf');
     }
+    public function downloadOrderTokensPDF($id)
+    {
+        Logger(['downloadOrderTokensPDF:', $id]);;;
+        $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
+            ->findOrFail($id);
+
+        $pdf = Pdf::loadView('pdf.ordertokens80mm', compact('order'));
+        $pdf->set_option('dpi', 72);
+        $pdf->setPaper([0, 0, 204, 800], 'portrait'); // 80mm thermal paper
+        return $pdf->download('order_' . $order->id . '.pdf');
+    }
+
+    public function getOrderStatus(Order $order)
+    {
+        if ($order->state == 'closed') {
+            $orderStatus = '';
+            switch ($label = $order->stateLabel()) {
+                case __('order.Not_Paid'):
+                    $orderStatus = 'UNPAID';
+                    break;
+                case __('order.Partial'):
+                    $orderStatus = 'Part-Chit';
+                    break;
+                case __('order.Paid'):
+                    $orderStatus = 'PAID';
+                    break;
+                case __('order.Change'):
+                    $orderStatus = 'Change';
+                    break;
+            }
+            return $orderStatus;
+        } else return '|';
+    }
+
+    public function printToPOS($order, $ip = "192.168.0.162"): void
+    {
+        logger('printing tokens job started');
+        try {
+            $connector = new NetworkPrintConnector($ip, 8899, $timeout = 25);
+            $printer = new Printer($connector);
+            try {
+                // ... Print stuff
+                $printer->text("Assalam o alaikum!\n");
+                $printer->cut();
+            } catch (Exception $e) {
+                logger($e->getMessage());
+            } finally {
+                $printer->close();
+            }
+        } catch (Exception $e) {
+            logger('Failed to connect to printer: ' . $e->getMessage());
+            return;
+        }
+    }
 }
-// <?php
-// /* Call this file 'hello-world.php' */
-// require __DIR__ . '/vendor/autoload.php';
-
-// use Mike42\Escpos\PrintConnectors\FilePrintConnector;
-// use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
-// use Mike42\Escpos\Printer;
-// $connector = new FilePrintConnector("php://stdout");
-
-// $printer -> close();

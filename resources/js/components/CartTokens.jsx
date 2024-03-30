@@ -237,12 +237,12 @@ class Cart extends Component {
         const { cart, products, customers, id, translations, shops } =
             this.state;
         return (
-            <div className="col">
+            <div className="row">
                 {/* <pre style={{ maxWidth: "500px", overflowWrap: "break-word" }}>
                     {JSON.stringify(this.state, null, 4)}
                 </pre> */}
                 <div
-                    className="card "
+                    className="card col-8"
                     style={{
                         overflow: "scroll",
                         height: "calc(30vh)",
@@ -302,8 +302,8 @@ class Cart extends Component {
                     </div>
                     <div className="card-footer">DSA</div>
                 </div>
-                <div className="col-md-6 col-lg-4">
-                    <div className="col ">
+                <div className="col-md-6 col-lg-4 card ">
+                    <div className="col card-body">
                         {/* <div className="col"> */}
                         <select
                             className="form-control"
@@ -318,7 +318,6 @@ class Cart extends Component {
                                 >{`${shp.name}`}</option>
                             ))}
                         </select>
-
                         <div className="input-group">
                             <p className="form-control-plaintext">
                                 {translations["general_customer"]}
@@ -328,7 +327,7 @@ class Cart extends Component {
                     <div className="user-cart mx-3">
                         <div
                             className="card"
-                            style={{ minHeight: "400px", overflowY: "scroll" }}
+                            style={{ minHeight: "500px", overflowY: "scroll" }}
                         >
                             <table className="table table-striped">
                                 <thead>

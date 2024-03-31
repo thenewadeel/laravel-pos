@@ -54,12 +54,16 @@ class Cart extends Component {
     }
 
     loadShops() {
-        axios.get(`/listOfShops`).then((res) => {
-            const shops = res.data;
-            this.setState({ shops });
-            this.setState({ shop_id: shops[0].id });
-            // console.log("shops returnd:", shops);
-        });
+        axios
+            .get(`/listOfShops`)
+            .then((res) => {
+                const shops = res.data;
+                this.setState({ shops: shops || [] });
+                this.setState({ shop_id: shops?.[0]?.id || undefined });
+            })
+            .catch((err) => {
+                console.error("Error loading shops:", err);
+            });
     }
 
     loadProducts(search = "") {
@@ -183,6 +187,12 @@ class Cart extends Component {
     }
     handleClickSubmit() {
         let cartTotal = this.getTotal(this.state.cart);
+        // let paymentEntered = document.getElementById("paymentInput").value;
+        // console.log({ paymentEntered });
+        // if (paymentEntered < this.cartTotal) {
+        //     alert("payment is less");
+        //     return;
+        // } else {
         Swal.fire({
             title: `Close Payment `,
             input: "text",
@@ -203,7 +213,8 @@ class Cart extends Component {
                     .post("/orders", postObj)
                     .then((res) => {
                         this.loadCart();
-                        // this.showPopup("QQQQQQQQ");
+                        // console.log({ res });
+
                         return res.data;
                     })
                     .catch((err) => {
@@ -223,15 +234,25 @@ class Cart extends Component {
                 document.body.removeChild(link);
                 URL.revokeObjectURL(link.href);
 
-                // Swal.fire({
-                //     title: "Paid!".amount,
-                //     text: `Your order has been closed. Cash Served: ${JSON.stringify(
-                //         result.value.order
-                //     )}`,
-                //     icon: "success",
-                // });
+                console.log("posting to route, payment", result);
+                let order = result.value.order;
+                return axios
+                    .post(`/orders/${order.id}/addPayment`, {
+                        order_id: order.id,
+                        // user_id: "XXXXX",
+                        amount: 0,
+                    })
+                    .then((res) => {
+                        this.loadCart();
+                        // this.showPopup("QQQQQQQQ");
+                        return res.data;
+                    })
+                    .catch((err) => {
+                        Swal.showValidationMessage(err);
+                    });
             }
         });
+        // }
     }
     render() {
         const { cart, products, customers, id, translations, shops } =
@@ -246,7 +267,7 @@ class Cart extends Component {
                         className="card "
                         style={{
                             overflow: "scroll",
-                            height: "calc(30vh)",
+                            height: "calc(90vh)",
                             justifyContent: "space-between",
                         }}
                     >
@@ -264,12 +285,17 @@ class Cart extends Component {
                                 onKeyDown={this.handleSeach}
                             />
                         </div>
-                        <div className="card-body order-product">
+                        <div
+                            className="card-body order-product d-flex flex-wrap justify-content-between"
+                            style={{
+                                justifyContent: "space-between",
+                            }}
+                        >
                             {products.map((p) => (
                                 <div
                                     onClick={() => this.addProductToCart(p.id)}
                                     key={p.id}
-                                    className="item"
+                                    className="item text-xl font-serif font-extrabold d-flex flex-column justify-content-center"
                                     style={{
                                         border: "2px solid darkgray",
                                         cursor: "pointer",
@@ -277,6 +303,8 @@ class Cart extends Component {
                                         "&:hover": {
                                             border: "40px solid darkgray",
                                         },
+                                        width: "calc(20% - 20px)" /* 20px is the margin on each side */,
+                                        margin: "10px",
                                     }}
                                 >
                                     {/* {console.log({"p":p.image_url})} */}
@@ -305,153 +333,177 @@ class Cart extends Component {
                         </div>
                         <div className="card-footer">DSA</div>
                     </div>
-                    <div
-                        className="card "
-                        style={{
-                            overflow: "scroll",
-                            height: "calc(30vh)",
-                            justifyContent: "space-between",
-                        }}
-                    >
-                        <div className="card-header flex flex-row d-row align-middle items-center">
-                            <div className="text-lg font-extrabold font-serif col-8">
-                                Change Calculator
-                            </div>
-                        </div>
-                        <div className="card-body order-product">
-                            <br />
-                            {/* Amount Total: ${this.getTotal(cart).toFixed(2)} */}
-                            <div className="row  text-lg">
-                                <div className="col">
-                                    {translations["total"]}:
-                                </div>
-                                <div className="col text-right">
-                                    {window.APP.currency_symbol}{" "}
-                                    {this.getTotal(cart)}
-                                </div>
-                            </div>
-                            <br />
-                            Received:
-                            <input
-                                type="number"
-                                value="0"
-                                onChange={(e) => {
-                                    document.getElementById(
-                                        "change"
-                                    ).innerHTML =
-                                        this.getTotal(cart).toFixed(2) - e;
-                                }}
-                            />
-                            <br />
-                            Change: $<span id="change"></span>
-                            <br />
-                        </div>
-                        <div className="card-footer">DSA</div>
-                    </div>
                 </div>
-                <div className="col-4 card ">
+                <div
+                    className="col-4 card container-fluid "
+                    style={{ height: "90vh" }}
+                >
                     <div className="col card-body">
-                        {/* <div className="col"> */}
-                        <select
-                            className="form-control"
-                            onChange={this.setShopId}
-                        >
-                            {/* {console.log(shops)} */}
-                            {/* <option value="">Shops</option> */}
-                            {shops.map((shp) => (
-                                <option
-                                    key={shp.id}
-                                    value={shp.id}
-                                >{`${shp.name}`}</option>
-                            ))}
-                        </select>
-                        <div className="input-group">
-                            <p className="form-control-plaintext">
-                                {translations["general_customer"]}
-                            </p>
+                        <div className="col " style={{ height: "60%" }}>
+                            {/* <select
+                                className="form-control"
+                                onChange={this.setShopId}
+                            >
+                                {shops.map((shp) => (
+                                    <option
+                                        key={shp.id}
+                                        value={shp.id}
+                                    >{`${shp.name}`}</option>
+                                ))}
+                            </select>
+                            <div className="input-group">
+                                <p className="form-control-plaintext">
+                                    {translations["general_customer"]}
+                                </p>
+                            </div> */}
+                            <div
+                                className="user-cart row w-100"
+                                style={{ height: "100%", overflowY: "scroll" }}
+                            >
+                                {/* <div
+                                className="card"
+                            > */}
+                                <table className="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                {translations["product_name"]}
+                                            </th>
+                                            <th>{translations["quantity"]}</th>
+                                            <th className="text-right">
+                                                {translations["price"]}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {cart.map((c) => (
+                                            <tr key={c.id}>
+                                                <td>{c.name}</td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control form-control-sm qty"
+                                                        value={c.pivot.quantity}
+                                                        onChange={(event) =>
+                                                            this.handleChangeQty(
+                                                                c.id,
+                                                                event.target
+                                                                    .value
+                                                            )
+                                                        }
+                                                    />
+                                                    <button
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() =>
+                                                            this.handleClickDelete(
+                                                                c.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <i className="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                                <td className="text-right">
+                                                    {window.APP.currency_symbol}{" "}
+                                                    {(
+                                                        c.price *
+                                                        c.pivot.quantity
+                                                    ).toFixed(2)}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                                {/* </div> */}
+                            </div>
                         </div>
-                    </div>
-                    <div className="user-cart mx-3">
                         <div
                             className="card"
-                            style={{ minHeight: "500px", overflowY: "scroll" }}
+                            style={{
+                                overflow: "scroll",
+                                // height: "calc(30vh)",
+                                justifyContent: "space-between",
+                            }}
                         >
-                            <table className="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>{translations["product_name"]}</th>
-                                        <th>{translations["quantity"]}</th>
-                                        <th className="text-right">
-                                            {translations["price"]}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {cart.map((c) => (
-                                        <tr key={c.id}>
-                                            <td>{c.name}</td>
-                                            <td>
-                                                <input
-                                                    type="text"
-                                                    className="form-control form-control-sm qty"
-                                                    value={c.pivot.quantity}
-                                                    onChange={(event) =>
-                                                        this.handleChangeQty(
-                                                            c.id,
-                                                            event.target.value
-                                                        )
-                                                    }
-                                                />
-                                                <button
-                                                    className="btn btn-danger btn-sm"
-                                                    onClick={() =>
-                                                        this.handleClickDelete(
-                                                            c.id
-                                                        )
-                                                    }
-                                                >
-                                                    <i className="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                            <td className="text-right">
-                                                {window.APP.currency_symbol}{" "}
-                                                {(
-                                                    c.price * c.pivot.quantity
-                                                ).toFixed(2)}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div className="row  text-lg">
-                        <div className="col">{translations["total"]}:</div>
-                        <div className="col text-right">
-                            {window.APP.currency_symbol} {this.getTotal(cart)}
-                        </div>
-                    </div>
-                    <div className="col ">
-                        <div className="col m-2">
-                            <button
-                                type="button"
-                                className="btn btn-danger btn-block"
-                                onClick={this.handleEmptyCart}
-                                disabled={!cart.length}
-                            >
-                                {translations["cancel"]}
-                            </button>
-                        </div>
+                            <div className="card-header flex flex-row d-row align-middle items-center">
+                                <div className="text-lg font-extrabold font-serif col-8">
+                                    Change Calculator
+                                </div>
+                            </div>
+                            <div className="card-body order-product w-100 font-sarif">
+                                {/* Amount Total: ${this.getTotal(cart).toFixed(2)} */}
+                                <div className="">
+                                    <div className="d-flex justify-content-between col-12 blockquote">
+                                        <span className="">Total Amount</span>
+                                        <span className=" font-bold text-lg ">
+                                            {window.APP.currency_symbol}{" "}
+                                            {this.getTotal(cart)}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="input-group ">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text text-lg">
+                                            Payment
+                                        </span>
+                                    </div>
+                                    <input
+                                        type="number"
+                                        className="form-control text-right"
+                                        aria-label="Amount (to the nearest dollar)"
+                                        id="paymentInput"
+                                        onChange={(e) => {
+                                            const inputValue = parseInt(
+                                                e.target.value
+                                            );
+                                            document.getElementById(
+                                                "change"
+                                            ).innerHTML =
+                                                this.getTotal(cart) -
+                                                inputValue;
+                                        }}
+                                    />
+                                    <div className="input-group-append">
+                                        <span className="input-group-text">
+                                            {window.APP.currency_symbol}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="input-group ">
+                                    <div className="d-flex justify-content-between col-12 blockquote">
+                                        <span className="">Change</span>
+                                        <span className=" font-bold text-xl">
+                                            {window.APP.currency_symbol}{" "}
+                                            <span id="change">---</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card-footer">
+                                <div className="row ">
+                                    <div className="col">
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger btn-block"
+                                            onClick={this.handleEmptyCart}
+                                            disabled={!cart.length}
+                                        >
+                                            {translations["cancel"]}
+                                        </button>
+                                    </div>
 
-                        <div className="col m-2">
-                            <button
-                                type="button"
-                                className="btn btn-success btn-block"
-                                disabled={!cart.length}
-                                onClick={this.handleClickSubmit}
-                            >
-                                {"Pay"}
-                            </button>
+                                    <div className="col ">
+                                        <button
+                                            type="button"
+                                            className="btn btn-success btn-block"
+                                            disabled={!cart.length}
+                                            onClick={this.handleClickSubmit}
+                                        >
+                                            {"Pay"}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

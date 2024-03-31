@@ -55,12 +55,12 @@ class OrderController extends Controller
         //     $filters = array_intersect(['dine-in', 'take-away', 'delivery'], $request->type);
         //     $orders = $orders->whereIn('type', $filters);
         // }
-        // $today = now()->startOfDay();
-        // if ($request->start_date && $request->end_date) {
-        //     $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
-        // } else {
-        //     $orders = $orders->whereDate('created_at', $today);
-        // }
+        $today = now()->startOfDay();
+        if ($request->start_date && $request->end_date) {
+            $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
+        } else {
+            $orders = $orders->whereDate('created_at', $today);
+        }
 
         $unpaid = $request->has('unpaid') && $request->unpaid == '1';
         // $chit = $request->has('chit') && $request->chit == '1';
@@ -118,6 +118,7 @@ class OrderController extends Controller
 
     public function addPayment(Request $request, Order $order)
     {
+        logger("addPayment:", $request->all());
         // dd($request->all(), $order);
         // dd('$validatedData');
         $validatedData = $request->validate([
@@ -132,21 +133,21 @@ class OrderController extends Controller
 
 
         if ($order->stateLabel() == __('order.Not_Paid')) {
-            $routeString = 'orders.edit';
+            // $routeString = 'orders.edit';
             $message = 'Payment added successfully';
         } elseif ($order->stateLabel() == __('order.Partial')) {
-            $routeString = 'orders.edit';
+            // $routeString = 'orders.edit';
             $message = 'Payment added successfully';
         } elseif ($order->stateLabel() == __('order.Paid')) {
-            $routeString = 'orders.show';
+            // $routeString = 'orders.show';
             $message = 'Payment added successfully';
             // $order->state = 'closed';
             // $order->save();
         } elseif ($order->stateLabel() == __('order.Change')) {
-            $routeString = 'orders.show';
             $customerName = $order->customer ? $order->customer->name : 'unknown';
             $message = 'Payment added successfully & Change attributed to ' . $customerName;
         }
+        $routeString = 'orders.show';
         $order->state = 'closed';
         $order->save();
 

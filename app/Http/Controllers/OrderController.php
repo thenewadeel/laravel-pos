@@ -118,7 +118,7 @@ class OrderController extends Controller
 
     public function addPayment(Request $request, Order $order)
     {
-        logger("addPayment:", $request->all());
+        // logger("addPayment:", $request->all());
         // dd($request->all(), $order);
         // dd('$validatedData');
         $validatedData = $request->validate([
@@ -241,7 +241,7 @@ class OrderController extends Controller
     }
     public function store(OrderStoreRequest $request)
     {
-        logger($request);
+        // logger($request);
         $order = Order::create([
             'customer_id' => $request->customer_id,
             'user_id' => $request->user()->id,
@@ -310,7 +310,7 @@ class OrderController extends Controller
 
     public function printTokens($id)
     {
-        Logger(['printTokens func:', $id]);;;
+        // Logger(['printTokens func:', $id]);;;
 
 
 
@@ -331,7 +331,7 @@ class OrderController extends Controller
      */
     public function downloadOrderPDF($id)
     {
-        Logger(['downloadOrderPDF:', $id]);;;
+        // Logger(['downloadOrderPDF:', $id]);;;
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
         $orderStatus = $this->getOrderStatus($order);
@@ -342,7 +342,7 @@ class OrderController extends Controller
     }
     public function downloadOrderTokensPDF($id)
     {
-        Logger(['downloadOrderTokensPDF:', $id]);;;
+        // Logger(['downloadOrderTokensPDF:', $id]);;;
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
 
@@ -376,7 +376,7 @@ class OrderController extends Controller
 
     public function printToPOS($order, $ip = "192.168.0.162"): void
     {
-        logger('printing tokens job started');
+        // logger('printing tokens job started');
         try {
             $connector = new NetworkPrintConnector($ip, 8899, $timeout = 25);
             $printer = new Printer($connector);
@@ -385,12 +385,12 @@ class OrderController extends Controller
                 $printer->text("Assalam o alaikum!\n");
                 $printer->cut();
             } catch (Exception $e) {
-                logger($e->getMessage());
+                // logger($e->getMessage());
             } finally {
                 $printer->close();
             }
         } catch (Exception $e) {
-            logger('Failed to connect to printer: ' . $e->getMessage());
+            // logger('Failed to connect to printer: ' . $e->getMessage());
             return;
         }
     }

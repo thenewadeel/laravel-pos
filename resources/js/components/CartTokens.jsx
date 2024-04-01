@@ -170,6 +170,7 @@ class Cart extends Component {
             })
             .catch((err) => {
                 if (btn) btn.disabled = false; // enable button
+                window.location.reload();
                 // Swal.fire("Error!", err.response.data.message, "error");
             });
     }

@@ -46,7 +46,6 @@
     {{-- <img src="{{ asset('img/company-logo.png') }}" alt="{{ config('app.name') }} Logo" class="logo"> --}}
     {{-- <img src="{{ public_path('images/logo_blk.jpg') }}"> --}}
     @foreach ($order->items as $index => $item)
-        <hr>
         <header>
             <div style=";;;;display:flex;;margin-top:0rem;">
                 <table style=";;;;width:100%;">
@@ -104,13 +103,9 @@
                 <span>{{ $order->user->getFullname() }}</span>
             </div>
             <span>Date: {{ $order->created_at->format('d-m-Y h:i A') }}</span>
+            <div style="page-break-after:always;"></div>
+        </div>
     @endforeach
-    <hr>
-    </div>
-    <br>
-    <footer>
-    </footer>
-
 </body>
 
 </html>

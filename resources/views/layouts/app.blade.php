@@ -14,7 +14,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
-    <link href='fonts/fonts.css' rel='stylesheet'>
+    <link href={{ asset('fonts/fonts.css') }} rel='stylesheet'>
     {{-- <link rel="dns-prefetch" href="//fonts.gstatic.com"> --}}
     {{-- <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet"> --}}
 

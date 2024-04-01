@@ -150,23 +150,23 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>XXX</th>
-                        <th>XXX</th>
-                        <th>{{ config('settings.currency_symbol') }}
+                        <th></th>
+                        <th></th>
+                        <th style="text-align:center;">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalTotal) }}</th>
-                        <th>XXX</th>
-                        <th>{{ config('settings.currency_symbol') }}
+                        <th></th>
+                        <th style="text-align:center;">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalDiscountAmount) }}</th>
-                        <th>{{ config('settings.currency_symbol') }}
+                        <th style="text-align:center;">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalNetAmount) }}</th>
-                        <th>{{ config('settings.currency_symbol') }}
+                        <th style="text-align:center;">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalReceivedAmount) }}</th>
-                        <th>{{ config('settings.currency_symbol') }}
+                        <th style="text-align:center;">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalChitAmount) }}</th>
-                        <th>XXX</th>
-                        <th>XXX</th>
-                        <th>XXX</th>
-                        <th>XXX</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
 
                     </tr>
                 </tfoot>

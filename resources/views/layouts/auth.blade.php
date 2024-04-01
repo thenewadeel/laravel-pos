@@ -11,6 +11,7 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="{{ asset('css/ionicons.min.css') }}">
     <!-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> -->
+    <link href='fonts/fonts.css' rel='stylesheet'>
     {{-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> --}}
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     @yield('css')

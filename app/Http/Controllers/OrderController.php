@@ -348,7 +348,7 @@ class OrderController extends Controller
 
         $pdf = Pdf::loadView('pdf.ordertokens80mm', compact('order'));
         $pdf->set_option('dpi', 72);
-        $pdf->setPaper([0, 0, 204, 800], 'portrait'); // 80mm thermal paper
+        $pdf->setPaper([0, 0, 204, 260], 'portrait'); // 80mm thermal paper
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 

@@ -129,47 +129,49 @@ class Cart extends Component {
 
     addProductToCart(id) {
         let product = this.state.products.find((p) => p.id === id);
-        if (!!product) {
-            // if product is already in cart
-            let cart = this.state.cart.find((c) => c.id === product.id);
-            if (!!cart) {
-                // update quantity
-                this.setState({
-                    cart: this.state.cart.map((c) => {
-                        if (
-                            c.id === product.id &&
-                            product.quantity > c.pivot.quantity
-                        ) {
-                            c.pivot.quantity = c.pivot.quantity + 1;
-                        }
-                        return c;
-                    }),
-                });
-            } else {
-                if (product.quantity > 0) {
-                    product = {
-                        ...product,
-                        pivot: {
-                            quantity: 1,
-                            product_id: product.id,
-                            user_id: 1,
-                        },
-                    };
+        if (!product) return; // return early if product not found
 
-                    this.setState({ cart: [...this.state.cart, product] });
-                }
+        const btn = document.getElementById(`add-to-cart-${id}`);
+        if (btn) btn.disabled = true; // disable button
+
+        let cart = this.state.cart.find((c) => c.id === product.id);
+        if (cart) {
+            // update quantity
+            this.setState({
+                cart: this.state.cart.map((c) => {
+                    if (
+                        c.id === product.id &&
+                        product.quantity > c.pivot.quantity
+                    ) {
+                        c.pivot.quantity++;
+                    }
+                    return c;
+                }),
+            });
+        } else {
+            if (product.quantity > 0) {
+                product = {
+                    ...product,
+                    pivot: {
+                        quantity: 1,
+                        product_id: product.id,
+                        user_id: 1,
+                    },
+                };
+
+                this.setState({ cart: [...this.state.cart, product] });
             }
-
-            axios
-                .post("/cart", { id })
-                .then((res) => {
-                    // this.loadCart();
-                    // console.log(res);
-                })
-                .catch((err) => {
-                    // Swal.fire("Error!", err.response.data.message, "error");
-                });
         }
+
+        axios
+            .post("/cart", { id })
+            .then((res) => {
+                if (btn) btn.disabled = false; // enable button
+            })
+            .catch((err) => {
+                if (btn) btn.disabled = false; // enable button
+                // Swal.fire("Error!", err.response.data.message, "error");
+            });
     }
 
     setCustomerId(event) {
@@ -294,6 +296,7 @@ class Cart extends Component {
                             {products.map((p) => (
                                 <div
                                     onClick={() => this.addProductToCart(p.id)}
+                                    id={"add-to-cart-" + p.id}
                                     key={p.id}
                                     className="item text-xl font-serif font-extrabold d-flex flex-column justify-content-center"
                                     style={{

@@ -78,7 +78,7 @@ class OrderController extends Controller
         //     // $orders = $orders->whereHas('discounts', 'hasAny');
         // }
 
-        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->paginate(25);
+        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->get(); //->paginate(25);
 
         $total = $orders->map(function ($i) {
             return $i->total();
@@ -86,8 +86,22 @@ class OrderController extends Controller
         $receivedAmount = $orders->map(function ($i) {
             return $i->receivedAmount();
         })->sum();
-
-        return view('orders.index', compact('orders', 'total', 'receivedAmount'));
+        $totalTotal = $orders->map(function ($i) {
+            return $i->total();
+        })->sum();
+        $totalDiscountAmount = $orders->map(function ($i) {
+            return $i->discountAmount();
+        })->sum();
+        $totalNetAmount = $orders->map(function ($i) {
+            return $i->discountedTotal();
+        })->sum();
+        $totalReceivedAmount = $orders->map(function ($i) {
+            return $i->receivedAmount();
+        })->sum();
+        $totalChitAmount = $orders->map(function ($i) {
+            return $i->balance();
+        })->sum();
+        return view('orders.index', compact('orders', 'total', 'receivedAmount', 'totalTotal', 'totalDiscountAmount', 'totalNetAmount', 'totalReceivedAmount', 'totalChitAmount'));
     }
 
     public function edit(Order $order)

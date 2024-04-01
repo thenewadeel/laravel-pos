@@ -45,9 +45,8 @@
                     <tr>
                         {{-- <th>{{ __('order.ID') }}</th> --}}
                         <th>{{ __('order.POS_Number') }}</th>
-                        <th>{{ __('order.Date') }}</th>
+                        {{-- <th>{{ __('order.Date') }}</th> --}}
                         <th>{{ __('order.Customer_Name') }}</th>
-                        <th>{{ __('order.Status') }}</th>
                         <th>{{ __('order.Total') }}</th>
                         <th>{{ __('order.Discounts') }}</th>
                         <th>{{ __('order.DiscountAmount') }}</th>
@@ -59,6 +58,7 @@
                         {{-- <th>{{ 'Shop' }}</th> --}}
                         <th>{{ __('order.Taken_By') }}</th>
                         <th>{{ __('order.Closed_By') }}</th>
+                        <th>{{ __('order.Status') }}</th>
                         <th>{{ __('order.Actions') }}</th>
                     </tr>
                 </thead>
@@ -67,33 +67,9 @@
                         <tr>
                             {{-- <td>{{ $order->id }}</td> --}}
                             <td title="{{ $order }}">{{ $order->POS_number }}</td>
-                            <td>{{ $order->created_at->format('d-M-y') }}</td>
+                            {{-- <td>{{ $order->created_at->format('d-M-y') }}</td> --}}
                             <td>{{ $order->getCustomerName() }}</td>
-                            <td style="vertical-align: middle; text-align: center;">
-                                @if ($order->state == 'preparing')
-                                    {{-- <span class="badge badge-success">{{ __('order.Preparing') }}</span> --}}
-                                @elseif($order->state == 'served')
-                                    {{-- <span class="badge badge-warning">{{ __('order.Served') }}</span> --}}
-                                @elseif($order->state == 'wastage')
-                                    <span class="badge badge-dark">{{ __('order.Wastage') }}</span>
-                                @elseif($order->state == 'closed')
-                                    <span class="badge badge-danger">{{ __('order.Closed') }}</span>
-                                @endif
 
-
-
-                                @if ($order->stateLabel() == __('order.Not_Paid'))
-                                    <span class="badge badge-danger">
-                                    @elseif($order->stateLabel() == __('order.Partial'))
-                                        <span class="badge badge-warning">
-                                        @elseif($order->stateLabel() == __('order.Paid'))
-                                            <span class="badge badge-success">
-                                            @else
-                                                {{-- if($order->stateLabel() == __('order.Change')) --}}
-                                                <span class="badge badge-info">
-                                @endif
-                                {{ $order->stateLabel() }}</span>
-                            </td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedTotal() }}</td>
                             <td>
                                 @if ($order->discounts()->count() == 0)
@@ -131,7 +107,31 @@
                                     Unknown
                                 @endif
                             </td>
+                            <td style="vertical-align: middle; text-align: center;">
+                                @if ($order->state == 'preparing')
+                                    {{-- <span class="badge badge-success">{{ __('order.Preparing') }}</span> --}}
+                                @elseif($order->state == 'served')
+                                    {{-- <span class="badge badge-warning">{{ __('order.Served') }}</span> --}}
+                                @elseif($order->state == 'wastage')
+                                    <span class="badge badge-dark">{{ __('order.Wastage') }}</span>
+                                @elseif($order->state == 'closed')
+                                    <span class="badge badge-danger">{{ __('order.Closed') }}</span>
+                                @endif
 
+
+
+                                @if ($order->stateLabel() == __('order.Not_Paid'))
+                                    <span class="badge badge-danger">
+                                    @elseif($order->stateLabel() == __('order.Partial'))
+                                        <span class="badge badge-warning">
+                                        @elseif($order->stateLabel() == __('order.Paid'))
+                                            <span class="badge badge-success">
+                                            @else
+                                                {{-- if($order->stateLabel() == __('order.Change')) --}}
+                                                <span class="badge badge-info">
+                                @endif
+                                {{ $order->stateLabel() }}</span>
+                            </td>
                             <td>
                                 @if ($order->state != 'closed')
                                     <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary btn-sm">
@@ -150,28 +150,28 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>{{ config('settings.currency_symbol') }} {{ number_format($total, 2) }}</th>
-                        <th></th>
-                        <th></th>
-                        <th>{{ config('settings.currency_symbol') }} {{ number_format($receivedAmount, 2) }}</th>
-                        <th></th>
+                        <th>XXX</th>
+                        <th>XXX</th>
                         <th>{{ config('settings.currency_symbol') }}
-                            {{ number_format(
-                                $orders->sum(function ($order) {
-                                    return $order->balance();
-                                }),
-                                2,
-                            ) }}
-                        </th>
-                        <th></th>
+                            {{ number_format($totalTotal) }}</th>
+                        <th>XXX</th>
+                        <th>{{ config('settings.currency_symbol') }}
+                            {{ number_format($totalDiscountAmount) }}</th>
+                        <th>{{ config('settings.currency_symbol') }}
+                            {{ number_format($totalNetAmount) }}</th>
+                        <th>{{ config('settings.currency_symbol') }}
+                            {{ number_format($totalReceivedAmount) }}</th>
+                        <th>{{ config('settings.currency_symbol') }}
+                            {{ number_format($totalChitAmount) }}</th>
+                        <th>XXX</th>
+                        <th>XXX</th>
+                        <th>XXX</th>
+                        <th>XXX</th>
+
                     </tr>
                 </tfoot>
             </table>
-            {{ $orders->render() }}
+            {{-- {{ $orders->render() }} --}}
         </div>
     </div>
 @endsection

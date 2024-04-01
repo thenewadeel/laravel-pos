@@ -37,7 +37,7 @@ class ReportsController extends Controller
             'date' => $request->input('date'),
         ];
 
-        $orders = Order::query();
+        $orders = Order::query()->where('state', 'closed');
 
         if ($request->has('date')) {
             $orders->whereDate('created_at', $filters['date']);
@@ -56,13 +56,14 @@ class ReportsController extends Controller
             $orders->whereIn('shop_id', $request['shops']);
         }
 
-
+        $openOrders = clone $orders;
+        $openOrders->where('state', '!=', 'closed');
 
         $orders = $orders
             ->orderBy('created_at', 'desc')
             ->with(['payments.user'])->get();
 
-        return view('reports.dailySale', compact('shops', 'orders'));
+        return view('reports.dailySale', compact('shops', 'orders', 'openOrders'));
     }
 
     /**

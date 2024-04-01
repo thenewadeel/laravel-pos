@@ -179,7 +179,7 @@
                     @endif
                 @endforeach
                 {{-- TODO : add summary of totals in footer row --}}
-                <tfoot>
+                <thead>
                     <tr class="table-danger font-extrabold  text-right">
                         <td colspan="9">
                             G. Total
@@ -192,7 +192,22 @@
                             G. Total Amount:{{ config('settings.currency_symbol') . number_format($totalAmount, 2) }}
                         </td>
                     </tr>
-                </tfoot>
+                    <tr class="table-info font-extrabold  text-right">
+                        <td colspan="9">
+                            Total Closed Orders: {{ $orders->count() }}<br />
+                            {{-- Total Cashiers: {{ count($cashiers) }}<br /> --}}
+                            Total Open Orders: {{ $openOrders->count() }}<br />
+                            Total Open Amount:
+                            {{ config('settings.currency_symbol') .
+                                number_format(
+                                    $openOrders->get()->map(function ($i) {
+                                            return $i->total();
+                                        })->sum(),
+                                    2,
+                                ) }}<br />
+                        </td>
+                    </tr>
+                </thead>
                 <thead style="display:none">
                     {{-- style="display:none"> --}}
                     <tr>

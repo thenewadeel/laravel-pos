@@ -261,102 +261,114 @@ class ProductSeeder extends Seeder
             [
                 "name" => "Gol Gappay",
                 "description" => "12 Pieces",
-                "price" => 280,
+                "price" => 300,
             ],
             [
                 "name" => "Dahi Bhallay",
                 "description" => "1 Serving",
-                "price" => 240,
+                "price" => 300,
             ],
             [
                 "name" => "Nestle Juice",
                 "description" => "Small",
-                "price" => 40,
+                "price" => 80,
             ],
             [
                 "name" => "Mineral Water",
-                "description" => "Small",
-                "price" => 70,
+                "description" => "Large",
+                "price" => 100,
             ],
             [
                 "name" => "Cold Drinks",
                 "description" => "Tin",
-                "price" => 90,
+                "price" => 100,
             ],
             [
                 "name" => "Tea",
                 "description" => "Cup",
-                "price" => 100,
+                "price" => 150,
             ],
             [
                 "name" => "Coffee",
                 "description" => "Cup",
-                "price" => 240,
+                "price" => 350,
             ],
             [
                 "name" => "Ice Cream",
-                "description" => "2 Scoops",
-                "price" => 180,
+                "description" => "1 Scoop",
+                "price" => 100,
             ],
             [
                 "name" => "Chicken Patty Burger",
                 "description" => "",
-                "price" => 300,
+                "price" => 450,
             ],
             [
                 "name" => "Zinger Burger",
                 "description" => "",
-                "price" => 400,
-            ],
-            [
-                "name" => "French Fries",
-                "description" => "",
-                "price" => 180,
+                "price" => 500,
             ],
             [
                 "name" => "Tikka Boti",
                 "description" => "Seekh",
-                "price" => 230,
+                "price" => 300,
             ],
             [
                 "name" => "Pizza",
                 "description" => "Large",
-                "price" => 1400,
+                "price" => 1700,
+            ],
+            [
+                "name" => "Pizza",
+                "description" => "Medium",
+                "price" => 950,
             ],
             [
                 "name" => "Halwa",
                 "description" => "Plate",
-                "price" => 160,
+                "price" => 300,
             ],
             [
                 "name" => "Puri",
                 "description" => "Piece",
-                "price" => 25,
+                "price" => 50,
             ],
             [
                 "name" => "Channay",
                 "description" => "Plate",
-                "price" => 100,
+                "price" => 150,
             ],
-            [
-                "name" => "Nihari",
-                "description" => "Plate",
-                "price" => 200,
-            ],
-            [
-                "name" => "Lassi",
-                "description" => "Glass",
-                "price" => 240,
-            ],
+            // [
+            //     "name" => "Nihari",
+            //     "description" => "Plate",
+            //     "price" => 200,
+            // ],
+            // [
+            //     "name" => "Lassi",
+            //     "description" => "Glass",
+            //     "price" => 240,
+            // ],
             [
                 "name" => "Chicken Biryani",
                 "description" => "Plate",
-                "price" => 230,
+                "price" => 300,
             ],
             [
                 "name" => "Naan",
                 "description" => "Piece",
-                "price" => 30,
+                "price" => 50,
+            ], [
+                "name" => "Sajji",
+                "description" => "Quarter",
+                "price" => 500,
+            ], [
+                "name" => "Sajji",
+                "description" => "Half",
+                "price" => 850,
+            ], [
+                "name" => "Sajji",
+                "description" => "Full",
+                "price" => 1500,
             ],
         ];
 
@@ -379,7 +391,7 @@ class ProductSeeder extends Seeder
             'name' => 'Tokenised Items',
         ]);
 
-        $shopNames = ["TokenShop1", "TokenShop2", "TokenShop3"];
+        $shopNames = ["TokenShop1", "TokenShop2", "TokenShop3", "TokenShop4", "TokenShop5", "TokenShop6"];
         foreach ($shopNames as $shopName) {
             $shop = Shop::updateOrCreate([
                 'name' => $shopName,

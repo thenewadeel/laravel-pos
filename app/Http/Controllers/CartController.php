@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['store', 'changeQty', 'delete', 'empty']]);
+    }
     public function index(Request $request)
     {
         if ($request->wantsJson()) {

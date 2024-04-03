@@ -391,7 +391,7 @@ class OrderController extends Controller
     public function printToPOS(Order $order, $ip = "192.168.0.162")
     {
         logger('printing tokens job started');
-        $ip = $order->shop->printer_ip;
+        $ip = $order->shop->printer_ip ?? "192.168.0.162";
         logger($ip);
         try {
             $connector = new NetworkPrintConnector($ip, 8899, $timeout = 25);

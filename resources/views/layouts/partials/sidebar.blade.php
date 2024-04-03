@@ -28,7 +28,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-                + @if (auth()->user()->type == 'admin')
+                @if (auth()->user()->type == 'admin')
                     <li class="nav-item has-treeview">
                         <a href="{{ route('home') }}" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -116,7 +116,7 @@
                         </form>
                     </a>
                 </li>
-                <li class="nav-item has-treeview">
+                {{-- <li class="nav-item has-treeview">
                     <a href="#" class="nav-link {{ activeSegment('inventory') }}" data-toggle="treeview">
                         <i class="nav-icon fas fa-warehouse"></i>
                         <p>{{ __('inventory.title') }}</p>
@@ -150,7 +150,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -200,10 +200,11 @@ class ShopController extends Controller
 
         $shop->name = $request->name;
         $shop->description = $request->description;
-
+        $shop->printer_ip = $request->printer_ip;
         $shop->image = $image_path;
 
-        $shop->user_id = $request->user_id;
+        // Update shop via pivot table user_shops
+        $shop->users()->syncWithoutDetaching([$request->user_id]);
 
         if ($request->hasFile('image')) {
             // Delete old image

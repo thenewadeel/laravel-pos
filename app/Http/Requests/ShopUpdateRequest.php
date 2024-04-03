@@ -30,6 +30,7 @@ class ShopUpdateRequest extends FormRequest
             'image' => 'nullable|image',
 
             'user_id' => 'exists:App\Models\User,id',
+            'printer_ip' => 'nullable|string|ip',
 
         ];
     }

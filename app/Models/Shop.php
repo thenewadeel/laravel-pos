@@ -12,6 +12,7 @@ class Shop extends Model
         'name',
         'description',
         'image',
+        'printer_ip'
         // 'status'
     ];
 

@@ -388,9 +388,11 @@ class OrderController extends Controller
         } else return '|';
     }
 
-    public function printToPOS($order, $ip = "192.168.0.162"): void
+    public function printToPOS(Order $order, $ip = "192.168.0.162")
     {
-        // logger('printing tokens job started');
+        logger('printing tokens job started');
+        $ip = $order->shop->printer_ip;
+        logger($ip);
         try {
             $connector = new NetworkPrintConnector($ip, 8899, $timeout = 25);
             $printer = new Printer($connector);
@@ -399,13 +401,14 @@ class OrderController extends Controller
                 $printer->text("Assalam o alaikum!\n");
                 $printer->cut();
             } catch (Exception $e) {
-                // logger($e->getMessage());
+                logger($e->getMessage());
             } finally {
                 $printer->close();
             }
         } catch (Exception $e) {
-            // logger('Failed to connect to printer: ' . $e->getMessage());
-            return;
+            logger('Failed to connect to printer: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to connect to printer: ' . $e->getMessage());
         }
+        return redirect()->back()->with('success', 'Order printed successfully');
     }
 }

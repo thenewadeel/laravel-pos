@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/print/{order}', [OrderController::class, 'printPdf'])->name('orders.print');
     Route::get('/orders/printTokens/{order}', [OrderController::class, 'printTokens'])->name('orders.printTokens');
     Route::get('/orders/printPreview/{order}', [OrderController::class, 'printPreview'])->name('orders.print.preview');
+    Route::get('/orders/printPOS/{order}', [OrderController::class, 'printToPOS'])->name('orders.print.POS');
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 
     Route::namespace('Stockboy')->prefix('inventory')->group(function () {

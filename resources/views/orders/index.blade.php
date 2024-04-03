@@ -144,6 +144,8 @@
                                 <a href="{{ route('orders.print', $order) }}" class="btn btn-primary btn-sm">
                                     <i class="fas fa-print"></i>
                                 </a>
+                                <a href="{{ route('orders.print.POS', $order) }}" class="btn btn-link">Print to POS</a>
+
                             </td>
                         </tr>
                     @endforeach

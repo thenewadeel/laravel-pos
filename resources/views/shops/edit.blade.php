@@ -44,6 +44,17 @@
                         </span>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <label for="printer_ip">{{ __('shop.Printer_IP') }}</label>
+                    <input type="text" name="printer_ip" class="form-control @error('printer_ip') is-invalid @enderror"
+                        id="printer_ip" placeholder="{{ __('shop.Printer_IP') }}"
+                        value="{{ old('printer_ip', $shop->printer_ip) }}">
+                    @error('printer_ip')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
 
                 <div class="form-group">
                     {{-- <label for="type">{{ __('shop.Type') }}</label>

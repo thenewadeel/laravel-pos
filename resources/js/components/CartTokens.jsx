@@ -248,6 +248,17 @@ class Cart extends Component {
                     .then((res) => {
                         this.loadCart();
                         // this.showPopup("QQQQQQQQ");
+                        (async () => {
+                            try {
+                                await axios.get(`/orders/printPOS/${order.id}`);
+                                console.log(`Sent to POS: ${order.id}`);
+                            } catch (err) {
+                                console.error(
+                                    `Failed to send to POS: ${order.id}`,
+                                    err
+                                );
+                            }
+                        })(); // Run the async function immediately
                         return res.data;
                     })
                     .catch((err) => {

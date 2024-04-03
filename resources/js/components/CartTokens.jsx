@@ -307,7 +307,15 @@ class Cart extends Component {
                         >
                             {products.map((p) => (
                                 <div
-                                    onClick={() => this.addProductToCart(p.id)}
+                                    onClick={(e) => {
+                                        if (!this.clickCooldown) {
+                                            this.addProductToCart(p.id);
+                                            this.clickCooldown = true;
+                                            setTimeout(() => {
+                                                this.clickCooldown = false;
+                                            }, 500);
+                                        }
+                                    }}
                                     id={"add-to-cart-" + p.id}
                                     key={p.id}
                                     className="item text-xl font-serif font-extrabold d-flex flex-column justify-content-center"

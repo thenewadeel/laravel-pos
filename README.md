@@ -14,44 +14,54 @@
 [ ] Menu : Display products grouped by their Categories and Cuisines
 [ ] Order Handling via Waiters and Tables
 [ ] Order Status via Kitchen
-[ ] Bill Generation & Printing
+[x] Bill Generation & Printing
 [ ] Payment Handling
-[ ] Discounts & Rebates
+[x] Discounts & Rebates
 
 [ ] Cashier Flow:
 
-a. Handle Customer orders of Products and Qty
-b. Assign the Dishes from the Placed orders to Kitchen
-c. Serve the Prepared Dishes from orders to Customers on their Table, via a Waiter/ Delivery boy
-d. Give Discounts
-e. Register Tips if any
-f. Take Payments
+[x] Handle Customer orders of Products and Qty
+[ ] Assign the Dishes from the Placed orders to Kitchen
+[ ] Serve the Prepared Dishes from orders to Customers on their Table, via a Waiter/ Delivery boy
+[x] Give Discounts
+[ ] Register Tips if any
+[ ] Take Payments
 
 [ ] Chef Flow:
 
-a. View Dishes from Placed Orders
-b. Verify Recipe for the Dish
-c. Mark as Prepared
-d. Register Wastages
+[ ] View Dishes from Placed Orders
+[ ] Verify Recipe for the Dish
+[ ] Mark as Prepared
+[ ] Register Wastages
 
 #### Models
 
 1. Product [ ]
 
     1. Name
-    2. Price
-    3. Cuisines (ManytoMany) [ ]
-    4. Category (belongsTo) [ ]
+    2. Description (nullable)
+    3. Image (nullable)
+    4. Price
+    5. Quantity (default: 1000)
+    6. Availability Status (default: true)
+    7. Product_Shop [hasMany] (Pivot)
+    8. Category_Products [hasMany] (Pivot)
+    9. Discount_Products [hasMany] (Pivot)
 
 2. Order [ ]
-    1. Table : string
-    2. Waiter / Delivery Boy: User
-    3. Tip Amount
-    4. Customer
-    5. Status : PLACED, PREPARED, SERVED, REJECTED
-    6. Items : Products (hasMany), Qty
-    7. Discount (hasMany)
-    8. Payments (hasMany)
+    1. POS_number
+    2. Table : string
+    3. Waiter / Delivery Boy: User
+    4. State : 'preparing', 'served', 'closed', 'wastage'
+    5. Type: 'dine-in', 'take-away', 'delivery'
+    6. Customer [foreign]
+    7. User [foreign]
+    8. Shop [foreign]
+    9. Order_Item : (hasMany) [foreign] (pivot)
+       a. Price // Amount
+       b. Quantity
+    10. Discount_Orders (hasMany) [foreign] (pivot)
+    11. Payments (hasMany)
 
 ### Accounting Features
 

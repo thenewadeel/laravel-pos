@@ -1,0 +1,407 @@
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */
+;
+/*!40103 SET TIME_ZONE='+00:00' */
+;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */
+;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */
+;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */
+;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */
+;
+DROP TABLE IF EXISTS `customers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `customers` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(70) NOT NULL,
+  `membership_number` varchar(20) NOT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  `phone` varchar(191) DEFAULT NULL,
+  `address` varchar(191) DEFAULT NULL,
+  `photo` varchar(191) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `discount_orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `discount_orders` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `discount_id` bigint(20) unsigned NOT NULL,
+  `order_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `discount_orders_discount_id_foreign` (`discount_id`),
+  KEY `discount_orders_order_id_foreign` (`order_id`),
+  CONSTRAINT `discount_orders_discount_id_foreign` FOREIGN KEY (`discount_id`) REFERENCES `discounts` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `discount_orders_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `discount_products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `discount_products` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `discount_id` bigint(20) unsigned NOT NULL,
+  `product_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `discount_products_discount_id_foreign` (`discount_id`),
+  KEY `discount_products_product_id_foreign` (`product_id`),
+  CONSTRAINT `discount_products_discount_id_foreign` FOREIGN KEY (`discount_id`) REFERENCES `discounts` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `discount_products_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `discounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `discounts` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) NOT NULL,
+  `percentage` decimal(5, 2) unsigned NOT NULL,
+  `amount` decimal(10, 2) unsigned NOT NULL,
+  `method` enum('NATURAL', 'REVERSE') NOT NULL DEFAULT 'NATURAL',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `failed_jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `migrations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(191) NOT NULL,
+  `batch` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `order_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `order_items` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `price` decimal(14, 4) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `order_id` bigint(20) unsigned NOT NULL,
+  `product_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_items_order_id_foreign` (`order_id`),
+  KEY `order_items_product_id_foreign` (`product_id`),
+  CONSTRAINT `order_items_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `order_items_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `orders` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `customer_id` bigint(20) unsigned DEFAULT NULL,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `shop_id` bigint(20) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `orders_customer_id_foreign` (`customer_id`),
+  KEY `orders_user_id_foreign` (`user_id`),
+  KEY `orders_shop_id_foreign` (`shop_id`),
+  CONSTRAINT `orders_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE
+  SET NULL,
+    CONSTRAINT `orders_shop_id_foreign` FOREIGN KEY (`shop_id`) REFERENCES `shops` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `orders_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `password_resets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `password_resets` (
+  `email` varchar(191) NOT NULL,
+  `token` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  KEY `password_resets_email_index` (`email`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `payments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `payments` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `amount` decimal(14, 4) NOT NULL,
+  `order_id` bigint(20) unsigned NOT NULL,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `payments_order_id_foreign` (`order_id`),
+  KEY `payments_user_id_foreign` (`user_id`),
+  CONSTRAINT `payments_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `payments_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `personal_access_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(191) NOT NULL,
+  `tokenable_id` bigint(20) unsigned NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`, `tokenable_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `product_shop`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `product_shop` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `shop_id` bigint(20) unsigned NOT NULL,
+  `product_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_shop_shop_id_foreign` (`shop_id`),
+  KEY `product_shop_product_id_foreign` (`product_id`),
+  CONSTRAINT `product_shop_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `product_shop_shop_id_foreign` FOREIGN KEY (`shop_id`) REFERENCES `shops` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `products` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) NOT NULL,
+  `description` text DEFAULT NULL,
+  `category` text DEFAULT NULL,
+  `image` varchar(191) DEFAULT NULL,
+  `barcode` varchar(191) DEFAULT NULL,
+  `price` decimal(14, 2) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `aval_status` tinyint(1) NOT NULL DEFAULT 1,
+  `tags` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`tags`)),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `products_barcode_unique` (`barcode`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `reports`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `reports` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `settings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `settings` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(191) NOT NULL,
+  `value` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `user_id` bigint(20) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `settings_key_unique` (`key`),
+  KEY `settings_user_id_foreign` (`user_id`),
+  CONSTRAINT `settings_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE
+  SET NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `shops`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `shops` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image` varchar(191) DEFAULT NULL,
+  `user_id` bigint(20) unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `shops_user_id_foreign` (`user_id`),
+  CONSTRAINT `shops_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE
+  SET NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `user_cart`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `user_cart` (
+  `user_id` bigint(20) unsigned NOT NULL,
+  `product_id` bigint(20) unsigned NOT NULL,
+  `quantity` int(10) unsigned NOT NULL,
+  KEY `user_cart_user_id_foreign` (`user_id`),
+  KEY `user_cart_product_id_foreign` (`product_id`),
+  CONSTRAINT `user_cart_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user_cart_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */
+;
+/*!40101 SET character_set_client = utf8 */
+;
+CREATE TABLE `users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `image` varchar(191) DEFAULT NULL,
+  `first_name` varchar(191) NOT NULL,
+  `last_name` varchar(191) NOT NULL,
+  `type` varchar(191) NOT NULL DEFAULT 'cashier',
+  `email` varchar(191) NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(191) NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */
+;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */
+;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */
+;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */
+;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */
+;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */
+;
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (1, '2014_10_12_000000_create_users_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (
+    2,
+    '2014_10_12_100000_create_password_resets_table',
+    1
+  );
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (3, '2019_08_19_000000_create_failed_jobs_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (
+    4,
+    '2019_12_14_000001_create_personal_access_tokens_table',
+    1
+  );
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (5, '2020_03_09_180012_create_shops_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (6, '2020_04_19_081616_create_products_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (
+    7,
+    '2020_04_19_081618_create_product_shop_table',
+    1
+  );
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (8, '2020_04_24_170630_create_customers_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (9, '2020_04_25_165730_create_orders_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (10, '2020_04_27_054355_create_settings_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (11, '2020_04_30_053758_create_user_cart_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (
+    12,
+    '2020_05_04_165749_create_order_items_table',
+    1
+  );
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (13, '2020_05_04_165822_create_payments_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (14, '2024_03_11_001933_create_reports_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (15, '2024_03_16_223854_create_discounts_table', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (16, '2024_03_16_225151_discount_products', 1);
+INSERT INTO `migrations` (`id`, `migration`, `batch`)
+VALUES (17, '2024_03_16_230609_discount_orders', 1);

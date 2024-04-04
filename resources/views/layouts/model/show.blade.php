@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
 @section('title')
-    Index - @(yield 'title')
+    Index - @yield('title')
 @endsection
 @section('content-header')
-    @(yield 'modelName')
+    @yield ('modelName')
 @endsection
 @section('content-actions')
     @yield('content-actions')
@@ -78,4 +78,5 @@
                 })
             })
         </script>
+        @yield('js')
     @endsection

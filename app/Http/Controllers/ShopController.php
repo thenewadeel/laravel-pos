@@ -15,6 +15,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ShopOrdersExport;
 use App\Exports\UsersExport;
 use App\Models\Category;
+use App\Models\Order;
 use App\Traits\ListOf;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Illuminate\Support\Facades\Log;
@@ -113,13 +114,24 @@ class ShopController extends Controller
      */
     public function show(Shop $shop, Request $request)
     {
-        $filters = $request->only(['created_at', 'shop_id']);
-        $orders = $this->getOrders($shop, $filters)->get();
-
+        // logger('request');
+        // logger($request);
+        // $filters = $request->only(['shop_id']);
+        // $orders = $this->getOrders($shop, $filters)->get();
+        $orders = Order::where('shop_id', $shop->id)->orderBy('created_at', 'desc')->get();
         $categories = Category::all();
+        // get previous user id
+        $previous = Shop::where('id', '<', $shop->id)
+            // ->where('user_id', $shop->user_id)
+            ->max('id');
 
 
-        return view('shops.show', compact('shop',  'categories', 'orders'));
+        // get next user id
+        $next = Shop::where('id', '>', $shop->id)
+            // ->where('user_id', $shop->user_id)
+            ->min('id');
+
+        return view('shops.show', compact('shop',  'categories', 'orders', 'next', 'previous'));
     }
 
     private function getOrders(Shop $shop, array $filters)

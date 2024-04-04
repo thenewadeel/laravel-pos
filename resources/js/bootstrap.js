@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 window._ = _;
 
 /**
@@ -7,27 +7,27 @@ window._ = _;
  * code may be modified to fit the specific needs of your application.
  */
 
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 window.Swal = Swal;
 
-import Popper from 'popper.js';
+import Popper from "popper.js";
 window.Popper = Popper;
 
-import jQuery from 'jquery';
+import jQuery from "jquery";
 window.$ = window.jQuery = jQuery;
 
-import DataTable from 'datatables.net-bs4';
+import DataTable from "datatables.net-bs4";
 DataTable(window, window.$);
 
-import 'bootstrap';
-import 'admin-lte';
+import "bootstrap";
+import "admin-lte";
 
 window.SwalWithBootstrap = Swal.mixin({
-  customClass: {
-    confirmButton: 'btn btn-primary mx-3',
-    cancelButton: 'btn btn-danger mx-3',
-  },
-  buttonsStyling: false,
+    customClass: {
+        confirmButton: "btn btn-primary mx-3",
+        cancelButton: "btn btn-danger mx-3",
+    },
+    buttonsStyling: false,
 });
 
 /**
@@ -36,9 +36,15 @@ window.SwalWithBootstrap = Swal.mixin({
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-import axios from 'axios';
+import axios from "axios";
 window.axios = axios;
 
+/**
+ * Set a default header for all axios requests. This is for the "X-Requested-With"
+ * header, which is typically used by web servers to determine whether or not
+ * to send a response as HTML or JSON. In this case, we're setting it to "XMLHttpRequest"
+ * to indicate that we're making a non-browser request.
+ */
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 /**
@@ -57,3 +63,4 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+import Chart from "chart.js/auto";

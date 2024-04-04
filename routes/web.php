@@ -1,18 +1,20 @@
 <?php
 
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\ShopController;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ExpenseController;
-use App\Http\Controllers\InventoryItemController;
-use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\{
+    CartController,
+    CustomerController,
+    HomeController,
+    OrderController,
+    ProductController,
+    SettingController,
+    ShopController,
+    ReportsController,
+    UsersController,
+    CategoryController,
+    ExpenseController,
+    InventoryItemController,
+    InventoryController
+};
 use App\Models\Category;
 use App\Models\InventoryItem;
 use Illuminate\Support\Facades\Route;

@@ -76,6 +76,31 @@
             </form>
         </div>
     </div>
+    <div class="card">
+        <div class="card-body">
+            {{-- @include('layouts.partials.alert.error', ['errors' => $errors]) --}}
+            {{-- {{ $shops }} --}}
+
+            <h4>{{ __('shop.Categories') }}</h4>
+            <form action="{{ route('shop.updateCategories', $shop->id) }}" method="post">
+                @csrf
+                @method('post')
+                <div class="form-group flex row ">
+                    @foreach ($categories as $category)
+                        <div class="m-2 p-2 form-check form-check-inline border border-gray-300 shadow-sm rounded">
+                            <input class="form-check-input" type="checkbox" name="category[]" value="{{ $category->id }}"
+                                id="category{{ $category->id }}"
+                                {{ $shop->categories->contains($category) ? 'checked' : '' }}>
+                            <label class="form-check-label"
+                                for="category{{ $category->id }}">{{ $category->name }}</label>
+                        </div>
+                    @endforeach
+                </div>
+
+                <button type="submit" class="btn btn-primary">{{ __('common.Update') }}</button>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @section('js')

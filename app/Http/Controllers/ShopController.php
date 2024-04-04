@@ -178,9 +178,11 @@ class ShopController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function edit(Shop $shop)
+    public function edit(Shop $shop, Request $request)
     {
-        return view('shops.edit')->with('shop', $shop);
+        $categories = Category::all();
+
+        return view('shops.edit', compact('shop',  'categories'));
     }
 
     /**

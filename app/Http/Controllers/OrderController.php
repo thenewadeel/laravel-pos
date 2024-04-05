@@ -397,7 +397,7 @@ class OrderController extends Controller
         $ip = $order->shop->printer_ip ?? "192.168.0.162";
         logger($ip);
         try {
-            $connector = new NetworkPrintConnector($ip, 8899, $timeout = 25);
+            $connector = new NetworkPrintConnector($ip);
             $printer = new Printer($connector);
             try {
                 // ... Print stuff

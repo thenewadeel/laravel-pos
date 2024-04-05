@@ -46,11 +46,9 @@ class ProductController extends Controller
     public function productsbyCat(Request $request)
     {
         // logger(['$request', $request]);
-        $category = Category::with('products.product')->where('name', 'Tokenised Items')->firstOrFail();
+        $category = Category::where('name', 'Tokenised Items')->firstOrFail();
         $catProducts = $category->products;
-        $products = $catProducts->map(function ($product) {
-            return $product->product;
-        });
+        $products = $category->products;
         // dd($catProducts->toArray(), $catProducts, $request);
         if (request()->wantsJson()) {
             return ProductResource::collection($products);

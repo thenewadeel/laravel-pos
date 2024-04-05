@@ -42,6 +42,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Product::class, 'user_cart')->withPivot('quantity');
     }
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 
     public function getFullname()
     {
@@ -55,5 +59,9 @@ class User extends Authenticatable
     public function shops()
     {
         return $this->belongsToMany(Shop::class, 'user_shop')->withTimestamps();
+    }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }

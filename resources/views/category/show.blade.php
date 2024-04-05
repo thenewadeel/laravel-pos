@@ -21,11 +21,11 @@
         <h3>Products</h3>
         <div>
             {{-- {{ $category }} --}}
-            @foreach ($category->products()->with(['product'])->get() as $product)
+            @foreach ($category->products()->get() as $product)
                 <div class="d-flex align-items-center justify-content-between ">
-                    {{ $product->product->name }}
+                    {{ $product->name }}
                     <form method="post"
-                        action="{{ route('categories.products.delete', ['category_id' => $category->id, 'product_id' => $product->product->id]) }}">
+                        action="{{ route('categories.products.delete', ['category_id' => $category->id, 'product_id' => $product->id]) }}">
                         @csrf
                         @method('DELETE')
 

@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
             $table->string('head');
             $table->decimal('amount', 8, 2);
             $table->string('notes')->nullable();
 
+            $table->foreignId('user_id');
+            $table->foreignId('shop_id');
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('set null');
 
             $table->timestamps();
         });

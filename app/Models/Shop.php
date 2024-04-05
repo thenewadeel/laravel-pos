@@ -25,6 +25,10 @@ class Shop extends Model
     {
         return $this->belongsToMany(User::class, 'user_shop')->withTimestamps();
     }
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'shop_categories')->withTimestamps();

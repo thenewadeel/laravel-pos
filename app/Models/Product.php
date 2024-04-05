@@ -22,12 +22,19 @@ class Product extends Model
         return $this->hasMany(Shop::class);
     }
 
+
     public function categories()
     {
-        return $this->hasMany(CategoryProducts::class);
+        return $this->hasManyThrough(Category::class, CategoryProducts::class, 'product_id', 'id', 'category_id');
     }
-    public function categoryNames()
+    public function discounts()
     {
-        return $this->hasManyThrough(Category::class, CategoryProducts::class, 'product_id', 'id', 'id', 'category_id');
+        return $this->belongsToMany(Discount::class, 'discount_product')
+            ->withTimestamps()
+            ->withPivot('name');
+    }
+    public function orders()
+    {
+        return $this->hasManyThrough(Order::class, OrderItem::class, 'product_id', 'id', 'id', 'order_id');
     }
 }

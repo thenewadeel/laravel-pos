@@ -24,7 +24,12 @@ return [
     'ID' => 'Id/ Ser',
     'CashierAcct' => 'Cashier User Acct',
     'Created_At' => 'Date',
+    'Create_Shop' => 'New Shop',
     'Actions' => 'Actions',
     'Shop_Name'             => 'Shop Name',
+    'Index' => 'Shop List',
+    'Edit' => 'Edit',
+    'Printer_IP' => 'Printer IP Address',
+    'Categories' => 'Categories'
 
 ];

@@ -31,6 +31,7 @@ return [
     // Product table messages
     //==========================================
     'Create_Product'    => 'Create Product',
+    'Search_Product'    => 'Search Product',
     'Name'              => 'Name',
     'Description'       => 'Description',
     'Image'             => 'Image',

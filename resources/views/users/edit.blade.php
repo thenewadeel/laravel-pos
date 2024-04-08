@@ -6,7 +6,7 @@
 @section('content')
     @include('layouts.partials.alert.error', ['errors' => $errors])
 
-    <div class="card">
+    <div class="card d-flex flex row flex-row">
         <div class="card-body">
             <form action="{{ route('users.update', $user) }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -101,9 +101,9 @@
                 <button class="btn btn-primary" type="submit">{{ __('common.Update') }}</button>
             </form>
         </div>
-    </div>
+        {{-- </div>
 
-    <div class="card">
+    <div class="card"> --}}
         <div class="card-body">
             {{-- @include('layouts.partials.alert.error', ['errors' => $errors]) --}}
             {{-- {{ $shops }} --}}

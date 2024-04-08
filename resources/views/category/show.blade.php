@@ -17,9 +17,9 @@
 @endsection
 
 @section('content-details')
-    <div class="card p-2">
-        <h3>Products</h3>
-        <div>
+    <div class="card p-2  d-flex flex-row">
+        <div class="card-body">
+            <h3>Products</h3>
             {{-- {{ $category }} --}}
             @foreach ($category->products()->get() as $product)
                 <div class="d-flex align-items-center justify-content-between ">
@@ -33,11 +33,11 @@
                     </form>
                 </div>
             @endforeach
+            <form id="delete-product-form" method="post" style="display:none">
+                @csrf
+                @method('DELETE')
+            </form>
         </div>
-        <form id="delete-product-form" method="post" style="display:none">
-            @csrf
-            @method('DELETE')
-        </form>
         <script>
             function deleteProduct(id) {
                 if (confirm('Are you sure you want to delete this product?')) {
@@ -50,7 +50,8 @@
         <form method="post" action="{{ route('categories.products.store') }}">
             <div class="card-header d-flex justify-content-between align-items-center">
                 @csrf
-                <button type="submit" class="btn btn-primary">Add Products</button>
+                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-plus-circle me-2"></i>Add
+                    Products</button>
                 <input type="hidden" name="category_id" value="{{ $category->id }}">
 
             </div>
@@ -78,17 +79,19 @@ item.className='';
                     }
                     ">
                 </div>
-                <ul id="product-list" class="list-group">
-                    @foreach ($products as $product)
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <input class="form-check-input me-2" type="checkbox" value="{{ $product->id }}"
-                                    id="product-{{ $product->id }}" name="product_ids[]">
-                                {{ $product->name }}
+                <div style="max-height: 60vh; overflow-y: scroll;;" class="flex grow">
+                    <div class="">
+                        @foreach ($products as $product)
+                            <div class="card">
+                                <div class="card-body d-flex justify-content-start my-0 py-0 w-max align-items-center">
+                                    <input class="form-check-input" type="checkbox" value="{{ $product->id }}"
+                                        id="product-{{ $product->id }}" name="product_ids[]">
+                                    {{ $product->name }}
+                                </div>
                             </div>
-                        </li>
-                    @endforeach
-                </ul>
+                        @endforeach
+                    </div>
+                </div>
             </div>
         </form>
     </div>

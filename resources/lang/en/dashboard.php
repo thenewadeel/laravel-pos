@@ -25,4 +25,5 @@ return [
     'Income_Today'      => 'Income Today',
     'Customers_Count'   => 'Customers Count',
     'Orders_Count'      => 'Orders Count',
+    'Balance'           => 'Balance',
 ];

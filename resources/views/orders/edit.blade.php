@@ -1,4 +1,4 @@
-@extends('layouts.model.edit')
+@extends('layouts.model.edit2')
 
 @section('title')
     {{ 'Order Edit' }}
@@ -22,7 +22,7 @@
 
 @section('route-update', route('orders.update', ['order' => $order->id]))
 
-@section('form-fields')
+@section('form-fields-left')
 
 
     <div class="form-group">
@@ -95,7 +95,7 @@
 
 
 @endsection
-@section('footer-actions')
+@section('form-fields-right')
 
     <div class="card" id="items">
         <div class="card-header">

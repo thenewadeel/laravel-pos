@@ -84,11 +84,11 @@ class ProductController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'image' => $image_path,
-            'barcode' => $request->barcode,
+            // 'barcode' => $request->barcode,
             'price' => $request->price,
             'quantity' => $request->quantity,
             // 'status' => $request->status,
-            'category' => $request->category
+            // 'category' => $request->category
         ]);
 
         if (!$product) {
@@ -128,13 +128,14 @@ class ProductController extends Controller
      */
     public function update(ProductUpdateRequest $request, Product $product)
     {
+        // logger($request->all());
         $product->name = $request->name;
         $product->description = $request->description;
-        $product->barcode = $request->barcode;
+        // $product->barcode = $request->barcode;
         $product->price = $request->price;
         $product->quantity = $request->quantity;
         // $product->status = $request->status;
-        $product->category = $request->category;
+        // $product->category = $request->category;
 
         if ($request->hasFile('image')) {
             // Delete old image

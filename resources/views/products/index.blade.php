@@ -36,11 +36,11 @@
                         {{-- <th>{{ 'Make' }}</th> --}}
                         <th>{{ 'Category' }}</th>
                         <th>{{ __('product.Image') }}</th>
-                        <th>{{ __('product.Barcode') }}</th>
-                        <th>{{ __('product.Quantity') }}</th>
+                        {{-- <th>{{ __('product.Barcode') }}</th> --}}
+                        {{-- <th>{{ __('product.Quantity') }}</th> --}}
                         <th>{{ __('product.Status') }}</th>
-                        <th>{{ __('product.Created_At') }}</th>
-                        <th>{{ __('Last Update') }}</th>
+                        {{-- <th>{{ __('product.Created_At') }}</th> --}}
+                        {{-- <th>{{ __('Last Update') }}</th> --}}
                         <th>{{ __('product.Actions') }}</th>
                     </tr>
                 </thead>
@@ -54,14 +54,14 @@
                             <td>{{ $product->categories()->pluck('name')->implode(', ') }}</td>
                             <td><img class="product-img" src="{{ Storage::url($product->image) }}" alt=""
                                     style="width: 64px !important; height: 64px !important;"></td>
-                            <td>{{ $product->barcode }}</td>
-                            <td>{{ $product->quantity }}</td>
+                            {{-- <td>{{ $product->barcode }}</td> --}}
+                            {{-- <td>{{ $product->quantity }}</td> --}}
                             <td>
                                 <span
                                     class="right badge badge-{{ $product->aval_status ? 'success' : 'danger' }}">{{ $product->aval_status ? __('common.Active') : __('common.Inactive') }}</span>
                             </td>
-                            <td>{{ $product->created_at }}</td>
-                            <td>{{ $product->updated_at }}</td>
+                            {{-- <td>{{ $product->created_at }}</td> --}}
+                            {{-- <td>{{ $product->updated_at }}</td> --}}
                             <td>
                                 <a href="{{ route('products.edit', $product) }}" class="btn btn-primary"><i
                                         class="fas fa-edit"></i></a>

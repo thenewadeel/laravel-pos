@@ -60,14 +60,17 @@
                 <div class="form-group mb-3">
                     <label for="product-filter" class="form-label">Filter Products</label>
                     <input id="product-filter" class="form-control" type="text"
-                        oninput="
+                        onkeyup="
                     var filter = this.value.toLowerCase();
+                    // console.log({filter});
                     var list = document.getElementById('product-list');
-                    var items = list.getElementsByTagName('li');
+                    // console.log({list});
+                    var items = list.getElementsByTagName('div');
+                    // console.log({items});
                     // console.log(items);
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i];
-                        var name = item.innerText.toLowerCase();
+                        var name = item.dataset.name.toLowerCase();
                         var classes='list-group-item d-flex justify-content-between align-items-center';
                         if(!(name.indexOf(filter) > -1)){
                             item.style.display = 'none';
@@ -81,15 +84,17 @@ item.className='';
                 </div>
                 <div style="max-height: 60vh; overflow-y: scroll;;" class="flex grow">
                     <div class="">
-                        @foreach ($products as $product)
-                            <div class="card">
-                                <div class="card-body d-flex justify-content-start my-0 py-0 w-max align-items-center">
+                        <div class="card" id='product-list'>
+                            @foreach ($products as $product)
+                                {{-- <li>{{ $product->name }}</li> --}}
+                                <div class="card-body d-flex justify-content-start my-0 py-0 w-max align-items-center"
+                                    data-name="{{ strtolower($product->name) }}">
                                     <input class="form-check-input" type="checkbox" value="{{ $product->id }}"
                                         id="product-{{ $product->id }}" name="product_ids[]">
                                     {{ $product->name }}
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>

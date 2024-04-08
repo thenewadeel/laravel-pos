@@ -24,7 +24,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="category">{{ 'Category' }}</label>
                     <input type="text" name="category" class="form-control @error('category') is-invalid @enderror"
                         id="category" placeholder="{{ 'Category Name' }}"
@@ -34,7 +34,7 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                </div>
+                </div> --}}
 
                 <div class="form-group">
                     <label for="description">{{ __('product.Description') }}</label>
@@ -60,7 +60,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group hidden">
+                {{-- <div class="form-group hidden">
                     <label for="barcode">{{ __('product.Barcode') }}</label>
                     <input type="text" name="barcode" class="form-control @error('barcode') is-invalid @enderror"
                         id="barcode" placeholder="{{ __('product.Barcode') }}"
@@ -70,7 +70,7 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
-                </div>
+                </div> --}}
 
                 <div class="form-group">
                     <label for="price">{{ __('product.Price') }}</label>

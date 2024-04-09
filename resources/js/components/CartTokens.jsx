@@ -352,7 +352,7 @@ class Cart extends Component {
                                             this.clickCooldown = true;
                                             setTimeout(() => {
                                                 this.clickCooldown = false;
-                                            }, 500);
+                                            }, 5);
                                         }
                                     }}
                                     id={"add-to-cart-" + p.id}

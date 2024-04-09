@@ -104,8 +104,8 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        $customer->first_name = $request->first_name;
-        $customer->last_name = $request->last_name;
+        $customer->name = $request->name;
+        // $customer->last_name = $request->last_name;
         $customer->email = $request->email;
         $customer->phone = $request->phone;
         $customer->address = $request->address;

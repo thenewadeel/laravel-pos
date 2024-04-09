@@ -16,4 +16,10 @@ class Discount extends Model
             ->withTimestamps()
             ->withPivot('name');
     }
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'discount_order')
+            ->withTimestamps()
+            ->withPivot('name');
+    }
 }

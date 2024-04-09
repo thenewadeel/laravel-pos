@@ -11,6 +11,7 @@ use App\Http\Controllers\{
     ReportsController,
     UsersController,
     CategoryController,
+    DiscountController,
     ExpenseController,
     InventoryItemController,
     InventoryController
@@ -35,7 +36,8 @@ Route::middleware('auth')->group(function () {
         'reports'     => ReportsController::class,
         'categories'  => CategoryController::class,
         'expenses'    => ExpenseController::class,
-        'inventoryItems' => InventoryItemController::class
+        'inventoryItems' => InventoryItemController::class,
+        'discounts' => DiscountController::class
     ]);
 
     Route::get('/listOfProducts', [ProductController::class, 'listOf']);
@@ -46,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/listOfReports', [ReportsController::class, 'listOf']);
     Route::get('/listOfCategories', [CategoryController::class, 'listOf']);
     Route::get('/listOfinventoryItems', [InventoryItemController::class, 'listOf']);
+    Route::get('/listOfDiscounts', [DiscountController::class, 'listOf']);
 
     Route::post('/orders/{order}/addPayment', [OrderController::class, 'addPayment'])->name('orders.payments.store');
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { createRoot } from "react-dom";
+import { createRoot } from "react-dom/client";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { sum } from "lodash";
@@ -16,6 +16,7 @@ class Cart extends Component {
             translations: {},
             products: [],
             shops: [],
+            searchText: "",
         };
 
         this.loadCart = this.loadCart.bind(this);
@@ -38,6 +39,7 @@ class Cart extends Component {
         this.loadProducts();
         // this.loadCustomers();
         this.loadShops();
+        this.loadDiscounts();
     }
 
     // load the transaltions for the react component
@@ -66,11 +68,26 @@ class Cart extends Component {
             });
     }
 
+    loadDiscounts() {
+        axios
+            .get(`/listOfDiscounts`)
+            .then((res) => {
+                const discounts = res.data;
+                this.setState({ discounts: discounts || [] });
+                console.log({ discounts });
+                // this.setState({ shop_id: shops?.[0]?.id || undefined });
+            })
+            .catch((err) => {
+                console.error("Error loading discounts:", err);
+            });
+    }
+
     loadProducts(search = "") {
         const query = (!!search ? `?search=${search}&` : "?") + "itemCount=20";
         axios.get(`/productsbyCat`).then((res) => {
             const products = res.data.data;
             this.setState({ products });
+            console.log({ products });
         });
     }
 
@@ -118,13 +135,14 @@ class Cart extends Component {
         });
     }
     handleChangeSearch(event) {
-        const search = event.target.value;
-        this.setState({ search });
+        console.log(event.target.value);
+        const searchText = event.target.value;
+        this.setState({ searchText });
     }
     handleSeach(event) {
-        if (event.keyCode === 13) {
-            this.loadProducts(event.target.value);
-        }
+        // if (event.keyCode === 13) {
+        //     this.loadProducts(event.target.value);
+        // }
     }
 
     addProductToCart(id) {
@@ -288,6 +306,7 @@ class Cart extends Component {
                         <div className="card-header flex flex-row d-row align-middle items-center">
                             <div className="text-lg font-extrabold font-serif col-8">
                                 Chand Raat Menu
+                                {products.length} - {this.state.searchText}
                             </div>
                             <input
                                 type="text"
@@ -296,7 +315,7 @@ class Cart extends Component {
                                     translations["search_product"] + "..."
                                 }
                                 onChange={this.handleChangeSearch}
-                                onKeyDown={this.handleSeach}
+                                // onKeyDown={this.handleSeach}
                             />
                         </div>
                         <div
@@ -307,6 +326,26 @@ class Cart extends Component {
                         >
                             {products.map((p) => (
                                 <div
+                                    style={{
+                                        display:
+                                            this.state.searchText.trim() ===
+                                                "" ||
+                                            p.name
+                                                .toLowerCase()
+                                                .includes(
+                                                    this.state.searchText.toLowerCase()
+                                                )
+                                                ? "block"
+                                                : "none",
+                                        border: "2px solid darkgray",
+                                        cursor: "pointer",
+                                        transition: "box-shadow 0.3s",
+                                        "&:hover": {
+                                            border: "40px solid darkgray",
+                                        },
+                                        width: "calc(20% - 20px)" /* 20px is the margin on each side */,
+                                        margin: "10px",
+                                    }}
                                     onClick={(e) => {
                                         if (!this.clickCooldown) {
                                             this.addProductToCart(p.id);
@@ -318,17 +357,7 @@ class Cart extends Component {
                                     }}
                                     id={"add-to-cart-" + p.id}
                                     key={p.id}
-                                    className="item text-xl font-serif font-extrabold d-flex flex-column justify-content-center"
-                                    style={{
-                                        border: "2px solid darkgray",
-                                        cursor: "pointer",
-                                        transition: "box-shadow 0.3s",
-                                        "&:hover": {
-                                            border: "40px solid darkgray",
-                                        },
-                                        width: "calc(20% - 20px)" /* 20px is the margin on each side */,
-                                        margin: "10px",
-                                    }}
+                                    className="item text-xl font-serif font-extrabold "
                                 >
                                     {/* {console.log({"p":p.image_url})} */}
                                     {/* <img
@@ -362,7 +391,7 @@ class Cart extends Component {
                     style={{ height: "90vh" }}
                 >
                     <div className="col card-body">
-                        <div className="col " style={{ height: "60%" }}>
+                        <div className="col " style={{ height: "60vh" }}>
                             {/* <select
                                 className="form-control"
                                 onChange={this.setShopId}
@@ -440,91 +469,82 @@ class Cart extends Component {
                                 {/* </div> */}
                             </div>
                         </div>
-                        <div
-                            className="card"
-                            style={{
-                                overflow: "scroll",
-                                // height: "calc(30vh)",
-                                justifyContent: "space-between",
-                            }}
-                        >
-                            <div className="card-header flex flex-row d-row align-middle items-center">
-                                <div className="text-lg font-extrabold font-serif col-8">
-                                    Change Calculator
+                    </div>
+                    <div
+                        className="card-footer"
+                        style={{
+                            overflow: "scroll",
+                            border: "2px solid darkgray",
+                            // height: "calc(30vh)",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <div className="card-header flex flex-row font-bold text-lg">
+                            Change Calculator
+                        </div>
+                        <div className="card-body order-product w-100 font-serif font-bold text-lg">
+                            {/* Amount Total: ${this.getTotal(cart).toFixed(2)} */}
+                            <div className=" ">
+                                <div className="d-flex justify-content-between col-12 ">
+                                    <span className="">Total Amount</span>
+                                    <span className=" ">
+                                        {window.APP.currency_symbol}{" "}
+                                        {this.getTotal(cart)}
+                                    </span>
                                 </div>
                             </div>
-                            <div className="card-body order-product w-100 font-sarif">
-                                {/* Amount Total: ${this.getTotal(cart).toFixed(2)} */}
-                                <div className="">
-                                    <div className="d-flex justify-content-between col-12 blockquote">
-                                        <span className="">Total Amount</span>
-                                        <span className=" font-bold text-lg ">
-                                            {window.APP.currency_symbol}{" "}
-                                            {this.getTotal(cart)}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="input-group ">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text text-lg">
-                                            Payment
-                                        </span>
-                                    </div>
-                                    <input
-                                        type="number"
-                                        className="form-control text-right"
-                                        aria-label="Amount (to the nearest dollar)"
-                                        id="paymentInput"
-                                        onChange={(e) => {
-                                            const inputValue = parseInt(
-                                                e.target.value
-                                            );
-                                            document.getElementById(
-                                                "change"
-                                            ).innerHTML =
-                                                this.getTotal(cart) -
-                                                inputValue;
-                                        }}
-                                    />
-                                    <div className="input-group-append">
-                                        <span className="input-group-text">
-                                            {window.APP.currency_symbol}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="input-group ">
-                                    <div className="d-flex justify-content-between col-12 blockquote">
-                                        <span className="">Change</span>
-                                        <span className=" font-bold text-xl">
-                                            {window.APP.currency_symbol}{" "}
-                                            <span id="change">---</span>
-                                        </span>
-                                    </div>
+                            <div className="input-group py-0 my-0">
+                                {/* <div className="input-group-prepend"> */}
+                                <span className=" col-6 ">Payment</span>
+                                {/* </div> */}
+                                <input
+                                    type="number"
+                                    className="form-control text-right"
+                                    aria-label="Amount (to the nearest dollar)"
+                                    id="paymentInput"
+                                    onChange={(e) => {
+                                        const inputValue = parseInt(
+                                            e.target.value
+                                        );
+                                        document.getElementById(
+                                            "change"
+                                        ).innerHTML =
+                                            this.getTotal(cart) - inputValue;
+                                    }}
+                                />
+                            </div>
+                            <div className="input-group ">
+                                <div className="d-flex justify-content-between col-12 ">
+                                    <span className="">Change</span>
+                                    <span className=" ">
+                                        {window.APP.currency_symbol}{" "}
+                                        <span id="change">---</span>
+                                    </span>
                                 </div>
                             </div>
-                            <div className="card-footer">
-                                <div className="row ">
-                                    <div className="col">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger btn-block"
-                                            onClick={this.handleEmptyCart}
-                                            disabled={!cart.length}
-                                        >
-                                            {translations["cancel"]}
-                                        </button>
-                                    </div>
+                        </div>
+                        <div className="card-footer">
+                            <div className="row ">
+                                <div className="col">
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger btn-block"
+                                        onClick={this.handleEmptyCart}
+                                        disabled={!cart.length}
+                                    >
+                                        {translations["cancel"]}
+                                    </button>
+                                </div>
 
-                                    <div className="col ">
-                                        <button
-                                            type="button"
-                                            className="btn btn-success btn-block"
-                                            disabled={!cart.length}
-                                            onClick={this.handleClickSubmit}
-                                        >
-                                            {"Pay"}
-                                        </button>
-                                    </div>
+                                <div className="col ">
+                                    <button
+                                        type="button"
+                                        className="btn btn-success btn-block"
+                                        disabled={!cart.length}
+                                        onClick={this.handleClickSubmit}
+                                    >
+                                        {"Pay"}
+                                    </button>
                                 </div>
                             </div>
                         </div>

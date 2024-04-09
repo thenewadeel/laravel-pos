@@ -96,7 +96,8 @@
             </table>
             <div class="d-flex justify-content-between">
                 <span>Total:</span>
-                <span>{{ config('settings.currency_symbol') }} {{ $item->product->price * $item->quantity }}</span>
+                <span>{{ config('settings.currency_symbol') }} {{ $item->product->price * $item->quantity }}
+                    /({{ $order->total() }})</span>
             </div>
             <div class="d-flex justify-content-between">
                 <span>Cashier:</span>

@@ -265,7 +265,7 @@ class OrderController extends Controller
             'shop_id' => $request->shop_id,
             'table_number' => $request->table_number,
             'waiter_name' => $request->waiter_name,
-            'type' => $request->order_type
+            'type' => $request->order_type,
         ]);
 
         $cart = $request->user()->cart()->get();
@@ -284,6 +284,9 @@ class OrderController extends Controller
                 'amount' => $request->amount,
                 'user_id' => $request->user()->id,
             ]);
+        }
+        if ($request->discountsToAdd) {
+            $order->discounts()->sync($request->discountsToAdd);
         }
         return ['message' => 'success', 'order' => $order];
     }

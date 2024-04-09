@@ -303,7 +303,7 @@ class Cart extends Component {
                             justifyContent: "space-between",
                         }}
                     >
-                        <div className="card-header flex flex-row d-row align-middle items-center">
+                        <div className="card-header flex flex-row d-row align-middle items-center  p-0 m-0">
                             <div className="text-lg font-extrabold font-serif col-8">
                                 Chand Raat Menu
                                 {products.length} - {this.state.searchText}
@@ -319,7 +319,7 @@ class Cart extends Component {
                             />
                         </div>
                         <div
-                            className="card-body order-product d-flex flex-wrap justify-content-between"
+                            className="card-body order-product d-flex flex-wrap justify-content-between p-0"
                             style={{
                                 justifyContent: "space-between",
                             }}
@@ -343,8 +343,8 @@ class Cart extends Component {
                                         "&:hover": {
                                             border: "40px solid darkgray",
                                         },
-                                        width: "calc(20% - 20px)" /* 20px is the margin on each side */,
-                                        margin: "10px",
+                                        width: "calc(20% - 4px)" /* 20px is the margin on each side */,
+                                        margin: "2px",
                                     }}
                                     onClick={(e) => {
                                         if (!this.clickCooldown) {
@@ -357,25 +357,16 @@ class Cart extends Component {
                                     }}
                                     id={"add-to-cart-" + p.id}
                                     key={p.id}
-                                    className="item text-xl font-serif font-extrabold "
+                                    className={`text-lg font-serif font-extrabold d-flex align-items-center justify-content-center `}
                                 >
-                                    {/* {console.log({"p":p.image_url})} */}
-                                    {/* <img
-                                    src={
-                                        p.image_url === "/storage/"
-                                            ? "/images/defaultItem.png"
-                                            : p.image_url
-                                    }
-                                    alt="" className="w-64 h-64 border-4 border-red-900"
-                                /> */}
                                     <div
                                         style={{
-                                            padding: "4px",
                                             textAlign: "center",
                                         }}
                                     >
                                         {p.name}
                                         <br />
+                                        {p.description}
                                         <span style={{ fontStyle: "italic" }}>
                                             ({p.price})
                                         </span>

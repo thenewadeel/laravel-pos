@@ -23,6 +23,7 @@
             'warning_quantity' => config('settings.warning_quantity'),
         ]); ?>
     </script>
+    @livewireStyles
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -71,6 +72,7 @@
     <!-- ./wrapper -->
     <!-- <script src="{{ asset('js/app.js') }}"></script> -->
     @yield('js')
+    @livewireScripts
 </body>
 
 </html>

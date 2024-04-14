@@ -18,401 +18,75 @@ class ProductSeeder extends Seeder
      */
     public function run(Faker $faker): void
     {
-        $directory = [
-            ["name" => "01 Shish Tawook	 ", "price" => 890],
-            ["name" => "02 Lamb Chops	 ", "price" => 1050],
-            ["name" => "03 Kebbey (Meat Balls)	 ", "price" => 700],
-            ["name" => "04 Babaganoush Dip	 ", "price" => 690],
-            ["name" => "05 Spicy Hummus Dip	 ", "price" => 980],
-            ["name" => "06 Mutabal	 ", "price" => 750],
-            ["name" => "07  Lebanese Special Platter	 ", "price" => 3900],
-            ["name" => "08 Joja Kabab Platter	 ", "price" => 3100],
-            ["name" => "09 Peach Margarita	 ", "price" => 400],
-            ["name" => "10 Mint Margarita	 ", "price" => 300],
-            ["name" => "11 Mint Lemonade	 ", "price" => 250],
-            ["name" => "12 Fresh Lime and 7up	 ", "price" => 190],
-            ["name" => "13 Strawberry Mojito	 ", "price" => 350],
-            ["name" => "14 Pina Colada	 ", "price" => 450],
-            ["name" => "15 Soft Drinks	 ", "price" => 100],
-            ["name" => "16 Mineral Water Small	 ", "price" => 85],
-            ["name" => "17 Mineral Water Large	 ", "price" => 130],
-            ["name" => "18 Dood Pati	 ", "price" => 200],
-            ["name" => "19 Karak Chaaye	 ", "price" => 180],
-            ["name" => "20 Espresso	 ", "price" => 220],
-            ["name" => "21 Cappuccino	 ", "price" => 480],
-            ["name" => "22 Mocca Chino	 ", "price" => 450],
-            ["name" => "23 Americano	 ", "price" => 420],
-            ["name" => "24 Plain Naan	 ", "price" => 40],
-            ["name" => "25 Roghni Naan	 ", "price" => 50],
-            ["name" => "26 Garlic Naan	 ", "price" => 80],
-            ["name" => "27 Laal Roti	 ", "price" => 40],
-            ["name" => "28 Fried Chicken Wing	 ", "price" => 450],
-            ["name" => "29 Finger Fish	 ", "price" => 1000],
-            ["name" => "30 Honey Wings	 ", "price" => 500],
-            ["name" => "31 Dynamite Chicken	 ", "price" => 670],
-            ["name" => "32 Crispy Chicken Strips and Chips 	 ", "price" => 1200],
-            ["name" => "33 Plain Fries	 ", "price" => 300],
-            ["name" => "34 Plain Fries (Masala)	 ", "price" => 80],
-            ["name" => "35 Plain Fries (Cheese)	 ", "price" => 180],
-            ["name" => "36 Plain Fries (Swiss Mushroom)	 ", "price" => 200],
-            ["name" => "37 Plain Fries (Pizza Sauce)	 ", "price" => 170],
-            ["name" => "38 Plain Fries (Jalapeno Sauce)	 ", "price" => 100],
-            ["name" => "39 Hot and Sour Soup (Single Bowl)	 ", "price" => 250],
-            ["name" => "40 Hot and Sour Soup (Family Bowl)	 ", "price" => 850],
-            ["name" => "41 Thai Soup (Single Bowl)	 ", "price" => 250],
-            ["name" => "42 Thai Soup (Family Bowl)	 ", "price" => 850],
-            ["name" => "43 Tom Yom Soup  (Single Bowl)	 ", "price" => 350],
-            ["name" => "44 Tom Yom Soup  (Family Bowl)	 ", "price" => 1300],
-            ["name" => "45 Chicken Corn Soup (Single Bowl)	 ", "price" => 250],
-            ["name" => "46 Chicken Corn Soup (Family Bowl)	 ", "price" => 850],
-            ["name" => "47 Cream Mushroom Soup (Single Bowl)	 ", "price" => 250],
-            ["name" => "48 Cream Mushroom Soup (Family Bowl)	 ", "price" => 850],
-            ["name" => "49 Cream of Chicken Soup (Single Bowl)	 ", "price" => 250],
-            ["name" => "50 Cream of Chicken Soup (Family Bowl)	 ", "price" => 850],
-            ["name" => "51 Lebanese Mezze Platter	 ", "price" => 800],
-            ["name" => "52 Caesar Salad	 ", "price" => 600],
-            ["name" => "53 Russian Salad	 ", "price" => 750],
-            ["name" => "54 Pasta Salad	 ", "price" => 400],
-            ["name" => "55 Beans Salad	 ", "price" => 300],
-            ["name" => "56 Fresh Greens Salad	 ", "price" => 200],
-            ["name" => "57 Lentil Soup (Single Bowl)	 ", "price" => 200],
-            ["name" => "58 Lentil Soup (Family Bowl)	 ", "price" => 750],
-            ["name" => "59 Greek Salad	 ", "price" => 650],
-            ["name" => "60 Fattoush	 ", "price" => 350],
-            ["name" => "61 Lebanese Salad	 ", "price" => 650],
-            ["name" => "62 Falafel	 ", "price" => 800],
-            ["name" => "63 Beef Shawarma	 ", "price" => 690],
-            ["name" => "64 Shish Tawook Shawarma	 ", "price" => 690],
-            ["name" => "65 Hummus Mah Lahme	 ", "price" => 1050],
-            ["name" => "66 Shawarma Plate	 ", "price" => 1150],
-            ["name" => "67 Falafel Plate	 ", "price" => 1250],
-            ["name" => "68 Kung Pow Chicken (Half)	 ", "price" => 1150],
-            ["name" => "69 Kung Pow Chicken (Full)	 ", "price" => 2100],
-            ["name" => "70 Chicken with Cashew Nuts (Half)	 ", "price" => 1075],
-            ["name" => "71 Chicken with Cashew Nuts (Full)	 ", "price" => 1950],
-            ["name" => "72 Chicken with Almond (Half)	 ", "price" => 1100],
-            ["name" => "73 Chicken with Almond (Full)	 ", "price" => 2000],
-            ["name" => "74 Chicken with Pineapple (Half)	 ", "price" => 1000],
-            ["name" => "75 Chicken with Pineapple (Full)	 ", "price" => 1900],
-            ["name" => "76 Mongolian Chicken (Half)	 ", "price" => 900],
-            ["name" => "77 Mongolian Chicken (Full)	 ", "price" => 1700],
-            ["name" => "78 Black Pepper Chicken (Half)	 ", "price" => 1100],
-            ["name" => "79 Black Pepper Chicken (Full)	 ", "price" => 2100],
-            ["name" => "80 Chicken Manchurian (Half)	 ", "price" => 1000],
-            ["name" => "81 Chicken Manchurian (Full)	 ", "price" => 1900],
-            ["name" => "82 Chicken Chilli Dry (Half)	 ", "price" => 925],
-            ["name" => "83 Chicken Chilli Dry (Full)	 ", "price" => 1650],
-            ["name" => "84 Chicken Chowmein	 ", "price" => 950],
-            ["name" => "85 Beef Chowmein	 ", "price" => 990],
-            ["name" => "86 Vegetable Chowmein	 ", "price" => 600],
-            ["name" => "87 Lasagna	 ", "price" => 1250],
-            ["name" => "88 Chicken Alfredo Pasta	 ", "price" => 1250],
-            ["name" => "89 Baked Rigatoni Creamy Pasta	 ", "price" => 1300],
-            ["name" => "90 Fish Fillet	 ", "price" => 1100],
-            ["name" => "91 Grilled Fish with Saffron Sauce	 ", "price" => 1450],
-            ["name" => "92 Fish and Chips	 ", "price" => 1290],
-            ["name" => "93 Chicken Ala Kiev	 ", "price" => 980],
-            ["name" => "94 Chicken Tikka Pizza (Medium)	 ", "price" => 1490],
-            ["name" => "95 Chicken Tikka Pizza (Large)	 ", "price" => 2090],
-            ["name" => "96 Chicken Fajita Pizza (Medium)	 ", "price" => 1490],
-            ["name" => "97 Chicken Fajita Pizza (Large)	 ", "price" => 2090],
-            ["name" => "98 Crown Crust Pizza (Medium)	 ", "price" => 1600],
-            ["name" => "99 Crown Crust Pizza (Large)	 ", "price" => 2200],
-            ["name" => "100 Pepper Corn Steak	 ", "price" => 1490],
-            ["name" => "101 Mushroom Steak 	 ", "price" => 1490],
-            ["name" => "102 Mexican Steak	 ", "price" => 1890],
-            ["name" => "103 Twin Steak	 ", "price" => 1590],
-            ["name" => "104 French Onion Steak	 ", "price" => 1650],
-            ["name" => "105 Jalapeno Beef Burger	 ", "price" => 750],
-            ["name" => "106 Grilled Beef Burger	 ", "price" => 750],
-            ["name" => "107 Stuffed Chicken Burger	 ", "price" => 650],
-            ["name" => "108 Zinger Burger	 ", "price" => 650],
-            ["name" => "109 Chicken Crunch Burger	 ", "price" => 500],
-            ["name" => "110 Double Decker Club Sandwich	 ", "price" => 650],
-            ["name" => "111 Grilled Chicken Sandwich	 ", "price" => 880],
-            ["name" => "112 Make it a Meal (French Fries & Soft Drink)	 ", "price" => 250],
-            ["name" => "113 BeefChili Dry (Half)	 ", "price" => 1050],
-            ["name" => "114 BeefChili Dry (Full)	 ", "price" => 1900],
-            ["name" => "115 Mangolian Beef(Half)	 ", "price" => 1100],
-            ["name" => "116 Mangolian Beef (Full)	 ", "price" => 2000],
-            ["name" => "117 Stir Fry Beef Chilli (Half)	 ", "price" => 1150],
-            ["name" => "118 Stir Fry Beef Chilli (Full)	 ", "price" => 2200],
-            ["name" => "119 Chlli Oyster Beef (Half)	 ", "price" => 1300],
-            ["name" => "120 Chlli Oyster Beef (Full) 	 ", "price" => 2450],
-            ["name" => "121 Hot & Spicy Braised Beef (Half)	 ", "price" => 1150],
-            ["name" => "122 Hot & Spicy Braised Beef (Full)	 ", "price" => 2250],
-            ["name" => "123 Egg Fried Rice	 ", "price" => 850],
-            ["name" => "124 Chicken Fried Rice	 ", "price" => 1100],
-            ["name" => "125 Vegetable Rice	 ", "price" => 850],
-            ["name" => "126 Garlic Rice	 ", "price" => 750],
-            ["name" => "127 Seekh Kabab Karahi (Half)	 ", "price" => 1100],
-            ["name" => "128 Seekh Kabab Karahi (Full)	 ", "price" => 2000],
-            ["name" => "129 Chapli Kabab	 ", "price" => 450],
-            ["name" => "130 Mutton Afghani Pulao	 ", "price" => 2400],
-            ["name" => "131 Bannu Beef Pulao	 ", "price" => 1350],
-            ["name" => "132 Chicken Biryani	 ", "price" => 1100],
-            ["name" => "133 Peas Pulao	 ", "price" => 550],
-            ["name" => "134 Palak Paneer (Half)	 ", "price" => 600],
-            ["name" => "135 Palak Paneer (Full)	 ", "price" => 1100],
-            ["name" => "136 Daal Mash (Half)	 ", "price" => 550],
-            ["name" => "137 Daal Mash (Full)	 ", "price" => 1000],
-            ["name" => "138 Shahi Daal (Half)	 ", "price" => 600],
-            ["name" => "139 Shahi Daal (Full)	 ", "price" => 1090],
-            ["name" => "140 Mian Jee Kee Daal (Half)	 ", "price" => 800],
-            ["name" => "141 Mian Jee Kee Daal (Full)	 ", "price" => 1500],
-            ["name" => "142 Chicken Makhni Karahi (Half)	 ", "price" => 1050],
-            ["name" => "143 Chicken Makhni Karahi (Full)	 ", "price" => 1950],
-            ["name" => "144 Chicken Namkeen Karahi (Half)	 ", "price" => 950],
-            ["name" => "145 Chicken Namkeen Karahi (Full)	 ", "price" => 1700],
-            ["name" => "146 Green Chilli Chicken Karahi (Half)	 ", "price" => 950],
-            ["name" => "147 Green Chilli Chicken Karahi (Full)	 ", "price" => 1700],
-            ["name" => "148 Arabian Chicken Handi (Half)	 ", "price" => 1150],
-            ["name" => "149 Arabian Chicken Handi (Full)	 ", "price" => 2200],
-            ["name" => "150 Chicken White Handi (Half)	 ", "price" => 1150],
-            ["name" => "151 Chicken White Handi (Full)	 ", "price" => 2200],
-            ["name" => "152 Chicken Achari (Half)	 ", "price" => 1000],
-            ["name" => "153 Chicken Achari (Full)	 ", "price" => 1800],
-            ["name" => "154 Shenwari Mutton Karahi (Half)	 ", "price" => 1650],
-            ["name" => "155 Shenwari Mutton Karahi (Full)	 ", "price" => 31400],
-            ["name" => "156 Peshawri Namkeen Mutton Karahi (Half)	 ", "price" => 1600],
-            ["name" => "157 Peshawri Namkeen Mutton Karahi (Full)	 ", "price" => 3000],
-            ["name" => "158 Balochi Mutton Karahi (Half)	 ", "price" => 1700],
-            ["name" => "159 Balochi Mutton Karahi (Full)	 ", "price" => 3200],
-            ["name" => "160 Mutton Handi (Half)	 ", "price" => 1750],
-            ["name" => "161 Mutton Handi (Full)	 ", "price" => 3300],
-            ["name" => "162 Mutton Joint / Rosh	 ", "price" => 1000],
-            ["name" => "163 Chicken Malai Boti (Boneless)	 ", "price" => 650],
-            ["name" => "164 Chicken Tikka	 ", "price" => 500],
-            ["name" => "165 Chicken Tikka Boti 	 ", "price" => 500],
-            ["name" => "166 Beef Behari Boti	 ", "price" => 580],
-            ["name" => "167 Fish Tikka	 ", "price" => 740],
-            ["name" => "168 Beef Gola Kabab	 ", "price" => 550],
-            ["name" => "169 Mutton Chops	 ", "price" => 1000],
-            ["name" => "170 Seekh Kabab	 ", "price" => 650],
-            ["name" => "171 Reshmi Kabab	 ", "price" => 550],
-            ["name" => "172 BBQ Platter (Half)	 ", "price" => 2600],
-            ["name" => "173 BBQ Platter (Full)	 ", "price" => 7500],
-            ["name" => "174 Shahi Platter (Half)	 ", "price" => 5000],
-            ["name" => "175 Shahi Platter (Full)	 ", "price" => 14000],
-            ["name" => "176 Spanish Flan	 ", "price" => 400],
-            ["name" => "177 Mango Mousse	 ", "price" => 430],
-            ["name" => "178 Molten Lava	 ", "price" => 600],
-            ["name" => "179 Gajrela (Bowl)	 ", "price" => 450],
-            ["name" => "180 Mix Kheer	 ", "price" => 550],
-            ["name" => "181 Gulab Jamun	 ", "price" => 300],
-            ["name" => "182 Ras Malai	 ", "price" => 360],
-            ["name" => "183 Sizzling Brownie with Ice Cream	 ", "price" => 400],
-            ["name" => "184 Ice Cream (2 Scoops)	 ", "price" => 270],
-            ["name" => "185 Ice Cream (3 Scoops)	 ", "price" => 400],
-            ["name" => "186 Painapple Crunch	 ", "price" => 950],
-            ["name" => "201 American Coffee	", "price" => 300],
-            ["name" => "202 Expresso	", "price" => 250],
-            ["name" => "203 Cappuccino	", "price" => 350],
-            ["name" => "204 Mocca Chino	", "price" => 420],
-            ["name" => "205 Cold Coffee	", "price" => 450],
-            ["name" => "206 Cold Coffee With Ice Cream	", "price" => 480],
-            ["name" => "207 Hot Chocolate	", "price" => 350],
-            ["name" => "208 Latte Coffee	", "price" => 350],
-            ["name" => "209 Green Tea & Lemon Or Mint	", "price" => 90],
-            ["name" => "210 Doodh Patti	", "price" => 200],
-            ["name" => "211 Sulemani Tea	", "price" => 90],
-            ["name" => "212 Spiced Honey Wings (6 Piece)	", "price" => 550],
-            ["name" => "213 French Fries	", "price" => 300],
-            ["name" => "214 Greek Feta Cheese Salad	", "price" => 500],
-            ["name" => "215 Chef Salad	", "price" => 700],
-            ["name" => "216 Caesar Salad	", "price" => 600],
-            ["name" => "217 Hawaiian Salad	", "price" => 700],
-            ["name" => "218 Chicken Panini Sandwich (2 Pcs)	", "price" => 500],
-            ["name" => "219 Grilled Beef Panini Sandwich (2 Pcs)	", "price" => 580],
-            ["name" => "220 Club Beef Burger	", "price" => 450],
-            ["name" => "221 Chicken Burger	", "price" => 400],
-            ["name" => "222 Barbeque Burger	", "price" => 500],
-            ["name" => "223 Philly Cheese Steak Sandwich	", "price" => 590],
-            ["name" => "224 Special Zinger Burger	", "price" => 650],
-            ["name" => "225 Bakers Street Club Sandwich	", "price" => 500],
-            ["name" => "226 Chicken Sandwich	", "price" => 400],
-            ["name" => "226 Grilled Cheese and Tomato Sandwich	", "price" => 480],
-            ["name" => "227 Chicken Parmesan	", "price" => 750],
-            ["name" => "228 Pane Bolognese	", "price" => 700],
-            ["name" => "229 Alfredo Pasta	", "price" => 700],
-            ["name" => "230 Fish and Chips	", "price" => 1290],
-            ["name" => "231 Lasagna	", "price" => 1290],
-            ["name" => "232 Pizza au Tandoori (Medium)	", "price" => 1490],
-            ["name" => "233 Pizza au Tandoori (Large)	", "price" => 2090],
-            ["name" => "234 Chicken Patties	", "price" => 100],
-            ["name" => "235 Chocolate Brownie	", "price" => 100],
-            ["name" => "236 Walnut Brownie 	", "price" => 100],
-            ["name" => "237 Date & Almond	", "price" => 120],
-            ["name" => "238 Basbousa	", "price" => 80],
-            ["name" => "239 Mini Pizza	", "price" => 120],
-            ["name" => "240 Lemon Tart	", "price" => 100],
-            ["name" => "241 Walnut Tart	", "price" => 180],
-            ["name" => "242 Chocolate Eclairs	", "price" => 170],
-            ["name" => "243 Doughnut	", "price" => 190],
-            ["name" => "244 Cup Cake	", "price" => 90],
-            ["name" => "245 Banana Bread	", "price" => 80],
-            ["name" => "246 Lemon Cake	", "price" => 60],
-            ["name" => "247 Cream Roll	", "price" => 120],
-            ["name" => "248 Cinnamon Roll	", "price" => 200],
-            ["name" => "249 Raisin Bread	", "price" => 130],
-            ["name" => "250 Assorted Milkshake	", "price" => 400]
-        ];
-        $tokenItems = [
-            [
-                "name" => "Gol Gappay",
-                "description" => "12 Pieces",
-                "price" => 300,
-            ],
-            [
-                "name" => "Dahi Bhallay",
-                "description" => "1 Serving",
-                "price" => 300,
-            ],
-            [
-                "name" => "Nestle Juice",
-                "description" => "Small",
-                "price" => 80,
-            ],
-            [
-                "name" => "Mineral Water",
-                "description" => "Large",
-                "price" => 100,
-            ],
-            [
-                "name" => "Cold Drinks",
-                "description" => "Tin",
-                "price" => 100,
-            ],
-            [
-                "name" => "Tea",
-                "description" => "Cup",
-                "price" => 150,
-            ],
-            [
-                "name" => "Coffee",
-                "description" => "Cup",
-                "price" => 350,
-            ],
-            [
-                "name" => "Ice Cream",
-                "description" => "1 Scoop",
-                "price" => 100,
-            ],
-            [
-                "name" => "Chicken Patty Burger",
-                "description" => "",
-                "price" => 450,
-            ],
-            [
-                "name" => "Zinger Burger",
-                "description" => "",
-                "price" => 500,
-            ],
-            [
-                "name" => "Tikka Boti",
-                "description" => "Seekh",
-                "price" => 300,
-            ],
-            [
-                "name" => "Pizza",
-                "description" => "Large",
-                "price" => 1700,
-            ],
-            [
-                "name" => "Pizza",
-                "description" => "Medium",
-                "price" => 950,
-            ],
-            [
-                "name" => "Halwa",
-                "description" => "Plate",
-                "price" => 300,
-            ],
-            [
-                "name" => "Puri",
-                "description" => "Piece",
-                "price" => 50,
-            ],
-            [
-                "name" => "Channay",
-                "description" => "Plate",
-                "price" => 150,
-            ],
-            // [
-            //     "name" => "Nihari",
-            //     "description" => "Plate",
-            //     "price" => 200,
-            // ],
-            // [
-            //     "name" => "Lassi",
-            //     "description" => "Glass",
-            //     "price" => 240,
-            // ],
-            [
-                "name" => "Chicken Biryani",
-                "description" => "Plate",
-                "price" => 300,
-            ],
-            [
-                "name" => "Naan",
-                "description" => "Piece",
-                "price" => 50,
-            ], [
-                "name" => "Sajji",
-                "description" => "Quarter",
-                "price" => 500,
-            ], [
-                "name" => "Sajji",
-                "description" => "Half",
-                "price" => 850,
-            ], [
-                "name" => "Sajji",
-                "description" => "Full",
-                "price" => 1500,
-            ],
-        ];
+        $directory = [];
+        $tokenItems = [];
 
-        foreach ($directory as $productSpecimen) {
-            // dd($productSpecimen);
+        // foreach ($directory as $productSpecimen) {
+        //     // dd($productSpecimen);
 
-            Product::updateOrCreate([
-                'name' => $productSpecimen['name'],
-                // 'description' => $productSpecimen->make,
-                // 'category' => $productSpecimen->category,
-                // 'image' => "images/{$imageName}",
-                // 'barcode' => $faker->ean13(),
-                'price' => $productSpecimen['price'],
-                'quantity' => '999',
-                'aval_status' => true,
-            ]);
-        }
+        //     Product::updateOrCreate([
+        //         'name' => $productSpecimen['name'],
+        //         // 'description' => $productSpecimen->make,
+        //         // 'category' => $productSpecimen->category,
+        //         // 'image' => "images/{$imageName}",
+        //         // 'barcode' => $faker->ean13(),
+        //         'price' => $productSpecimen['price'],
+        //         'quantity' => '999',
+        //         'aval_status' => true,
+        //     ]);
+        // }
 
-        $category = Category::updateOrCreate([
-            'name' => 'Tokenised Items',
-        ]);
+        // $category = Category::updateOrCreate([
+        //     'name' => 'Tokenised Items',
+        // ]);
 
-        $shopNames = ["TokenShop1", "TokenShop2", "TokenShop3", "TokenShop4", "TokenShop5", "TokenShop6"];
-        foreach ($shopNames as $shopName) {
-            $shop = Shop::updateOrCreate([
-                'name' => $shopName,
-                'description' => $shopName,
-                'image' => '',
-            ]);
-            $shop->categories()->attach($category);
-        }
-        foreach ($tokenItems as $productSpecimen) {
-            // dd($productSpecimen);
+        // $shopNames = ["TokenShop1", "TokenShop2", "TokenShop3", "TokenShop4", "TokenShop5", "TokenShop6"];
+        // foreach ($shopNames as $shopName) {
+        //     $shop = Shop::updateOrCreate([
+        //         'name' => $shopName,
+        //         'description' => $shopName,
+        //         'image' => '',
+        //     ]);
+        //     $shop->categories()->attach($category);
+        // }
+        // foreach ($tokenItems as $productSpecimen) {
+        //     // dd($productSpecimen);
 
-            $product = Product::updateOrCreate([
-                'name' => $productSpecimen['name'],
-                'description' => $productSpecimen['description'],
-                'price' => $productSpecimen['price'],
-                'quantity' => '999',
-                'aval_status' => true,
-            ]);
+        //     $product = Product::updateOrCreate([
+        //         'name' => $productSpecimen['name'],
+        //         'description' => $productSpecimen['description'],
+        //         'price' => $productSpecimen['price'],
+        //         'quantity' => '999',
+        //         'aval_status' => true,
+        //     ]);
 
 
-            DB::insert('insert into category_products (category_id, product_id) values (?, ?)', [$category->id, $product->id]);
+        //     DB::insert('insert into category_products (category_id, product_id) values (?, ?)', [$category->id, $product->id]);
+        // }
+
+
+
+        DB::table('products')->delete();
+        DB::table('category_products')->delete();
+        DB::table('categories')->delete();
+
+        $csvFilePath = base_path('seedData/products.csv');
+        if (file_exists($csvFilePath)) {
+            $products = array_map('str_getcsv', file($csvFilePath));
+            $header = array_shift($products);
+            foreach ($products as $product) {
+                $data = array_combine($header, $product);
+                $categoryName = $data['categoryName'];
+                $category = Category::firstOrCreate(['name' => $categoryName]);
+                $product = Product::updateOrCreate([
+                    'name' => $data['name'],
+                    'price' => $data['price'],
+                ]);
+                DB::table('category_products')->insert([
+                    'category_id' => $category->id,
+                    'product_id' => $product->id,
+                ]);
+            }
         }
     }
 }

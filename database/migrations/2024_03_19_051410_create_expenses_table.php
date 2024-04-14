@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('notes')->nullable();
 
             $table->foreignId('user_id');
-            $table->foreignId('shop_id');
+            $table->foreignId('shop_id')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('set null');

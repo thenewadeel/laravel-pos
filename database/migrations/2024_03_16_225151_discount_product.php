@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('discount_products', function (Blueprint $table) {
+        Schema::create('discount_product', function (Blueprint $table) {
             $table->id();
             $table->string('name')->default('Offer');
             $table->foreignId('discount_id');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('discount_products');
+        Schema::dropIfExists('discount_product');
     }
 };

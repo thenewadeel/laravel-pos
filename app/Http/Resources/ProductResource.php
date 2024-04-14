@@ -15,18 +15,28 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $array =  [
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'image' => $this->image,
-            // 'barcode' => $this->barcode,
             'price' => $this->price,
-            'quantity' => $this->quantity,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
-            'image_url' => Storage::url($this->image),
-            // 'category' => $this->category
+        ];
+
+        if (isset($this->categories)) {
+            $array['categories'] = CategoryResource::collection($this->categories);
+        }
+
+        return $array;
+    }
+}
+
+class CategoryResource extends JsonResource
+{
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
         ];
     }
 }

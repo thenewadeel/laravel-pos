@@ -23,6 +23,9 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::with('products')->get();
+        if (request()->wantsJson()) {
+            return $categories->toArray();
+        }
         return view('category.index', compact('categories'));
     }
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { createRoot } from "react-dom";
+import { createRoot } from "react-dom/client";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { sum } from "lodash";
@@ -9,7 +9,7 @@ class Cart extends Component {
         super(props);
         this.state = {
             cart: [],
-            products: [],
+            categories: [],
             customers: [],
             id: "",
             search: "",
@@ -20,6 +20,7 @@ class Cart extends Component {
             waiter_name: "",
             table_number: "",
             order_type: "dine-in",
+            filterText: "",
         };
 
         this.loadCart = this.loadCart.bind(this);
@@ -29,7 +30,7 @@ class Cart extends Component {
         this.handleEmptyCart = this.handleEmptyCart.bind(this);
 
         this.loadShops = this.loadShops.bind(this);
-        this.loadProducts = this.loadProducts.bind(this);
+        this.loadCategories = this.loadCategories.bind(this);
         this.handleChangeSearch = this.handleChangeSearch.bind(this);
         this.handleSeach = this.handleSeach.bind(this);
         this.setCustomerId = this.setCustomerId.bind(this);
@@ -46,7 +47,7 @@ class Cart extends Component {
         // load user cart
         this.loadTranslations();
         this.loadCart();
-        this.loadProducts();
+        this.loadCategories();
         this.loadCustomers();
         this.loadShops();
     }
@@ -76,15 +77,17 @@ class Cart extends Component {
             const shops = res.data;
             this.setState({ shops });
             this.setState({ shop_id: shops[0].id });
-            console.log("shops returnd:", shops);
+            // console.log("shops returnd:", shops);
         });
     }
 
-    loadProducts(search = "") {
-        const query = (!!search ? `?search=${search}&` : "?") + "itemCount=300";
-        axios.get(`/products${query}`).then((res) => {
-            const products = res.data.data;
-            this.setState({ products });
+    loadCategories(search = "") {
+        // const query = (!!search ? `?search=${search}&` : "?") + "itemCount=300";
+        axios.get(`/categories`).then((res) => {
+            // console.log({ res });
+            const categories = res.data;
+            this.setState({ categories });
+            // console.log({ categories });
         });
     }
 
@@ -158,12 +161,15 @@ class Cart extends Component {
     }
     handleSeach(event) {
         if (event.keyCode === 13) {
-            this.loadProducts(event.target.value);
+            this.loadCategories(event.target.value);
         }
     }
 
-    addProductToCart(id) {
-        let product = this.state.products.find((p) => p.id === id);
+    addProductToCart(id, category_id) {
+        let product = this.state.categories
+            .find((c) => c.id === category_id)
+            ?.products.find((p) => p.id === id);
+        // let product = this.state.products.find((p) => p.id === id);
         if (!!product) {
             // if product is already in cart
             let cart = this.state.cart.find((c) => c.id === product.id);
@@ -199,7 +205,7 @@ class Cart extends Component {
                 .post("/cart", { id })
                 .then((res) => {
                     // this.loadCart();
-                    console.log(res);
+                    // console.log(res);
                 })
                 .catch((err) => {
                     // Swal.fire("Error!", err.response.data.message, "error");
@@ -289,13 +295,24 @@ class Cart extends Component {
             },
             allowOutsideClick: () => !Swal.isLoading(),
         }).then((result) => {
-            if (result.value) {
-                //
-            }
+            let order = result.value.order;
+            // console.log({ order });
+            return axios
+                .post(`/orders/${order.id}/addPayment`, {
+                    order_id: order.id,
+                    amount: 0,
+                })
+                .then((res) => {
+                    this.loadCart();
+                    return res.data;
+                })
+                .catch((err) => {
+                    Swal.showValidationMessage(err);
+                });
         });
     }
     render() {
-        const { cart, products, customers, id, translations, shops } =
+        const { cart, categories, customers, id, translations, shops } =
             this.state;
         return (
             <div className="row">
@@ -493,7 +510,7 @@ class Cart extends Component {
                     </div>
                 </div>
                 <div className="col-md-6 col-lg-8">
-                    <div className="mb-2">
+                    {/* <div className="">
                         <input
                             type="text"
                             className="form-control"
@@ -501,54 +518,141 @@ class Cart extends Component {
                             onChange={this.handleChangeSearch}
                             onKeyDown={this.handleSeach}
                         />
-                    </div>
+                    </div> */}
                     <div
                         className="order-product"
                         style={{
                             overflow: "scroll",
                             height: "calc(80vh)",
-                            display: "flex",
-                            flexWrap: "wrap",
-                            justifyContent: "space-between",
                         }}
                     >
-                        {products.map((p) => (
+                        <nav className="nav">
                             <div
-                                onClick={() => this.addProductToCart(p.id)}
-                                key={p.id}
-                                className="item"
-                                style={{
-                                    border: "2px solid darkgray",
-                                    cursor: "pointer",
-                                    transition: "box-shadow 0.3s",
-                                    "&:hover": {
-                                        border: "40px solid darkgray",
-                                    },
-                                }}
+                                className="nav nav-tabs btn-group w-100 pb-2"
+                                id="myTab"
+                                role="tablist"
                             >
-                                {/* {console.log({"p":p.image_url})} */}
-                                {/* <img
-                                    src={
-                                        p.image_url === "/storage/"
-                                            ? "/images/defaultItem.png"
-                                            : p.image_url
-                                    }
-                                    alt="" className="w-64 h-64 border-4 border-red-900"
-                                /> */}
-                                <div
-                                    style={{
-                                        padding: "4px",
-                                        textAlign: "center",
-                                    }}
-                                >
-                                    {p.name}
-                                    <br />
-                                    <span style={{ fontStyle: "italic" }}>
-                                        ({p.price})
-                                    </span>
-                                </div>
+                                {categories.map((c) => (
+                                    <a
+                                        className={
+                                            " btn btn-outline-secondary font-bold text-lg" +
+                                            (c === categories[0]
+                                                ? " active"
+                                                : "")
+                                        }
+                                        id={"tab-header-" + c.id}
+                                        data-toggle="tab"
+                                        href={"#tab-" + c.id}
+                                        role="tab"
+                                        aria-controls={"tab-" + c.id}
+                                        aria-selected={
+                                            c === categories[0]
+                                                ? "true"
+                                                : "false"
+                                        }
+                                        key={c.id}
+                                    >
+                                        {c.name}
+                                    </a>
+                                ))}
                             </div>
-                        ))}
+                        </nav>
+                        <div
+                            className="tab-content "
+                            id="myTabContent"
+                            style={{
+                                height: "100%",
+                                borderRadius: "5px",
+                                padding: "0.5rem",
+                                overflow: "scroll",
+                                // display: "flex",
+                                // justifyContent: "space-around",
+                            }}
+                        >
+                            {categories.map((c) => (
+                                <div
+                                    className={
+                                        "tab-pane fade" +
+                                        (c === categories[0]
+                                            ? " show active"
+                                            : "")
+                                    }
+                                    id={"tab-" + c.id}
+                                    role="tabpanel"
+                                    aria-labelledby={"tab-header-" + c.id}
+                                    key={c.id}
+                                    style={
+                                        {
+                                            // display: "flex",
+                                            // flexWrap: "wrap",
+                                            // justifyContent: "space-between",
+                                        }
+                                    }
+                                >
+                                    <div className="mb-2">
+                                        <input
+                                            type="text"
+                                            placeholder="Filter Products..."
+                                            className="form-control"
+                                            value={this.state.filterText}
+                                            onChange={(e) =>
+                                                this.setState({
+                                                    filterText: e.target.value,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                    {c.products
+                                        .filter((p) =>
+                                            p.name
+                                                .toLowerCase()
+                                                .includes(
+                                                    this.state.filterText.toLowerCase()
+                                                )
+                                        )
+                                        .map((p) => (
+                                            <div
+                                                onClick={() =>
+                                                    this.addProductToCart(
+                                                        p.id,
+                                                        c.id
+                                                    )
+                                                }
+                                                key={p.id}
+                                                className="item"
+                                                style={{
+                                                    border: "2px solid darkgray",
+                                                    cursor: "pointer",
+                                                    transition:
+                                                        "box-shadow 0.3s",
+                                                    "&:hover": {
+                                                        border: "40px solid darkgray",
+                                                    },
+                                                    // maxWidth: "calc(30% - 4px)",
+                                                    // margin: "0.4rem",
+                                                }}
+                                            >
+                                                <div
+                                                    style={{
+                                                        padding: "4px",
+                                                        textAlign: "center",
+                                                    }}
+                                                >
+                                                    {p.name}
+                                                    <br />
+                                                    <span
+                                                        style={{
+                                                            fontStyle: "italic",
+                                                        }}
+                                                    >
+                                                        ({p.price})
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

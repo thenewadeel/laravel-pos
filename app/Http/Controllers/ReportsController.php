@@ -34,13 +34,14 @@ class ReportsController extends Controller
 
         $filters = [
             'shop_id' => $request->input('shop_id'),
-            'date' => $request->input('date'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
         ];
 
         $orders = Order::query()->where('state', 'closed');
 
-        if ($request->has('date')) {
-            $orders->whereDate('created_at', $filters['date']);
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $orders->whereBetween('created_at', [$filters['start_date'], $filters['end_date']]);
         } else {
             $orders->whereDate('created_at', now());
         }

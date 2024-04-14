@@ -11,60 +11,58 @@
         <div class="card-body">
 
             <form class="mb-4" action="{{ route('reports.dailySale') }}" method="GET">
-                <div class="row items-end p-0">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <label for="shop_id">Shops :</label>
-                                <div class="form-inline">
-                                    <button class="btn btn-sm btn-outline-info" type="button"
-                                        onclick="selectAllCheckboxes(this)">Select All</button>
-                                    <button class="btn btn-sm btn-outline-secondary" type="button"
-                                        onclick="deselectAllCheckboxes(this)">Select None</button>
-                                </div>
-                            </div>
+                <div class="col items-end px-4">
+                    @include('layouts.partials.dateRangeFormGroup', [
+                        'name' => 'dateRange',
+                        'start_date' => request('start_date', date('Y-m-d')),
+                        'end_date' => request('end_date', date('Y-m-d')),
+                        // 'stylingClasses' => 'col',
+                    ])
+                    <div class="form-group">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <label for="shop_id">Shops :</label>
                             <div class="form-inline">
-                                @foreach ($shops as $shop)
-                                    <div class="form-check form-check-inline badge-info p-1 m-1 rounded-lg">
-                                        <input class="form-check-input" type="checkbox" name="shops[]"
-                                            value="{{ $shop->id }}" id="shop{{ $shop->id }}">
-                                        <label class="form-check-label" for="shop{{ $shop->id }}">
-                                            {{ $shop->name }}
-                                        </label>
-                                    </div>
-                                @endforeach
+                                <button class="btn btn-sm btn-outline-info" type="button"
+                                    onclick="selectAllCheckboxes(this)">Select All</button>
+                                <button class="btn btn-sm btn-outline-secondary" type="button"
+                                    onclick="deselectAllCheckboxes(this)">Select None</button>
                             </div>
-
-                            <script>
-                                function selectAllCheckboxes(selectAllButton) {
-                                    var checkboxes = document.querySelectorAll('input[name="shops[]"]');
-                                    checkboxes.forEach((checkbox) => {
-                                        checkbox.checked = true;
-                                    });
-                                    selectAllButton.disabled = true;
-                                }
-
-                                function deselectAllCheckboxes(deselectAllButton) {
-                                    var checkboxes = document.querySelectorAll('input[name="shops[]"]');
-                                    checkboxes.forEach((checkbox) => {
-                                        checkbox.checked = false;
-                                    });
-                                    deselectAllButton.parentNode.querySelector('button[type="button"]').disabled = false;
-                                }
-                            </script>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="date">{{ __('common.Select_Date') }}</label>
-                            <input type="date" name="date" id="date" class="form-control"
-                                value="{{ request('date', date('Y-m-d')) }}">
+                        <div class="form-inline">
+                            @foreach ($shops as $shop)
+                                <div class="form-check form-check-inline badge-info p-1 m-1 rounded-lg">
+                                    <input class="form-check-input" type="checkbox" name="shops[]"
+                                        value="{{ $shop->id }}" id="shop{{ $shop->id }}">
+                                    <label class="form-check-label" for="shop{{ $shop->id }}">
+                                        {{ $shop->name }}
+                                    </label>
+                                </div>
+                            @endforeach
                         </div>
+
+                        <script>
+                            function selectAllCheckboxes(selectAllButton) {
+                                var checkboxes = document.querySelectorAll('input[name="shops[]"]');
+                                checkboxes.forEach((checkbox) => {
+                                    checkbox.checked = true;
+                                });
+                                selectAllButton.disabled = true;
+                            }
+
+                            function deselectAllCheckboxes(deselectAllButton) {
+                                var checkboxes = document.querySelectorAll('input[name="shops[]"]');
+                                checkboxes.forEach((checkbox) => {
+                                    checkbox.checked = false;
+                                });
+                                deselectAllButton.parentNode.querySelector('button[type="button"]').disabled = false;
+                            }
+                        </script>
                     </div>
-                    <div class="col-md-4 ">
-                        <button type="submit" class="btn btn-primary col-md-6">{{ __('common.Filter') }}</button>
+
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary col-md-8">{{ __('common.Filter') }}</button>
                         <a href="{{ route('reports.dailySale') }}"
-                            class="btn btn-danger col-md-2">{{ __('common.Clear') }}</a>
+                            class="btn btn-danger col-md-4">{{ __('common.Clear') }}</a>
                     </div>
                 </div>
             </form>

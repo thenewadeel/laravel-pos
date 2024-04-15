@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\InventoryItem;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InventoryController extends Controller
 {
@@ -18,6 +19,29 @@ class InventoryController extends Controller
             });
         })->orderBy('id', 'desc')->get();
         return view('inventory.index', compact('inventoryItems'));
+    }
+
+    public function import(Request $request)
+    {
+        // logger($request->all());
+        // logger('star    ');
+        // $validationResult = $request->validate([
+        //     'file' => 'required|file|mimes:xlsx'
+        // ]);
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx'
+        ]);
+
+        // logger('$file');
+        $file = $request->file('file')->store('storage');
+        // logger($file);
+        // $import = new \App\Imports\InventoryImport;
+        // $import->import($file);
+        Excel::import(new \App\Imports\InventoryImport, $file);
+        // Excel::import(new InventoryImport, 'users.xlsx');
+
+        // return redirect('/')->with('success', 'All good!');
+        return redirect()->route('inventory.index')->with('success', 'Inventory data imported successfully.');
     }
 
     public function issue(Request $request)

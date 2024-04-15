@@ -16,6 +16,16 @@
                 </div>
             </div>
         </form>
+        <div class="mt-1">
+            <form method="POST" action="{{ route('inventory.import') }}" enctype="multipart/form-data" class="d-inline">
+                @csrf
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" name="file" accept=".xlsx">
+                    <label class="custom-file-label" for="customFile">{{ __('inventory.Import_Inventory') }}</label>
+                </div>
+                <button type="submit" class="btn btn-sm btn-primary ml-1">{{ __('common.Upload') }}</button>
+            </form>
+        </div>
     </div>
 @endsection
 @section('css')

@@ -73,6 +73,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/issue', [InventoryController::class, 'issue'])->name('inventory.issue');
         Route::get('/deposit', [InventoryController::class, 'deposit'])->name('inventory.deposit');
         Route::get('/stockTaking', [InventoryController::class, 'stockTaking'])->name('inventory.stockTaking');
+        Route::post('/import', [InventoryController::class, 'import'])->name('inventory.import');
     });
 
     Route::namespace('Accountant')->group(function () {

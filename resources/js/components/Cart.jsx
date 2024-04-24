@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { createRoot } from "react-dom/client";
-import axios from "axios";
+// import axios from "axios";
 import Swal from "sweetalert2";
 import { sum } from "lodash";
 
+let axios = window.axios;
 class Cart extends Component {
     constructor(props) {
         super(props);
@@ -165,7 +166,7 @@ class Cart extends Component {
         }
     }
 
-    addProductToCart(id, category_id) {
+    addProductToCart(id, category_id, qty = 1) {
         let product = this.state.categories
             .find((c) => c.id === category_id)
             ?.products.find((p) => p.id === id);
@@ -181,7 +182,7 @@ class Cart extends Component {
                             c.id === product.id &&
                             product.quantity > c.pivot.quantity
                         ) {
-                            c.pivot.quantity = c.pivot.quantity + 1;
+                            c.pivot.quantity = c.pivot.quantity + qty;
                         }
                         return c;
                     }),
@@ -191,7 +192,7 @@ class Cart extends Component {
                     product = {
                         ...product,
                         pivot: {
-                            quantity: 1,
+                            quantity: qty,
                             product_id: product.id,
                             user_id: 1,
                         },
@@ -647,6 +648,28 @@ class Cart extends Component {
                                                     >
                                                         ({p.price})
                                                     </span>
+                                                    {/* <br /> */}
+                                                    <input
+                                                        style={{
+                                                            width: "40px",
+                                                            marginTop: "8px",
+                                                        }}
+                                                        type="number"
+                                                        min={1}
+                                                        defaultValue={1}
+                                                        onKeyDown={(e) =>
+                                                            e.key === "Enter" &&
+                                                            this.addProductToCart(
+                                                                p.id,
+                                                                c.id,
+                                                                parseInt(
+                                                                    e.target
+                                                                        .value,
+                                                                    10
+                                                                )
+                                                            )
+                                                        }
+                                                    />
                                                 </div>
                                             </div>
                                         ))}

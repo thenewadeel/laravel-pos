@@ -3,7 +3,9 @@
 @section('title', __('order.Orders_List'))
 @section('content-header', __('order.Orders_List'))
 @section('content-actions')
-
+    <a href="{{ route('orders.index', ['all' => true]) }}" class="btn btn-info">
+        <i class="fas fa-filter mr-1"></i>{{ __('common.All') }}
+    </a>
     <a href="{{ route('orders.index', ['unpaid' => true]) }}" class="btn btn-info">
         <i class="fas fa-filter mr-1"></i>{{ __('order.Unpaid') }}
     </a>
@@ -20,7 +22,11 @@
         {{-- {{var_dump($orders)}} --}}
         <div class="card-body">
             <div class="row">
-                <div class="col-md-7"></div>
+                <div
+                    class="col-md-2 border-2 shadow-inner rounded-md shadow-blue-300 d-flex align-items-center justify-content-center text-center text-lg ">
+                    <span>{{ __('order.Total_Orders') }}</span>:
+                    {{ $orders->count() }}
+                </div>
                 <div class="col-md-5">
                     <form action="{{ route('orders.index') }}">
                         <div class="row">

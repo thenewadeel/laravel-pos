@@ -95,7 +95,7 @@
 
 
 @endsection
-@section('form-fields-right')
+@section('form-right')
 
     <div class="card" id="items">
         <div class="card-header">
@@ -128,7 +128,7 @@
                                     <form action="{{ route('order.items.destroy', [$order, $item]) }}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
                                     </form>
                                 </td>
                             </tr>

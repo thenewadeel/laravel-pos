@@ -63,3 +63,21 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts";
         max-height: 70px;
     }
 }
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  text-align: center;
+  font-weight: bold;
+}
+
+.text-center.font-weight-bold {
+}

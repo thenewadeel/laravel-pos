@@ -203,7 +203,7 @@ class Cart extends Component {
             }
 
             axios
-                .post("/cart", { id })
+                .post("/cart", { id, quantity: qty })
                 .then((res) => {
                     // this.loadCart();
                     // console.log(res);
@@ -320,12 +320,13 @@ class Cart extends Component {
                 <div className="col-md-6 col-lg-4">
                     <div className="col ">
                         {/* <div className="col"> */}
+                        <label htmlFor="shop-select">Department:</label>
                         <select
+                            id="shop-select"
                             className="form-control"
                             onChange={this.setShopId}
                         >
                             {/* {console.log(shops)} */}
-                            {/* <option value="">Shops</option> */}
                             {shops.map((shp) => (
                                 <option
                                     key={shp.id}
@@ -333,33 +334,63 @@ class Cart extends Component {
                                 >{`${shp.name}`}</option>
                             ))}
                         </select>
-
-                        <div className="">
-                            {/* <label htmlFor="waiter_name">{"waiter_name"}</label> */}
-                            <input
-                                type="text"
+                        <div>
+                            <select
                                 className="form-control"
-                                id="waiter_name"
-                                value={this.state.waiter_name}
-                                onChange={this.setWaiterName}
-                                placeholder="Waiter Name"
-                            />
+                                onChange={this.setOrderType}
+                                id="order-type-select"
+                                placeholder="Order Type"
+                            >
+                                {/* <option value="">{"order_type"}</option> */}
+                                <option value="dine-in">{"dine-in"}</option>
+                                <option value="take-away">{"take-away"}</option>
+                                <option value="delivery">{"delivery"}</option>
+                            </select>
                         </div>
+                        {this.state.order_type === "delivery" && (
+                            <div className="">
+                                <label htmlFor="delivery-address">
+                                    {"Delivery Address"}
+                                </label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="delivery-address"
+                                    // value={this.state.delivery_address}
+                                    // onChange={this.setDeliveryAddress}
+                                />
+                            </div>
+                        )}
 
-                        <div className="">
-                            {/* <label htmlFor="table_number"> */}
-                            {/* {translations["table_number"]} */}
-                            {/* </label> */}
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="table_number"
-                                value={this.state.table_number}
-                                onChange={this.setTableNumber}
-                                placeholder="Table Number"
-                            />
-                        </div>
+                        {this.state.order_type === "dine-in" && (
+                            <div className="">
+                                <div className="">
+                                    {/* <label htmlFor="waiter_name">{"waiter_name"}</label> */}
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="waiter_name"
+                                        value={this.state.waiter_name}
+                                        onChange={this.setWaiterName}
+                                        placeholder="Waiter Name"
+                                    />
+                                </div>
 
+                                <div className="">
+                                    {/* <label htmlFor="table_number"> */}
+                                    {/* {translations["table_number"]} */}
+                                    {/* </label> */}
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="table_number"
+                                        value={this.state.table_number}
+                                        onChange={this.setTableNumber}
+                                        placeholder="Table Number"
+                                    />
+                                </div>
+                            </div>
+                        )}
                         <div className="input-group">
                             <input
                                 type="text"
@@ -403,18 +434,7 @@ class Cart extends Component {
                                     >{`${cus.id} - ${cus.name}`}</option>
                                 ))}
                         </select>
-                        <div>
-                            <select
-                                className="form-control"
-                                onChange={this.setOrderType}
-                                placeholder="Order Type"
-                            >
-                                {/* <option value="">{"order_type"}</option> */}
-                                <option value="dine-in">{"dine-in"}</option>
-                                <option value="take-away">{"take-away"}</option>
-                                <option value="delivery">{"delivery"}</option>
-                            </select>
-                        </div>
+
                         {/* </div> */}
                     </div>
                     <div className="user-cart mx-3">
@@ -582,13 +602,6 @@ class Cart extends Component {
                                     role="tabpanel"
                                     aria-labelledby={"tab-header-" + c.id}
                                     key={c.id}
-                                    style={
-                                        {
-                                            // display: "flex",
-                                            // flexWrap: "wrap",
-                                            // justifyContent: "space-between",
-                                        }
-                                    }
                                 >
                                     <div className="mb-2">
                                         <input
@@ -629,14 +642,20 @@ class Cart extends Component {
                                                     "&:hover": {
                                                         border: "40px solid darkgray",
                                                     },
-                                                    // maxWidth: "calc(30% - 4px)",
-                                                    // margin: "0.4rem",
+                                                    display: "flex",
+                                                    height: "100%",
+                                                    padding: "4px",
+                                                    textAlign: "center",
+                                                    flexGrow: 1,
+                                                    alignItems: "center",
+                                                    justifyContent:
+                                                        "space-between",
                                                 }}
                                             >
                                                 <div
                                                     style={{
-                                                        padding: "4px",
-                                                        textAlign: "center",
+                                                        flexGrow: 1,
+                                                        flexBasis: "0",
                                                     }}
                                                 >
                                                     {p.name}

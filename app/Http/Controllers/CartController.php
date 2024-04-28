@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CartStoreRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,16 @@ class CartController extends Controller
         }
         return view('cart.index');
     }
+    // public function index2(Request $request)
+    // {
+    //     if ($request->wantsJson()) {
+    //         return response(
+    //             $request->user()->cart()->get()
+    //         );
+    //     }
+    //     $cart = $request->user()->cart()->get();
+    //     return view('cart.index2', compact('cart'));
+    // }
     public function indexTokens(Request $request)
     {
         if ($request->wantsJson()) {
@@ -30,12 +41,10 @@ class CartController extends Controller
         return view('cart.indexTokens');
     }
 
-    public function store(Request $request)
+    public function store(CartStoreRequest $request)
     {
-        $request->validate([
-            'id' => 'required|exists:products,id',
-        ]);
         $id = $request->id;
+        $qty = $request->has('quantity') ? $request->quantity : 1;
 
         $product = Product::where('id', $id)->first();
         $cart = $request->user()->cart()->where('id', $id)->first();
@@ -47,7 +56,7 @@ class CartController extends Controller
             //     ], 400);
             // }
             // update only quantity
-            $cart->pivot->quantity = $cart->pivot->quantity + 1;
+            $cart->pivot->quantity = $cart->pivot->quantity + $qty;
             $cart->pivot->save();
         } else {
             // if ($product->quantity < 1) {
@@ -55,7 +64,7 @@ class CartController extends Controller
             //         'message' => __('cart.outstock'),
             //     ], 400);
             // }
-            $request->user()->cart()->attach($product->id, ['quantity' => 1]);
+            $request->user()->cart()->attach($product->id, ['quantity' => $qty]);
         }
 
         return response('', 204);

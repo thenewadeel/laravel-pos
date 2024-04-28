@@ -59,7 +59,9 @@ class OrderController extends Controller
         //     $orders = $orders->whereIn('type', $filters);
         // }
         $today = now()->startOfDay();
-        if ($request->start_date && $request->end_date) {
+        if ($request->has('all') && $request->all == '1') {
+            //no date filtering....
+        } elseif ($request->start_date && $request->end_date) {
             $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
         } else {
             $orders = $orders->whereDate('created_at', $today);
@@ -121,16 +123,27 @@ class OrderController extends Controller
 
     public function update(Request $request, Order $order)
     {
+        // dd($request);
+        //     "shop_id" => "2"
+        //   "customer_id" => "88"
+        //   "table_number" => "446"
+        //   "waiter_name" => "Maribel Bogan"
+        //   "type" => "take-away"
+        //   "user_id" => "2"
+        //   "state" => "preparing"
         $validatedData = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'shop_id' => 'required|exists:shops,id',
-            'type' => 'required|in:dine-in,take-away,delivery',
-            'state' => 'required|in:preparing,served,closed,wastage',
+            'shop_id' => 'nullable|exists:shops,id',
+            'customer_id' => 'nullable|exists:customers,id',
+            'table_number' => 'nullable|string',
+            'waiter_name' => 'nullable|string',
+            'type' => 'nullable|in:dine-in,take-away,delivery',
+            'user_id' => 'required|exists:users,id',
+            'state' => 'nullable|in:preparing,served,closed,wastage',
         ]);
 
         $order->update($validatedData);
 
-        return redirect()->route('orders.index')->with('success', 'Order updated successfully');
+        return redirect()->route('orders.edit', $order)->with('success', 'Order updated successfully');
     }
 
     public function addPayment(Request $request, Order $order)
@@ -202,7 +215,12 @@ class OrderController extends Controller
 
         return redirect()->route('orders.edit', $order)->with('success', 'Product added to order successfully');
     }
-
+    public function destroy(Order $order)
+    {
+        $order->delete();
+        dd($order);
+        return redirect()->route('orders.index', $order)->with('success', 'order deleted successfully');
+    }
     public function destroyItem(Order $order, OrderItem $item)
     {
         $item->delete();

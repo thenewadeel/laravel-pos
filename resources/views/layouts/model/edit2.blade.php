@@ -23,15 +23,16 @@
                         @method('PUT')
 
                         @yield('form-fields-left')
+                        <button class="btn btn-block btn-primary" type="submit">{{ __('common.Update') }}</button>
+                    </form>
                 </div>
-                <button class="btn btn-primary" type="submit">{{ __('common.Update') }}</button>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    @yield('form-fields-right')
+                    @yield('form-right')
 
                 </div>
             </div>

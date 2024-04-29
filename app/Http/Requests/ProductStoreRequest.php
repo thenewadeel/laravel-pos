@@ -32,6 +32,7 @@ class ProductStoreRequest extends FormRequest
             // 'quantity' => 'required|integer',
             // 'status' => 'required|boolean',
             'category' => 'nullable|string',
+            'kitchen_printer_ip' => 'nullable|string',
 
         ];
     }

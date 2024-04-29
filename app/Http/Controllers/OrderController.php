@@ -412,7 +412,7 @@ class OrderController extends Controller
         } else return '|';
     }
 
-    public function printToPOS(Order $order, $ip = "192.168.0.162")
+    public function printToPOS(Order $order, $ip = "192.168.0.162", $asTokens = false)
     {
         logger('printing tokens job started');
         $ip = $order->shop->printer_ip ?? "192.168.0.162";
@@ -422,88 +422,13 @@ class OrderController extends Controller
             $printer = new Printer($connector);
             try {
                 // ... Print stuff
-                foreach ($order->items as $item) {
-                    // logger(public_path('images/logo_blk.jpg'));
-                    // $printer->graphics(EscposImage::load(public_path('images/logo_blk.jpg'), false));
+                if ($asTokens) {
+                    foreach ($order->items as $item) {
 
-
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->text("\n" . str_repeat("-", 42) . "\n");
-                    $printer->setEmphasis(true);
-                    $printer->setTextSize(2, 2);
-                    $printer->setFont(Printer::FONT_A); // change font
-                    $printer->text("Quetta Club Limited\n");
-                    // $printer->setFont(Printer::FONT_B); // change font
-                    // $printer->text("Quetta Club Limited\n");
-                    // $printer->setFont(Printer::FONT_C); // change font
-                    // $printer->text("Quetta Club Limited\n");
-                    $printer->setFont(Printer::FONT_A); // change font
-                    $printer->text("Chand Raat Festival\n");
-                    $printer->text("2024\n");
-                    $printer->setTextSize(1, 1);
-                    $printer->setEmphasis(false);
-                    $printer->text(str_repeat("-", 42) . "\n");
-                    $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-                    $printer->setTextSize(1, 1);
-                    $printer->text("POS Order Token\n");
-                    $printer->setTextSize(1, 1);
-                    $printer->setEmphasis(false);
-                    $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-                    $printer->text($order->POS_number . "\n");
-                    $printer->setTextSize(1, 1);
-                    $printer->setEmphasis(false);
-
-
-                    $printer->setJustification(Printer::JUSTIFY_LEFT);
-
-                    // $printer->dataHeader('POS ' . $order->POS_number);
-                    // $printer->setFooter("User: " . $order->user ? $order->user->getFullName() : "Guest" . "  Shop: " . $order->shop ? $order->shop->name : "Unknown");
-                    $printer->text("Customer: ");
-
-                    if ($order->customer) {
-                        $printer->text($order->customer->name . "\n");
-                    } else {
-                        $printer->text("Walk in Customer\n");
+                        $this->print_POS_Token($printer, $order, $item);
                     }
-
-                    $printer->text("Date: " . $order->created_at . "\n");
-                    // $printer->text("Items:\n");
-                    // $printer->text('- ' . $item->product->name . '(' . $item->product->price * $item->quantity . ')' . ' x ' . $item->quantity . "\n");
-                    $printer->setEmphasis(true);
-                    $printer->text(str_repeat("-", 42) . "\n");
-
-                    $printer->setTextSize(2, 2);
-                    $printer->text($item->product->name);
-                    $printer->setTextSize(1, 1);
-                    $printer->text("\n @ (" . $item->product->price . ")\n");
-                    $printer->text("\n");
-                    $printer->setTextSize(3, 3);
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->text("QTY: " . $item->quantity . "\n");
-                    $printer->setTextSize(1, 1);
-                    $printer->setEmphasis(false);
-                    $printer->text(str_repeat("-", 42) . "\n");
-
-                    $printer->setJustification(Printer::JUSTIFY_LEFT);
-                    $printer->setTextSize(2, 2);
-                    // $printer->text("Payments:");
-                    // foreach ($order->payments as $payment) {
-                    //     $printer->text('- ' . $payment->method . ' ' . $payment->amount . "\n");
-                    // }
-                    $printer->text("Total: " . $order->total() . "\n");
-
-                    $printer->setTextSize(1, 1);
-                    $printer->text("Cashier: " . $order->user->getFullName()  . "\n");
-                    $printer->text("Shop: " . $order->shop ? $order->shop->name : "Unknown");
-                    $printer->text("\nOn: "  . "");
-                    $printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-                    $printer->text(date('Y-m-d H:i:s') . "\n");
-                    $printer->setTextSize(1, 1);
-                    $printer->setEmphasis(false);
-
-                    $printer->text("\n \n");
-                    $printer->cut();
+                } else {
+                    $this->print_POS_Order($printer, $order);
                 }
             } catch (Exception $e) {
                 logger($e->getMessage());
@@ -515,5 +440,269 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Failed to connect to printer: ' . $e->getMessage());
         }
         return redirect()->back()->with('success', 'Order printed successfully');
+    }
+
+    private function print_POS_Token(Printer $printer, Order $order, OrderItem $item)
+    {
+        // logger(public_path('images/logo_blk.jpg'));
+        // $printer->graphics(EscposImage::load(public_path('images/logo_blk.jpg'), false));
+
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("\n" . str_repeat("-", 42) . "\n");
+        $printer->setEmphasis(true);
+        $printer->setTextSize(2, 2);
+        $printer->setFont(Printer::FONT_A); // change font
+        $printer->text("Quetta Club Limited\n");
+        // $printer->setFont(Printer::FONT_B); // change font
+        // $printer->text("Quetta Club Limited\n");
+        // $printer->setFont(Printer::FONT_C); // change font
+        // $printer->text("Quetta Club Limited\n");
+        $printer->setFont(Printer::FONT_A); // change font
+        $printer->text("Chand Raat Festival\n");
+        $printer->text("2024\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+        $printer->text(str_repeat("-", 42) . "\n");
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+        $printer->setTextSize(1, 1);
+        $printer->text("POS Order Token\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+        $printer->text($order->POS_number . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+
+
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+
+        // $printer->dataHeader('POS ' . $order->POS_number);
+        // $printer->setFooter("User: " . $order->user ? $order->user->getFullName() : "Guest" . "  Shop: " . $order->shop ? $order->shop->name : "Unknown");
+        $printer->text("Customer: ");
+
+        if ($order->customer) {
+            $printer->text($order->customer->name . "\n");
+        } else {
+            $printer->text("Walk in Customer\n");
+        }
+
+        $printer->text("Date: " . $order->created_at . "\n");
+        // $printer->text("Items:\n");
+        // $printer->text('- ' . $item->product->name . '(' . $item->product->price * $item->quantity . ')' . ' x ' . $item->quantity . "\n");
+        $printer->setEmphasis(true);
+        $printer->text(str_repeat("-", 42) . "\n");
+
+        $printer->setTextSize(2, 2);
+        $printer->text($item->product->name);
+        $printer->setTextSize(1, 1);
+        $printer->text("\n @ (" . $item->product->price . ")\n");
+        $printer->text("\n");
+        $printer->setTextSize(3, 3);
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("QTY: " . $item->quantity . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+        $printer->text(str_repeat("-", 42) . "\n");
+
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->setTextSize(2, 2);
+        // $printer->text("Payments:");
+        // foreach ($order->payments as $payment) {
+        //     $printer->text('- ' . $payment->method . ' ' . $payment->amount . "\n");
+        // }
+        $printer->text("Total: " . $order->total() . "\n");
+
+        $printer->setTextSize(1, 1);
+        $printer->text("Cashier: " . $order->user->getFullName()  . "\n");
+        $printer->text("Shop: " . $order->shop ? $order->shop->name : "Unknown");
+        $printer->text("\nOn: "  . "");
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+        $printer->text(date('Y-m-d H:i:s') . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+
+        $printer->text("\n \n");
+        $printer->cut();
+    }
+    private function print_POS_Cat_Token(Printer $printer, Order $order)
+    {
+        // logger(public_path('images/logo_blk.jpg'));
+        // $printer->graphics(EscposImage::load(public_path('images/logo_blk.jpg'), false));
+
+        $items_by_cat = $order->items->groupBy('product.category.name');
+        foreach ($items_by_cat as $cat => $items) {
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->setTextSize(2, 2);
+            $printer->setFont(Printer::FONT_A); // change font
+            $printer->text($cat . "\n");
+
+            foreach ($items as $item) {
+                $printer->setTextSize(1, 1);
+                $printer->setEmphasis(false);
+                $printer->text($item->product->name . " x " . $item->quantity . "\n");
+            }
+
+            $printer->text("\n");
+        }
+
+
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("\n" . str_repeat("-", 42) . "\n");
+        $printer->setEmphasis(true);
+        $printer->setTextSize(2, 2);
+        $printer->setFont(Printer::FONT_A); // change font
+        $printer->text("Quetta Club Limited\n");
+        // $printer->setFont(Printer::FONT_B); // change font
+        // $printer->text("Quetta Club Limited\n");
+        // $printer->setFont(Printer::FONT_C); // change font
+        // $printer->text("Quetta Club Limited\n");
+        $printer->setFont(Printer::FONT_A); // change font
+        // $printer->text("Chand Raat Festival\n");
+        // $printer->text("2024\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+        $printer->text(str_repeat("-", 42) . "\n");
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+        $printer->setTextSize(1, 1);
+        $printer->text("POS Order Token\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+        $printer->text($order->POS_number . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+
+
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+
+        // $printer->dataHeader('POS ' . $order->POS_number);
+        // $printer->setFooter("User: " . $order->user ? $order->user->getFullName() : "Guest" . "  Shop: " . $order->shop ? $order->shop->name : "Unknown");
+        $printer->text("Customer: ");
+
+        if ($order->customer) {
+            $printer->text($order->customer->name . "\n");
+        } else {
+            $printer->text("Walk in Customer\n");
+        }
+
+        $printer->text("Date: " . $order->created_at . "\n");
+        // $printer->text("Items:\n");
+        // $printer->text('- ' . $item->product->name . '(' . $item->product->price * $item->quantity . ')' . ' x ' . $item->quantity . "\n");
+        $printer->setEmphasis(true);
+        $printer->text(str_repeat("-", 42) . "\n");
+
+        $printer->setTextSize(2, 2);
+        $printer->text($item->product->name);
+        $printer->setTextSize(1, 1);
+        $printer->text("\n @ (" . $item->product->price . ")\n");
+        $printer->text("\n");
+        $printer->setTextSize(3, 3);
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("QTY: " . $item->quantity . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+        $printer->text(str_repeat("-", 42) . "\n");
+
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->setTextSize(2, 2);
+        // $printer->text("Payments:");
+        // foreach ($order->payments as $payment) {
+        //     $printer->text('- ' . $payment->method . ' ' . $payment->amount . "\n");
+        // }
+        $printer->text("Total: " . $order->total() . "\n");
+
+        $printer->setTextSize(1, 1);
+        $printer->text("Cashier: " . $order->user->getFullName()  . "\n");
+        $printer->text("Shop: " . $order->shop ? $order->shop->name : "Unknown");
+        $printer->text("\nOn: "  . "");
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+        $printer->text(date('Y-m-d H:i:s') . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+
+        $printer->text("\n \n");
+        $printer->cut();
+    }
+    private function print_POS_Order(Printer $printer, Order $order)
+    {
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("\n" . str_repeat("-", 42) . "\n");
+        $printer->setEmphasis(true);
+        $printer->setTextSize(2, 2);
+        $printer->setFont(Printer::FONT_A); // change font
+        $printer->text("Quetta Club Limited\n");
+        // $printer->setFont(Printer::FONT_B); // change font
+        // $printer->text("Quetta Club Limited\n");
+        // $printer->setFont(Printer::FONT_C); // change font
+        // $printer->text("Quetta Club Limited\n");
+        $printer->setFont(Printer::FONT_A); // change font
+        // $printer->text("Chand Raat Festival\n");
+        // $printer->text("2024\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+        $printer->text(str_repeat("-", 42) . "\n");
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+        $printer->setTextSize(1, 1);
+        $printer->text("POS Order Receipt\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+        $printer->text($order->POS_number . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+
+
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+
+        // $printer->dataHeader('POS ' . $order->POS_number);
+        // $printer->setFooter("User: " . $order->user ? $order->user->getFullName() : "Guest" . "  Shop: " . $order->shop ? $order->shop->name : "Unknown");
+        $printer->text("Customer: ");
+
+        if ($order->customer) {
+            $printer->text($order->customer->name . "\n");
+        } else {
+            $printer->text("Walk in Customer\n");
+        }
+
+        $printer->text("Date: " . $order->created_at . "\n");
+        // $printer->text("Items:\n");
+        // $printer->text('- ' . $item->product->name . '(' . $item->product->price * $item->quantity . ')' . ' x ' . $item->quantity . "\n");
+        $printer->setEmphasis(true);
+        $printer->text(str_repeat("-", 42) . "\n");
+        foreach ($order->items() as $item) {
+            $printer->setTextSize(2, 2);
+            $printer->text($item->product->name);
+            $printer->setTextSize(1, 1);
+            $printer->text("\n @ (" . $item->product->price . ")\n");
+            $printer->text("\n");
+            $printer->setTextSize(3, 3);
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->text("QTY: " . $item->quantity . "\n");
+            $printer->setTextSize(1, 1);
+            $printer->setEmphasis(false);
+            $printer->text(str_repeat("-", 42) . "\n");
+        }
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->setTextSize(2, 2);
+        // $printer->text("Payments:");
+        // foreach ($order->payments as $payment) {
+        //     $printer->text('- ' . $payment->method . ' ' . $payment->amount . "\n");
+        // }
+        $printer->text("Total: " . $order->total() . "\n");
+
+        $printer->setTextSize(1, 1);
+        $printer->text("Cashier: " . $order->user->getFullName()  . "\n");
+        $printer->text("Shop: " . $order->shop ? $order->shop->name : "Unknown");
+        $printer->text("\nOn: "  . "");
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+        $printer->text(date('Y-m-d H:i:s') . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->setEmphasis(false);
+
+        $printer->text("\n \n");
+        $printer->cut();
     }
 }

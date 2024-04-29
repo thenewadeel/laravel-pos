@@ -89,6 +89,7 @@ class ProductController extends Controller
             'quantity' => $request->quantity,
             // 'status' => $request->status,
             // 'category' => $request->category
+            'kitchen_printer_ip' => $request->kitchen_printer_ip
         ]);
 
         if (!$product) {
@@ -136,6 +137,7 @@ class ProductController extends Controller
         $product->quantity = $request->quantity;
         // $product->status = $request->status;
         // $product->category = $request->category;
+        $product->kitchen_printer_ip = $request->kitchen_printer_ip;
 
         if ($request->hasFile('image')) {
             // Delete old image

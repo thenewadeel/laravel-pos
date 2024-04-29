@@ -14,6 +14,7 @@ class Product extends Model
         'price',
         'quantity',
         'status',
+        'kitchen_printer_ip',
         // 'category'
     ];
 

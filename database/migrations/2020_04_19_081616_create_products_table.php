@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('price', 14, 2);
             $table->integer('quantity')->default('1000');
             $table->boolean('aval_status')->default(true);
+            $table->string('kitchen_printer_ip')->default('192.168.0.162');
 
             $table->timestamps();
         });

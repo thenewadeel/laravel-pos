@@ -203,7 +203,7 @@ class Cart extends Component {
             }
 
             axios
-                .post("/cart", { id, quantity: qty })
+                .post("/cart", { id, quantity: qty }, { withCredentials: true })
                 .then((res) => {
                     // this.loadCart();
                     // console.log(res);

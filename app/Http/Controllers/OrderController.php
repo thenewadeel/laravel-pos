@@ -522,9 +522,9 @@ class OrderController extends Controller
     }
     private function print_POS_Header(Printer $printer, Order $order, String $heading = "Quetta Club Limited\n")
     {
+        $printer->setEmphasis(true);
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text(str_repeat("-", 42) . "\n");
-        $printer->setEmphasis(true);
         $printer->setTextSize(2, 2);
         $printer->setFont(Printer::FONT_A); // change font
         $printer->text($heading);
@@ -536,12 +536,39 @@ class OrderController extends Controller
         // $printer->text("Chand Raat Festival\n");
         // $printer->text("2024\n");
         $printer->setTextSize(1, 1);
-        $printer->setEmphasis(false);
         $printer->text(str_repeat("-", 42) . "\n");
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+
+        if ($order->type) {
+            $printer->setTextSize(2, 2);
+            $printer->text("Order Type:");
+            $printer->text($order->type . "\n");
+        }
+        if ($order->type == 'dine-in' && $order->table_number) {
+            $printer->setTextSize(2, 2);
+            $printer->text("Table # ");
+            $printer->text($order->table_number . "\n");
+        }
+        if ($order->waiter_name) {
+            $printer->setTextSize(2, 2);
+            $printer->text("Waiter: ");
+            $printer->text($order->waiter_name  . "\n");
+        }
+
+
+        $printer->setTextSize(2, 2);
+        $printer->text("Order for: ");
+        $printer->text($order->shop->name . "\n");
+
+
+
+
+
+
         $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->setTextSize(1, 1);
-        $printer->text("POS Order Receipt\n");
+        $printer->text("POS Order Receipt: ");
         $printer->setTextSize(1, 1);
         $printer->text($order->POS_number . "\n");
         $printer->setTextSize(1, 1);
@@ -562,22 +589,24 @@ class OrderController extends Controller
         $printer->setEmphasis(true);
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text(str_repeat("-", 42) . "\n");
+        $printer->setEmphasis(false);
     }
-    private function print_POS_Footer(Printer $printer, Order $order)
+    private function print_POS_Footer(Printer $printer, Order $order, $showTotal = true)
     {
         $printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->setTextSize(2, 2);
         // $printer->text("Payments:");
         // foreach ($order->payments as $payment) {
         //     $printer->text('- ' . $payment->method . ' ' . $payment->amount . "\n");
         // }
-        $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->text("Total: " . $order->total() . "\n");
-
+        if ($showTotal) {
+            $printer->setTextSize(2, 2);
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->text("Total: " . $order->total() . "\n");
+        }
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->setTextSize(1, 1);
-        $printer->text("Cashier: " . $order->user->getFullName()  . "  ;   ");
-        $printer->text("Shop: " . $order->shop ? $order->shop->name : "Unknown");
+        $printer->text("Cashier: " . $order->user->getFullName()  . "\n");
+        // $printer->text("Shop: " . $order->shop ? $order->shop->name : "Unknown");
         $printer->text("\non: "  . "");
         // $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text(date('Y-m-d H:i:s') . "\n");
@@ -605,25 +634,28 @@ class OrderController extends Controller
                 $connector = new NetworkPrintConnector($kitchen_printer_ip);
                 $kitchen_printer = new Printer($connector);
                 try {
-                    $this->print_POS_Header($kitchen_printer, $order, $heading = "QCL - Kitchen QT\n");
+                    $this->print_POS_Header($kitchen_printer, $order, $heading = "Quetta Club Limited\n---------------------\nQCL - Kitchen QT\n");
                     foreach ($items as $item) {
 
                         $kitchen_printer->setJustification(Printer::JUSTIFY_LEFT);
-                        $kitchen_printer->setTextSize(1, 1);
+                        $kitchen_printer->setEmphasis(true);
+                        $kitchen_printer->setTextSize(2, 2);
+                        // $kitchen_printer->setTextSize(1, 1);
                         $kitchen_printer->text($item->product->name);
                         $kitchen_printer->setTextSize(1, 1);
-                        $kitchen_printer->text("\n @ (" . $item->product->price . ")");
-                        $kitchen_printer->text("\n");
-                        $kitchen_printer->setTextSize(1, 1);
-                        $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
-                        $kitchen_printer->text("QTY: " . $item->quantity . "\n");
+                        $kitchen_printer->text(" Rate:(" . $item->product->price . ")");
                         $kitchen_printer->text("\n");
                         $kitchen_printer->setJustification(Printer::JUSTIFY_RIGHT);
-                        $kitchen_printer->setTextSize(2, 2);
-                        $kitchen_printer->setEmphasis(true);
-                        $kitchen_printer->text("Amount: " . (int) $item->price . "\n");
+                        $kitchen_printer->setTextSize(3, 3);
+                        $kitchen_printer->text("QTY: " . $item->quantity . "\n");
+                        $kitchen_printer->text("\n");
+                        $kitchen_printer->setEmphasis(false);
+
+                        // $kitchen_printer->setTextSize(2, 2);
+                        // $kitchen_printer->setEmphasis(true);
+                        // $kitchen_printer->text("Amount: " . (int) $item->price . "\n");
                     }
-                    $this->print_POS_Footer($kitchen_printer, $order);
+                    $this->print_POS_Footer($kitchen_printer, $order, false);
                 } catch (Exception $e) {
                     logger($e->getMessage());
                 } finally {

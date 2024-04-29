@@ -20,7 +20,7 @@
                         <th>{{ __('shop.Desc') }}</th>
                         <th>{{ __('shop.Image') }}</th>
                         <th>{{ __('shop.CashierAcct') }}</th>
-                        <th>{{ __('shop.Created_At') }}</th>
+                        <th>{{ __('shop.Printer_IP') }}</th>
                         <th>{{ __('shop.Actions') }}</th>
                     </tr>
                 </thead>
@@ -39,7 +39,7 @@
                                     {{ $user->getFullName() }}({{ $user->email }}),
                                 @endforeach
                             </td>
-                            <td>{{ $shop->created_at }}</td>
+                            <td>{{ $shop->printer_ip }}</td>
                             <td>
                                 <a href="{{ route('shops.edit', $shop) }}" class="btn btn-primary"><i
                                         class="fas fa-edit"></i></a>

@@ -55,5 +55,6 @@ return [
     'Print_Preview'     => 'Print Preview',
     'Unpaid'            => 'Unpaid',
     'chit'              => 'Chit',
+    'Total_Orders'      => 'Total Orders'
 
 ];

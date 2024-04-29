@@ -52,4 +52,5 @@ return [
     'Download_To_Excel' => 'Download',
     'Start_Date' => 'Start Date',
     'End_Date' => 'End Date',
+    'All'       =>  'All'
 ];

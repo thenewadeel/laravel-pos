@@ -71,7 +71,8 @@
         <label for="kitchen_printer_ip">{{ __('category.Kitchen_printer_ip') }}</label>
         <input type="text" name="kitchen_printer_ip"
             class="form-control @error('kitchen_printer_ip') is-invalid @enderror" id="kitchen_printer_ip"
-            placeholder="{{ __('product.Kitchen_printer_ip') }}" value="{{ old('kitchen_printer_ip', '192.168.0.165') }}">
+            placeholder="{{ __('product.Kitchen_printer_ip') }}"
+            value="{{ old('kitchen_printer_ip', $category->kitchen_printer_ip) }}">
         @error('kitchen_printer_ip')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>

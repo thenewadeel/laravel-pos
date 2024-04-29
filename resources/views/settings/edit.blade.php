@@ -58,6 +58,18 @@
                         </span>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <label for="default_printer_ip">{{ __('settings.default_printer_ip') }}</label>
+                    <input type="text" name="default_printer_ip"
+                        class="form-control @error('default_printer_ip') is-invalid @enderror" id="default_printer_ip"
+                        placeholder="{{ __('settings.default_printer_ip') }}"
+                        value="{{ old('default_printer_ip', config('settings.default_printer_ip')) }}">
+                    @error('default_printer_ip')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
                 <button type="submit" class="btn btn-primary">{{ __('settings.Change_Setting') }}</button>
             </form>
         </div>

@@ -417,8 +417,19 @@ class OrderController extends Controller
     public function printToPOS(Order $order)
     {
         try {
-            $this->print_POS_Category_wise_Token($order);
+            // $this->print_POS_Category_wise_Token($order);
             $this->print_POS_Order($order);
+        } catch (Exception $e) {
+            logger('Failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed xxx: ' . $e->getMessage());
+        }
+        return redirect()->back()->with('success', 'Order printed successfully');
+    }
+    public function printToPOSQT(Order $order)
+    {
+        try {
+            $this->print_POS_Category_wise_Token($order);
+            // $this->print_POS_Order($order);
         } catch (Exception $e) {
             logger('Failed: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed xxx: ' . $e->getMessage());

@@ -152,6 +152,8 @@
                                 </a>
                                 <a href="{{ route('orders.print.POS', $order) }}" class="btn btn-link btn-sm"><i
                                         class="fas fa-print">POS</i></a>
+                                <a href="{{ route('orders.print.QT', $order) }}" class="btn btn-link btn-sm"><i
+                                        class="fas fa-print">QT</i></a>
 
                             </td>
                         </tr>

@@ -583,7 +583,7 @@ class OrderController extends Controller
             $printer->text("Walk in Customer\n");
         }
 
-        $printer->text("Date: " . $order->created_at . "\n");
+        $printer->text("Order Date: " . $order->created_at . "\n");
         // $printer->text("Items:\n");
         // $printer->text('- ' . $item->product->name . '(' . $item->product->price * $item->quantity . ')' . ' x ' . $item->quantity . "\n");
         $printer->setEmphasis(true);
@@ -607,7 +607,7 @@ class OrderController extends Controller
         $printer->setTextSize(1, 1);
         $printer->text("Cashier: " . $order->user->getFullName()  . "\n");
         // $printer->text("Shop: " . $order->shop ? $order->shop->name : "Unknown");
-        $printer->text("\non: "  . "");
+        $printer->text("\nPrint Date: "  . "");
         // $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text(date('Y-m-d H:i:s') . "\n");
         $printer->setTextSize(1, 1);
@@ -631,10 +631,10 @@ class OrderController extends Controller
             // logger('$kitchen_printer_ip');
             // logger($kitchen_printer_ip);
             try {
-                $connector = new NetworkPrintConnector($kitchen_printer_ip);
+                $connector = new NetworkPrintConnector($kitchen_printer_ip, 9100, 5);
                 $kitchen_printer = new Printer($connector);
                 try {
-                    $this->print_POS_Header($kitchen_printer, $order, $heading = "Quetta Club Limited\n---------------------\nQCL - Kitchen QT\n");
+                    $this->print_POS_Header($kitchen_printer, $order, $heading = "Quetta Club Limited\n---------------------\nQCL - Kitchen KOT\n");
                     foreach ($items as $item) {
 
                         $kitchen_printer->setJustification(Printer::JUSTIFY_LEFT);
@@ -671,7 +671,7 @@ class OrderController extends Controller
     {
         $shop_printer_ip = $order->shop->printer_ip ?? config('settings.default_printer_ip');
         try {
-            $connector = new NetworkPrintConnector($shop_printer_ip);
+            $connector = new NetworkPrintConnector($shop_printer_ip, 9100, 5);
             $shop_printer = new Printer($connector);
             try {
                 // ... Print stuff

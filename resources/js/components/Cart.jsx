@@ -578,7 +578,7 @@ class Cart extends Component {
                                 {categories.map((c) => (
                                     <a
                                         className={
-                                            " btn btn-outline-secondary font-bold text-lg" +
+                                            " btn btn-outline-secondary font-bold text-xl" +
                                             (c === categories[0]
                                                 ? " active"
                                                 : "")

@@ -20,7 +20,7 @@
 
 @section('form-fields')
 
-    <div class="form-group">
+    {{-- <div class="form-group">
         <label for="products">{{ __('category.Products') }}</label>
         <select name="products[]" class="select2 form-control @error('products') is-invalid @enderror" id="products" multiple>
             @foreach ($products as $product)
@@ -32,6 +32,17 @@
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
+            @endforeach
+    </div> --}}
+    <div class="form-group">
+        <label for="name">{{ __('category.Name') }}</label>
+        <input name="name" class="form-control @error('name') is-invalid @enderror" id="name"
+            placeholder="{{ __('category.Name') }}" value="{{ old('name', $category->name) }}">
+        @error('name')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
     </div>
     <div class="form-group">
         <label for="description">{{ __('category.Description') }}</label>
@@ -56,5 +67,15 @@
             </span>
         @enderror
     </div>
-
+    <div class="form-group">
+        <label for="kitchen_printer_ip">{{ __('category.Kitchen_printer_ip') }}</label>
+        <input type="text" name="kitchen_printer_ip"
+            class="form-control @error('kitchen_printer_ip') is-invalid @enderror" id="kitchen_printer_ip"
+            placeholder="{{ __('product.Kitchen_printer_ip') }}" value="{{ old('kitchen_printer_ip', '192.168.0.165') }}">
+        @error('kitchen_printer_ip')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+    </div>
 @endsection

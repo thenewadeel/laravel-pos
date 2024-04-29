@@ -44,13 +44,15 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'description' => '',
-            'image' => 'image',
+            'description' => 'nullable',
+            'image' => 'nullable|image',
+            'kitchen_printer_ip' => 'nullable'
         ]);
 
         $category = new Category();
         $category->name = $request->name;
         $category->description = $request->description;
+        $category->kitchen_printer_ip = $request->kitchen_printer_ip;
         if ($request->hasFile('image')) {
             $category->image = $request->file('image')->store('public/categories');
         }
@@ -81,9 +83,16 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        // dd($request->all());
+        $request->validate([
+            'name' => 'nullable',
+            'description' => 'nullable',
+            'image' => 'nullable|image',
+            'kitchen_printer_ip' => 'nullable'
+        ]);
         $category->name = $request->name;
         $category->description = $request->description;
-
+        $category->kitchen_printer_ip = $request->kitchen_printer_ip;
         if ($request->hasFile('image')) {
             // Delete old image
             if ($category->image) {

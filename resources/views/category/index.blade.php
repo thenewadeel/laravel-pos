@@ -10,7 +10,7 @@
     <a href="{{ route('categories.create') }}" class="btn btn-primary">Create Category</a>
 @endsection
 @section('variables')
-    @php($tableHeaders = ['Id', 'Name', 'Description', 'Image', 'Products', 'Actions'])
+    @php($tableHeaders = ['Id', 'Name', 'Description', 'Image', 'Kitchen Printer IP', 'Products', 'Actions'])
     @php($varValue = 'test-value')
     @php($varData = ['test' => 'data'])
 @endsection
@@ -28,6 +28,7 @@
             <td>
                 <img width="50" src="{{ $category->image }}" alt="">
             </td>
+            <td>{{ $category->kitchen_printer_ip }}</td>
             <td>
                 <ul>
                     @foreach ($category->products()->get() as $product)
@@ -36,7 +37,7 @@
                 </ul>
             </td>
             <td>
-                {{-- <a href="{{ route('categories.edit', $category) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a> --}}
+                <a href="{{ route('categories.edit', $category) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
                 <a class="btn btn-danger btn-delete" href="{{ route('categories.destroy', $category) }}"><i
                         class="fas fa-trash"></i></a>
             </td>

@@ -17,7 +17,7 @@ return new class extends Migration
             // $table->string('slug');
             $table->string('image')->nullable();
             $table->text('description')->nullable();
-
+            $table->string('kitchen_printer_ip')->nullable()->default('192.168.0.109')->comment('The kitchen printer IP address for this category');
             $table->timestamps();
         });
     }

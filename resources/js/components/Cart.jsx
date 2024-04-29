@@ -48,7 +48,7 @@ class Cart extends Component {
         // load user cart
         this.loadTranslations();
         this.loadCart();
-        this.loadCategories();
+        // this.loadCategories();
         this.loadCustomers();
         this.loadShops();
     }
@@ -78,23 +78,32 @@ class Cart extends Component {
             const shops = res.data;
             this.setState({ shops });
             this.setState({ shop_id: shops[0].id });
+            // console.log({ shops });
             // console.log("shops returnd:", shops);
+            const category_ids = shops
+                .map((shop) => shop.categories.map((category) => category.id))
+                .flat();
+            this.loadCategories(category_ids);
         });
     }
 
-    loadCategories(search = "") {
+    loadCategories(cat_ids = [1, 2], search = "") {
         // const query = (!!search ? `?search=${search}&` : "?") + "itemCount=300";
-        axios.get(`/categories`).then((res) => {
-            // console.log({ res });
-            const categories = res.data;
-            this.setState({ categories });
-            // console.log({ categories });
-        });
+        // console.log({ cat_ids });
+        const _cat_ids = cat_ids; // empty array
+        axios
+            .get(`/categories`, { params: { cat_ids: _cat_ids } })
+            .then((res) => {
+                // console.log({ res });
+                const categories = res.data;
+                this.setState({ categories });
+                // console.log({ categories });
+            });
     }
 
     handleOnChangeBarcode(event) {
         const id = event.target.value;
-        console.log(id);
+        // console.log(id);
         this.setState({ id });
     }
 
@@ -219,6 +228,19 @@ class Cart extends Component {
     }
     setShopId(event) {
         this.setState({ shop_id: event.target.value });
+
+        const category_ids = this.state.shops
+            .filter((shop) => shop.id === parseInt(event.target.value))
+            .map((shop) => shop.categories.map((category) => category.id))
+            .flat();
+        // console.log({ category_ids });
+        this.loadCategories(category_ids);
+
+        // const category_ids = this.state.shops
+        //     .find((s) => s.id === event.target.value)
+        //     .categories.map((c) => c.id);
+
+        // this.loadCategories(category_ids);
     }
     setWaiterName(event) {
         this.setState({ waiter_name: event.target.value });

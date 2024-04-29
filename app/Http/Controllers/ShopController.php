@@ -49,11 +49,11 @@ class ShopController extends Controller
         if ($request->search) {
             $shops = $shops->where('name', 'LIKE', "%{$request->search}%");
         }
-        $itemsPerPage = 10;
+        $itemsPerPage = 100;
         if ($request->itemCount) {
             $itemsPerPage = $request->itemCount;
         }
-
+        $shops = $shops->with('categories');
         $shops = $shops->with(['users' => function ($query) use ($request) {
             if ($request->search) {
                 $query->where('name', 'LIKE', "%{$request->search}%");

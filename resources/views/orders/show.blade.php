@@ -120,11 +120,12 @@
 
 @section('footer-actions')
     <div class="d-flex justify-content-between w-100">
-        <a href="{{ route('orders.show', ['order' => $previous]) }}"
-            class="btn btn-primary {{ $previous == $order->id ? 'disabled' : '' }}">
-            <i class="fas fa-chevron-left"></i>
-        </a>
-
+        @if ($previous)
+            <a href="{{ route('orders.show', ['order' => $previous]) }}"
+                class="btn btn-primary {{ $previous == $order->id ? 'disabled' : '' }}">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        @endif
         <span class="h6">{{ $order->POS_number }}</span>
         @if ($next)
             <a href="{{ route('orders.show', ['order' => $next]) }}"

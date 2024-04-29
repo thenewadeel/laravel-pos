@@ -17,6 +17,7 @@ class SettingsSeeder extends Seeder
         $data = [
             ['key' => 'app_name', 'value' => env('APP_NAME', 'Laravel-POS'),],
             ['key' => 'currency_symbol', 'value' => 'Rs '],
+            ['key' => 'default_printer_ip', 'value' => '192.168.0.109'],
         ];
 
         foreach ($data as $value) {

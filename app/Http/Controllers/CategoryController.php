@@ -20,9 +20,24 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::with('products')->get();
+        $categories = Category::query();
+        if ($request->has('cat_ids')) {
+            logger($request->cat_ids);
+            $categories =    $categories->whereIn('id', $request->cat_ids);
+            // ->delete();
+            // foreach ($request->cat_ids as $cat_id) {
+            //     foreach ($request->input('product_ids', []) as $product_id) {
+            //         $categoryProduct = new CategoryProducts();
+            //         $categoryProduct->category_id = $cat_id;
+            //         $categoryProduct->product_id = $product_id;
+            //         $categoryProduct->save();
+            //     }
+            // }
+        }
+
+        $categories = $categories->with('products')->get();
         if (request()->wantsJson()) {
             return $categories->toArray();
         }

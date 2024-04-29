@@ -28,7 +28,7 @@ trait ListOf
             $shopsArray = $u->shops()->pluck('shops.id')->toArray();
 
 
-            $query->whereIn('id', $shopsArray);
+            $query->with('categories')->whereIn('id', $shopsArray);
         }
 
 

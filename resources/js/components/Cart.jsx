@@ -339,7 +339,7 @@ class Cart extends Component {
             this.state;
         return (
             <div className="row">
-                <div className="col-md-6 col-lg-4">
+                <div className="col-md-4 ">
                     <div className="col ">
                         {/* <div className="col"> */}
                         <label htmlFor="shop-select">Department:</label>
@@ -459,10 +459,10 @@ class Cart extends Component {
 
                         {/* </div> */}
                     </div>
-                    <div className="user-cart mx-3">
+                    <div className="user-cart px-3">
                         <div
                             className="card"
-                            style={{ minHeight: "400px", overflowY: "scroll" }}
+                            style={{ minHeight: "300px", overflowY: "scroll" }}
                         >
                             <table className="table table-striped">
                                 <thead>
@@ -552,7 +552,7 @@ class Cart extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-6 col-lg-8">
+                <div className="col-md-8">
                     {/* <div className="">
                         <input
                             type="text"
@@ -566,7 +566,8 @@ class Cart extends Component {
                         className="order-product"
                         style={{
                             overflow: "scroll",
-                            height: "calc(80vh)",
+                            height: "calc(88vh)",
+                            scrollbarWidth:"none",
                         }}
                     >
                         <nav className="nav">
@@ -578,7 +579,7 @@ class Cart extends Component {
                                 {categories.map((c) => (
                                     <a
                                         className={
-                                            " btn btn-outline-secondary font-bold text-xl" +
+                                            " btn btn-outline-secondary font-bold text-lg" +
                                             (c === categories[0]
                                                 ? " active"
                                                 : "")
@@ -608,6 +609,7 @@ class Cart extends Component {
                                 borderRadius: "5px",
                                 padding: "0.5rem",
                                 overflow: "scroll",
+                                scrollbarWidth: "none",
                                 // display: "flex",
                                 // justifyContent: "space-around",
                             }}
@@ -665,22 +667,32 @@ class Cart extends Component {
                                                         border: "40px solid darkgray",
                                                     },
                                                     display: "flex",
-                                                    height: "100%",
-                                                    padding: "4px",
+                                                    height: "10rem",
+                                                    width:"19%",
+                                                    //padding: "2px",
                                                     textAlign: "center",
-                                                    flexGrow: 1,
+                                                    flexGrow: 0,
                                                     alignItems: "center",
                                                     justifyContent:
                                                         "space-between",
                                                 }}
                                             >
                                                 <div
+                                                
                                                     style={{
                                                         flexGrow: 1,
                                                         flexBasis: "0",
                                                     }}
                                                 >
-                                                    {p.name}
+                                                <span
+                                                className="text-lg font-bold"
+                                                        style={{
+                                                            fontStyle: "bold",
+                                                        }}
+                                                    >
+                                                    {p.name}    
+                                                    </span>
+                                                    
                                                     <br />
                                                     <span
                                                         style={{
@@ -693,7 +705,7 @@ class Cart extends Component {
                                                     <input
                                                         style={{
                                                             width: "40px",
-                                                            marginTop: "8px",
+                                                            //marginTop: "8px",
                                                         }}
                                                         type="number"
                                                         min={1}

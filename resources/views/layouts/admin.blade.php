@@ -12,7 +12,7 @@
     <!-- overlayScrollbars -->
     <!-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> -->
     <!-- Google Font: Source Sans Pro -->
-    <link href={{ asset('fonts/fonts.css') }} rel='stylesheet'>
+  <!--  <link href={{ asset('fonts/fonts.css') }} rel='stylesheet'>  -->
     {{-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> --}}
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -26,7 +26,7 @@
     @livewireStyles
 </head>
 
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini sidebar-collapse">
     <!-- Site wrapper -->
     <div class="wrapper">
 

@@ -175,7 +175,12 @@ class Cart extends Component {
         }
     }
 
+    // to prevent spam clicking on the "add to cart" button
+    lastClickTime = 0;
     addProductToCart(id, category_id, qty = 1) {
+        const currentTime = new Date().getTime();
+        if (currentTime - this.lastClickTime < 1000) return;
+        this.lastClickTime = currentTime;
         let product = this.state.categories
             .find((c) => c.id === category_id)
             ?.products.find((p) => p.id === id);
@@ -334,12 +339,29 @@ class Cart extends Component {
                 });
         });
     }
+    categoryFilterProduct(categories, filterText) {
+        // const filterText = this.state.filterText;
+        if (filterText == "") {
+            return categories;
+        } else {
+            let catX = categories.filter((category) => {
+                let prods = category.products.filter((product) => {
+                    return product.name
+                        .toLowerCase()
+                        .includes(filterText.toLowerCase());
+                });
+                return prods.length > 0;
+            });
+            console.log({ catX });
+            return catX;
+        }
+    }
     render() {
         const { cart, categories, customers, id, translations, shops } =
             this.state;
         return (
             <div className="row">
-                <div className="col-md-4 ">
+                <div className="col-md-4 px-0">
                     <div className="col ">
                         {/* <div className="col"> */}
                         <label htmlFor="shop-select">Department:</label>
@@ -552,7 +574,7 @@ class Cart extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-8">
+                <div className="col-md-8 px-0">
                     {/* <div className="">
                         <input
                             type="text"
@@ -567,16 +589,47 @@ class Cart extends Component {
                         style={{
                             overflow: "scroll",
                             height: "calc(88vh)",
-                            scrollbarWidth:"none",
+                            scrollbarWidth: "none",
                         }}
                     >
+                        <div className="col-md-6 col-lg-12 d-flex input-group px-0 mb-2 pr-4">
+                            <input
+                                type="text"
+                                placeholder="Filter Products..."
+                                className="form-control me-2"
+                                value={this.state.filterText}
+                                onChange={(e) =>
+                                    this.setState({
+                                        filterText: e.target.value,
+                                    })
+                                }
+                            />
+                            <button
+                                className="btn btn-sm btn-danger"
+                                onClick={() => {
+                                    this.setState({
+                                        filterText: "",
+                                    });
+                                    var allItems =
+                                        document.querySelectorAll(".active");
+                                    allItems.forEach(function (item) {
+                                        item.classList.remove("active");
+                                    });
+                                }}
+                            >
+                                Clear Filter
+                            </button>
+                        </div>
                         <nav className="nav">
                             <div
-                                className="nav nav-tabs btn-group w-100 pb-2"
+                                className="nav nav-tabs btn-group w-100 pb-2 pr-4"
                                 id="myTab"
                                 role="tablist"
                             >
-                                {categories.map((c) => (
+                                {this.categoryFilterProduct(
+                                    categories,
+                                    this.state.filterText
+                                ).map((c) => (
                                     <a
                                         className={
                                             " btn btn-outline-secondary font-bold text-lg" +
@@ -607,7 +660,7 @@ class Cart extends Component {
                             style={{
                                 height: "100%",
                                 borderRadius: "5px",
-                                padding: "0.5rem",
+                                // padding: "0.5rem",
                                 overflow: "scroll",
                                 scrollbarWidth: "none",
                                 // display: "flex",
@@ -627,19 +680,6 @@ class Cart extends Component {
                                     aria-labelledby={"tab-header-" + c.id}
                                     key={c.id}
                                 >
-                                    <div className="mb-2">
-                                        <input
-                                            type="text"
-                                            placeholder="Filter Products..."
-                                            className="form-control"
-                                            value={this.state.filterText}
-                                            onChange={(e) =>
-                                                this.setState({
-                                                    filterText: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </div>
                                     {c.products
                                         .filter((p) =>
                                             p.name
@@ -668,7 +708,7 @@ class Cart extends Component {
                                                     },
                                                     display: "flex",
                                                     height: "10rem",
-                                                    width:"19%",
+                                                    width: "19%",
                                                     //padding: "2px",
                                                     textAlign: "center",
                                                     flexGrow: 0,
@@ -678,21 +718,19 @@ class Cart extends Component {
                                                 }}
                                             >
                                                 <div
-                                                
                                                     style={{
                                                         flexGrow: 1,
                                                         flexBasis: "0",
                                                     }}
                                                 >
-                                                <span
-                                                className="text-lg font-bold"
+                                                    <span
+                                                        className="text-lg font-bold"
                                                         style={{
                                                             fontStyle: "bold",
                                                         }}
                                                     >
-                                                    {p.name}    
+                                                        {p.name}
                                                     </span>
-                                                    
                                                     <br />
                                                     <span
                                                         style={{

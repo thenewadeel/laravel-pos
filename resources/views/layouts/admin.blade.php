@@ -12,7 +12,7 @@
     <!-- overlayScrollbars -->
     <!-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> -->
     <!-- Google Font: Source Sans Pro -->
-  <!--  <link href={{ asset('fonts/fonts.css') }} rel='stylesheet'>  -->
+    <!--  <link href={{ asset('fonts/fonts.css') }} rel='stylesheet'>  -->
     {{-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> --}}
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -37,7 +37,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <div class="container-fluid">
-                    <div class="row mb-2">
+                    <div class="row">
                         <div class="col-sm-6">
                             <h1>@yield('content-header')</h1>
                         </div>

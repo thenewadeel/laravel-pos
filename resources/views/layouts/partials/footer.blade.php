@@ -1,4 +1,4 @@
-<footer class="main-footer">
+<footer class="main-footer p-1">
     <div class="float-right d-none d-sm-block">
         <b>{{ __('common.Version') }}</b> 1.0.3
     </div>

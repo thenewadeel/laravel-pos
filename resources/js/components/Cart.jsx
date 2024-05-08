@@ -361,10 +361,19 @@ class Cart extends Component {
             this.state;
         return (
             <div className="row">
-                <div className="col-md-4 px-0">
-                    <div className="col ">
+                <div className="col-md-4  card pl-2 py-0 pr-0 my-0">
+                    <div className="card-header  font-bold">
+                        Order Data:
+                        <a
+                            href="/orders"
+                            className="btn btn-secondary  float-right btn-sm"
+                        >
+                            All Orders
+                        </a>
+                    </div>
+                    <div className="col">
                         {/* <div className="col"> */}
-                        <label htmlFor="shop-select">Department:</label>
+                        {/* <label htmlFor="shop-select">Department:</label> */}
                         <select
                             id="shop-select"
                             className="form-control"
@@ -480,89 +489,97 @@ class Cart extends Component {
                         </select>
 
                         {/* </div> */}
-                    </div>
-                    <div className="user-cart px-3">
-                        <div
-                            className="card"
-                            style={{ minHeight: "300px", overflowY: "scroll" }}
-                        >
-                            <table className="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>{translations["product_name"]}</th>
-                                        <th>{translations["quantity"]}</th>
-                                        <th className="text-right">
-                                            {translations["price"]}
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {cart.map((c) => (
-                                        <tr key={c.id}>
-                                            <td>{c.name}</td>
-                                            <td>
-                                                <input
-                                                    type="text"
-                                                    className="form-control form-control-sm qty"
-                                                    value={c.pivot.quantity}
-                                                    onChange={(event) =>
-                                                        this.handleChangeQty(
-                                                            c.id,
-                                                            event.target.value
-                                                        )
-                                                    }
-                                                />
-                                                <button
-                                                    className="btn btn-danger btn-sm"
-                                                    onClick={() =>
-                                                        this.handleClickDelete(
-                                                            c.id
-                                                        )
-                                                    }
-                                                >
-                                                    <i className="fas fa-trash"></i>
-                                                </button>
-                                            </td>
-                                            <td className="text-right">
-                                                {window.APP.currency_symbol}{" "}
-                                                {(
-                                                    c.price * c.pivot.quantity
-                                                ).toFixed(2)}
-                                            </td>
+                        {/* </div> */}
+                        <div className="user-cart">
+                            <div
+                                className="card m-0"
+                                style={{
+                                    minHeight: "300px",
+                                    overflowY: "scroll",
+                                }}
+                            >
+                                <table className="table table-striped">
+                                    <thead className="py-0 p-0 m-0 text-base">
+                                        <tr>
+                                            <th>
+                                                {translations["product_name"]}
+                                            </th>
+                                            <th>{translations["quantity"]}</th>
+                                            <th className="text-right">
+                                                {translations["price"]}
+                                            </th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {cart.map((c) => (
+                                            <tr key={c.id}>
+                                                <td>{c.name}</td>
+                                                <td>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control form-control-sm qty"
+                                                        value={c.pivot.quantity}
+                                                        onChange={(event) =>
+                                                            this.handleChangeQty(
+                                                                c.id,
+                                                                event.target
+                                                                    .value
+                                                            )
+                                                        }
+                                                    />
+                                                    <button
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() =>
+                                                            this.handleClickDelete(
+                                                                c.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <i className="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                                <td className="text-right">
+                                                    {window.APP.currency_symbol}{" "}
+                                                    {(
+                                                        c.price *
+                                                        c.pivot.quantity
+                                                    ).toFixed(2)}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row  text-lg">
-                        <div className="col">{translations["total"]}:</div>
-                        <div className="col text-right">
-                            {window.APP.currency_symbol} {this.getTotal(cart)}
+                        <div className="row  text-lg font-bold px-4 ">
+                            <div className="col">{translations["total"]}:</div>
+                            <div className="col text-right">
+                                {window.APP.currency_symbol}{" "}
+                                {this.getTotal(cart)}
+                            </div>
                         </div>
-                    </div>
-                    <div className="col ">
-                        <div className="col m-2">
-                            <button
-                                type="button"
-                                className="btn btn-danger btn-block"
-                                onClick={this.handleEmptyCart}
-                                disabled={!cart.length}
-                            >
-                                {translations["cancel"]}
-                            </button>
-                        </div>
-                        <div className="col m-2">
-                            <button
-                                type="button"
-                                className="btn btn-info btn-block"
-                                disabled={!cart.length}
-                                onClick={this.handleClickSave}
-                            >
-                                {"Save"}
-                            </button>
-                        </div>
-                        <div className="col m-2">
+                        <div className="row   ">
+                            <div className="col mx-2">
+                                <button
+                                    type="button"
+                                    className="btn btn-danger btn-block"
+                                    onClick={this.handleEmptyCart}
+                                    disabled={!cart.length}
+                                >
+                                    {translations["cancel"]}
+                                </button>
+                            </div>
+                            <div className="col mx-2">
+                                <button
+                                    type="button"
+                                    className="btn btn-info btn-block"
+                                    disabled={!cart.length}
+                                    onClick={this.handleClickSave}
+                                >
+                                    {"Save"}
+                                </button>
+                            </div>
+                            {/* <div className="col m-2">
                             <button
                                 type="button"
                                 className="btn btn-success btn-block"
@@ -571,6 +588,7 @@ class Cart extends Component {
                             >
                                 {"Pay"}
                             </button>
+                        </div> */}
                         </div>
                     </div>
                 </div>

@@ -43,7 +43,7 @@ class ReportsController extends Controller
         if ($request->has('start_date') && $request->has('end_date')) {
             $orders->whereBetween('created_at', [$filters['start_date'], $filters['end_date']]);
         } else {
-            $orders->whereDate('created_at', now());
+            // $orders->whereDate('created_at', now());
         }
         // if ($request->has('shop_id')) {
         //     $orders->where('shop_id', $filters['shop_id']);

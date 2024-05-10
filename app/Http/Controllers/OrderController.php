@@ -139,9 +139,11 @@ class OrderController extends Controller
             'table_number' => 'nullable|string',
             'waiter_name' => 'nullable|string',
             'type' => 'nullable|in:dine-in,take-away,delivery',
-            'user_id' => 'required|exists:users,id',
-            'state' => 'nullable|in:preparing,served,closed,wastage',
+            // 'user_id' => 'required|exists:users,id',
+            // 'state' => 'nullable|in:preparing,served,closed,wastage',
         ]);
+
+        $validatedData['user_id'] = auth()->user()->id;
 
         $order->update($validatedData);
 
@@ -189,7 +191,7 @@ class OrderController extends Controller
 
     public function addItem(Request $request, Order $order)
     {
-        // dd($request);
+        // dd($request->all());
         $product = Product::find($request->item);
 
         $validatedData = $request->validate([
@@ -199,21 +201,18 @@ class OrderController extends Controller
 
         $validatedData['order_id'] = $order->id;
         $validatedData['user_id'] = $request->user()->id;
-        $validatedData['product_id'] = $product->id;
-        $validatedData['price'] = $product->price * $request->quantity;
 
-        // dd($product);
-        $order->items()->create($validatedData);
-
-        // if ($product) {
-        //     $order->items()->create([
-        //         'price' => $product->price,
-        //         'quantity' => 1,
-        //         'product_id' => $request->item,
-        //     ]);
-        // } else {
-        //     dd($request);
-        // }
+        if ($existingItem = $order->items()->where('product_id', $product->id)->first()) {
+            $existingItem->update([
+                'quantity' => $existingItem->quantity + $request->quantity,
+                'price' => $product->price * ($existingItem->quantity + $request->quantity),
+            ]);
+        } else {
+            $validatedData['product_id'] = $product->id;
+            $validatedData['price'] = $product->price * $request->quantity;
+            $order->items()->create($validatedData);
+        }
+        // $order->items()->create($validatedData);
 
         return redirect()->route('orders.edit', $order)->with('success', 'Product added to order successfully');
     }
@@ -522,11 +521,11 @@ class OrderController extends Controller
     }
     private function print_POS_Header(Printer $printer, Order $order, String $heading = "Quetta Club Limited\n---------------------\n*** Customer Bill ***\n")
     {
-     $printer->setTextSize(2, 2);   
-    $printer->setEmphasis(true);
+        $printer->setTextSize(2, 2);
+        $printer->setEmphasis(true);
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text(str_repeat("-", 22) . "\n");
-       
+
         $printer->setFont(Printer::FONT_A); // change font
         $printer->text($heading);
         // $printer->setFont(Printer::FONT_B); // change font
@@ -536,10 +535,10 @@ class OrderController extends Controller
         $printer->setFont(Printer::FONT_A); // change font
         // $printer->text("Chand Raat Festival\n");
         // $printer->text("2024\n");
-        
+
         $printer->text(str_repeat("-", 22) . "\n");
         $printer->setJustification(Printer::JUSTIFY_LEFT);
-$printer->setTextSize(1, 1);
+        $printer->setTextSize(1, 1);
         if ($order->type) {
             //$printer->setTextSize(2, 2);
             $printer->text("Order Type:");
@@ -584,21 +583,20 @@ $printer->setTextSize(1, 1);
             $printer->text("Walk in Customer\n");
         }
 
-    
+
         $printer->text("Order Date: " . $order->created_at . "\n");
         // $printer->text("Items:\n");
         // $printer->text('- ' . $item->product->name . '(' . $item->product->price * $item->quantity . ')' . ' x ' . $item->quantity . "\n");
         $printer->setEmphasis(false);
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text(str_repeat("-", 42) . "\n");
-        
     }
     private function print_POS_Footer(Printer $printer, Order $order, $showTotal = true)
     {
-        $printer->setJustification(Printer::JUSTIFY_CENTER);    
-     $printer->setTextSize(1, 1);
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->setTextSize(1, 1);
         $printer->text(str_repeat("-", 42) . "\n");
-    
+
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         // $printer->text("Payments:");
         // foreach ($order->payments as $payment) {
@@ -612,26 +610,26 @@ $printer->setTextSize(1, 1);
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->setTextSize(1, 1);
         $printer->text("Order by: " . $order->user->getFullName()  . "\n");
-    if(count($order->payments)){
-    $printer->text("Closed by: " . $order->payments[0]->user->getFullName()  . "\n");
-}
+        if (count($order->payments)) {
+            $printer->text("Closed by: " . $order->payments[0]->user->getFullName()  . "\n");
+        }
         // $printer->text("Shop: " . $order->shop ? $order->shop->name : "Unknown");
         $printer->text("\nPrint Date: "  . "");
         // $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text(date('Y-m-d H:i:s') . "\n");
         $printer->setTextSize(1, 1);
-    if($showTotal){
-     $printer->setJustification(Printer::JUSTIFY_CENTER);    
-     $printer->setTextSize(1, 1);
-        $printer->text(str_repeat("-", 42) . "\n");
-    
-        $printer->setJustification(Printer::JUSTIFY_LEFT);
-    $printer->setTextSize(1, 1);
-        $printer->text("Address: Club Road, Quetta Cantt.\n");
-    $printer->text("Contact: Pascom 36251, PTCL 081-2849676\n");
-    $printer->text("http://www.facebook.com/quettaclublimited\n");
-    $printer->text("E-mail: quettaclublimited@gmail.com");
-    }
+        if ($showTotal) {
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->setTextSize(1, 1);
+            $printer->text(str_repeat("-", 42) . "\n");
+
+            $printer->setJustification(Printer::JUSTIFY_LEFT);
+            $printer->setTextSize(1, 1);
+            $printer->text("Address: Club Road, Quetta Cantt.\n");
+            $printer->text("Contact: Pascom 36251, PTCL 081-2849676\n");
+            $printer->text("http://www.facebook.com/quettaclublimited\n");
+            $printer->text("E-mail: quettaclublimited@gmail.com");
+        }
         $printer->text("\n \n");
         $printer->cut();
     }
@@ -662,12 +660,12 @@ $printer->setTextSize(1, 1);
                         //$kitchen_printer->setTextSize(2, 2);
                         // $kitchen_printer->setTextSize(1, 1);
                         $kitchen_printer->text($item->product->name);
-                    $kitchen_printer->text("\n");    
-                    $kitchen_printer->setJustification(Printer::JUSTIFY_RIGHT);
+                        $kitchen_printer->text("\n");
+                        $kitchen_printer->setJustification(Printer::JUSTIFY_RIGHT);
                         $kitchen_printer->text("Rate:(" . $item->product->price . ")");
                         $kitchen_printer->text("\n");
-                        
-                    $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
+
+                        $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
                         //$kitchen_printer->setTextSize(2,2);
                         $kitchen_printer->text("QTY: " . $item->quantity . "\n");
                         //$kitchen_printer->text("\n");
@@ -676,17 +674,16 @@ $printer->setTextSize(1, 1);
                         // $kitchen_printer->setTextSize(2, 2);
                         // $kitchen_printer->setEmphasis(true);
                         // $kitchen_printer->text("Amount: " . (int) $item->price . "\n");
-                            $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);    
-     $kitchen_printer->setTextSize(1, 1);
-        $kitchen_printer->text(str_repeat("-", 42) . "\n");
-    
-                    }
-                 $kitchen_printer->setEmphasis(true);
-                $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
+                        $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
                         $kitchen_printer->setTextSize(1, 1);
-                        $kitchen_printer->text("\nTotal Items:" . count($items) . "\n");
-                        $kitchen_printer->setEmphasis(false);
-                $kitchen_printer->setJustification(Printer::JUSTIFY_LEFT);
+                        $kitchen_printer->text(str_repeat("-", 42) . "\n");
+                    }
+                    $kitchen_printer->setEmphasis(true);
+                    $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
+                    $kitchen_printer->setTextSize(1, 1);
+                    $kitchen_printer->text("\nTotal Items:" . count($items) . "\n");
+                    $kitchen_printer->setEmphasis(false);
+                    $kitchen_printer->setJustification(Printer::JUSTIFY_LEFT);
                     $this->print_POS_Footer($kitchen_printer, $order, false);
                 } catch (Exception $e) {
                     logger($e->getMessage());
@@ -728,11 +725,12 @@ $printer->setTextSize(1, 1);
                     $shop_printer->text("Amount: " . (int) $item->price . "\n");
 
                     $shop_printer->setEmphasis(false);
-                
+
                     $shop_printer->setTextSize(1, 1);
                     $shop_printer->setJustification(Printer::JUSTIFY_CENTER);
-                    $shop_printer->text(str_repeat("-", 42) . "\n");}
-                
+                    $shop_printer->text(str_repeat("-", 42) . "\n");
+                }
+
                 $this->print_POS_Footer($shop_printer, $order);
             } catch (Exception $e) {
                 logger($e->getMessage());

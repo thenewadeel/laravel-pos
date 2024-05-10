@@ -2,10 +2,10 @@
 
 
 @section('title')
-    Edit - @(yield 'title')
+    Edit - @yield ('title')
 @endsection
 @section('content-header')
-    @(yield 'modelName')
+    @yield ('modelName')
 @endsection
 @section('content-actions')
     @yield('content-actions')
@@ -15,8 +15,11 @@
     @include('layouts.partials.alert.error', ['errors' => $errors])
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card">
+                <div class="card-header card-title">
+                    @yield ('modelName')
+                </div>
                 <div class="card-body">
                     <form action="@yield('route-update')" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -29,13 +32,21 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    @yield('form-right')
+        <div class="col-md-4">
+            {{-- <div class="card">
+                <div class="card-body"> --}}
+            @yield('form-middle')
 
+            {{-- </div>
+            </div> --}}
+        </div>
+        <div class="col-md-4">
+            {{-- <div class="card">
+                <div class="card-body"> --}}
+            @yield('form-right')
+            {{-- 
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
     @yield('footer-actions')

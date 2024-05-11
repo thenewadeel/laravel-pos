@@ -55,6 +55,15 @@ return [
     'Print_Preview'     => 'Print Preview',
     'Unpaid'            => 'Unpaid',
     'chit'              => 'Chit',
-    'Total_Orders'      => 'Total Orders'
+    'Total_Orders'      => 'Total Orders',
+    'Type'              => 'Type',
+    'Table_Number'      => 'Table #',
+    'Waiter_Name'       => 'Waiter Name',
+    'Shop_Name'         => 'Shop Name',
+    'Discount'          => 'Discount',
+    'Chit'              => 'Chit',
+    'Dine_In'           => 'Dine In',
+    'Take_Away'         => 'Take Away',
+    'Delivery'          => 'Delivery',
 
 ];

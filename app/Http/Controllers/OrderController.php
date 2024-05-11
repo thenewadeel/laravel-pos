@@ -37,7 +37,7 @@ class OrderController extends Controller
     }
     public function index(Request $request)
     {
-
+        // dd($request->all());
 
         // logger('asdasdasd');
         if (auth()->user()->type == 'admin') {
@@ -51,6 +51,52 @@ class OrderController extends Controller
             // dd($shops);
             $orders = Order::whereIn('shop_id', $shops);
         }
+        // FILTERS
+        // POS Number	
+        if ($request->has('pos_number') && $request->pos_number != null) {
+            $orders = $orders->where('pos_number', $request->pos_number);
+        }
+        // Customer Name	
+        if ($request->has('customer_name') && $request->customer_name != null) {
+            $orders = $orders->whereHas('customer', function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->customer_name . '%');
+            });
+        }
+        // Type	
+        if ($request->has('type') && $request->type != null) {
+            // dd($request->type);
+            $orders = $orders->where('type', $request->type);
+        }
+        // Table #	
+        if ($request->has('table_number') && $request->table_number != null) {
+            $orders = $orders->where('table_number', $request->table_number);
+        }
+        // Waiter Name	
+        if ($request->has('waiter_name') && $request->waiter_name != null) {
+            $orders = $orders->where('waiter_name', 'LIKE', '%' . $request->waiter_name . '%');
+        }
+        // Shop Name	
+        if ($request->has('shop_name') && $request->shop_name != null) {
+            $orders = $orders->whereHas('shop', function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->shop_name . '%');
+            });
+        }
+        // Total	
+
+        // Discount	
+        // Net Amount	
+        // Cash	
+        // Chit	
+
+        // Taken By	
+        // if ($request->has('Taken_By')) {
+
+        // Closed By	
+        // if ($request->has('Closed_By')) {
+
+        // Status
+        // if ($request->has('Status')) {
+
         // if ($request->has('state')) {
         //     $filters = array_intersect(['preparing', 'served', 'closed', 'wastage'], $request->state);
         //     $orders = $orders->whereIn('state', $filters);

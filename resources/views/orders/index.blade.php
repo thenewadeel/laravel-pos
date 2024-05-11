@@ -3,9 +3,11 @@
 @section('title', __('order.Orders_List'))
 @section('content-header', __('order.Orders_List'))
 @section('content-actions')
-    <a href="{{ route('orders.index', ['all' => true]) }}" class="btn btn-info">
-        <i class="fas fa-filter mr-1"></i>{{ __('common.All') }}
-    </a>
+    @if (auth()->user()->type == 'admin')
+        <a href="{{ route('orders.index', ['all' => true]) }}" class="btn btn-info">
+            <i class="fas fa-filter mr-1"></i>{{ __('common.All') }}
+        </a>
+    @endif
     <a href="{{ route('orders.index', ['unpaid' => true]) }}" class="btn btn-info">
         <i class="fas fa-filter mr-1"></i>{{ __('order.Unpaid') }}
     </a>
@@ -46,19 +48,23 @@
                 </div>
             </div>
             {{-- {{ $orders[0] }} --}}
-            <table class="table">
+            <table class="table table-responsive table-sm">
                 <thead>
                     <tr>
                         {{-- <th>{{ __('order.ID') }}</th> --}}
                         <th>{{ __('order.POS_Number') }}</th>
                         {{-- <th>{{ __('order.Date') }}</th> --}}
                         <th>{{ __('order.Customer_Name') }}</th>
+                        <th>{{ __('order.Type') }}</th>
+                        <th>{{ __('order.Table_Number') }}</th>
+                        <th>{{ __('order.Waiter_Name') }}</th>
+                        <th>{{ __('order.Shop_Name') }}</th>
                         <th>{{ __('order.Total') }}</th>
-                        <th>{{ __('order.Discounts') }}</th>
-                        <th>{{ __('order.DiscountAmount') }}</th>
+                        {{-- <th>{{ __('order.Discounts') }}</th> --}}
+                        <th>{{ __('order.Discount') }}</th>
                         <th>{{ __('order.NetAmount') }}</th>
                         <th>{{ __('order.Received_Amount') }}</th>
-                        <th>{{ __('order.To_Pay') }}</th>
+                        <th>{{ __('order.Chit') }}</th>
 
 
                         {{-- <th>{{ 'Shop' }}</th> --}}
@@ -67,6 +73,73 @@
                         <th>{{ __('order.Status') }}</th>
                         <th>{{ __('order.Actions') }}</th>
                     </tr>
+                    {{-- Filter Row --}}
+                    {{-- 'POS_Number
+                        'Customer_Name
+                        'Type
+                        'Table_Number
+                        'Waiter_Name
+                        'Shop_Name --}}
+                    <form action="{{ route('orders.index') }}" method="GET">
+                        <tr>
+                            <td colspan="1">
+                                <div>
+                                    {{-- <div style="display:flex; flex-direction:row; align-items:center;"> --}}
+
+                                    <input type="search" name="pos_number" placeholder="{{ __('order.POS_Number') }}"
+                                        value="{{ request('pos_number') }}" id="posNumber">
+                                </div>
+                            </td>
+                            <td colspan="1">
+
+                                <div>
+
+                                    <input type="search" name="customer_name"
+                                        placeholder="{{ __('order.Customer_Name') }}"
+                                        value="{{ request('customer_name') }}" id="customerName">
+                                </div>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <select name="type" id="type">
+                                        <option value="">{{ __('order.Type') }}</option>
+                                        <option {{ request('type') == 'dine-in' ? 'selected' : '' }} value="dine-in">
+                                            {{ __('order.Dine_In') }}</option>
+                                        <option {{ request('type') == 'take_away' ? 'selected' : '' }} value="take_away">
+                                            {{ __('order.Take_Away') }}</option>
+                                        <option {{ request('type') == 'delivery' ? 'selected' : '' }} value="delivery">
+                                            {{ __('order.Delivery') }}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <input type="search" name="table_number" placeholder="{{ __('order.Table_Number') }}"
+                                        value="{{ request('table_number') }}"" id="tableNumber">
+                                </div>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <input type="search" name="waiter_name" placeholder="{{ __('order.Waiter_Name') }}"
+                                        value="{{ request('waiter_name') }}" style="width:200px" id="waiterName">
+                                </div>
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <input type="search" name="shop_name" placeholder="{{ __('order.Shop_Name') }}"
+                                        value="{{ request('shop_name') }}" style="width:200px" id="shopName">
+                                </div>
+                            </td>
+                            <td colspan="8">
+                            </td>
+                            <td colspan="1">
+                                <div>
+                                    <button type="submit" class="btn btn-primary btn-sm"><i
+                                            class="fas fa-filter"></i>{{ __('common.Filter') }}</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </form>
                 </thead>
                 <tbody>
                     @foreach ($orders as $order)
@@ -75,9 +148,12 @@
                             <td title="{{ $order }}">{{ $order->POS_number }}</td>
                             {{-- <td>{{ $order->created_at->format('d-M-y') }}</td> --}}
                             <td>{{ $order->getCustomerName() }}</td>
-
+                            <td>{{ $order->type }}</td>
+                            <td>{{ $order->table_number }}</td>
+                            <td>{{ $order->waiter_name }}</td>
+                            <td>{{ $order->shop->name }}</td>
                             <td>{{ config('settings.currency_symbol') }} {{ $order->formattedTotal() }}</td>
-                            <td>
+                            {{-- <td>
                                 @if ($order->discounts()->count() == 0)
                                     {{ 'None' }}
                                 @else
@@ -85,7 +161,7 @@
                                         {{ $discount->name }} ({{ $discount->percentage }}%),
                                     @endforeach
                                 @endif
-                            </td>
+                            </td> --}}
                             <td style="text-align:right;">
 
                                 {{ config('settings.currency_symbol') }} {{ number_format($order->discountAmount(), 2) }}
@@ -116,27 +192,30 @@
                             <td style="vertical-align: middle; text-align: center;">
                                 @if ($order->state == 'preparing')
                                     {{-- <span class="badge badge-success">{{ __('order.Preparing') }}</span> --}}
+                                    <span class="badge badge-primary">Open </span>
                                 @elseif($order->state == 'served')
                                     {{-- <span class="badge badge-warning">{{ __('order.Served') }}</span> --}}
+                                    <span class="badge badge-primary">Open </span>
                                 @elseif($order->state == 'wastage')
-                                    <span class="badge badge-dark">{{ __('order.Wastage') }}</span>
+                                    {{-- <span class="badge badge-dark">{{ __('order.Wastage') }}</span> --}}
+                                    <span class="badge badge-primary">Open </span>
                                 @elseif($order->state == 'closed')
                                     <span class="badge badge-danger">{{ __('order.Closed') }}</span>
+
+
+
+                                    @if ($order->stateLabel() == __('order.Not_Paid'))
+                                        <span class="badge badge-danger">
+                                        @elseif($order->stateLabel() == __('order.Partial'))
+                                            <span class="badge badge-warning">
+                                            @elseif($order->stateLabel() == __('order.Paid'))
+                                                <span class="badge badge-success">
+                                                @else
+                                                    {{-- if($order->stateLabel() == __('order.Change')) --}}
+                                                    <span class="badge badge-info">
+                                    @endif
+                                    {{ $order->stateLabel() }}</span>
                                 @endif
-
-
-
-                                @if ($order->stateLabel() == __('order.Not_Paid'))
-                                    <span class="badge badge-danger">
-                                    @elseif($order->stateLabel() == __('order.Partial'))
-                                        <span class="badge badge-warning">
-                                        @elseif($order->stateLabel() == __('order.Paid'))
-                                            <span class="badge badge-success">
-                                            @else
-                                                {{-- if($order->stateLabel() == __('order.Change')) --}}
-                                                <span class="badge badge-info">
-                                @endif
-                                {{ $order->stateLabel() }}</span>
                             </td>
                             <td>
                                 @if ($order->state != 'closed')
@@ -163,9 +242,13 @@
                     <tr>
                         <th></th>
                         <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                         <th style="text-align:center;">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalTotal) }}</th>
-                        <th></th>
+                        {{-- <th></th> --}}
                         <th style="text-align:center;">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalDiscountAmount) }}</th>
                         <th style="text-align:center;">{{ config('settings.currency_symbol') }}

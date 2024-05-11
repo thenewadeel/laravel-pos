@@ -81,12 +81,12 @@
                         <p>{{ __('cart.title') }}</p>
                     </a>
                 </li>
-                <li class="nav-item has-treeview">
+                {{-- <li class="nav-item has-treeview">
                     <a href="{{ route('cart.indexTokens') }}" class="nav-link {{ activeSegment('cart') }}">
                         <i class="nav-icon fas fa-cart-plus"></i>
                         <p>{{ __('cart.title2') }}</p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item has-treeview">
                     <a href="{{ route('orders.index') }}" class="nav-link {{ activeSegment('orders') }}">
                         <i class="nav-icon fas fa-cart-plus"></i>
@@ -122,6 +122,12 @@
                         <p>{{ __('inventory.title') }}</p>
                     </a>
                     <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('inventory.index') }}" class="nav-link {{ activeSegment('index') }}">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>{{ __('inventory.index') }}</p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{ route('inventory.issue') }}" class="nav-link {{ activeSegment('issue') }}">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>

@@ -84,12 +84,12 @@
                 <thead>
                     <tr>
                         {{-- <th>{{ __('order.ID') }}</th> --}}
-                        <th>{{ __('order.POS_Number') }}</th>
+                        <th class="col-1">{{ __('order.POS_Number') }}</th>
                         {{-- <th>{{ __('order.Date') }}</th> --}}
-                        <th>{{ __('order.Customer_Name') }}</th>
-                        <th>{{ __('order.Type') }}</th>
-                        <th>{{ __('order.Table_Number') }}</th>
-                        <th>{{ __('order.Waiter_Name') }}</th>
+                        <th class="col-2">{{ __('order.Customer_Name') }}</th>
+                        <th class="col-1">{{ __('order.Type') }}</th>
+                        <th class="col-1">{{ __('order.Table_Number') }}</th>
+                        <th class="col-1">{{ __('order.Waiter_Name') }}</th>
                         {{-- <th>{{ __('order.Shop_Name')   }}</th> --}}
                         {{-- <th>{{ __('order.Total') }}</th> --}}
                         {{-- <th>{{ __('order.Discounts') }}</th> --}}
@@ -100,10 +100,10 @@
 
 
                         {{-- <th>{{ 'Shop' }}</th> --}}
-                        <th>{{ __('order.Taken_By') }}</th>
-                        <th>{{ __('order.Closed_By') }}</th>
-                        <th>{{ __('order.Status') }}</th>
-                        <th>{{ __('order.Actions') }}</th>
+                        <th class="col-1">{{ __('order.Taken_By') }}</th>
+                        <th class="col-1">{{ __('order.Closed_By') }}</th>
+                        <th class="col-1">{{ __('order.Status') }}</th>
+                        <th class="col-1">{{ __('order.Actions') }}</th>
                     </tr>
 
 

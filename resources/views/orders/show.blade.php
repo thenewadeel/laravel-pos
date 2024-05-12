@@ -13,10 +13,11 @@
         @if ($order->state !== 'closed')
             <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary">{{ __('order.Edit') }}</a>
         @endif
-        <a href="{{ route('orders.print', $order) }}" class="btn btn-primary ">
-            {{ __('order.Print') }} <i class="fas fa-print"></i></a>
+        {{-- <a href="{{ route('orders.print', $order) }}" class="btn btn-primary ">
+            {{ __('order.Print') }} <i class="fas fa-print"></i></a> --}}
         {{-- <a href="{{ route('orders.print.preview', $order) }}" class="btn btn-primary ">
             {{ __('order.Print_Preview') }} <i class="fas fa-print"></i></a> --}}
+        @include('layouts.partials.orderPrintBtns', ['order' => $order])
     </div>
 @endsection
 

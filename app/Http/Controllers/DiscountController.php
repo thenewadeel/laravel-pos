@@ -28,7 +28,15 @@ class DiscountController extends Controller
      */
     public function create()
     {
-        //
+        Discount::create([
+            'name' => 'New Discount',
+            'percentage' => 0,
+            'amount' => 0,
+            'method' => 'NATURAL',
+            'type' => 'DISCOUNT'
+        ]);
+
+        return back()->with('message', "Discount created");
     }
 
     /**
@@ -61,13 +69,20 @@ class DiscountController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        return back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Discount $discount)
     {
-        //
+        $discount->delete();
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true
+            ]);
+        }
+        return back()->with('message', "Discount deleted");
     }
 }

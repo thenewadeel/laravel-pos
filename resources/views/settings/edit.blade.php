@@ -72,6 +72,17 @@
                 </div>
                 <button type="submit" class="btn btn-primary">{{ __('settings.Change_Setting') }}</button>
             </form>
+
         </div>
+        @if (auth()->user()->type == 'admin')
+            <div class="card">
+                <div class="card-header text-lg font-bold">
+                    {{ __('settings.Discounts') }}
+                </div>
+                <div class="card-body">
+                    @include('layouts.partials.discountEdit')
+                </div>
+            </div>
+        @endif
     </div>
 @endsection

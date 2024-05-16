@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Discount;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
@@ -47,6 +48,12 @@ class OrdersSeeder extends Seeder
                     'quantity' => $qty,
                 ]);
             }
+        }
+        // Add random discounts to existing orders
+        $orders = \App\Models\Order::all();
+        foreach ($orders as $order) {
+            $discountIds = Discount::inRandomOrder()->limit(rand(0, 3))->pluck('id')->toArray();
+            $order->discounts()->sync($discountIds);
         }
     }
     // {"name":"971 Gajjar Halwa Full","price":1500,"category":"Dessert","make":"Pakistani"}

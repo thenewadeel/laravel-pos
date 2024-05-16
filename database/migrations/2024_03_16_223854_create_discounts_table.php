@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('percentage', 5, 2)->unsigned()->min(0)->max(100);
             $table->decimal('amount', 10, 2)->unsigned()->min(0);
             $table->enum('method', ['NATURAL', 'REVERSE'])->default('NATURAL');
+            $table->enum('type', ['DISCOUNT', 'CHARGES'])->default('DISCOUNT');
             $table->timestamps();
         });
     }

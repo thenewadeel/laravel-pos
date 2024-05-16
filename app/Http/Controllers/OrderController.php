@@ -161,7 +161,7 @@ class OrderController extends Controller
     {
         $order = $order->load(['items.product', 'payments', 'customer', 'shop']);
         $users = User::all();
-        $discounts = Discount::all();
+        $discounts = Discount::orderBy('type')->get();
         $shops = Shop::all();
         $customers = Customer::all();
         $products = Product::all();

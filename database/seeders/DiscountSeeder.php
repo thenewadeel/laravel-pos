@@ -23,22 +23,60 @@ class DiscountSeeder extends Seeder
             Discount::create([
                 'name' => $randomName,
                 'percentage' => $randomPercentage,
-                'amount' => rand(0, 1500),
+                'amount' => 0,
+
             ]);
         }
+        // 'method', ['NATURAL', 'REVERSE'])->default('NATURAL');
+        // $table->enum('type', ['DISCOUNT', 'CHARGES']
+        Discount::create([
+            'name' => 'Sales.Tax',
+            'percentage' => 17.5,
+            'amount' => 0,
+            'method' => 'NATURAL',
+            'type' => 'CHARGES',
+        ]);
+        Discount::create([
+            'name' => 'Service Charges',
+            'percentage' => 1,
+            'amount' => 500,
+            'method' => 'REVERSE',
+            'type' => 'CHARGES',
+        ]);
+        Discount::create([
+            'name' => 'Fazool Charges',
+            'percentage' => 13.5,
+            'amount' => 500,
+            'method' => 'NATURAL',
+            'type' => 'CHARGES',
+        ]);
+        Discount::create([
+            'name' => 'Nirala Discount',
+            'percentage' => 30,
+            'amount' => 300,
+            'method' => 'NATURAL',
+            'type' => 'DISCOUNT',
+        ]);
+        Discount::create([
+            'name' => 'Nirala Reverse',
+            'percentage' => 30,
+            'amount' => 300,
+            'method' => 'REVERSE',
+            'type' => 'DISCOUNT',
+        ]);
 
         // Seed the pivot table
-        for ($i = 0; $i < 20; $i++) {
-            $discount = Discount::inRandomOrder()->first();
-            $product = \App\Models\Product::inRandomOrder()->first();
-            $discount->products()->attach($product->id);
-        }
+        // for ($i = 0; $i < 20; $i++) {
+        //     $discount = Discount::inRandomOrder()->first();
+        //     $product = \App\Models\Product::inRandomOrder()->first();
+        //     $discount->products()->attach($product->id);
+        // }
 
-        // Add random discounts to existing orders
-        $orders = \App\Models\Order::all();
-        foreach ($orders as $order) {
-            $discountIds = Discount::inRandomOrder()->limit(rand(0, 3))->pluck('id')->toArray();
-            $order->discounts()->sync($discountIds);
-        }
+        // // Add random discounts to existing orders
+        // $orders = \App\Models\Order::all();
+        // foreach ($orders as $order) {
+        //     $discountIds = Discount::inRandomOrder()->limit(rand(0, 3))->pluck('id')->toArray();
+        //     $order->discounts()->sync($discountIds);
+        // }
     }
 }

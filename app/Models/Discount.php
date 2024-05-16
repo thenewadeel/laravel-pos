@@ -19,7 +19,32 @@ class Discount extends Model
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'discount_order')
-            ->withTimestamps()
-            ->withPivot('name');
+            ->withTimestamps();
+        // ->withPivot('name');
+    }
+    public function apply($value)
+    {
+        // $table->string('name');
+        // $table->decimal('percentage', 5, 2)->unsigned()->min(0)->max(100);
+        // $table->decimal('amount', 10, 2)->unsigned()->min(0);
+        // $table->enum('method', ['NATURAL', 'REVERSE'])->default('NATURAL');
+        // $table->enum('type', ['DISCOUNT', 'CHARGES'])->
+        $increment = $this->amount;
+        if ($this->type == 'DISCOUNT') {
+            if ($this->method == 'NATURAL') {
+                $result = ($value - ($value * $this->percentage / 100)) - $increment;
+            } else {
+                $value = ($value - $increment);
+                $result = ($value - ($value  * $this->percentage / 100));
+            }
+        } else {
+            if ($this->method == 'NATURAL') {
+                $result = ($value + ($value * $this->percentage / 100)) + $increment;
+            } else {
+                $value = ($value + $increment);
+                $result = ($value + ($value * $this->percentage / 100));
+            }
+        }
+        return $result;
     }
 }

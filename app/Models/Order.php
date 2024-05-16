@@ -98,21 +98,23 @@ class Order extends Model
             return $i->price;
         })->sum();
     }
-    public function discountedTotal()
+    public function discountedTotal() //final amount after discounting 
     {
         $totalPrice = $this->total();
         foreach ($this->discounts as $discount) {
-            $totalPrice -= $totalPrice * ($discount->percentage / 100);
+            $totalPrice = $discount->apply($totalPrice);
+            // $totalPrice -= $totalPrice * ($discount->percentage / 100);
         }
         return $totalPrice;
+        // $totalPrice = $this->total();
+        // foreach ($this->discounts as $discount) {
+        //     $totalPrice -= $totalPrice * ($discount->percentage / 100);
+        // }
+        // return $totalPrice;
     }
-    public function discountAmount()
+    public function discountAmount() //total amount to be discounted
     {
-        $totalPrice = $this->total();
-        foreach ($this->discounts as $discount) {
-            $totalPrice -= $totalPrice * ($discount->percentage / 100);
-        }
-        return $this->total() - $totalPrice;
+        return $this->total() - $this->discountedTotal();
     }
     public function formattedDiscountedTotal()
     {

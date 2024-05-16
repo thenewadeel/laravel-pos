@@ -181,31 +181,54 @@
                 {{-- TODO : add summary of totals in footer row --}}
                 <thead>
                     <tr class="table-danger font-extrabold  text-right">
-                        <td colspan="9">
-                            G. Total
-                            Cash: {{ config('settings.currency_symbol') . number_format($totalCash, 2) }}
-                            <br />
-                            Chit: {{ config('settings.currency_symbol') . number_format($totalChit, 2) }}
-                            <br />
-                            Discount: {{ config('settings.currency_symbol') . number_format($totalDiscount, 2) }}
-                            <br />
-                            G. Total Amount:{{ config('settings.currency_symbol') . number_format($totalAmount, 2) }}
+                        <td colspan="7">
+                            G. Total Cash:</td>
+                        <td> {{ config('settings.currency_symbol') . number_format($totalCash, 2) }}
                         </td>
                     </tr>
+                    <tr class="table-danger font-extrabold  text-right">
+                        <td colspan="7">
+                            Chit: </td>
+                        <td> {{ config('settings.currency_symbol') . number_format($totalChit, 2) }}
+                        </td>
+                    </tr>
+                    <tr class="table-danger font-extrabold  text-right">
+                        <td colspan="7">
+                            Discount:</td>
+                        <td> {{ config('settings.currency_symbol') . number_format($totalDiscount, 2) }}
+                        </td>
+                    </tr>
+                    <tr class="table-danger font-extrabold  text-right">
+                        <td colspan="7">
+                            G. Total Amount:</td>
+                        <td> {{ config('settings.currency_symbol') . number_format($totalAmount, 2) }}
+                        </td>
+                    </tr>
+
                     <tr class="table-info font-extrabold  text-right">
-                        <td colspan="9">
-                            Total Closed Orders: {{ $orders->count() }}<br />
-                            {{-- Total Cashiers: {{ count($cashiers) }}<br /> --}}
-                            Total Open Orders: {{ $openOrders->count() }}<br />
-                            Total Open Amount:
+                        <td colspan="7">
+                            Total Closed Orders: </td>
+                        <td>{{ $orders->count() }}</td>
+                    </tr>
+                    <tr class="table-info font-extrabold  text-right">
+                        <td colspan="7">
+                            Total Open Orders:</td>
+                        <td> {{ $openOrders->count() }}</td>
+                    </tr>
+                    <tr class="table-info font-extrabold  text-right">
+                        {{-- Total Cashiers: {{ count($cashiers) }}<br /> --}}
+                        <td colspan="7">
+                            Total Open Amount:</td>
+                        <td>
                             {{ config('settings.currency_symbol') .
                                 number_format(
                                     $openOrders->map(function ($i) {
                                             return $i->total();
                                         })->sum(),
                                     2,
-                                ) }}<br />
+                                ) }}
                         </td>
+                        {{-- </td> --}}
                     </tr>
                 </thead>
                 <thead style="display:none">

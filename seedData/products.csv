@@ -1,0 +1,201 @@
+name,price,categoryName
+38 Plain Fries (Jalapeno Sauce),100,Chinese
+39 Hot and Sour Soup (Single Bowl),250,Chinese
+40 Hot and Sour Soup (Family Bowl),850,Chinese
+41 Thai Soup (Single Bowl),250,Chinese
+42 Thai Soup (Family Bowl),850,Chinese
+43 Tom Yom Soup  (Single Bowl),350,Chinese
+44 Tom Yom Soup  (Family Bowl),1300,Chinese
+45 Chicken Corn Soup (Single Bowl),250,Chinese
+46 Chicken Corn Soup (Family Bowl),850,Chinese
+47 Cream Mushroom Soup (Single Bowl),250,Chinese
+48 Cream Mushroom Soup (Family Bowl),850,Chinese
+49 Cream of Chicken Soup (Single Bowl),250,Chinese
+50 Cream of Chicken Soup (Family Bowl),850,Chinese
+51 Lebanese Mezze Platter,800,Salad
+52 Caesar Salad,600,Salad
+53 Russian Salad,750,Salad
+54 Pasta Salad,400,Salad
+55 Beans Salad,300,Salad
+56 Fresh Greens Salad,200,Salad
+57 Lentil Soup (Single Bowl),200,Chinese
+58 Lentil Soup (Family Bowl),750,Chinese
+59 Greek Salad,650,Salad
+60 Fattoush,350,Salad
+61 Lebanese Salad,650,Salad
+62 Falafel,800,Fast Food
+63 Beef Shawarma,690,Fast Food
+64 Shish Tawook Shawarma,690,Fast Food
+65 Hummus Mah Lahme,1050,Fast Food
+66 Shawarma Plate,1150,Fast Food
+67 Falafel Plate,1250,Fast Food
+68 Kung Pow Chicken (Half),1150,Chinese
+69 Kung Pow Chicken (Full),2100,Chinese
+70 Chicken with Cashew Nuts (Half),1075,Chinese
+71 Chicken with Cashew Nuts (Full),1950,Chinese
+72 Chicken with Almond (Half),1100,Chinese
+73 Chicken with Almond (Full),2000,Chinese
+74 Chicken with Pineapple (Half),1000,Chinese
+75 Chicken with Pineapple (Full),1900,Chinese
+76 Mongolian Chicken (Half),900,Chinese
+77 Mongolian Chicken (Full),1700,Chinese
+78 Black Pepper Chicken (Half),1100,Chinese
+79 Black Pepper Chicken (Full),2100,Chinese
+80 Chicken Manchurian (Half),1000,Chinese
+81 Chicken Manchurian (Full),1900,Chinese
+82 Chicken Chilli Dry (Half),925,Chinese
+83 Chicken Chilli Dry (Full),1650,Chinese
+84 Chicken Chowmein,950,Chinese
+85 Beef Chowmein,990,Chinese
+86 Vegetable Chowmein,600,Chinese
+87 Lasagna,1250,Chinese
+88 Chicken Alfredo Pasta,1250,Chinese
+89 Baked Rigatoni Creamy Pasta,1300,Chinese
+90 Fish Fillet,1100,Chinese
+91 Grilled Fish with Saffron Sauce,1450,Chinese
+92 Fish and Chips,1290,Chinese
+93 Chicken Ala Kiev,980,Chinese
+94 Chicken Tikka Pizza (Medium),1490,Pizza
+95 Chicken Tikka Pizza (Large),2090,Pizza
+96 Chicken Fajita Pizza (Medium),1490,Pizza
+97 Chicken Fajita Pizza (Large),2090,Pizza
+98 Crown Crust Pizza (Medium),1600,Pizza
+99 Crown Crust Pizza (Large),2200,Pizza
+100 Pepper Corn Steak,1490,Steak
+101 Mushroom Steak,1490,Steak
+102 Mexican Steak,1890,Steak
+103 Twin Steak,1590,Steak
+104 French Onion Steak,1650,Steak
+105 Jalapeno Beef Burger,750,Fast Food
+106 Grilled Beef Burger,750,Fast Food
+107 Stuffed Chicken Burger,650,Fast Food
+108 Zinger Burger,650,Fast Food
+109 Chicken Crunch Burger,500,Fast Food
+110 Double Decker Club Sandwich,650,Fast Food
+111 Grilled Chicken Sandwich,880,Fast Food
+112 Make it a Meal (French Fries & Soft Drink),250,Fast Food
+113 BeefChili Dry (Half),1050,Chinese
+114 BeefChili Dry (Full),1900,Chinese
+115 Mangolian Beef(Half),1100,Chinese
+116 Mangolian Beef (Full),2000,Chinese
+117 Stir Fry Beef Chilli (Half),1150,Chinese
+118 Stir Fry Beef Chilli (Full),2200,Chinese
+119 Chlli Oyster Beef (Half),1300,Chinese
+120 Chlli Oyster Beef (Full),2450,Chinese
+121 Hot & Spicy Braised Beef (Half),1150,Chinese
+122 Hot & Spicy Braised Beef (Full),2250,Chinese
+123 Egg Fried Rice,850,Rice
+124 Chicken Fried Rice,1100,Rice
+125 Vegetable Rice,850,Rice
+126 Garlic Rice,750,Rice
+127 Seekh Kabab Karahi (Half),1100,Desi
+128 Seekh Kabab Karahi (Full),2000,Desi
+129 Chapli Kabab,450,Desi
+130 Mutton Afghani Pulao,2400,Rice
+131 Bannu Beef Pulao,1350,Rice
+132 Chicken Biryani,1100,Rice
+133 Peas Pulao,550,Rice
+134 Palak Paneer (Half),600,Desi
+135 Palak Paneer (Full),1100,Desi
+136 Daal Mash (Half),550,Desi
+137 Daal Mash (Full),1000,Desi
+138 Shahi Daal (Half),600,Desi
+139 Shahi Daal (Full),1090,Desi
+140 Mian Jee Kee Daal (Half),800,Desi
+141 Mian Jee Kee Daal (Full),1500,Desi
+142 Chicken Makhni Karahi (Half),1050,Desi
+143 Chicken Makhni Karahi (Full),1950,Desi
+144 Chicken Namkeen Karahi (Half),950,Desi
+145 Chicken Namkeen Karahi (Full),1700,Desi
+146 Green Chilli Chicken Karahi (Half),950,Desi
+147 Green Chilli Chicken Karahi (Full),1700,Desi
+148 Arabian Chicken Handi (Half),1150,Desi
+149 Arabian Chicken Handi (Full),2200,Desi
+150 Chicken White Handi (Half),1150,Desi
+151 Chicken White Handi (Full),2200,Desi
+152 Chicken Achari (Half),1000,Desi
+153 Chicken Achari (Full),1800,Desi
+154 Shenwari Mutton Karahi (Half),1650,Desi
+155 Shenwari Mutton Karahi (Full),31400,Desi
+156 Peshawri Namkeen Mutton Karahi (Half),1600,Desi
+157 Peshawri Namkeen Mutton Karahi (Full),3000,Desi
+158 Balochi Mutton Karahi (Half),1700,Desi
+159 Balochi Mutton Karahi (Full),3200,Desi
+160 Mutton Handi (Half),1750,Desi
+161 Mutton Handi (Full),3300,Desi
+162 Mutton Joint / Rosh,1000,Desi
+163 Chicken Malai Boti (Boneless),650,BBQ
+164 Chicken Tikka,500,BBQ
+165 Chicken Tikka Boti,500,BBQ
+166 Beef Behari Boti,580,BBQ
+167 Fish Tikka,740,BBQ
+168 Beef Gola Kabab,550,BBQ
+169 Mutton Chops,1000,BBQ
+170 Seekh Kabab,650,BBQ
+171 Reshmi Kabab,550,BBQ
+172 BBQ Platter (Half),2600,BBQ
+173 BBQ Platter (Full),7500,BBQ
+174 Shahi Platter (Half),5000,BBQ
+175 Shahi Platter (Full),14000,BBQ
+176 Spanish Flan,400,Dessert
+177 Mango Mousse,430,Dessert
+178 Molten Lava,600,Dessert
+179 Gajrela (Bowl),450,Dessert
+180 Mix Kheer,550,Dessert
+181 Gulab Jamun,300,Dessert
+182 Ras Malai,360,Dessert
+183 Sizzling Brownie with Ice Cream,400,Dessert
+184 Ice Cream (2 Scoops),270,Dessert
+185 Ice Cream (3 Scoops),400,Dessert
+186 Painapple Crunch,950,Dessert
+201 American Coffee,300,Coffee & Tea
+202 Expresso,250,Coffee & Tea
+203 Cappuccino,350,Coffee & Tea
+204 Mocca Chino,420,Coffee & Tea
+205 Cold Coffee,450,Dessert
+206 Cold Coffee With Ice Cream,480,Dessert
+207 Hot Chocolate,350,Coffee & Tea
+208 Latte Coffee,350,Coffee & Tea
+209 Green Tea & Lemon Or Mint,90,Coffee & Tea
+210 Doodh Patti,200,Coffee & Tea
+211 Sulemani Tea,90,Coffee & Tea
+212 Spiced Honey Wings (6 Piece),550,Fast Food
+213 French Fries,300,Fast Food
+214 Greek Feta Cheese Salad,500,Salad
+215 Chef Salad,700,Salad
+216 Caesar Salad,600,Salad
+217 Hawaiian Salad,700,Salad
+218 Chicken Panini Sandwich (2 Pcs),500,Fast Food
+219 Grilled Beef Panini Sandwich (2 Pcs),580,Fast Food
+220 Club Beef Burger,450,Fast Food
+221 Chicken Burger,400,Fast Food
+222 Barbeque Burger,500,Fast Food
+223 Philly Cheese Steak Sandwich,590,Fast Food
+224 Special Zinger Burger,650,Fast Food
+225 Bakers Street Club Sandwich,500,Fast Food
+226 Chicken Sandwich,400,Fast Food
+226 Grilled Cheese and Tomato Sandwich,480,Fast Food
+227 Chicken Parmesan,750,Italian
+228 Pane Bolognese,700,Italian
+229 Alfredo Pasta,700,Italian
+230 Fish and Chips,1290,Italian
+231 Lasagna,1290,Italian
+232 Pizza au Tandoori (Medium),1490,Italian
+233 Pizza au Tandoori (Large),2090,Italian
+234 Chicken Patties,100,Confectionery
+235 Chocolate Brownie,100,Confectionery
+236 Walnut Brownie,100,Confectionery
+237 Date & Almond,120,Confectionery
+238 Basbousa,80,Confectionery
+239 Mini Pizza,120,Confectionery
+240 Lemon Tart,100,Confectionery
+241 Walnut Tart,180,Confectionery
+242 Chocolate Eclairs,170,Confectionery
+243 Doughnut,190,Confectionery
+244 Cup Cake,90,Confectionery
+245 Banana Bread,80,Confectionery
+246 Lemon Cake,60,Confectionery
+247 Cream Roll,120,Confectionery
+248 Cinnamon Roll,200,Confectionery
+249 Raisin Bread,130,Confectionery
+250 Assorted Milkshake,400,Confectionery

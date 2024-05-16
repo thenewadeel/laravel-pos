@@ -38,10 +38,48 @@
             </td>
             <td>
                 <a href="{{ route('categories.edit', $category) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                <a class="btn btn-danger btn-delete" href="{{ route('categories.destroy', $category) }}"><i
-                        class="fas fa-trash"></i></a>
+                <button class="btn btn-danger btn-delete" data-url="{{ route('categories.destroy', $category) }}"><i
+                        class="fas fa-trash"></i></button>
             </td>
         </tr>
     @endforeach
 
+@endsection
+@section('js')
+    <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script type="module">
+        $(document).ready(function() {
+            $(document).on('click', '.btn-delete', function() {
+                var $this = $(this);
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: '{{ __('common.sure') }}',
+                    text: '{{ __('common.really_delete') }}',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '{{ __('common.yes_delete') }}',
+                    cancelButtonText: '{{ __('common.No') }}',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        $.post($this.data('url'), {
+                            _method: 'DELETE',
+                            _token: '{{ csrf_token() }}'
+                        }, function(res) {
+                            $this.closest('tr').fadeOut(500, function() {
+                                $(this).remove();
+                            })
+                        })
+                    }
+                })
+            })
+        })
+    </script>
 @endsection

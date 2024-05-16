@@ -93,12 +93,12 @@
                 })
 
                 swalWithBootstrapButtons.fire({
-                    title: {{ __('product.sure') }},
-                    text: {{ __('product.really_delete') }},
-                    icon: {{ __('product.Create_Product') }} 'warning',
+                    title: '{{ __('common.sure') }}',
+                    text: '{{ __('common.really_delete') }}',
+                    icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: {{ __('product.yes_delete') }},
-                    cancelButtonText: {{ __('product.No') }},
+                    confirmButtonText: '{{ __('common.yes_delete') }}',
+                    cancelButtonText: '{{ __('common.No') }}',
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {

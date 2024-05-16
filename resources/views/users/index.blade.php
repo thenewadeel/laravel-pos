@@ -34,8 +34,13 @@
                                     style="width: 64px !important; height: 64px !important;"></td>
                             <td>{{ $user->first_name }}/ {{ $user->last_name }}</td>
                             <td>
-                                <span
-                                    class="right badge badge-{{ $user->type ? 'success' : 'danger' }}">{{ $user->type }}</span>
+                                @if ($user->type == 'admin')
+                                    <span class="right badge badge-success">{{ $user->type }}</span>
+                                @elseif ($user->type == 'cashier')
+                                    <span class="right badge badge-danger">{{ $user->type }}</span>
+                                @else
+                                    <span class="right badge badge-warning">{{ $user->type }}</span>
+                                @endif
                             </td>
                             <td>{{ $user->email }}</td>
                             <td>
@@ -78,12 +83,12 @@
                 })
 
                 swalWithBootstrapButtons.fire({
-                    title: {{ __('user.sure') }},
-                    text: {{ __('user.really_delete') }},
-                    icon: {{ __('user.Create_User') }} 'warning',
+                    title: '{{ __('common.sure') }}',
+                    text: '{{ __('common.really_delete') }}',
+                    icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: {{ __('user.yes_delete') }},
-                    cancelButtonText: {{ __('user.No') }},
+                    confirmButtonText: '{{ __('common.yes_delete') }}',
+                    cancelButtonText: '{{ __('common.No') }}',
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {

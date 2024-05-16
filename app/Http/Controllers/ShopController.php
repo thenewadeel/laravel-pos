@@ -281,9 +281,12 @@ class ShopController extends Controller
         }
         $shop->delete();
 
-        return response()->json([
-            'success' => true
-        ]);
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true
+            ]);
+        }
+        return back()->with('message', "Shop deleted");
     }
 
 

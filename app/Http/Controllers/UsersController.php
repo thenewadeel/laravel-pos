@@ -170,7 +170,27 @@ class UsersController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        if (auth()->id() == $user->id) {
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => false
+                ]);
+            }
+            return back()->with('message', "User cat delete self");
+        } else {
+
+            if ($user->image) {
+                Storage::delete($user->image);
+            }
+            $user->delete();
+
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => true
+                ]);
+            }
+            return back()->with('message', "User deleted");
+        }
     }
     public function export()
     {

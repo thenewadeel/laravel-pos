@@ -54,4 +54,8 @@ return [
     'End_Date' => 'End Date',
     'All'       =>  'All',
     'Reset'     =>  'Reset',
+    'sure'      =>  'Are you sure?',
+    'really_delete'     =>  'Do you really want to delete this?',
+    'yes_delete'        =>  'Yes, delete it!',
+    'No'         =>  'No, cancel!',
 ];

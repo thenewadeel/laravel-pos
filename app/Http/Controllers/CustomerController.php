@@ -136,8 +136,11 @@ class CustomerController extends Controller
 
         $customer->delete();
 
-        return response()->json([
-            'success' => true
-        ]);
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true
+            ]);
+        }
+        return back()->with('message', "Customer deleted");
     }
 }

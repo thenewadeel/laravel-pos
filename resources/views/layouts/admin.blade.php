@@ -10,7 +10,7 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="{{ asset('css/ionicons.min.css') }}">
     <!-- overlayScrollbars -->
-    <!-- <link rel="stylesheet" href="{{ asset('css/app.css') }}"> -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <!-- Google Font: Source Sans Pro -->
     <!--  <link href={{ asset('fonts/fonts.css') }} rel='stylesheet'>  -->
     {{-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> --}}

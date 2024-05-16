@@ -43,8 +43,8 @@
                             <td>
                                 <a href="{{ route('shops.edit', $shop) }}" class="btn btn-primary"><i
                                         class="fas fa-edit"></i></a>
-                                <a class="btn btn-danger btn-delete" href="{{ route('shops.destroy', $shop) }}"><i
-                                        class="fas fa-trash"></i></a>
+                                <button class="btn btn-danger btn-delete" data-url="{{ route('shops.destroy', $shop) }}"><i
+                                        class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -70,12 +70,12 @@
                 })
 
                 swalWithBootstrapButtons.fire({
-                    title: {{ __('shop.sure') }},
-                    text: {{ __('shop.really_delete') }},
-                    icon: {{ __('shop.Create_Shop') }} 'warning',
+                    title: '{{ __('common.sure') }}',
+                    text: '{{ __('common.really_delete') }}',
+                    icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: {{ __('shop.yes_delete') }},
-                    cancelButtonText: {{ __('shop.No') }},
+                    confirmButtonText: '{{ __('common.yes_delete') }}',
+                    cancelButtonText: '{{ __('common.No') }}',
                     reverseButtons: true
                 }).then((result) => {
                     if (result.value) {

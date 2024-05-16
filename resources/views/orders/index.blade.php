@@ -80,30 +80,30 @@
             </div>
             {{-- </div> --}}
             {{-- {{ $orders[0] }} --}}
-            <table class="table table-responsive table-bordered table-sm">
+            <table class="table table-responsive table-bordered table-striped table-sm">
                 <thead>
                     <tr>
                         {{-- <th>{{ __('order.ID') }}</th> --}}
-                        <th class="col-1">{{ __('order.POS_Number') }}</th>
+                        <th class="col-1 align-middle">{{ __('order.POS_Number') }}</th>
                         {{-- <th>{{ __('order.Date') }}</th> --}}
-                        <th class="col-2">{{ __('order.Customer_Name') }}</th>
-                        <th class="col-1">{{ __('order.Type') }}</th>
-                        <th class="col-1">{{ __('order.Table_Number') }}</th>
-                        <th class="col-1">{{ __('order.Waiter_Name') }}</th>
+                        <th class="col-2 text-center align-middle">{{ __('order.Customer_Name') }}</th>
+                        <th class="col-1 text-center align-middle">{{ __('order.Type') }}</th>
+                        <th class="col-1 text-center align-middle">{{ __('order.Table_Number') }}</th>
+                        <th class="col-1 text-center align-middle">{{ __('order.Waiter_Name') }}</th>
                         {{-- <th>{{ __('order.Shop_Name')   }}</th> --}}
                         {{-- <th>{{ __('order.Total') }}</th> --}}
                         {{-- <th>{{ __('order.Discounts') }}</th> --}}
                         {{-- <th>{{ __('order.Discount') }}</th> --}}
-                        <th>{{ __('order.NetAmount') }}</th>
-                        <th>{{ __('order.Received_Amount') }}</th>
-                        <th>{{ __('order.Chit') }}</th>
+                        <th class="text-center align-middle">{{ __('order.NetAmount') }}</th>
+                        <th class="text-center align-middle">{{ __('order.Received_Amount') }}</th>
+                        <th class="text-center align-middle">{{ __('order.Chit') }}</th>
 
 
                         {{-- <th>{{ 'Shop' }}</th> --}}
-                        <th class="col-1">{{ __('order.Taken_By') }}</th>
-                        <th class="col-1">{{ __('order.Closed_By') }}</th>
-                        <th class="col-1">{{ __('order.Status') }}</th>
-                        <th class="col-1">{{ __('order.Actions') }}</th>
+                        <th class="col-1 text-center align-middle">{{ __('order.Taken_By') }}</th>
+                        <th class="col-1 text-center align-middle">{{ __('order.Closed_By') }}</th>
+                        <th class="col-1 text-center align-middle">{{ __('order.Status') }}</th>
+                        <th class="col-1 text-center align-middle">{{ __('order.Actions') }}</th>
                     </tr>
 
 
@@ -112,12 +112,12 @@
                     @foreach ($orders as $order)
                         <tr>
                             {{-- <td>{{ $order->id }}</td> --}}
-                            <td title="{{ $order }}" class="px-1 m-0">{{ $order->POS_number }}</td>
+                            <td title="{{ $order }}" class="px-1 m-0 align-middle">{{ $order->POS_number }}</td>
                             {{-- <td>{{ $order->created_at->format('d-M-y') }}</td> --}}
-                            <td>{{ $order->getCustomerName() }}</td>
-                            <td>{{ $order->type }}</td>
-                            <td>{{ $order->table_number }}</td>
-                            <td>{{ $order->waiter_name }}</td>
+                            <td class=" align-middle">{{ $order->getCustomerName() }}</td>
+                            <td class="text-center align-middle">{{ $order->type }}</td>
+                            <td class="text-center align-middle">{{ $order->table_number }}</td>
+                            <td class=" align-middle">{{ $order->waiter_name }}</td>
                             {{-- <td>{{ $order->shop->name }}</td> --}}
                             {{-- <td>{{ config('settings.currency_symbol') }} {{ $order->formattedTotal() }}</td> --}}
                             {{-- <td>
@@ -133,20 +133,20 @@
 
                                 {{ config('settings.currency_symbol') }} {{ number_format($order->discountAmount(), 2) }}
                             </td> --}}
-                            <td class="text-right">
+                            <td class="text-right align-middle">
 
                                 {{ config('settings.currency_symbol') }} {{ number_format($order->discountedTotal(), 0) }}
                             </td>
-                            <td class="text-right">{{ config('settings.currency_symbol') }}
+                            <td class="text-right align-middle">{{ config('settings.currency_symbol') }}
                                 {{ number_format($order->receivedAmount(), 0) }}</td>
 
-                            <td class="text-right">{{ config('settings.currency_symbol') }}
+                            <td class="text-right align-middle">{{ config('settings.currency_symbol') }}
                                 {{ number_format($order->balance(), 0) }}
                             </td>
 
-                            <td>{{ $order->getUserName() }}</td>
+                            <td class=" align-middle">{{ $order->getUserName() }}</td>
                             @php($users = $order->payments->pluck('user')->flatten()->unique('id'))
-                            <td>
+                            <td class=" align-middle">
                                 @if ($users->isNotEmpty())
                                     @foreach ($users as $user)
                                         {{ $user->getFullName() }}@if (!$loop->last)
@@ -157,7 +157,7 @@
                                     Unknown
                                 @endif
                             </td>
-                            <td style="vertical-align: middle; text-align: center;" class="px-0">
+                            <td style="vertical-align: middle; text-align: center;" class="px-0  align-middle">
                                 @if ($order->state == 'preparing')
                                     {{-- <span class="badge badge-success">{{ __('order.Preparing') }}</span> --}}
                                     <span class="badge badge-primary">Open </span>
@@ -185,15 +185,16 @@
                                     {{ $order->stateLabel() }}</span>
                                 @endif
                             </td>
-                            <td class="p-0 m-0 text-right">
+                            <td class="p-0 m-0 text-right  align-middle">
                                 <div class="btn-group">
                                     @if ($order->state != 'closed')
                                         <a href="{{ route('orders.edit', $order) }}"
-                                            class="btn btn-outline-primary btn-sm">
+                                            class="btn btn-outline-primary btn-sm py-0 my-0 px-2 align-middle">
                                             <i class="fas fa-edit text-xs "></i>
                                         </a>
                                     @endif
-                                    <a href="{{ route('orders.show', $order) }}" class="btn btn-info btn-sm">
+                                    <a href="{{ route('orders.show', $order) }}"
+                                        class="btn btn-info btn-sm py-0 my-0 px-2 align-middle">
                                         <i class="fas fa-eye text-xs"></i>
                                     </a>
                                 </div>
@@ -204,7 +205,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="5" class="text-right">Totals : </th>
+                        <th colspan="5" class="text-right align-middle">Totals : </th>
                         {{-- <th></th>
                         <th></th>
                         <th></th>
@@ -215,11 +216,11 @@
                         {{-- <th></th> --}}
                         {{-- <th style="text-align:center;">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalDiscountAmount) }}</th> --}}
-                        <th class="text-right">{{ config('settings.currency_symbol') }}
+                        <th class="text-right align-middle">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalNetAmount) }}</th>
-                        <th class="text-right">{{ config('settings.currency_symbol') }}
+                        <th class="text-right align-middle">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalReceivedAmount) }}</th>
-                        <th class="text-right pr-1">{{ config('settings.currency_symbol') }}
+                        <th class="text-right align-middle pr-1">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalChitAmount) }}</th>
                         {{-- <th></th> --}}
                     </tr>

@@ -128,7 +128,18 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        if ($category->photo) {
+            Storage::delete($category->photo);
+        }
+
+        $category->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true
+            ]);
+        }
+        return back()->with('message', "Category deleted");
     }
     public function catprodstore(Request $request)
     {

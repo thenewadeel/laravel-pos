@@ -9,7 +9,9 @@
             Filters
         </div>
         <div class="card-body">
-
+            {{-- {{ $orders }}
+            <hr />
+            {{ $openOrders }} --}}
             <form class="mb-4" action="{{ route('reports.dailySale') }}" method="GET">
                 <div class="col items-end px-4">
                     @include('layouts.partials.dateRangeFormGroup', [
@@ -198,7 +200,7 @@
                             Total Open Amount:
                             {{ config('settings.currency_symbol') .
                                 number_format(
-                                    $openOrders->get()->map(function ($i) {
+                                    $openOrders->map(function ($i) {
                                             return $i->total();
                                         })->sum(),
                                     2,

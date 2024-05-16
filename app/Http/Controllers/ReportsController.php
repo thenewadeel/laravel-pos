@@ -33,17 +33,17 @@ class ReportsController extends Controller
         $shops = Shop::all();
 
         $filters = [
-            'shop_id' => $request->input('shop_id'),
+            // 'shop_id' => $request->input('shop_id'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
         ];
 
-        $orders = Order::query()->where('state', 'closed');
+        $orders = Order::query();
 
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $orders->whereBetween('created_at', [$filters['start_date'], $filters['end_date']]);
+        if ($request->has('start_date')) {
+            $orders->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
         } else {
-            // $orders->whereDate('created_at', now());
+            $orders->whereDate('created_at', now());
         }
         // if ($request->has('shop_id')) {
         //     $orders->where('shop_id', $filters['shop_id']);
@@ -63,7 +63,8 @@ class ReportsController extends Controller
             ->with(['payments.user']);
         $openOrders = clone $orders;
         $openOrders->where('state', '!=', 'closed');
-        $orders = $orders->get();
+        $openOrders = $openOrders->get();
+        $orders = $orders->where('state', 'closed')->get();
         return view('reports.dailySale', compact('shops', 'orders', 'openOrders'));
     }
 

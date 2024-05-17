@@ -168,7 +168,7 @@
                                     {{-- <span class="badge badge-dark">{{ __('order.Wastage') }}</span> --}}
                                     <span class="badge badge-primary">Open </span>
                                 @elseif($order->state == 'closed')
-                                    <span class="badge badge-danger">{{ __('order.Closed') }}</span>
+                                    {{-- <span class="badge badge-danger">{{ __('order.Closed') }}</span> --}}
 
 
 

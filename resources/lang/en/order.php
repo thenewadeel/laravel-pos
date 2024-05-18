@@ -17,6 +17,7 @@ return [
     // Orders module messages
     //==========================================
     'title'         => 'Orders',
+    'title_Short'         => 'Orders',
     'submit'        => 'Filter',
     'Orders_List'   => 'Orders List',
 
@@ -30,7 +31,7 @@ return [
     'Status'            => 'Status',
     'To_Pay'            => 'Chit',
     'Created_At'        => 'Created At',
-    'Not_Paid'          => 'Not Paid',
+    'Not_Paid'          => 'Chit',
     'Partial'           => 'Part-Chit',
     'Paid'              => 'Paid',
     'Change'            => 'Change',

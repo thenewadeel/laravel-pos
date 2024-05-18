@@ -159,6 +159,9 @@ class OrderController extends Controller
 
     public function edit(Order $order)
     {
+        if ($order->state == 'closed') {
+            return back()->with('message', 'Order is already closed');
+        }
         $order = $order->load(['items.product', 'payments', 'customer', 'shop']);
         $users = User::all();
         $discounts = Discount::orderBy('type')->get();
@@ -237,6 +240,9 @@ class OrderController extends Controller
 
     public function addItem(Request $request, Order $order)
     {
+        if ($order->state == 'closed') {
+            return back()->with('message', 'Order is already closed');
+        }
         // dd($request->all());
         $product = Product::find($request->item);
 
@@ -264,12 +270,15 @@ class OrderController extends Controller
     }
     public function destroy(Order $order)
     {
-        $order->delete();
         dd($order);
+        $order->delete();
         return redirect()->route('orders.index', $order)->with('success', 'order deleted successfully');
     }
     public function destroyItem(Order $order, OrderItem $item)
     {
+        if ($order->state == 'closed') {
+            return back()->with('message', 'Order is already closed');
+        }
         $item->delete();
 
         return redirect()->route('orders.edit', $order)->with('success', 'Product deleted from order successfully');
@@ -284,6 +293,9 @@ class OrderController extends Controller
 
     public function updateDiscounts(Order $order, Request $request)
     {
+        if ($order->state == 'closed') {
+            return back()->with('message', 'Order is already closed');
+        }
         $validatedData = $request->validate([
             'discountsToAdd' => 'nullable|array',
             'discountsToAdd.*' => 'nullable|exists:discounts,id',
@@ -340,8 +352,8 @@ class OrderController extends Controller
                 'quantity' => $item->pivot->quantity,
                 'product_id' => $item->id,
             ]);
-            $item->quantity = $item->quantity - $item->pivot->quantity;
-            $item->save();
+            // $item->quantity = $item->quantity - $item->pivot->quantity;
+            // $item->save();
         }
         $request->user()->cart()->detach();
         if ($request->amount) {

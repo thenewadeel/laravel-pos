@@ -17,6 +17,7 @@ return [
     // Cart module messages
     //==========================================
     'title' => 'Point Of Sale',
+    'title_Short' => 'PoS',
 
     //==========================================
     // Stock messages

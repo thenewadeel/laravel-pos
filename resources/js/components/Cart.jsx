@@ -368,7 +368,8 @@ class Cart extends Component {
                             href="/orders"
                             className="btn btn-secondary  float-right btn-sm"
                         >
-                            All Orders
+                            <i class="nav-icon fas fa-list"></i>
+                            Orders
                         </a>
                     </div>
                     <div className="col">

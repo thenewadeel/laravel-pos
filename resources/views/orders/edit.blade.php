@@ -9,10 +9,21 @@
 @endsection
 @section('content-actions')
     <div class="mb-2">
-        <a href="{{ route('orders.index') }}" class="btn btn-primary">{{ __('order.Index') }}</a>
+        {{-- <a href="{{ route('orders.index') }}" class="btn btn-primary">{{ __('order.Index') }}</a> --}}
         {{-- </div>
 <div class="mb-2"> --}}
-        <a href="{{ route('orders.show', $order) }}" class="btn btn-primary">{{ __('order.Show') }}</a>
+        <a href="{{ route('orders.show', $order) }}" class="btn btn-info btn-sm">
+            <i class="nav-icon fas fa-eye"></i>
+            {{ __('order.Show') }}
+        </a>
+        <a href="{{ route('orders.index') }}" class="btn btn-dark btn-sm">
+            <i class="nav-icon fas fa-list"></i>
+            {{ __('order.title_Short') }}
+        </a>
+        <a href="{{ route('cart.index') }}" class="btn btn-dark btn-sm">
+            <i class="nav-icon fas fa-shopping-cart"></i>
+            {{ __('cart.title_Short') }}
+        </a>
     </div>
 @endsection
 

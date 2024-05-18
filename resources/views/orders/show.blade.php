@@ -9,15 +9,27 @@
 @section('content-actions')
     {{-- {{ $order }} --}}
     <div class="mb-2">
-        <a href="{{ route('orders.index') }}" class="btn btn-primary">{{ __('order.Index') }}</a>
+
+        {{-- <a href="{{ route('orders.index') }}" class="btn btn-primary">{{ __('order.Index') }}</a> --}}
         @if ($order->state !== 'closed')
-            <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary">{{ __('order.Edit') }}</a>
+            <a href="{{ route('orders.edit', $order) }}" class="btn btn-info btn-sm">
+                <i class="nav-icon fas fa-edit"></i>
+                {{ __('order.Edit') }}
+            </a>
         @endif
         {{-- <a href="{{ route('orders.print', $order) }}" class="btn btn-primary ">
             {{ __('order.Print') }} <i class="fas fa-print"></i></a> --}}
         {{-- <a href="{{ route('orders.print.preview', $order) }}" class="btn btn-primary ">
             {{ __('order.Print_Preview') }} <i class="fas fa-print"></i></a> --}}
         @include('layouts.partials.orderPrintBtns', ['order' => $order])
+        <a href="{{ route('orders.index') }}" class="btn btn-dark btn-sm">
+            <i class="nav-icon fas fa-list"></i>
+            {{ __('order.title_Short') }}
+        </a>
+        <a href="{{ route('cart.index') }}" class="btn btn-dark btn-sm">
+            <i class="nav-icon fas fa-shopping-cart"></i>
+            {{ __('cart.title_Short') }}
+        </a>
     </div>
 @endsection
 

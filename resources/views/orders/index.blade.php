@@ -4,17 +4,25 @@
 @section('content-header', __('order.Orders_List'))
 @section('content-actions')
     @if (auth()->user()->type == 'admin')
-        <a href="{{ route('orders.index', ['all' => true]) }}" class="btn btn-info">
+        <a href="{{ route('orders.index', ['all' => true]) }}" class="btn btn-info btn-sm">
             <i class="fas fa-filter mr-1"></i>{{ __('common.All') }}
         </a>
     @endif
-    <a href="{{ route('orders.index', ['unpaid' => true]) }}" class="btn btn-info">
-        <i class="fas fa-filter mr-1"></i>{{ __('order.Unpaid') }}
+    <a href="{{ route('orders.index', ['unpaid' => true]) }}" class="btn btn-info btn-sm">
+        <i class="fas fa-filter mr-1"></i>
+        {{ __('order.Unpaid') }}
     </a>
     {{-- <a href="{{ route('orders.index', ['chit' => true]) }}" class="btn btn-warning">{{ __('order.Chit_Orders') }}</a>
     <a href="{{ route('orders.index', ['discounted' => true]) }}"
         class="btn btn-secondary">{{ __('order.Discounted_Orders') }}</a> --}}
-    <a href="{{ route('cart.index') }}" class="btn btn-primary">{{ __('cart.title') }}</a>
+    {{-- <a href="{{ route('orders.index') }}" class="btn btn-dark btn-sm">
+        <i class="nav-icon fas fa-list"></i>
+        {{ __('order.title_Short') }}
+    </a> --}}
+    <a href="{{ route('cart.index') }}" class="btn btn-dark btn-sm">
+        <i class="nav-icon fas fa-shopping-cart"></i>
+        {{ __('cart.title_Short') }}
+    </a>
 @endsection
 
 @section('content')
@@ -112,7 +120,11 @@
                     @foreach ($orders as $order)
                         <tr>
                             {{-- <td>{{ $order->id }}</td> --}}
-                            <td title="{{ $order }}" class="px-1 m-0 align-middle">{{ $order->POS_number }}</td>
+                            <td title="{{ $order }}" class="px-1 m-0 align-middle">
+                                <a href="{{ route('orders.show', $order) }}">
+                                    {{ $order->POS_number }}
+                                </a>
+                            </td>
                             {{-- <td>{{ $order->created_at->format('d-M-y') }}</td> --}}
                             <td class=" align-middle">{{ $order->getCustomerName() }}</td>
                             <td class="text-center align-middle">{{ $order->type }}</td>

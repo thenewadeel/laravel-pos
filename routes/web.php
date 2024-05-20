@@ -12,12 +12,9 @@ use App\Http\Controllers\{
     UsersController,
     CategoryController,
     DiscountController,
-    ExpenseController,
-    InventoryItemController,
-    InventoryController
+    ExpenseController
 };
 use App\Models\Category;
-use App\Models\InventoryItem;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,7 +33,6 @@ Route::middleware('auth')->group(function () {
         'reports'     => ReportsController::class,
         'categories'  => CategoryController::class,
         'expenses'    => ExpenseController::class,
-        'inventoryItems' => InventoryItemController::class,
         'discounts' => DiscountController::class
     ]);
 
@@ -47,7 +43,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/listOfShops', [ShopController::class, 'listOf']);
     Route::get('/listOfReports', [ReportsController::class, 'listOf']);
     Route::get('/listOfCategories', [CategoryController::class, 'listOf']);
-    Route::get('/listOfinventoryItems', [InventoryItemController::class, 'listOf']);
     Route::get('/listOfDiscounts', [DiscountController::class, 'listOf']);
 
     Route::post('/orders/{order}/addPayment', [OrderController::class, 'addPayment'])->name('orders.payments.store');
@@ -67,15 +62,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/printPOSQT/{order}', [OrderController::class, 'printToPOSQT'])->name('orders.print.QT');
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 
-    Route::namespace('Stockboy')->prefix('inventory')->group(function () {
-        Route::get('/', [InventoryController::class, 'index'])
-            ->name('inventory.index');
-        Route::get('/evaluation', [InventoryController::class, 'evaluation'])->name('inventory.evaluation');
-        Route::get('/issue', [InventoryController::class, 'issue'])->name('inventory.issue');
-        Route::get('/deposit', [InventoryController::class, 'deposit'])->name('inventory.deposit');
-        Route::get('/stockTaking', [InventoryController::class, 'stockTaking'])->name('inventory.stockTaking');
-        Route::post('/import', [InventoryController::class, 'import'])->name('inventory.import');
-    });
 
     Route::namespace('Accountant')->group(function () {
         Route::get('/dailySale', [ReportsController::class, 'dailySale'])->name('reports.dailySale');

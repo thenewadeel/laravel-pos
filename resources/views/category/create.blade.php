@@ -63,4 +63,22 @@
             </span>
         @enderror
     </div>
+    <div class="form-group">
+        <label for="type">{{ __('category.type') }}</label>
+        {{-- <input type="text" name="type" class="form-control @error('type') is-invalid @enderror" id="type"
+            placeholder="{{ __('product.Type') }}" value="{{ old('type', 'default') }}"> --}}
+
+
+        <select name="type" class="form-control @error('type') is-invalid @enderror" id="type">
+            <option value="product" @if (old('type', 'product') == 'product') selected @endif>{{ __('product.Product') }}</option>
+            <option value="customer" @if (old('type', 'product') == 'customer') selected @endif>{{ __('product.Customer') }}
+            </option>
+            <option value="staff" @if (old('type', 'product') == 'staff') selected @endif>{{ __('product.Staff') }}</option>
+        </select>
+        @error('type')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+    </div>
 @endsection

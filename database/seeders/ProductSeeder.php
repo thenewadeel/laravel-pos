@@ -7,7 +7,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Category;
+// use App\Models\Category;
+use AliBayat\LaravelCategorizable\Category;
 use Illuminate\Support\Facades\DB;
 use App\Models\Shop;
 
@@ -77,15 +78,23 @@ class ProductSeeder extends Seeder
             foreach ($products as $product) {
                 $data = array_combine($header, $product);
                 $categoryName = $data['categoryName'];
-                $category = Category::firstOrCreate(['name' => $categoryName]);
+                $category = Category::firstOrCreate(
+                    [
+                        'name' => $categoryName,
+                        'type' => 'product'
+                    ]
+                );
                 $product = Product::updateOrCreate([
                     'name' => $data['name'],
                     'price' => $data['price'],
                 ]);
-                DB::table('category_products')->insert([
-                    'category_id' => $category->id,
-                    'product_id' => $product->id,
-                ]);
+                // DB::table('category_products')->insert([
+                //     'category_id' => $category->id,
+                //     'product_id' => $product->id,
+                // ]);
+
+                $product->attachCategory($category);
+                // $product->categories()->attach($category);
             }
         }
     }

@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use AliBayat\LaravelCategorizable\Categorizable;
 
 class Product extends Model
 {
+    use Categorizable;
     protected $fillable = [
         'name',
         'description',
@@ -24,10 +26,10 @@ class Product extends Model
     }
 
 
-    public function categories()
-    {
-        return $this->hasManyThrough(Category::class, CategoryProducts::class, 'product_id', 'id', 'id', 'category_id');
-    }
+    // public function categories()
+    // {
+    //     return $this->hasManyThrough(Category::class, CategoryProducts::class, 'product_id', 'id', 'id', 'category_id');
+    // }
     public function discounts()
     {
         return $this->belongsToMany(Discount::class, 'discount_product')

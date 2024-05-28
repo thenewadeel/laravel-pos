@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Category;
+// use App\Models\Category;
+use AliBayat\LaravelCategorizable\Category;
 
 class CategorySeeder extends Seeder
 {
@@ -49,9 +50,10 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         foreach ($this->categories as $categoryName) {
-            \App\Models\Category::factory()->create([
-                'name' => $categoryName
-            ]);
+            Category::firstOrCreate(['name' => $categoryName]);
+            // \App\Models\Category::factory()->create([
+            //     'name' => $categoryName
+            // ]);
         }
     }
 }

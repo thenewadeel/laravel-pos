@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ShopOrdersExport;
 use App\Exports\UsersExport;
-use App\Models\Category;
+// use App\Models\Category;
+use AliBayat\LaravelCategorizable\Category;
 use App\Models\Order;
 use App\Traits\ListOf;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
@@ -192,7 +193,7 @@ class ShopController extends Controller
 
     public function edit(Shop $shop, Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::where('type', 'product')->get();
 
         return view('shops.edit', compact('shop',  'categories'));
     }

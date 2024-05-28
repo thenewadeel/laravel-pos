@@ -14,7 +14,8 @@ use App\Http\Controllers\{
     DiscountController,
     ExpenseController
 };
-use App\Models\Category;
+// use App\Models\Category;
+use AliBayat\LaravelCategorizable\Category;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 

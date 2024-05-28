@@ -14,7 +14,8 @@ use App\Models\Payment;
 use App\Models\Discount;
 use App\Models\OrderItem;
 use App\Models\Product;
-use App\Models\Category;
+// use App\Models\Category;
+use AliBayat\LaravelCategorizable\Category;
 
 use Illuminate\Log\Logger;
 use App\Jobs\PrintOrderTokensJob;

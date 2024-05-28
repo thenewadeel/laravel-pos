@@ -183,8 +183,8 @@ class Cart extends Component {
         this.lastClickTime = currentTime;
         let product = this.state.categories
             .find((c) => c.id === category_id)
-            ?.products.find((p) => p.id === id);
-        // let product = this.state.products.find((p) => p.id === id);
+            ?.items.find((p) => p.id === id);
+        // let product = this.state.items.find((p) => p.id === id);
         if (!!product) {
             // if product is already in cart
             let cart = this.state.cart.find((c) => c.id === product.id);
@@ -345,7 +345,7 @@ class Cart extends Component {
             return categories;
         } else {
             let catX = categories.filter((category) => {
-                let prods = category.products.filter((product) => {
+                let prods = category.items.filter((product) => {
                     return product.name
                         .toLowerCase()
                         .includes(filterText.toLowerCase());
@@ -699,7 +699,7 @@ class Cart extends Component {
                                     aria-labelledby={"tab-header-" + c.id}
                                     key={c.id}
                                 >
-                                    {c.products
+                                    {c.items
                                         .filter((p) =>
                                             p.name
                                                 .toLowerCase()

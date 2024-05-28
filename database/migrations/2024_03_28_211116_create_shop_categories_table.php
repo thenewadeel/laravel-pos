@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('shop_categories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->nullable();
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
+            $table->foreign('category_id')->references('id')->on('xcategories')->onDelete('set null');
             $table->foreignId('shop_id')->nullable();
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('set null');
             $table->timestamps();

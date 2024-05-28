@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use AliBayat\LaravelCategorizable\Categorizable;
 
 class Shop extends Model
 {
+    use Categorizable;
     use HasFactory;
     protected $fillable = [
         'name',
@@ -29,8 +31,8 @@ class Shop extends Model
     {
         return $this->hasMany(Expense::class);
     }
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'shop_categories')->withTimestamps();
-    }
+    // public function categories()
+    // {
+    //     return $this->belongsToMany(Category::class, 'shop_categories')->withTimestamps();
+    // }
 }

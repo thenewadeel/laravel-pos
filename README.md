@@ -82,3 +82,8 @@ b. By User
 c. Items & Qty
 d. Item Rates if any
 [ ] Inventory Reports
+
+### Requirements 27 May
+
+-   searchable members in orders edit
+-   discount controller i/o update/ test

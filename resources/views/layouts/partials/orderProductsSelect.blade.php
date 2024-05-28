@@ -12,8 +12,7 @@
                         {{ $category->name }}
                     </a>
                     <div class="card-body p-0 m-0 flex row w-100 max-h-80  overflow-y-scroll">
-
-                        @foreach ($category->products as $product)
+                        @forelse (AliBayat\LaravelCategorizable\Category::find($category->id)->entries(App\Models\Product::class)->get() as $product)
                             <div class="col-md-3 h-max p-1 m-0">
                                 <form action="{{ route('order.items.store', $order) }}" method="post"
                                     class="border p-1 m-0">
@@ -44,7 +43,9 @@
                                     </div>
                                 </form>
                             </div>
-                        @endforeach
+                        @empty
+                            <p>No items available.</p>
+                        @endforelse
                     </div>
                 </div>
             @endforeach

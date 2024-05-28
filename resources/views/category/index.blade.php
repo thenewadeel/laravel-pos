@@ -21,24 +21,26 @@
 
     @foreach ($categories as $category)
         <tr>
-            <td>{{ $category->id }}</td>
-            <td><a href="{{ route('categories.show', $category) }}">{{ $category->name }}</a></td>
+            {{-- {{ $category }} --}}
+            <td>{{ $category['id'] }}</td>
+            <td><a href="{{ route('categories.show', $category['id']) }}">{{ $category['name'] }}</a></td>
 
-            <td>{{ $category->description }}</td>
+            <td>{{ $category['description'] }}</td>
             <td>
-                <img width="50" src="{{ $category->image }}" alt="">
+                <img width="50" src="{{ $category['image'] }}" alt="">
             </td>
-            <td>{{ $category->kitchen_printer_ip }}</td>
+            <td>{{ $category['kitchen_printer_ip'] }}</td>
             <td>
                 <ul>
-                    @foreach ($category->products()->get() as $product)
+                    @foreach ($category['items'] as $product)
                         <li><a>{{ $product->name }}</a></li>
                     @endforeach
                 </ul>
             </td>
             <td>
-                <a href="{{ route('categories.edit', $category) }}" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                <button class="btn btn-danger btn-delete" data-url="{{ route('categories.destroy', $category) }}"><i
+                <a href="{{ route('categories.edit', $category['id']) }}" class="btn btn-primary"><i
+                        class="fas fa-edit"></i></a>
+                <button class="btn btn-danger btn-delete" data-url="{{ route('categories.destroy', $category['id']) }}"><i
                         class="fas fa-trash"></i></button>
             </td>
         </tr>

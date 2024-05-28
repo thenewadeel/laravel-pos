@@ -19,7 +19,8 @@
         "livewire/livewire": "^3.4",
         "maatwebsite/excel": "^3.1",
         "mike42/escpos-php": "^2.2",
-        "sentry/sentry-laravel": "^4.4"
+        "sentry/sentry-laravel": "^4.4",
+        "alibayat/laravel-categorizable" : "dev-master#8735c7d4b583a6c540de6167646c77c6f784cc95"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6.7",

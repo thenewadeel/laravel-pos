@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+// use App\Models\Category;
+use AliBayat\LaravelCategorizable\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\CategoryProducts;
+// use App\Models\CategoryProducts;
 use App\Traits\ListOf;
 
 class CategoryController extends Controller
@@ -22,10 +23,12 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $products = Product::query();
         $categories = Category::query();
         if ($request->has('cat_ids')) {
             logger($request->cat_ids);
             $categories =    $categories->whereIn('id', $request->cat_ids);
+            // $products = $products->whereIn('category_id', $request->cat_ids);
             // ->delete();
             // foreach ($request->cat_ids as $cat_id) {
             //     foreach ($request->input('product_ids', []) as $product_id) {
@@ -36,11 +39,19 @@ class CategoryController extends Controller
             //     }
             // }
         }
+        $categories = $categories->where('type', 'product');
+        $categories = $categories->get();
+        $categories = $categories->map(function ($cat) {
+            $cat['items'] = Category::find($cat->id)->entries(Product::class)->get();
+            return $cat;
+        });
 
-        $categories = $categories->with('products')->get();
+
+
         if (request()->wantsJson()) {
-            return $categories->toArray();
+            return $categories;
         }
+        // dd($categories);
         return view('category.index', compact('categories'));
     }
 
@@ -61,18 +72,20 @@ class CategoryController extends Controller
             'name' => 'required',
             'description' => 'nullable',
             'image' => 'nullable|image',
-            'kitchen_printer_ip' => 'nullable'
+            'kitchen_printer_ip' => 'nullable',
+            'type' => 'nullable|in:product,default',
         ]);
 
         $category = new Category();
         $category->name = $request->name;
         $category->description = $request->description;
-        $category->kitchen_printer_ip = $request->kitchen_printer_ip;
         if ($request->hasFile('image')) {
             $category->image = $request->file('image')->store('public/categories');
         }
+        $category->kitchen_printer_ip = $request->kitchen_printer_ip;
+        $category->type = $request->type;
         $category->save();
-
+        // dd($category);
         return redirect()->route('categories.index')->with('success', 'Category created successfully.');
     }
 
@@ -81,7 +94,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $products = Product::all();
+        $products = Category::find($category->id)->entries(Product::class)->get();
+        // $products = Product::all();
+        // dd($products);
         return view('category.show', compact('category', 'products'));
     }
 
@@ -151,29 +166,31 @@ class CategoryController extends Controller
         $category = Category::findOrFail($request->category_id);
 
         foreach ($request->product_ids as $product_id) {
-            $categoryProduct = new CategoryProducts();
-            $categoryProduct->category_id = $request->category_id;
-            $categoryProduct->product_id = $product_id;
-            $categoryProduct->save();
+            Product::find($product_id)->attachCategory($category);
+            // $categoryProduct = new CategoryProducts();
+            // $categoryProduct->category_id = $request->category_id;
+            // $categoryProduct->product_id = $product_id;
+            // $categoryProduct->save();
             // $category->products()->save(Product::findOrFail($product_id), $categoryProduct->toArray());
         }
+
         return redirect()->back();
     }
 
     /**
      * Delete the specified category-product relation
      */
-    public function catproddelete($category_id, $product_id)
+    public function catproddelete(Category $category_id, $product_id)
     {
         // Log the arguments
         // logger('Deleting category-product relation:', [
         //     'category_id' => $category_id,
         //     'product_id' => $product_id,
         // ]);
-
-        CategoryProducts::where('category_id', $category_id)
-            ->where('product_id', $product_id)
-            ->delete();
+        Product::find($product_id)->detachCategory($category_id);
+        // CategoryProducts::where('category_id', $category_id)
+        //     ->where('product_id', $product_id)
+        //     ->delete();
         return redirect()->back();
     }
 }

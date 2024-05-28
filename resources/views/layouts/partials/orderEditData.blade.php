@@ -39,20 +39,68 @@
                 <input type="number" name="table_number" id="table_number" class="form-control"
                     value="{{ old('table_number', $order->table_number) }}">
             </div>
-            <div class="form-group col flex p-0 m-0">
+            <div class="form-group flex flex-col p-0 m-0">
+                <div class="flex flex-row p-0 m-0">
+                    <label for="searchCustomer" class="col-md-4 p-0 m-0">Search Customer:</label>
+                    <input id="searchCustomer" type="text" placeholder="Search customer..."
+                        class="form-control col-md-8 p-0 m-0">
+                </div>
+                <div class="border-2 border-green-700 col-12 p-0 m-0 mt-1 w-full bg-white rounded-md shadow-lg">
+                    <div id="customerDropdown" class="border-4 border-green-300 " style="display: none;">
+                        <ul
+                            class="py-1 max-h-32 rounded-md text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5 ring-1 ring-black ring-opacity-5">
+                            @foreach ($customers as $customer)
+                                <li
+                                    class=" py-2 pl-3 pr-9 text-gray-900 cursor-pointer hover:bg-indigo-500 hover:text-white">
+                                    <div class="flex items-center justify-between">
+                                        <span
+                                            class="font-normal text-indigo-600">{{ $customer->membership_number }}</span>
+                                        <span>{{ $customer->name }}</span>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
 
-                <label for="customer_id" class="col-md-4">Customer:</label>
-                <select name="customer_id" id="customer_id" class="form-control">
-                    @foreach ($customers as $customer)
-                        <option value="{{ $customer->id }}"
-                            {{ $customer->id == $order->customer_id ? 'selected' : '' }}>
-                            {{ $customer->name }}
-                        </option>
-                    @endforeach
-                </select>
+                <script>
+                    (function() {
+                        document.getElementById('customerDropdown').addEventListener('click', function(e) {
+                            if (e.target.tagName === 'LI') {
+                                var customerId = e.target.querySelector('.font-normal').textContent;
+                                document.getElementById('customer_id').value = customerId;
+                                document.getElementById('searchCustomer').value = e.target.querySelector('span:last-child')
+                                    .textContent;
+                                document.getElementById('customerDropdown').style.display = 'none';
+                            }
+                        });
+
+                        document.addEventListener('click', function(e) {
+                            var dropdown = document.getElementById('customerDropdown');
+                            if (!dropdown.contains(e.target) && e.target.id !== 'searchCustomer') {
+                                dropdown.style.display = 'none';
+                            }
+                        });
+                    })();
+
+                    document.getElementById('searchCustomer').addEventListener('input', function() {
+                        var input = this.value.toLowerCase();
+                        var dropdown = document.getElementById('customerDropdown');
+                        var items = dropdown.getElementsByTagName('li');
+
+                        Array.prototype.forEach.call(items, function(item) {
+                            var text = item.textContent.toLowerCase();
+                            var displayStyle = text.includes(input) ? 'block' : 'none';
+                            item.style.display = displayStyle;
+                        });
+
+                        dropdown.style.display = 'block';
+                    });
+                </script>
             </div>
+            <input type="hidden" name="customer_id" id="customer_id" value="">
             <button type="submit" class="btn btn-primary col flex p-0 m-0">Update</button>
         </form>
-
     </div>
+
 </div>

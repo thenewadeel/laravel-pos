@@ -30,11 +30,13 @@
                                                 class="form-inline col-md-6 shadow-inner shadow-blue-500 rounded-md"
                                                 value="1" min="1">
                                         </div>
-                                        <div class="col-md-4 p-0 m-0">
-                                            <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                                            <span
-                                                class=" bg-red-500 text-white rounded-full px-1 text-base">{{ $order->items->pluck('product.id')->contains($product->id) ? $order->items->where('product_id', $product->id)->first()->quantity : '0' }}</span>
-                                        </div>
+                                        @if ($order->items->pluck('product.id')->contains($product->id))
+                                            <div class="col-md-4 p-0 m-0">
+                                                <i class="fas fa-shopping-cart text-3xl text-sky-600"></i>
+                                                <span
+                                                    class="relative -left-4 -top-4 bg-red-500 border-2 border-white  rounded-full px-1 text-lg font-bold text-white">{{ $order->items->where('product_id', $product->id)->first()->quantity }}</span>
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="row p-0 m-0">
                                         <button type="submit"

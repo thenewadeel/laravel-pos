@@ -93,12 +93,12 @@ item.className='';
                 <div class="flex grow ">
                     <div class="">
                         <div class="card" id='product-list'>
-                            <div class="flex flex-row justify-content-between border-2 bg-gray-100 p-2">
-                                <div class="border-2 border-sky-300 text-sky-600 px-2 rounded-md hover:shadow-md min-w-16 text-center"
+                            <div class="flex flex-row justify-content-between border-2 bg-gray-100 px-2">
+                                <div class="border-2 border-sky-300 text-sky-600 mx-2 rounded-md hover:shadow-md min-w-16 text-center"
                                     onclick="selectAll()">All
                                 </div>
-                                <div><--Selection--></div>
-                                <div class="border-2 border-red-900 text-red-900 px-2 rounded-md hover:shadow-xl min-w-16 text-center"
+                                <div class="text-base w-max font-bold font-sans"><-- Select --></div>
+                                <div class="border-2 border-red-900 text-red-900 mx-2 rounded-md hover:shadow-xl min-w-16 text-center"
                                     onclick="selectNone()">
                                     None
                                 </div>

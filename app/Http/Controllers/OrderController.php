@@ -193,6 +193,7 @@ class OrderController extends Controller
             'table_number' => 'nullable|string',
             'waiter_name' => 'nullable|string',
             'type' => 'nullable|in:dine-in,take-away,delivery',
+            'notes' => 'nullable|string',
             // 'user_id' => 'required|exists:users,id',
             // 'state' => 'nullable|in:preparing,served,closed,wastage',
         ]);
@@ -348,6 +349,7 @@ class OrderController extends Controller
             'table_number' => $request->table_number,
             'waiter_name' => $request->waiter_name,
             'type' => $request->order_type,
+            'notes' => $request->notes,
         ]);
 
         $cart = $request->user()->cart()->get();
@@ -379,6 +381,7 @@ class OrderController extends Controller
         $html = 'Order ID: ' . $order->id . "\n";
         $html .= 'Customer: ' . $order->customer->name . "\n";
         $html .= 'Date: ' . $order->created_at . "\n";
+        $html .= 'Notes: ' . $order->notes . "\n";
         $html .= 'Items: ' . "\n";
         foreach ($order->items as $item) {
             if ($item->pivot) {
@@ -570,6 +573,9 @@ class OrderController extends Controller
         $printer->text("Total: " . $order->total() . "\n");
 
         $printer->setTextSize(1, 1);
+        if ($order->notes) {
+            $printer->text("Notes: " . $order->notes  . "\n");
+        }
         $printer->text("Cashier: " . $order->user->getFullName()  . "\n");
         $printer->text("Shop: " . $order->shop ? $order->shop->name : "Unknown");
         $printer->text("\nOn: "  . "");
@@ -617,7 +623,9 @@ class OrderController extends Controller
             $printer->text("Waiter: ");
             $printer->text($order->waiter_name  . "\n");
         }
-
+        if ($order->notes) {
+            $printer->text("Notes: " . $order->notes  . "\n");
+        }
 
         //$printer->setTextSize(2, 2);
         $printer->text("Order for: ");

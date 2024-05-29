@@ -41,9 +41,13 @@
             </div>
             <div class="form-group flex flex-col p-0 m-0">
                 <div class="flex flex-row p-0 m-0">
-                    <label for="searchCustomer" class="col-md-4 p-0 m-0">Search Customer:</label>
+                    <label for="searchCustomer" class="col-md-4 p-0 m-0">Customer:</label>
                     <input id="searchCustomer" type="text" placeholder="Search customer..."
-                        class="form-control col-md-8 p-0 m-0">
+                        class="form-control col p-0 m-0">
+                    {{-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                        data-target="#exampleModal">
+                        +
+                    </button> --}}
                 </div>
                 <div class="border-2 border-green-700 col-12 p-0 m-0 mt-1 w-full bg-white rounded-md shadow-lg">
                     <div id="customerDropdown" class="border-4 border-green-300 " style="display: none;">
@@ -97,6 +101,11 @@
                         dropdown.style.display = 'block';
                     });
                 </script>
+            </div>
+            <div class="form-group col flex p-0 m-0">
+                <label for="notes" class="col-md-4">Notes:</label>
+                <input type="text" name="notes" id="notes" class="form-control"
+                    value="{{ old('notes', $order->notes) }}">
             </div>
             <input type="hidden" name="customer_id" id="customer_id" value="">
             <button type="submit" class="btn btn-primary col flex p-0 m-0">Update</button>

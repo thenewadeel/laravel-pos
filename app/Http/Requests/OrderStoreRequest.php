@@ -27,6 +27,12 @@ class OrderStoreRequest extends FormRequest
             'customer_id' => 'nullable|integer|exists:customers,id',
             'shop_id' => 'nullable|integer|exists:shops,id',
             'amount' => 'nullable|numeric|min:0',
+            'table_number' => 'nullable|string|max:3',
+            'waiter_name' => 'nullable|string|max:191',
+            'notes' => 'nullable|string|max:191',
+            'state' => 'nullable|in:preparing,served,closed,wastage',
+            'type' => 'nullable|in:dine-in,take-away,delivery',
+            // 'user_id' => $this->user_id,
         ];
     }
 }

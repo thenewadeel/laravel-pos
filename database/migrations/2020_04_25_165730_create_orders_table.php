@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('POS_number')->nullable();
             $table->string('table_number')->nullable();
             $table->string('waiter_name')->nullable();
+            $table->string('notes')->nullable();
 
             $table->enum('state', ['preparing', 'served', 'closed', 'wastage'])->default('preparing');
             $table->enum('type', ['dine-in', 'take-away', 'delivery'])->default('dine-in');

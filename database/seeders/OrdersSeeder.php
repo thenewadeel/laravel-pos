@@ -35,6 +35,7 @@ class OrdersSeeder extends Seeder
                 'state' => $faker->randomElement(['preparing', 'served', 'closed', 'wastage']),
                 'type' => $faker->randomElement(['dine-in', 'take-away', 'delivery']),
                 'created_at' => $faker->dateTimeBetween('-7 day', '-1 day'),
+                'notes' => $faker->sentence,
             ]);
 
             // Create 3-5 random products for each order

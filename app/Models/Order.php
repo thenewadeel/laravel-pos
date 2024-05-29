@@ -33,6 +33,8 @@ class Order extends Model
         'table_number',
         // The name of the waiter who is assigned to this order
         'waiter_name',
+        // Notes about the order
+        'notes'
     ];
     protected static function boot()
     {

@@ -122,7 +122,14 @@
                 <td style="text-align:right" colspan="2">
                     {{ config('settings.currency_symbol') }}{{ $order->formattedReceivedAmount() }}</td>
             </tr>
+            @if ($order->notes)
+                <tr class="w-min h-min p-0 m-0">
+                    <td colspan="5" class="w-min h-min p-0 m-0">
+                        <span class="text-muted mx-4 ">Notes: {{ $order->notes }}</span>
 
+                    </td>
+                </tr>
+            @endif
         </table>
 
         {{-- {{ $order }} --}}
@@ -132,7 +139,7 @@
 @endsection
 
 @section('footer-actions')
-    <div class="d-flex justify-content-between w-100">
+    <div class="d-flex justify-content-between w-100 md:mx-96">
         @if ($previous)
             <a href="{{ route('orders.show', ['order' => $previous]) }}"
                 class="btn btn-primary {{ $previous == $order->id ? 'disabled' : '' }}">

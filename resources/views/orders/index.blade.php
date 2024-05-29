@@ -205,14 +205,22 @@
                                             <i class="fas fa-edit text-xs "></i>
                                         </a>
                                     @endif
-                                    <a href="{{ route('orders.show', $order) }}"
+                                    {{-- <a href="{{ route('orders.show', $order) }}"
                                         class="btn btn-info btn-sm py-0 my-0 px-2 align-middle">
                                         <i class="fas fa-eye text-xs"></i>
-                                    </a>
+                                    </a> --}}
                                 </div>
                                 @include('layouts.partials.orderPrintBtns', ['order' => $order])
                             </td>
                         </tr>
+                        @if ($order->notes)
+                            <tr class="w-min h-min p-0 m-0">
+                                <td colspan="5" class="w-min h-min p-0 m-0">
+                                    <span class="text-muted mx-4 ">Notes: {{ $order->notes }}</span>
+
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
                 <tfoot>

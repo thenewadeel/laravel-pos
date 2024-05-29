@@ -6,6 +6,7 @@
 @endsection
 @section('content-header')
     {{ 'Order:Edit' }}
+    <span class="text-base" title="{{ $order }}">{{ $order->POS_number }}</span>
 @endsection
 @section('content-actions')
     <div class="mb-2">

@@ -47,8 +47,8 @@
             @enderror
         </div>
         <div class="col p-0 m-0">
-            <div class="col-8">
-                <div class="px-4 accent-emerald-500">
+            <div class="">
+                <div class="px-2 accent-emerald-500">
                     <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                     <label for="remember">
                         Remember Me

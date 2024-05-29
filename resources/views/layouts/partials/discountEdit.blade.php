@@ -17,7 +17,7 @@
                 <tr>
                     <form action="{{ route('discounts.update', $discount) }}" method="POST">
                         @csrf
-                        {{-- <td>
+                        @method('PUT') {{-- <td>
                         <label for="name">Name:</label>
                     </td> --}}
                         <td>
@@ -26,12 +26,12 @@
                         </td>
                         {{-- <label for="percentage">Percentage:</label> --}}
                         <td>
-                            <input class="form-control" type="number" id="percentage" name="percentage"
+                            <input class="form-control" type="number" step="0.01" id="percentage" name="percentage"
                                 value="{{ $discount->percentage }}">
                         </td>
                         {{-- <label for="amount">Amount:</label> --}}
                         <td>
-                            <input class="form-control" type="number" id="amount" name="amount"
+                            <input class="form-control" type="number" step="0.01" id="amount" name="amount"
                                 value="{{ $discount->amount }}">
                         </td>
                         {{-- <label for="method">Method:</label> --}}
@@ -54,24 +54,36 @@
                                 </option>
                             </select>
                         </td>
-                        <td class="flex flex-row p-0 m-0 align-middle items-center justify-items-center">
-                            <button class="btn btn-primary h-full col-8 btn-sm px-0 mx-0" type="submit">Submit</button>
-                            <a class="btn btn-danger  col-2 btn-sm px-0 ml-4"
+                        <td
+                            class="flex justify-content-center align-middle h-full items-center border-2 border-green-700 p-0 m-0 ">
+                            <button class="btn btn-primary h-full col-6 btn-sm px-0 mx-0" type="submit">Update</button>
+                            {{-- </td> --}}
+                            {{-- <td class="flex flex-row p-0 m-0 "> --}}
+                            {{-- <form action="{{ route('discounts.destroy', $discount) }}" method="POST"> --}}
+                            {{-- @csrf --}}
+                            {{-- @method('DELETE') --}}
+                            <a class="btn btn-danger col-4 btn-delete btn-sm px-0 mx-2"
                                 data-url="{{ route('discounts.destroy', $discount) }}"><i class="fas fa-trash"></i></a>
+                            {{-- </form> --}}
                         </td>
                     </form>
                 </tr>
             @endforeach
-        </tbody>
         <tfoot>
             <tr>
-                <div>
-
-                    <a class="btn btn-success" type="button" href="{{ route('discounts.create') }}">Create New
-                        Discount</a>
-                </div>
+                {{-- <td colspan="5"></td> --}}
+                <td colspan="6">
+                    <div class="flex justify-content-center">
+                        <a class="btn btn-outline-primary btn-sm btn-block font-bold" type="button"
+                            href="{{ route('discounts.create') }}">
+                            <i class="fas fa-plus"></i>
+                            Add New
+                        </a>
+                    </div>
+                </td>
             </tr>
         </tfoot>
+        </tbody>
     </table>
 </div>
 

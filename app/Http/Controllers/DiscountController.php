@@ -68,8 +68,27 @@ class DiscountController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
-        return back();
+        //'name' => 'New Discount',
+        // 'percentage' => 0,
+        // 'amount' => 0,
+        // 'method' => 'NATURAL',
+        // 'type' => 'DISCOUNT'
+
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'percentage' => 'nullable|string',
+            'amount' => 'nullable|numeric',
+            'method' => 'nullable|in:NATURAL,REVERSE|string',
+            'type' => 'required|in:DISCOUNT,CHARGES|string',
+            // 'user_id' => 'required|exists:users,id',
+            // 'state' => 'nullable|in:preparing,served,closed,wastage',
+        ]);
+
+        // $validatedData['user_id'] = auth()->user()->id;
+
+        // $order->update($validatedData);
+        Discount::find($id)->update($validatedData);
+        return back()->with('success', 'Discount updated successfully');
     }
 
     /**
@@ -77,6 +96,7 @@ class DiscountController extends Controller
      */
     public function destroy(Discount $discount)
     {
+        // dd('asdfghjk');
         $discount->delete();
         if (request()->wantsJson()) {
             return response()->json([

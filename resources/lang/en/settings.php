@@ -28,4 +28,5 @@ return [
     'Warning_quantity'  => 'Warning quantity',
     'Change_Setting'    => 'Change Setting',
     'Discounts'          => 'Discounts',
+    'default_printer_ip' => 'Default Printer IP Address',
 ];

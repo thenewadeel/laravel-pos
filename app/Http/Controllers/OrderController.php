@@ -38,15 +38,15 @@ class OrderController extends Controller
     }
     public function index(Request $request)
     {
-        // dd($request->all());
-
-        // logger('asdasdasd');
+        $request = $request->collect()->filter(function ($value) {
+            return null !== $value;
+        })->toArray();
+        $request = collect($request);
+        // dd($request);
         if (auth()->user()->type == 'admin') {
             $orders = Order::query();
         } else {
             $u = User::with('shops')->find(auth()->id());
-            // $u = User::with('shops')->find(auth()->id());
-
 
             $shops = $u->shops()->pluck('shops.id')->toArray();
             // dd($shops);
@@ -54,32 +54,33 @@ class OrderController extends Controller
         }
         // FILTERS
         // POS Number	
-        if ($request->has('pos_number') && $request->pos_number != null) {
-            $orders = $orders->where('pos_number', $request->pos_number);
+        // dd($request->has('pos_number'), $request);
+        if ($request->has('pos_number') && $request['pos_number'] != null) {
+            $orders = $orders->where('pos_number', $request['pos_number']);
         }
         // Customer Name	
-        if ($request->has('customer_name') && $request->customer_name != null) {
+        if ($request->has('customer_name') && $request['customer_name'] != null) {
             $orders = $orders->whereHas('customer', function ($query) use ($request) {
-                $query->where('name', 'LIKE', '%' . $request->customer_name . '%');
+                $query->where('name', 'LIKE', '%' . $request['customer_name'] . '%');
             });
         }
         // Type	
-        if ($request->has('type') && $request->type != null) {
+        if ($request->has('type') && $request['type'] != null) {
             // dd($request->type);
-            $orders = $orders->where('type', $request->type);
+            $orders = $orders->where('type', $request['type']);
         }
         // Table #	
-        if ($request->has('table_number') && $request->table_number != null) {
-            $orders = $orders->where('table_number', $request->table_number);
+        if ($request->has('table_number') && $request['table_number'] != null) {
+            $orders = $orders->where('table_number', $request['table_number']);
         }
         // Waiter Name	
-        if ($request->has('waiter_name') && $request->waiter_name != null) {
-            $orders = $orders->where('waiter_name', 'LIKE', '%' . $request->waiter_name . '%');
+        if ($request->has('waiter_name') && $request['waiter_name'] != null) {
+            $orders = $orders->where('waiter_name', 'LIKE', '%' . $request['waiter_name'] . '%');
         }
         // Shop Name	
-        if ($request->has('shop_name') && $request->shop_name != null) {
+        if ($request->has('shop_name') && $request['shop_name'] != null) {
             $orders = $orders->whereHas('shop', function ($query) use ($request) {
-                $query->where('name', 'LIKE', '%' . $request->shop_name . '%');
+                $query->where('name', 'LIKE', '%' . $request['shop_name'] . '%');
             });
         }
         // Total	
@@ -108,15 +109,18 @@ class OrderController extends Controller
         //     $orders = $orders->whereIn('type', $filters);
         // }
         $today = now()->startOfDay();
-        if ($request->has('all') && $request->all == '1') {
+        if ($request->has('all') && $request['all'] == '1') {
             //no date filtering....
-        } elseif ($request->start_date && $request->end_date) {
-            $orders = $orders->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
+        } elseif ($request->has('start_date') && $request->has('end_date')) {
+            $orders = $orders->whereBetween('created_at', [$request['start_date'], $request['end_date'] . ' 23:59:59']);
+        } elseif ($request->has('start_date')) {
+            $orders = $orders->whereDate('created_at', '>=', $request['start_date']);
+        } elseif ($request->count() > 0) {
         } else {
             $orders = $orders->whereDate('created_at', $today);
         }
 
-        $unpaid = $request->has('unpaid') && $request->unpaid == '1';
+        $unpaid = $request->has('unpaid') && $request['unpaid'] == '1';
         // $chit = $request->has('chit') && $request->chit == '1';
         // $discounted = $request->has('discounted') && $request->discounted == '1';
 

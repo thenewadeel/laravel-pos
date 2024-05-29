@@ -9,8 +9,7 @@
 @endsection
 
 @section('content')
-    <p class="login-box-msg">Sign in to start your session</p>
-
+    {{-- <p class="login-box-msg">Sign in to start your session</p> --}}
     <form action="{{ route('login') }}" method="post">
         @csrf
         <div class="form-group">
@@ -47,9 +46,9 @@
                 </span>
             @enderror
         </div>
-        <div class="row">
+        <div class="col p-0 m-0">
             <div class="col-8">
-                <div class="icheck-primary">
+                <div class="px-4 accent-emerald-500">
                     <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                     <label for="remember">
                         Remember Me
@@ -57,17 +56,16 @@
                 </div>
             </div>
             <!-- /.col -->
-            <div class="col-4">
-                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-            </div>
+            <button type="submit"
+                class=" bg-blue-900 text-white font-bold w-full text-center rounded-md min-h-10 hover:shadow-sky-500 hover:shadow-md transition-all duration-500 px-0 mx-0">Login</button>
             <!-- /.col -->
         </div>
     </form>
-
+    {{-- 
     <p class="mb-1">
         <a href="{{ route('password.request') }}">I forgot my password</a>
     </p>
     <p class="mb-0">
         <a href="{{ route('register') }}" class="text-center">Register a new membership</a>
-    </p>
+    </p> --}}
 @endsection

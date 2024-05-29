@@ -17,13 +17,22 @@
     @yield('css')
 </head>
 
-<body class="hold-transition login-page">
-    <div class="login-box">
-        <div class="login-logo">
-            <a href="../../index2.html">{{ config('app.name') }}</a>
+<body class="hold-transition login-page mx-5 md:mx-20">
+    <div class=" fixed w-4/5 h-4/5 saturate-0 sepia-[.4] bg-gray-600 p-20 m-20 rounded-xl shadow-[2px_2px_5px] bg-cover bg-center filter blur-[2px] "
+        style="background-image: url({{ asset('images/bg.jpg') }});">
+    </div>
+    <div
+        class="login-box flex flex-col md:flex-row justify-center justify-items-center align-middle items-center w-full p-20 m-20">
+
+        <div
+            class="login-logo  hidden md:flex md:w-1/2 hover:shadow-yellow-500 justify-center justify-items-center align-middle items-center">
+            <img src="{{ asset('images/qcl watermark.png') }}" alt="AdminLTE Logo"
+                class="img rounded-3xl shadow  border-8 border-solid border-sky-950 hover:bg-blue-950 bg-opacity-35 hover:bg-opacity-90 bg-gray-900 max-w-80 max-h-80 filter hover:grayscale-0 grayscale-0 hover:shadow-none transition-all duration-500" />
         </div>
         <!-- /.login-logo -->
-        <div class="card">
+        <div class="card md:w-1/2 max-w-96 max-h-96">
+            <div href="../../index2.html" class="text-lg font-bold card-header text-center">{{ config('app.name') }}
+            </div>
             <div class="card-body login-card-body">
                 @yield('content')
             </div>

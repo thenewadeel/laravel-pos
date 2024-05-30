@@ -302,6 +302,7 @@ class OrderController extends Controller
         if ($order->state == 'closed') {
             return back()->with('message', 'Order is already closed');
         }
+        $prevDiscounts = $order->discounts()->get();
         $validatedData = $request->validate([
             'discountsToAdd' => 'nullable|array',
             'discountsToAdd.*' => 'nullable|exists:discounts,id',
@@ -309,7 +310,11 @@ class OrderController extends Controller
         // dd($validatedData);
         $discountsToAdd = $validatedData['discountsToAdd'] ?? [];
         $order->discounts()->sync($discountsToAdd);
-
+        activity('order-discount')
+            ->causedBy($request->user())
+            ->performedOn($order)
+            ->withProperties(['prevDiscounts' => $prevDiscounts, 'updatedDiscounts' => $order->discounts()->get()])
+            ->log('edited');
         return redirect()->route('orders.edit', $order)->with('success', 'Discounts updated successfully');
     }
     public function show(Order $order)

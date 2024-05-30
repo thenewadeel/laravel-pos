@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "alibayat/laravel-categorizable": "dev-master#8735c7d4b583a6c540de6167646c77c6f784cc95",
         "barryvdh/laravel-dompdf": "^2.1",
         "doctrine/dbal": "^3.3",
         "guzzlehttp/guzzle": "^7.2",
@@ -20,7 +21,7 @@
         "maatwebsite/excel": "^3.1",
         "mike42/escpos-php": "^2.2",
         "sentry/sentry-laravel": "^4.4",
-        "alibayat/laravel-categorizable" : "dev-master#8735c7d4b583a6c540de6167646c77c6f784cc95"
+        "spatie/laravel-activitylog": "^4.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6.7",

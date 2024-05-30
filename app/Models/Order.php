@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Order extends Model
 {
+    use LogsActivity;
     protected $fillable = [
         // Unique identifier for the order in the POS system
         'POS_number',
@@ -36,6 +39,15 @@ class Order extends Model
         // Notes about the order
         'notes'
     ];
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('orders')
+            ->logFillable()
+            ->logOnlyDirty();
+        // ->logOnly(['name', 'text']);
+        // Chain fluent methods for configuration options
+    }
     protected static function boot()
     {
         parent::boot();

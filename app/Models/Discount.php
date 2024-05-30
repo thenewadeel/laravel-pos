@@ -5,8 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+
 class Discount extends Model
 {
+
+    use LogsActivity;
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('orders-discounts')
+            ->logFillable();
+        // ->logOnlyDirty();
+        // ->logOnly(['name', 'text']);
+        // Chain fluent methods for configuration options
+    }
     use HasFactory;
     protected $fillable = ['name', 'percentage', 'method', 'amount'];
 

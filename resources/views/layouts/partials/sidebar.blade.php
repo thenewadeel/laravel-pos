@@ -67,6 +67,12 @@
                             <p>{{ 'Users' }}</p>
                         </a>
                     </li>
+                    <li class="nav-item has-treeview">
+                        <a href="{{ route('activities.index') }}" class="nav-link {{ activeSegment('activities') }}">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>{{ 'Activities' }}</p>
+                        </a>
+                    </li>
 
                     {{-- <li class="nav-item has-treeview">
                         <a href="{{ route('expenses.index') }}" class="nav-link {{ activeSegment('expenses') }}">

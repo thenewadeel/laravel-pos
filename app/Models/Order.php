@@ -10,6 +10,7 @@ use Spatie\Activitylog\LogOptions;
 class Order extends Model
 {
     use LogsActivity;
+    protected static $recordEvents = ['updated', 'deleted'];
     protected $fillable = [
         // Unique identifier for the order in the POS system
         'POS_number',

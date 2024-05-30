@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Traits\ListOf;
 use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
+use Spatie\Activitylog\Models\Activity;
 
 class ReportsController extends Controller
 {
@@ -114,5 +115,10 @@ class ReportsController extends Controller
     public function destroy(Reports $reports)
     {
         //
+    }
+    public function activities(Request $request)
+    {
+        $activities = Activity::orderBy('updated_at', 'desc')->limit(100)->get();
+        return view('activities.index')->with('activities', $activities);
     }
 }

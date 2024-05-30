@@ -313,7 +313,7 @@ class OrderController extends Controller
         activity('order-discount')
             ->causedBy($request->user())
             ->performedOn($order)
-            ->withProperties(['prevDiscounts' => $prevDiscounts, 'updatedDiscounts' => $order->discounts()->get()])
+            ->withProperties(['old' => $prevDiscounts, 'attributes' => $order->discounts()->get()])
             ->log('edited');
         return redirect()->route('orders.edit', $order)->with('success', 'Discounts updated successfully');
     }

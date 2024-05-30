@@ -102,5 +102,7 @@ Route::middleware('auth')->group(function () {
             $translations = trans($type);
             return response()->json($translations);
         });
+
+        Route::get('/activities', [ReportsController::class, 'activities'])->name('activities.index');
     });
 });

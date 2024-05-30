@@ -12,8 +12,8 @@
         <!-- Sidebar user (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img class="user-img" src="{{ Storage::url(auth()->user()->image) }}" alt=""
-                    {{-- style="width: 64px !important; height: 64px !important;"  --}} class="img-circle elevation-2" alt="User Image">
+                <img class="user-img -mx-3 min-w-14 min-h-14 " src="{{ Storage::url(auth()->user()->image) }}"
+                    alt="" {{-- style="width: 64px !important; height: 64px !important;"  --}} class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="#" class="d-block">{{ auth()->user()->getFullname() }}</a>

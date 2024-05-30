@@ -43,6 +43,7 @@
                 <div class="flex flex-row p-0 m-0">
                     <label for="searchCustomer" class="col-md-4 p-0 m-0">Customer:</label>
                     <input id="searchCustomer" type="text" placeholder="Search customer..."
+                        value="{{ $order->customer->membership_number ?? '' }} {{ $order->customer->name ?? '' }}"
                         class="form-control col p-0 m-0">
                     {{-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                         data-target="#exampleModal">
@@ -57,8 +58,8 @@
                                 <li
                                     class=" py-2 pl-3 pr-9 text-gray-900 cursor-pointer hover:bg-indigo-500 hover:text-white">
                                     <div class="flex items-center justify-between">
-                                        <span
-                                            class="font-normal text-indigo-600">{{ $customer->membership_number }}</span>
+                                        <span class="font-normal text-indigo-600" id="customer_id_{{ $customer->id }}"
+                                            data-id="{{ $customer->id }}">{{ $customer->membership_number }}</span>
                                         <span>{{ $customer->name }}</span>
                                     </div>
                                 </li>
@@ -71,7 +72,8 @@
                     (function() {
                         document.getElementById('customerDropdown').addEventListener('click', function(e) {
                             if (e.target.tagName === 'LI') {
-                                var customerId = e.target.querySelector('.font-normal').textContent;
+                                var customerId = e.target.querySelector('.font-normal').getAttribute('data-id');
+                                // console.log(customerId);
                                 document.getElementById('customer_id').value = customerId;
                                 document.getElementById('searchCustomer').value = e.target.querySelector('span:last-child')
                                     .textContent;
@@ -107,7 +109,7 @@
                 <input type="text" name="notes" id="notes" class="form-control"
                     value="{{ old('notes', $order->notes) }}">
             </div>
-            <input type="hidden" name="customer_id" id="customer_id" value="">
+            <input type="hidden" name="customer_id" id="customer_id" value="{{ $order->customer_id ?? '' }}">
             <button type="submit" class="btn btn-primary col flex p-0 m-0">Update</button>
         </form>
     </div>

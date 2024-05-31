@@ -44,7 +44,7 @@
                     <label for="searchCustomer" class="col-md-4 p-0 m-0">Customer:</label>
                     <input id="searchCustomer" type="text" placeholder="Search customer..."
                         value="{{ $order->customer->membership_number ?? '' }} {{ $order->customer->name ?? '' }}"
-                        class="form-control col p-0 m-0">
+                        class="form-control ">
                     {{-- <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
                         data-target="#exampleModal">
                         +

@@ -40,7 +40,7 @@
                         {{-- <th class="col-1 text-center align-middle">{{ __('activity.Event') }}</th> --}}
                         <th class="text-center align-middle">{{ __('activity.Subject_Id') }}</th>
                         <th class="text-center align-middle">{{ __('activity.Causer') }}</th>
-                        <th class="col-1 text-center align-middle">{{ __('activity.Properties') }}</th>
+                        <th class="col-1 text-center align-middle">{{ __('activity.Changes') }}</th>
 
                         <th class="text-center align-middle">{{ __('activity.Date_Time') }}</th>
 
@@ -80,12 +80,12 @@
                             <td class="text-right align-middle">
                                 @if ($activity->description == 'updated')
                                     <table>
-                                        <thead>
+                                        {{-- <thead>
                                             <tr>
                                                 <td colspan="3" class="text-center font-bold">
                                                     {{ __('activity.Changes') }}</td>
                                             </tr>
-                                        </thead>
+                                        </thead> --}}
                                         @foreach ($activity->properties['attributes'] as $key => $value)
                                             <tr>
                                                 <td>{{ $key }}</td>

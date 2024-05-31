@@ -70,10 +70,18 @@
 
 
         </div>
+        {{-- <div class="card col p-0 mx-1">
+        </div> --}}
         <div class="card col p-0 mx-1">
-            @include('layouts.partials.orderProductsSelect', [
-                'categories' => $order->shop?->categories,
-                // 'products' => $products,
-            ])
+            <div class="max-h-96">
+                <livewire:item-search :order="$order" />
+            </div>
+            <div>
+
+                @include('layouts.partials.orderProductsSelect', [
+                    'categories' => $order->shop?->categories,
+                    // 'products' => $products,
+                ])
+            </div>
         </div>
     @endsection

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use AliBayat\LaravelCategorizable\Categorizable;
+use AliBayat\LaravelCategorizable\Category;
 
 class Shop extends Model
 {
@@ -20,7 +21,19 @@ class Shop extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class);
+        $categories = Category::query();
+        $category_ids = $this->categoriesIds();
+
+
+        $categories = $categories->where('type', 'product');
+        // $categories = $categories->whereIn('id', $category_ids);
+        $products = Product::query('category_id', $category_ids);
+        // $categories = $categories->get();
+        // foreach ($category_ids as $cat) {
+        //     $products = $products->merge(Category::find($cat)->entries(Product::class));
+        // }
+        return $products; //= Category::whereIn('id', Shop::first()->categoriesIds())->get();
+        // return $this->hasMany(Product::class);
     }
 
     public function users()

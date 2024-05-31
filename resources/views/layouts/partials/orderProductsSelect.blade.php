@@ -5,6 +5,7 @@
     <div class="card-body p-1 m-0">
         {{-- <div class=""> --}}
         {{-- <label for="items" class="font-weight-bold">Items:</label> --}}
+        @php($categories = $categories ? $categories : AliBayat\LaravelCategorizable\Category::all())
         @if (count($categories) > 0)
             @foreach ($categories as $category)
                 <div class="card p-0 m-0">

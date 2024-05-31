@@ -76,5 +76,5 @@ return [
     'Part_Chit_Warning_Text' => 'Please select Customer for Part Chit.',
     'Change_Title'       => 'Payment Complete with Change',
     'Change_Text'       => 'Please return change amount to Customer.',
-
+    'createNeworder' => 'New',
 ];

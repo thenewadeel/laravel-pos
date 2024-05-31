@@ -3,6 +3,11 @@
 @section('title', __('order.Orders_List'))
 @section('content-header', __('order.Orders_List'))
 @section('content-actions')
+    <a href="{{ route('createNeworder') }}" class="btn btn-outline-danger font-bold btn-sm">
+        <i class="fas fa-plus mr-1">
+            {{ __('order.createNeworder') }}
+        </i>
+    </a>
     @if (auth()->user()->type == 'admin')
         <a href="{{ route('orders.index', ['all' => true]) }}" class="btn btn-info btn-sm">
             <i class="fas fa-filter mr-1"></i>{{ __('common.All') }}

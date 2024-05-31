@@ -177,6 +177,18 @@ class OrderController extends Controller
     }
 
 
+    public function newEdit()
+    {
+        $order = Order::create(['user_id' => auth()->id()]);
+        $users = User::all();
+        $discounts = Discount::orderBy('type')->get();
+        $shops = Shop::all();
+        $customers = Customer::all();
+        $products = Product::all();
+        return view('orders.edit', compact('order', 'shops', 'customers', 'users', 'discounts', 'products'));
+    }
+
+
     public function update(Request $request, Order $order)
     {
         // dd($request);

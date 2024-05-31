@@ -40,6 +40,20 @@ class Order extends Model
         // Notes about the order
         'notes'
     ];
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        // 'user_id' => auth()->id(),
+        'customer_id' => '122',
+        // 'shop_id' => '',
+        'table_number' => '1',
+        'state' => 'preparing',
+        'type' => 'dine-in',
+    ];
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()

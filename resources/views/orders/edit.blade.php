@@ -72,7 +72,7 @@
         </div>
         <div class="card col p-0 mx-1">
             @include('layouts.partials.orderProductsSelect', [
-                'categories' => $order->shop->categories,
+                'categories' => $order->shop?->categories,
                 // 'products' => $products,
             ])
         </div>

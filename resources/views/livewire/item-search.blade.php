@@ -29,10 +29,12 @@
             <div class="border-2 border-blue-500 flex flex-wrap overflow-y-scroll rounded-md">
                 @if ($products)
                     @foreach ($products as $product)
-                        @include('layouts.partials.itemCard', [
+                        <livewire:itemCard :product="$product" :order="$order" />
+
+                        {{-- @include('layouts.partials.itemCard', [
                             'order' => $order,
                             'product' => $product,
-                        ])
+                        ]) --}}
                     @endforeach
                 @else
                     <div class="border-2 border-red-500">

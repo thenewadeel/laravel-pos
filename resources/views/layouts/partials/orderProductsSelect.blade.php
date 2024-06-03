@@ -14,10 +14,11 @@
                     </a>
                     <div class="card-body p-0 m-0 flex row w-100 max-h-80  overflow-y-scroll">
                         @forelse (AliBayat\LaravelCategorizable\Category::find($category->id)->entries(App\Models\Product::class)->get() as $product)
-                            @include('layouts.partials.itemCard', [
+                            <livewire:itemCard :product="$product" :order="$order" />
+                            {{-- @include('layouts.partials.itemCard', [
                                 'order' => $order,
                                 'product' => $product,
-                            ])
+                            ]) --}}
                         @empty
                             <p>No items available.</p>
                         @endforelse

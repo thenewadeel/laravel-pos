@@ -23,7 +23,8 @@ class ItemSearch extends Component
     public function search()
     {
         $this->searching = true;
-        $this->products = $this->getProducts()->where('name', 'like', '%' . $this->searchText . '%')->get();
+        $prods = $this->getProducts();
+        $this->products = ($prods != null) ? $prods->where('name', 'like', '%' . $this->searchText . '%')->get() : null;
     }
     public function getProducts()
     {

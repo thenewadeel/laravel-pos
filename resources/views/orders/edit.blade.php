@@ -57,10 +57,11 @@
         </div>
 
         <div class="card col-md-3 p-0 mx-1">
-            @include('layouts.partials.orderItemsEdit', [
+            <livewire:order-items-edit :order="$order" />
+            {{-- @include('layouts.partials.orderItemsEdit', [
                 'order' => $order,
                 'products' => $products,
-            ])
+            ]) --}}
             {{-- @endsection --}}
             {{-- @section('form-right') --}}
 

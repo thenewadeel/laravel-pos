@@ -36,41 +36,41 @@
     {{-- @section('form-fields-left') --}}
     <div class="flex row">
         <div class="card col-md-3 p-0 mx-1">
-            @include('layouts.partials.orderEditData', [
-                'shops' => auth()->user() ? auth()->user()->shops : $shops,
-                'customers' => $customers,
-                'order' => $order,
-                'users' => $users,
-            ])
+            {{-- @include('layouts.partials.orderEditData', [
+            'shops' => auth()->user() ? auth()->user()->shops : $shops,
+            'customers' => $customers,
+            'order' => $order,
+            'users' => $users,
+            ]) --}}
 
-            @include('layouts.partials.orderDiscounts', [
+            <livewire:order-items-edit :order="$order" />
+            {{-- @include('layouts.partials.orderDiscounts', [
                 'order' => $order,
                 'discounts' => $discounts,
-            ])
+            ]) --}}
 
-            @include('layouts.partials.orderTotals', [
+            {{-- @include('layouts.partials.orderTotals', [
                 'order' => $order,
-            ])
+            ]) --}}
 
             @include('layouts.partials.orderPayments', ['order' => $order])
 
         </div>
 
-        <div class="card col-md-3 p-0 mx-1">
-            <livewire:order-items-edit :order="$order" />
-            {{-- @include('layouts.partials.orderItemsEdit', [
+        {{-- <div class="card col-md-3 p-0 mx-1"> --}}
+        {{-- @include('layouts.partials.orderItemsEdit', [
                 'order' => $order,
                 'products' => $products,
             ]) --}}
-            {{-- @endsection --}}
-            {{-- @section('form-right') --}}
+        {{-- @endsection --}}
+        {{-- @section('form-right') --}}
 
 
 
 
 
 
-        </div>
+        {{-- </div> --}}
         {{-- <div class="card col p-0 mx-1">
         </div> --}}
         <div class="card col p-0 mx-1">

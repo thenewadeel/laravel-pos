@@ -3,7 +3,10 @@
 @section('title', __('order.Orders_List'))
 @section('content-header', __('order.Orders_List'))
 @section('content-actions')
-    <a href="{{ route('createNeworder') }}" class="btn btn-outline-danger font-bold btn-sm">
+
+
+    <a class="btn btn-outline-danger font-bold btn-sm" id="btn-new-order"
+        onclick="document.getElementById('myModal').style.display='block'">
         <i class="fas fa-plus mr-1">
             {{ __('order.createNeworder') }}
         </i>
@@ -32,7 +35,17 @@
 
 @section('content')
     @include('layouts.partials.alert.error', ['errors' => $errors])
-
+    <div id="myModal" class=" fixed right-64 top-20  z-50 transition-all duration-700" style="display: none">
+        <div class="modal-content flex flex-col mx-2">
+            <div class="close self-end border-4 m-1 border-red-500 w-full rounded-md bg-red-600 text-center"
+                onclick="document.getElementById('myModal').style.display='none'" style="color: white;font-weight: bold;">
+                Cancel &times;
+            </div>
+            @include('layouts.partials.orderCreate', [
+                // 'user' => auth()->user() ? auth()->user()->shops : $shops,
+            ])
+        </div>
+    </div>
     <div class="card">
         {{-- {{var_dump($orders)}} --}}
         <div class="card-body m-0 p-0 ">

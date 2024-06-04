@@ -16,7 +16,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 // use App\Models\Category;
 use AliBayat\LaravelCategorizable\Category;
-
+use App\Http\Requests\OrderNewRequest;
 use Illuminate\Log\Logger;
 use App\Jobs\PrintOrderTokensJob;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
@@ -176,7 +176,13 @@ class OrderController extends Controller
         return view('orders.edit', compact('order', 'shops', 'customers', 'users', 'discounts', 'products'));
     }
 
+    public function makeNew(OrderNewRequest $request)
+    {
+        $request->merge(['user_id' => auth()->id()]);
+        $order = Order::create($request->all());
 
+        return redirect()->route('orders.edit', $order)->with('success', 'Order created successfully');
+    }
     public function newEdit()
     {
         $order = Order::create(['user_id' => auth()->id()]);

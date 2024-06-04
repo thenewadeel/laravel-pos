@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     ]);
 
     Route::get('/createNeworder', [OrderController::class, 'newEdit'])->name('createNeworder');
+    Route::post('/makeNeworder', [OrderController::class, 'makeNew'])->name('makeNeworder');
 
     Route::get('/listOfProducts', [ProductController::class, 'listOf']);
     Route::get('/listOfCustomers', [CustomerController::class, 'listOf']);

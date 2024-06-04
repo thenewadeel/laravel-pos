@@ -26,7 +26,7 @@
             </div>
         </div>
         @if ($searching)
-            <div class="border-2 border-blue-500 flex flex-wrap overflow-y-scroll rounded-md">
+            <div class="border-2 border-blue-500 flex flex-wrap max-h-[20vh] overflow-y-scroll rounded-md">
                 @if ($products)
                     @foreach ($products as $product)
                         <livewire:itemCard :product="$product" :order="$order" />

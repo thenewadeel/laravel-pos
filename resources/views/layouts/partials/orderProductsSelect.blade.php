@@ -1,4 +1,4 @@
-<div class="card p-0 m-0">
+<div class="card p-0 m-0 h-screen overflow-y-scroll">
     <div class="card-header p-1 m-0 text-lg font-bold text-center">
         Categories & Product List
     </div>
@@ -9,10 +9,14 @@
         @if (count($categories) > 0)
             @foreach ($categories as $category)
                 <div class="card p-0 m-0">
-                    <a class="card-header text-lg m-0 p-0 font-bold">
+                    <a class=" text-lg m-0 p-0 font-bold bg-blue-100 text-black"
+                        onclick="toggleCat('{{ $category->id }}')">
                         {{ $category->name }}
                     </a>
-                    <div class="card-body p-0 m-0 flex row w-100 max-h-80  overflow-y-scroll">
+                    <div class="card-body p-0 m-0 flex row w-100" id="cat-items-{{ $category->id }}"
+                        @if ($loop->first) style="display: flex-wrap"
+                        @else 
+                            style="display: none" @endif>
                         @forelse (AliBayat\LaravelCategorizable\Category::find($category->id)->entries(App\Models\Product::class)->get() as $product)
                             <livewire:itemCard :product="$product" :order="$order" />
                             {{-- @include('layouts.partials.itemCard', [
@@ -29,6 +33,12 @@
             <p>No categories found.</p>
         @endif
     </div>
+    <script>
+        function toggleCat(id) {
+            let visibility = document.getElementById('cat-items-' + id);
+            visibility.style.display = visibility.style.display === 'none' ? 'flex' : 'none';
+        }
+    </script>
 </div>
 
 {{-- </div> --}}
@@ -36,5 +46,5 @@
 {{-- <div class="card-footer">{{ $categories }}</div> --}}
 </div>
 @section('js')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script> --}}
 @endsection

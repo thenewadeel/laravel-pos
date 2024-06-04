@@ -31,4 +31,21 @@ class OrderItemsEdit extends Component
             $this->order = Order::find($this->order->id);
         }
     }
+
+    public function toggleDiscount($discountId)
+    {
+        $prevDiscounts = $this->order->discounts()->get();
+
+        if ($this->order->discounts->contains($discountId)) {
+            $this->order->discounts()->detach($discountId);
+        } else {
+            $this->order->discounts()->attach($discountId);
+        }
+
+        activity('order-discount')
+            ->causedBy(auth()->user())
+            ->performedOn($this->order)
+            ->withProperties(['old' => $prevDiscounts, 'attributes' => $this->order->discounts()->get()])
+            ->log('edited');
+    }
 }

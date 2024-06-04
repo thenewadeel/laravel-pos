@@ -47,5 +47,7 @@ class OrderItemsEdit extends Component
             ->performedOn($this->order)
             ->withProperties(['old' => $prevDiscounts, 'attributes' => $this->order->discounts()->get()])
             ->log('edited');
+
+        $this->order = Order::find($this->order->id);
     }
 }

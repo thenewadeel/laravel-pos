@@ -56,7 +56,7 @@
             </table>
         </div>
     </div>
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap" wire:loading.class="bg-red-200">
         @foreach (App\Models\Discount::all() as $discount)
             <div
                 class=" p-0 py-1 m-0 rounded-lg col-4 flex flex-row align-middle items-center justify-start justify-items-center">
@@ -72,5 +72,19 @@
                 </div>
             </div>
         @endforeach
+    </div>
+    <div class="flex items-center card-header text-bold py-0 my-0 text-center" wire:loading.class="bg-red-200">
+        <div class="col-md-4">
+            Total<br />
+            {{ config('settings.currency_symbol') }}{{ number_format($order->total(), 0) }}
+        </div>
+        <div class="col-md-4">
+            Discount<br />
+            {{ config('settings.currency_symbol') }}{{ number_format($order->discountAmount(), 0) }}
+        </div>
+        <div class="col-md-4">
+            Net Payable <br />
+            {{ config('settings.currency_symbol') }}{{ number_format($order->balance(), 0) }}
+        </div>
     </div>
 </div>

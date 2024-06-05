@@ -178,6 +178,20 @@ class OrderController extends Controller
 
     public function makeNew(OrderNewRequest $request)
     {
+        // dd($request->all());
+        if ($request->has('customer_id') && $request->customer_id == null) {
+            // } else {
+            $customer = Customer::firstOrCreate(
+                [
+                    "name" => $request->searchCustomer,
+                    "membership_number" => 555,
+                    // "address" => $request->customer_address,
+                    // "email" => $request->customer_email,
+                    // "user_id" => $request->customer_id
+                ]
+            );
+            $request['customer_id'] = $customer->id;
+        }
         $request->merge(['user_id' => auth()->id()]);
         $order = Order::create($request->all());
 

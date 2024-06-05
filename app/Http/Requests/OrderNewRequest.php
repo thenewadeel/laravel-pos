@@ -24,7 +24,8 @@ class OrderNewRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer_id' => 'required|integer|exists:customers,id',
+            'customer_id' => 'nullable|integer|exists:customers,id',
+            'searchCustomer' => 'required_if:customer_id,null',
             'shop_id' => 'required|integer|exists:shops,id',
             'amount' => 'nullable|numeric|min:0',
             'table_number' => 'nullable|string|max:3',

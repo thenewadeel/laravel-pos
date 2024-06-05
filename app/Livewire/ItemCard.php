@@ -67,6 +67,7 @@ class ItemCard extends Component
             // $this->reset();
             $this->setupQuantities();
             $this->dispatch('item-added-to-order', orderId: $order->id);
+            $this->dispatch('order-updated', orderId: $order->id);
         } else {
             $this->message =  'Product not added';
         }

@@ -23,6 +23,7 @@ class OrderItemsEdit extends Component
             $item->delete();
         }
     }
+    // #[On('order-updated')]
     #[On('item-added-to-order')]
     public function updatePostList($orderId)
     {
@@ -47,6 +48,8 @@ class OrderItemsEdit extends Component
             ->performedOn($this->order)
             ->withProperties(['old' => $prevDiscounts, 'attributes' => $this->order->discounts()->get()])
             ->log('edited');
+
+        $this->dispatch('order-updated', orderId: $this->order->id);
 
         $this->order = Order::find($this->order->id);
     }

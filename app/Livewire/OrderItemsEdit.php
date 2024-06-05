@@ -22,6 +22,7 @@ class OrderItemsEdit extends Component
         if ($item->order->id == $this->order->id) {
             $item->delete();
         }
+        $this->dispatch('order-updated', orderId: $this->order->id);
     }
     // #[On('order-updated')]
     #[On('item-added-to-order')]

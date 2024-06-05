@@ -52,8 +52,9 @@
             {{-- @include('layouts.partials.orderTotals', [
                 'order' => $order,
             ]) --}}
+            <livewire:order-payment :order="$order" />
 
-            @include('layouts.partials.orderPayments', ['order' => $order])
+            {{-- @include('layouts.partials.orderPayments', ['order' => $order]) --}}
 
         </div>
 

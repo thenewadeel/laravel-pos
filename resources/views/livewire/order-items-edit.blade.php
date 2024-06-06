@@ -1,9 +1,9 @@
-<div class="card p-0 m-0">
+<div class="card p-0 m-0 h-full overflow-y-scroll ">
     <div class="card-header p-1 m-0 text-lg font-bold text-center">
-        Items
+        {{ __('order.Order_Details') }}
     </div>
-    <div class="card-body p-1 m-0" wire:loading.class="bg-red-200">
-        <div class="form-group">
+    <div class="card-body p-1 m-0 overflow-y-scroll" wire:loading.class="bg-red-200">
+        <div class="form-group p-0 m-0">
             {{-- {{ $message }} --}}
             {{-- <label for="items" class="font-weight-bold">Items:</label> --}}
             <table class="table table-striped table-bordered table-sm p-0 m-0">
@@ -56,34 +56,43 @@
             </table>
         </div>
     </div>
-    <div class="flex flex-wrap" wire:loading.class="bg-red-200">
+    <div class="flex flex-wrap p-0 m-0" wire:loading.class="bg-red-200">
         @foreach (App\Models\Discount::all() as $discount)
             <div
                 class=" p-0 py-1 m-0 rounded-lg col-4 flex flex-row align-middle items-center justify-start justify-items-center">
                 <div
-                    class="form-check form-check-inline badge-{{ $discount->type == 'CHARGES' ? 'warning' : 'info' }} rounded-md p-0  m-0 ml-1">
-                    <input class="form-check-input mx-1 p-0" type="checkbox" name="discountsToAdd[]"
-                        value="{{ $discount->id }}"
+                    class="form-check form-check-inline badge-{{ $discount->type == 'CHARGES' ? 'warning' : 'success' }} rounded-md p-0  m-0 mx-1 w-full h-12 shadow-md">
+                    <input class="form-check-input mx-1 p-0 m-0 text-xl" type="checkbox" name="discountsToAdd[]"
+                        style="width: 1.5rem; height: 1.5rem;" value="{{ $discount->id }}"
                         {{ in_array($discount->id, $order->discounts->pluck('id')->toArray()) ? 'checked' : '' }}
                         wire:change.live="toggleDiscount({{ $discount->id }})">
-                    <label class="form-check-label m-0 p-0 text-md font-bold" for="discount{{ $discount->id }}">
-                        {{ $discount->name }} ({{ $discount->percentage }}%)
+                    <label class="form-check-label m-0 p-0 text-md font-bold leading-none self-center ml-2"
+                        for="discount{{ $discount->id }}">
+                        {{ $discount->name }}
+                        <br />
+                        <span class="text-sm font-normal">
+                            ({{ $discount->percentage }}%)
+                        </span>
                     </label>
                 </div>
             </div>
         @endforeach
     </div>
-    <div class="flex items-center card-header text-bold py-0 my-0 text-center" wire:loading.class="bg-red-200">
-        <div class="col-md-4">
-            Total<br />
+    <div class="flex flex-row items-center justify-between leading-none card-header text-bold py-0 my-0 text-center px-4"
+        wire:loading.class="bg-red-200">
+        <div class="">
+            <span class="text-base font-normal">Total</span>
+            <br />
             {{ config('settings.currency_symbol') }}{{ number_format($order->total(), 0) }}
         </div>
-        <div class="col-md-4">
-            Discount<br />
+        <div class="">
+            <span class="text-base font-normal">Discount</span>
+            <br />
             {{ config('settings.currency_symbol') }}{{ number_format($order->discountAmount(), 0) }}
         </div>
-        <div class="col-md-4">
-            Net Payable <br />
+        <div class="">
+            <span class="text-base font-normal">Net Payable</span>
+            <br />
             {{ config('settings.currency_symbol') }}{{ number_format($order->balance(), 0) }}
         </div>
     </div>

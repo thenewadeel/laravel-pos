@@ -18,11 +18,11 @@
 </head>
 
 <body class="hold-transition login-page mx-5 md:mx-20">
-    <div class=" fixed w-4/5 h-4/5 saturate-0 sepia-[.4] bg-gray-600 p-20 m-20 rounded-xl shadow-[2px_2px_5px] bg-cover bg-center filter blur-[2px] "
+    <div class=" fixed w-4/5 h-4/5 saturate-0 sepia-[.4] bg-gray-600 p-5 m-5 rounded-xl shadow-[2px_2px_5px] bg-cover bg-center filter blur-[2px] "
         style="background-image: url({{ asset('images/bg.jpg') }});">
     </div>
     <div
-        class="login-box flex flex-col md:flex-row justify-center justify-items-center align-middle items-center w-full p-20 m-20">
+        class="login-box flex flex-col md:flex-row justify-center justify-items-center align-middle items-center w-full p-0 m-5 md:p-20 md:m-20">
 
         <div
             class="login-logo  hidden md:flex md:w-1/2 hover:shadow-yellow-500 justify-center justify-items-center align-middle items-center">

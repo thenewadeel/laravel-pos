@@ -35,8 +35,10 @@
 
 @section('content')
     @include('layouts.partials.alert.error', ['errors' => $errors])
-    <div id="myModal" class=" fixed right-64 top-20  z-50 transition-all duration-700" style="display: none">
-        <div class="modal-content flex flex-col mx-2">
+    <div id="myModal"
+        class="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif] top-20 md:left-[40vw]"
+        style="display: none">
+        <div class="modal-content w-full max-w-lg bg-white shadow-lg rounded-md p-6 relative">
             <div class="close self-end border-4 m-1 border-red-500 w-full rounded-md bg-red-600 text-center"
                 onclick="document.getElementById('myModal').style.display='none'" style="color: white;font-weight: bold;">
                 Cancel &times;

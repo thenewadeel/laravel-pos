@@ -1,9 +1,7 @@
 <div class="rounded-md p-0 m-0 border-none border-emerald-800">
     <div class="card-header p-1 m-0 text-lg font-bold text-center">
-        Items
-    </div>
-    <div class="card-body p-1 m-0">
-        <div class="form-group">
+        {{-- Items --}}
+        <div class="form-group p-0 m-0 ">
             {{-- <label for="items" class="font-weight-bold">Items:</label> --}}
             {{-- {{ $order }} --}}
             {{-- {{ $products }} --}}
@@ -25,8 +23,11 @@
                 </button>
             </div>
         </div>
+    </div>
+    <div class="card-body p-1 m-0">
         @if ($searching)
-            <div class="border-2 border-blue-500 flex flex-wrap max-h-[20vh] overflow-y-scroll rounded-md">
+            <div
+                class="border-4 border-green-800 shadow-[0px_0px_5px] shadow-black flex flex-wrap h-[42vh] md:h-[38vh] overflow-y-scroll rounded-md">
                 @if ($products)
                     @foreach ($products as $product)
                         <livewire:itemCard :product="$product" :order="$order" />

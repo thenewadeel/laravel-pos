@@ -77,4 +77,7 @@ return [
     'Change_Title'       => 'Payment Complete with Change',
     'Change_Text'       => 'Please return change amount to Customer.',
     'createNeworder' => 'New',
+    'Order_Details' => 'Order Details',
+    'Payment'       => 'Payment',
+    'Pay_Close'     => 'Pay & Close'
 ];

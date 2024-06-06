@@ -34,48 +34,15 @@
     {{-- @section('route-update', route('orders.update', ['order' => $order->id])) --}}
 
     {{-- @section('form-fields-left') --}}
-    <div class="flex row">
-        <div class="card col-md-3 p-0 mx-1">
-            {{-- @include('layouts.partials.orderEditData', [
-            'shops' => auth()->user() ? auth()->user()->shops : $shops,
-            'customers' => $customers,
-            'order' => $order,
-            'users' => $users,
-            ]) --}}
+    <div class="flex md:flex-row flex-col h-[85vh]">
+        <div class="card flex flex-col col-md-3 p-0 mx-1 justify-between border-4 border-red-500">
 
             <livewire:order-items-edit :order="$order" />
-            {{-- @include('layouts.partials.orderDiscounts', [
-                'order' => $order,
-                'discounts' => $discounts,
-            ]) --}}
 
-            {{-- @include('layouts.partials.orderTotals', [
-                'order' => $order,
-            ]) --}}
             <livewire:order-payment :order="$order" />
-
-            {{-- @include('layouts.partials.orderPayments', ['order' => $order]) --}}
-
         </div>
-
-        {{-- <div class="card col-md-3 p-0 mx-1"> --}}
-        {{-- @include('layouts.partials.orderItemsEdit', [
-                'order' => $order,
-                'products' => $products,
-            ]) --}}
-        {{-- @endsection --}}
-        {{-- @section('form-right') --}}
-
-
-
-
-
-
-        {{-- </div> --}}
-        {{-- <div class="card col p-0 mx-1">
-        </div> --}}
-        <div class="card col p-0 mx-1">
-            <div class="max-h-96">
+        <div class="card flex flex-col w-full p-0 mx-1  border-4 border-red-500">
+            <div class="">
                 <livewire:item-search :order="$order" />
             </div>
             <div>

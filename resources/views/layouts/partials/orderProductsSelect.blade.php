@@ -1,4 +1,4 @@
-<div class="card p-0 m-0 h-screen overflow-y-scroll">
+<div class="card p-0 m-0 max-h-[77vh] overflow-y-scroll">
     <div class="card-header p-1 m-0 text-lg font-bold text-center">
         Categories & Product List
     </div>

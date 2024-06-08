@@ -68,7 +68,7 @@ class ProductSeeder extends Seeder
 
 
         DB::table('products')->delete();
-        DB::table('category_products')->delete();
+        // DB::table('category_products')->delete();
         DB::table('categories')->delete();
 
         $csvFilePath = base_path('seedData/products.csv');

@@ -9,7 +9,7 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>{{ $orders_count }}</h3>
+                        <div class="text-xl font-bold">{{ $orders_count }}</div>
                         <p>{{ __('dashboard.Orders_Count') }}</p>
                     </div>
                     <div class="icon">
@@ -24,7 +24,8 @@
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>{{ config('settings.currency_symbol') }} {{ number_format($sales, 2) }}</h3>
+                        <div class="text-xl font-bold">{{ config('settings.currency_symbol') }}
+                            {{ number_format($sales, 0) }}</div>
                         <p>{{ __('dashboard.Balance') }}</p>
                     </div>
                     <div class="icon">
@@ -38,7 +39,8 @@
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>{{ config('settings.currency_symbol') }} {{ number_format($income, 2) }}</h3>
+                        <div class="text-xl font-bold">{{ config('settings.currency_symbol') }}
+                            {{ number_format($income, 0) }}</div>
                         <p>{{ __('dashboard.Income') }}</p>
                     </div>
                     <div class="icon">
@@ -53,7 +55,8 @@
                 <!-- small box -->
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>{{ config('settings.currency_symbol') }} {{ number_format($income_today, 2) }}</h3>
+                        <div class="text-xl font-bold">{{ config('settings.currency_symbol') }}
+                            {{ number_format($income_today, 0) }}</div>
 
                         <p>{{ __('dashboard.Income_Today') }}</p>
                     </div>
@@ -69,7 +72,7 @@
                 <!-- small box -->
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>{{ $customers_count }}</h3>
+                        <div class="text-xl font-bold">{{ $customers_count }}</div>
 
                         <p>{{ __('dashboard.Customers_Count') }}</p>
                     </div>

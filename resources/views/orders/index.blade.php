@@ -87,7 +87,7 @@
                             <option value="">{{ __('order.Type') }}</option>
                             <option {{ request('type') == 'dine-in' ? 'selected' : '' }} value="dine-in">
                                 {{ __('order.Dine_In') }}</option>
-                            <option {{ request('type') == 'take_away' ? 'selected' : '' }} value="take_away">
+                            <option {{ request('type') == 'take-away' ? 'selected' : '' }} value="take-away">
                                 {{ __('order.Take_Away') }}</option>
                             <option {{ request('type') == 'delivery' ? 'selected' : '' }} value="delivery">
                                 {{ __('order.Delivery') }}</option>

@@ -67,10 +67,12 @@ class Order extends Model
     {
         parent::boot();
 
-        static::created(function ($obj) {
-            $obj->POS_number = sprintf('%04d', (int)Order::where('created_at', '>=', $obj->created_at->startOfMonth())->count() + 1) . '-' . $obj->created_at->format('d-m-Y');
-            $obj->save();
-        });
+        // static::created();
+    }
+    public function assignPOS()
+    {
+        $this->POS_number = sprintf('%04d', (int)Order::where('POS_number', '!=', 'null')->where('created_at', '>=', $this->created_at->startOfMonth())->count() + 1) . '-' . $this->created_at->format('d-m-Y');
+        $this->save();
     }
     public function items()
     {

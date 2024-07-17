@@ -5,8 +5,12 @@
     {{ 'Order Edit' }}
 @endsection
 @section('content-header')
-    {{ 'Order:Edit' }}
-    <span class="text-base" title="{{ $order }}">{{ $order->POS_number }}</span>
+    <div class="flex flex-row items-center">
+        <span title="{{ $order }}" class="mr-4">
+            {{ 'Order:Edit' }}
+        </span>
+        <livewire:order-p-o-s-no :order="$order" />
+    </div>
 @endsection
 @section('content-actions')
     <div class="mb-2">

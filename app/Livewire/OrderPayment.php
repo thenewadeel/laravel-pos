@@ -69,6 +69,7 @@ class OrderPayment extends Component
             'user_id' => auth()->user()->id,
             'amount' => ($this->customerPayment >= $this->order->balance()) ? $this->order->balance() : $this->customerPayment,
         ]);
+        if ($this->order->POS_number == null) $this->order->assignPOS();
         $this->order->state = 'closed';
         $this->order->save();
         return $this->redirect('/orders/' . $this->order->id);

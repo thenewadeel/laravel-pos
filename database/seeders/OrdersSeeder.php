@@ -22,9 +22,9 @@ class OrdersSeeder extends Seeder
 
         // Create a loop for 500 orders
         for ($i = 0; $i < 250; $i++) {
-            $user = \App\Models\User::all()->random();
-            $shop = \App\Models\Shop::all()->random();
-            $customer = \App\Models\Customer::all()->random();
+            $user = \App\Models\User::inRandomOrder()->first();
+            $shop = \App\Models\Shop::inRandomOrder()->first();
+            $customer = \App\Models\Customer::inRandomOrder()->first();
 
             $order = Order::create([
                 'user_id' => $user->id,

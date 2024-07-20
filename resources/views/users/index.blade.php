@@ -38,6 +38,8 @@
                                     <span class="right badge badge-success">{{ $user->type }}</span>
                                 @elseif ($user->type == 'cashier')
                                     <span class="right badge badge-danger">{{ $user->type }}</span>
+                                @elseif ($user->type == 'order-taker')
+                                    <span class="right badge badge-info">{{ $user->type }}</span>
                                 @else
                                     <span class="right badge badge-warning">{{ $user->type }}</span>
                                 @endif

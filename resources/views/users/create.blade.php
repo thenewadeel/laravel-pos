@@ -47,7 +47,12 @@
                 @include('layouts.partials.selector', [
                     'name' => 'type',
                     'selected' => old('type'),
-                    'options' => ['admin' => 'admin', 'cashier' => 'cashier', 'accountant' => 'accountant'],
+                    'options' => [
+                        'admin' => 'admin',
+                        'cashier' => 'cashier',
+                        'accountant' => 'accountant',
+                        'order-taker' => 'order-taker',
+                    ],
                     'label' => __('user.Type'),
                     'placeholder' => __('user.Type'),
                 ])

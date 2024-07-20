@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
         ]);
 
         // Make 3 cashiers
-        $types = ['cashier', 'cashier', 'cashier'];
+        $types = ['cashier', 'cashier', 'order-taker'];
         $firstNames = ['Faizan', 'Sameer', 'Ameen'];
         $lastNames = ['Ahmed', 'Ali Shah', 'Shah'];
         $emails = ['john@qcl.pos', 'emma@qcl.pos', 'david@qcl.pos'];

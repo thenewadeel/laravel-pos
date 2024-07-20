@@ -29,7 +29,7 @@ class UserStoreRequest extends FormRequest
             'email' => 'required|email',
             'password' => 'required|string',
             // 'image' => 'nullable|image',
-            'type' => 'in:admin,cashier,accountant|string',
+            'type' => 'in:admin,cashier,accountant,order-taker|string',
 
         ];
     }

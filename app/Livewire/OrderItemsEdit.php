@@ -24,6 +24,28 @@ class OrderItemsEdit extends Component
         }
         $this->dispatch('order-updated', orderId: $this->order->id);
     }
+    public function increaseQty($itemId)
+    {
+        $item = OrderItem::find($itemId);
+        $newQty = $item->quantity + 1;
+        $item->update([
+            'quantity' => $newQty,
+            'price' => $item->product->price * ($newQty)
+        ]);
+        $this->dispatch('order-updated', orderId: $this->order->id);
+    }
+    public function decreaseQty($itemId)
+    {
+        $item = OrderItem::find($itemId);
+        if ($item->quantity > 1) {
+            $newQty = $item->quantity - 1;
+            $item->update([
+                'quantity' => $newQty,
+                'price' => $item->product->price * ($newQty)
+            ]);
+            $this->dispatch('order-updated', orderId: $this->order->id);
+        }
+    }
     // #[On('order-updated')]
     #[On('item-added-to-order')]
     public function updatePostList($orderId)

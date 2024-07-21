@@ -21,7 +21,19 @@
                         <tr>
                             <td class="">{{ $item->product->name }}</td>
                             <td class="text-right">{{ $item->product->price }}</td>
-                            <td class="text-center">{{ $item->quantity }}</td>
+                            <td class="text-center flex flex-row">
+                                <div class="flex flex-row items-center">
+                                    <i class="fas fa-minus-circle text-red-500 hover:text-red-700 cursor-pointer"
+                                        wire:click="decreaseQty({{ $item->id }})"></i>
+                                    &nbsp;
+                                </div>
+                                {{ $item->quantity }}
+                                <div class="flex flex-row items-center">
+                                    <i class="fas fa-plus-circle text-green-500 hover:text-green-700 cursor-pointer"
+                                        wire:click="increaseQty({{ $item->id }})"></i>
+                                    &nbsp;
+                                </div>
+                            </td>
                             {{-- <td>
                                 <input type="number" name="items[{{ $item->id }}][quantity]"
                                     value="{{ $item->quantity }}" class="form-control">

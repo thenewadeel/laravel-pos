@@ -6,7 +6,7 @@
         <div class="form-group p-0 m-0">
             {{-- {{ $message }} --}}
             {{-- <label for="items" class="font-weight-bold">Items:</label> --}}
-            <table class="table table-striped table-bordered table-sm p-0 m-0">
+            <table class="table table-striped  table-sm p-0 m-0">
                 <thead>
                     <tr class="text-center font-bold">
                         <th>Product</th>
@@ -18,38 +18,38 @@
                 </thead>
                 <tbody>
                     @foreach ($order->items as $item)
-                        <tr>
-                            <td class="">{{ $item->product->name }}</td>
-                            <td class="text-right">{{ $item->product->price }}</td>
-                            <td class="text-center flex flex-row">
-                                <div class="flex flex-row items-center">
-                                    <i class="fas fa-minus-circle text-red-500 hover:text-red-700 cursor-pointer"
-                                        wire:click="decreaseQty({{ $item->id }})"></i>
-                                    &nbsp;
-                                </div>
-                                {{ $item->quantity }}
-                                <div class="flex flex-row items-center">
-                                    <i class="fas fa-plus-circle text-green-500 hover:text-green-700 cursor-pointer"
-                                        wire:click="increaseQty({{ $item->id }})"></i>
-                                    &nbsp;
+                        <tr class="">
+
+                            <td class="align-middle">{{ $item->product->name }}</td>
+                            <td class="align-middle text-right">{{ $item->product->price }}</td>
+                            <td class="align-middle">
+                                <div
+                                    class="text-center px-0 py-2 flex flex-row items-center overflow-hidden border-2 border-slate-200 w-max rounded-lg ">
+                                    @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
+                                    @endif
+                                    {{-- <div class="flex overflow-hidden border w-max rounded-lg"> --}}
+                                    <button type="button"
+                                        class="flex items-center justify-center w-6 h-6 font-semibold rounded-r-full rounded-l-md bg-red-200 border-2 border-red-500 align-middle"
+                                        wire:click="decreaseQty({{ $item->id }})">
+                                        -
+                                    </button>
+                                    <span
+                                        class="bg-transparent flex items-center justify-center w-8 h-6 font-semibold text-gray-800 text-base align-middle">
+                                        {{ $item->quantity }}
+                                    </span>
+                                    <button type="button"
+                                        class="flex items-center justify-center w-6 h-6 font-semibold rounded-l-full rounded-r-md bg-green-300 border-2 border-green-500 align-middle"
+                                        wire:click="increaseQty({{ $item->id }})">
+                                        +
+                                    </button>
                                 </div>
                             </td>
-                            {{-- <td>
-                                <input type="number" name="items[{{ $item->id }}][quantity]"
-                                    value="{{ $item->quantity }}" class="form-control">
-                            </td> --}}
-                            <td class="text-right">
+                            <td class="text-right align-middle">
                                 {{ number_format($item->quantity * $item->product->price, 0) }}
                             </td>
-                            <td>
-                                {{-- <form action="{{ route('order.items.destroy', [$order, $item]) }}" method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form> --}}
-                                <button wire:click="deleteItem({{ $item->id }})" class="btn btn-danger btn-sm">
+                            <td class="align-middle">
+                                <button wire:click="deleteItem({{ $item->id }})"
+                                    class="btn btn-danger btn-sm align-middle">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </td>

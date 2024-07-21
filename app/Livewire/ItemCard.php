@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Order;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class ItemCard extends Component
@@ -72,5 +74,15 @@ class ItemCard extends Component
             $this->message =  'Product not added';
         }
         // return redirect()->route('orders.edit', $order)->with('success', 'Product added to order successfully');
+    }
+
+    #[On('order-updated')]
+    public function updateOrder($orderId)
+    {
+        if ($this->order->id == $orderId) {
+            // $this->message = $orderId;
+            $this->order = Order::find($this->order->id);
+        }
+        $this->setupQuantities();
     }
 }

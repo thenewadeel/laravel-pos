@@ -57,7 +57,7 @@
             </div>
             <!-- /.col -->
             <button type="submit"
-                class=" bg-blue-900 text-white font-bold w-full text-center rounded-md min-h-10 hover:shadow-sky-500 hover:shadow-md transition-all duration-500 px-0 mx-0">Login</button>
+                class=" bg-blue-950 text-white font-bold w-full text-center rounded-md min-h-10 hover:shadow-slate-950 hover:shadow-md transition-all duration-500 px-0 mx-0">Login</button>
             <!-- /.col -->
         </div>
     </form>

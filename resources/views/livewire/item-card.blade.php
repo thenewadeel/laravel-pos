@@ -24,7 +24,7 @@
         <div class="p-0 px-2 m-0 rounded-md" wire:loading.class="bg-red-200">
             <button type="button" wire:click="addProductToOrder" class="btn btn-outline-secondary btn-block btn-sm "
                 wire:loading.attr="disabled">
-                <i class="fas fa-add p-0 m-0"></i>
+                <i class="fas fa-add p-0 m-0"></i>Add
             </button>
         </div>
     </div>

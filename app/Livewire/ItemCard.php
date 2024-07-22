@@ -45,7 +45,8 @@ class ItemCard extends Component
     }
     public function qtyDown()
     {
-        $this->quantity--;
+        if ($this->quantity > 1)
+            $this->quantity--;
     }
     public function addProductToOrder()
     {

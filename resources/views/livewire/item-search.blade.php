@@ -26,23 +26,18 @@
     </div>
     <div class="card-body p-1 m-0">
         @if ($searching)
-            <div
-                class="border-4 border-green-800 shadow-[0px_0px_5px] shadow-black flex flex-wrap h-[42vh] md:h-[38vh] overflow-y-scroll rounded-md">
-                @if ($products)
+            @if ($products->count() > 0)
+                <div
+                    class="border-4 border-green-800 shadow-[0px_0px_5px] shadow-black flex flex-wrap max-h-[42vh] md:max-h-[38vh] overflow-y-scroll rounded-md">
                     @foreach ($products as $product)
                         <livewire:itemCard :product="$product" :order="$order" />
-
-                        {{-- @include('layouts.partials.itemCard', [
-                            'order' => $order,
-                            'product' => $product,
-                        ]) --}}
                     @endforeach
-                @else
-                    <div class="border-2 border-red-500">
-                        No Products Found
-                    </div>
-                @endif
-            </div>
+                </div>
+            @else
+                <div class="border-2 border-red-500 text-center text-lg bg-red-200 font-bold">
+                    No Products Found
+                </div>
+            @endif
             {{-- @else
             <div class="border-2 border-red-500">
                 Enter Search text

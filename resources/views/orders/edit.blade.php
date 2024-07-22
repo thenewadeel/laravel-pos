@@ -43,11 +43,14 @@
 
             <livewire:order-items-edit :order="$order" />
 
-            <livewire:order-payment :order="$order" />
+            @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
+                <livewire:order-payment :order="$order" />
+            @endif
         </div>
         <div class="card flex flex-col w-full p-0 mx-1  border-4 border-red-500">
             <div class="">
-                <livewire:item-search :order="$order" />
+                {{-- <livewire:item-search :order="$order" /> --}}
+                @include('layouts.partials.productSearch', [])
             </div>
             <div>
 

@@ -65,46 +65,48 @@
                         'Table_Number
                         'Waiter_Name
                         'Shop_Name --}}
-
-                <form action="{{ route('orders.index') }}" method="GET">
-                    <div class="form-inline flex flex-row justify-items-stretch justify-content-between  m-0 p-2">
-                        <div class="input-group ">
-                            <input type="date" name="start_date" class="form-control "
-                                value="{{ request('start_date') }}" />
-                            {{-- <div class="col-md-5"> --}}
-                            <input type="date" name="end_date" class="form-control "
-                                value="{{ request('end_date') }}" />
+                @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
+                    <form action="{{ route('orders.index') }}" method="GET">
+                        <div class="form-inline flex flex-row justify-items-stretch justify-content-between  m-0 p-2">
+                            <div class="input-group ">
+                                <input type="date" name="start_date" class="form-control "
+                                    value="{{ request('start_date') }}" />
+                                {{-- <div class="col-md-5"> --}}
+                                <input type="date" name="end_date" class="form-control "
+                                    value="{{ request('end_date') }}" />
+                            </div>
+                            {{-- </div> --}}
+                            {{-- <div class="col-md-2"> --}}
+                            {{-- <button class="btn btn-outline-primary" type="submit">{{ __('order.submit') }}</button> --}}
+                            {{-- </div> --}}
+                            <input type="search" name="pos_number" placeholder="{{ __('order.POS_Number') }}"
+                                value="{{ request('pos_number') }}" id="posNumber" class="form-control p-0 m-0 w-auto">
+                            <input type="search" name="customer_name" placeholder="{{ __('order.Customer_Name') }}"
+                                value="{{ request('customer_name') }}" id="customerName"
+                                class="form-control p-0 m-0 w-auto">
+                            <select name="type" id="type" class="form/orders/251/edit-control p-0 m-0 w-auto">
+                                <option value="">{{ __('order.Type') }}</option>
+                                <option {{ request('type') == 'dine-in' ? 'selected' : '' }} value="dine-in">
+                                    {{ __('order.Dine_In') }}</option>
+                                <option {{ request('type') == 'take-away' ? 'selected' : '' }} value="take-away">
+                                    {{ __('order.Take_Away') }}</option>
+                                <option {{ request('type') == 'delivery' ? 'selected' : '' }} value="delivery">
+                                    {{ __('order.Delivery') }}</option>
+                            </select>
+                            <input type="search" name="table_number" placeholder="{{ __('order.Table_Number') }}"
+                                value="{{ request('table_number') }}" id="tableNumber" class="form-control p-0 m-0 w-auto">
+                            <input type="search" name="waiter_name" placeholder="{{ __('order.Waiter_Name') }}"
+                                value="{{ request('waiter_name') }}" style="width:200px" id="waiterName"
+                                class="form-control p-0 m-0 w-auto">
+                            <div class="btn-group  btn-block">
+                                <button type="submit" class="btn btn-outline-primary btn-sm"><i
+                                        class="fas fa-filter"></i>{{ __('common.Filter') }}</button>
+                                <button type="reset" class="btn btn-outline-danger  btn-sm"><i
+                                        class="fas fa-eraser"></i>{{ __('common.Reset') }}</button>
+                            </div>
                         </div>
-                        {{-- </div> --}}
-                        {{-- <div class="col-md-2"> --}}
-                        {{-- <button class="btn btn-outline-primary" type="submit">{{ __('order.submit') }}</button> --}}
-                        {{-- </div> --}}
-                        <input type="search" name="pos_number" placeholder="{{ __('order.POS_Number') }}"
-                            value="{{ request('pos_number') }}" id="posNumber" class="form-control p-0 m-0 w-auto">
-                        <input type="search" name="customer_name" placeholder="{{ __('order.Customer_Name') }}"
-                            value="{{ request('customer_name') }}" id="customerName" class="form-control p-0 m-0 w-auto">
-                        <select name="type" id="type" class="form-control p-0 m-0 w-auto">
-                            <option value="">{{ __('order.Type') }}</option>
-                            <option {{ request('type') == 'dine-in' ? 'selected' : '' }} value="dine-in">
-                                {{ __('order.Dine_In') }}</option>
-                            <option {{ request('type') == 'take-away' ? 'selected' : '' }} value="take-away">
-                                {{ __('order.Take_Away') }}</option>
-                            <option {{ request('type') == 'delivery' ? 'selected' : '' }} value="delivery">
-                                {{ __('order.Delivery') }}</option>
-                        </select>
-                        <input type="search" name="table_number" placeholder="{{ __('order.Table_Number') }}"
-                            value="{{ request('table_number') }}" id="tableNumber" class="form-control p-0 m-0 w-auto">
-                        <input type="search" name="waiter_name" placeholder="{{ __('order.Waiter_Name') }}"
-                            value="{{ request('waiter_name') }}" style="width:200px" id="waiterName"
-                            class="form-control p-0 m-0 w-auto">
-                        <div class="btn-group  btn-block">
-                            <button type="submit" class="btn btn-outline-primary btn-sm"><i
-                                    class="fas fa-filter"></i>{{ __('common.Filter') }}</button>
-                            <button type="reset" class="btn btn-outline-danger  btn-sm"><i
-                                    class="fas fa-eraser"></i>{{ __('common.Reset') }}</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                @endif
             </div>
             {{-- </div> --}}
             {{-- {{ $orders[0] }} --}}
@@ -123,13 +125,14 @@
                         {{-- <th>{{ __('order.Discounts') }}</th> --}}
                         {{-- <th>{{ __('order.Discount') }}</th> --}}
                         <th class="text-center align-middle">{{ __('order.NetAmount') }}</th>
-                        <th class="text-center align-middle">{{ __('order.Received_Amount') }}</th>
-                        <th class="text-center align-middle">{{ __('order.Chit') }}</th>
+                        @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
+                            <th class="text-center align-middle">{{ __('order.Received_Amount') }}</th>
+                            <th class="text-center align-middle">{{ __('order.Chit') }}</th>
 
-
-                        {{-- <th>{{ 'Shop' }}</th> --}}
-                        <th class="col-1 text-center align-middle">{{ __('order.Taken_By') }}</th>
-                        <th class="col-1 text-center align-middle">{{ __('order.Closed_By') }}</th>
+                            {{-- <th>{{ 'Shop' }}</th> --}}
+                            <th class="col-1 text-center align-middle">{{ __('order.Taken_By') }}</th>
+                            <th class="col-1 text-center align-middle">{{ __('order.Closed_By') }}</th>
+                        @endif
                         <th class="col-1 text-center align-middle">{{ __('order.Status') }}</th>
                         <th class="col-1 text-center align-middle">{{ __('order.Actions') }}</th>
                     </tr>
@@ -169,26 +172,27 @@
 
                                 {{ config('settings.currency_symbol') }} {{ number_format($order->discountedTotal(), 0) }}
                             </td>
-                            <td class="text-right align-middle">{{ config('settings.currency_symbol') }}
-                                {{ number_format($order->receivedAmount(), 0) }}</td>
+                            @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
+                                <td class="text-right align-middle">{{ config('settings.currency_symbol') }}
+                                    {{ number_format($order->receivedAmount(), 0) }}</td>
 
-                            <td class="text-right align-middle">{{ config('settings.currency_symbol') }}
-                                {{ number_format($order->balance(), 0) }}
-                            </td>
-
-                            <td class=" align-middle">{{ $order->getUserName() }}</td>
-                            @php($users = $order->payments->pluck('user')->flatten()->unique('id'))
-                            <td class=" align-middle">
-                                @if ($users->isNotEmpty())
-                                    @foreach ($users as $user)
-                                        {{ $user->getFullName() }}@if (!$loop->last)
-                                            ,
-                                        @endif
-                                    @endforeach
-                                @else
-                                    Unknown
-                                @endif
-                            </td>
+                                <td class="text-right align-middle">{{ config('settings.currency_symbol') }}
+                                    {{ number_format($order->balance(), 0) }}
+                                </td>
+                                <td class=" align-middle">{{ $order->getUserName() }}</td>
+                                @php($users = $order->payments->pluck('user')->flatten()->unique('id'))
+                                <td class=" align-middle">
+                                    @if ($users->isNotEmpty())
+                                        @foreach ($users as $user)
+                                            {{ $user->getFullName() }}@if (!$loop->last)
+                                                ,
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        Unknown
+                                    @endif
+                                </td>
+                            @endif
                             <td style="vertical-align: middle; text-align: center;" class="px-0  align-middle">
                                 @if ($order->state == 'preparing')
                                     {{-- <span class="badge badge-success">{{ __('order.Preparing') }}</span> --}}
@@ -258,10 +262,12 @@
                             {{ number_format($totalDiscountAmount) }}</th> --}}
                         <th class="text-right align-middle">{{ config('settings.currency_symbol') }}
                             {{ number_format($totalNetAmount) }}</th>
-                        <th class="text-right align-middle">{{ config('settings.currency_symbol') }}
-                            {{ number_format($totalReceivedAmount) }}</th>
-                        <th class="text-right align-middle pr-1">{{ config('settings.currency_symbol') }}
-                            {{ number_format($totalChitAmount) }}</th>
+                        @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
+                            <th class="text-right align-middle">{{ config('settings.currency_symbol') }}
+                                {{ number_format($totalReceivedAmount) }}</th>
+                            <th class="text-right align-middle pr-1">{{ config('settings.currency_symbol') }}
+                                {{ number_format($totalChitAmount) }}</th>
+                        @endif
                         {{-- <th></th> --}}
                     </tr>
                 </tfoot>

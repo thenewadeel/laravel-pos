@@ -39,6 +39,14 @@ class ItemCard extends Component
         $this->quantity = 1;
         $this->processing = false;
     }
+    public function qtyUp()
+    {
+        $this->quantity++;
+    }
+    public function qtyDown()
+    {
+        $this->quantity--;
+    }
     public function addProductToOrder()
     {
         $this->processing = true;

@@ -56,6 +56,27 @@
                         </tr>
                     @endforeach
                     <tr>
+                        <td colspan="5">
+                            <div class="flex flex-row">
+                                <div class="flex flex-col">
+                                    <input wire:model="miscProductName" placeholder="misc item" class="form-control">
+
+                                    @if ($errors->has('miscProductName'))
+                                        <span>{{ $errors->first('miscProductName') }}</span>
+                                    @endif
+                                </div>
+                                <div class="flex flex-col">
+                                    <input wire:model="miscProductPrice" placeholder="Amount" class="form-control"
+                                        type="number" step="0.1">
+                                    @if ($errors->has('miscProductPrice'))
+                                        <span>{{ $errors->first('miscProductPrice') }}</span>
+                                    @endif
+                                </div>
+                                <button wire:click="addMiscProduct" class="btn btn-sm btn-primary">Add</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="text-center font-weight-bold">{{ $order->items->count() }}x Items</td>
                         <td class="text-right font-weight-bold">Total</td>
                         <td class="text-center font-weight-bold">{{ $order->items->sum('quantity') }}</td>

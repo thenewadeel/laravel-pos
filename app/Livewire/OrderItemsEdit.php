@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
@@ -11,10 +12,30 @@ class OrderItemsEdit extends Component
 {
     public $order;
     public $message = 'asd';
+    public $miscProductName, $miscProductPrice;
+    protected $rules = [
+        "miscProductName" => "required|string",
+        "miscProductPrice" => "required|decimal:0,2",
+    ];
     // public $products;
     public function render()
     {
         return view('livewire.order-items-edit');
+    }
+    public function addMiscProduct()
+    {
+        $this->validate();
+        $product = Product::firstOrCreate([
+            'name' => $this->miscProductName,
+            'price' => $this->miscProductPrice
+        ]);
+
+        $this->order->items()->create([
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'price' => $product->price,
+        ]);
+        $this->dispatch('order-updated', orderId: $this->order->id);
     }
     public function deleteItem($id)
     {

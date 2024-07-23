@@ -11,7 +11,7 @@
             <div class="form-group col flex p-0 m-0">
                 <label for="shop_id" class="col-md-4">Shop:</label>
                 <select name="shop_id" id="shop_id" class="form-control">
-                    @foreach ($shops as $shop)
+                    @foreach (auth()->user()->shops as $shop)
                         <option value="{{ $shop->id }}" {{ $shop->id == $order->shop_id ? 'selected' : '' }}>
                             {{ $shop->name }}
                         </option>
@@ -21,19 +21,19 @@
             <div class="form-group col flex p-0 m-0">
 
                 <label for="type" class="col-md-4">Type:</label>
-                <select name="type" id="type" class="form-control">
+                <select name="type" id="type" class="form-control" onchange="handleTypeChange(event)">
                     <option value="dine-in" {{ $order->type == 'dine-in' ? 'selected' : '' }}>Dine-in</option>
                     <option value="take-away" {{ $order->type == 'take-away' ? 'selected' : '' }}>Take Away</option>
                     <option value="delivery" {{ $order->type == 'delivery' ? 'selected' : '' }}>Delivery</option>
                 </select>
             </div>
-            <div class="form-group col flex p-0 m-0">
+            <div class="form-group col flex p-0 m-0" id="waiter_name-div">
 
                 <label for="waiter_name" class="col-md-4">Waiter:</label>
                 <input type="text" name="waiter_name" id="waiter_name" class="form-control"
                     value="{{ old('waiter_name', $order->waiter_name) }}">
             </div>
-            <div class="form-group col flex p-0 m-0">
+            <div class="form-group col flex p-0 m-0" id="table_number-div">
 
                 <label for="table_number" class="col-md-4">Table #:</label>
                 <input type="number" name="table_number" id="table_number" class="form-control"
@@ -102,6 +102,24 @@
 
                         dropdown.style.display = 'block';
                     });
+                </script>
+                <script>
+                    function handleTypeChange(event) {
+                        switch (event.target.value) {
+                            case 'dine-in':
+                                document.getElementById('table_number-div').style.display = 'flex';
+                                id = "table_number"
+                                document.getElementById('waiter_name-div').style.display = 'flex';
+
+                                break;
+                            default:
+                                document.getElementById('table_number-div').style.display = 'none';
+                                document.getElementById('waiter_name-div').style.display = 'none';
+                                document.getElementById('table_number').value = null;
+                                document.getElementById('waiter_name').value = null;
+                                break;
+                        }
+                    }
                 </script>
             </div>
             <div class="form-group col flex p-0 m-0">

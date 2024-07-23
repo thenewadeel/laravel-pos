@@ -41,6 +41,10 @@
     <div class="flex md:flex-row flex-col h-[85vh]">
         <div class="card flex flex-col col-md-3 p-0 mx-1 justify-between border-4 border-red-500">
 
+            @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
+                @include('layouts.partials.orderEditData', [])
+            @endif
+
             <livewire:order-items-edit :order="$order" />
 
             @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')

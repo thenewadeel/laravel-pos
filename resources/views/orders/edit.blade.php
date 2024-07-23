@@ -52,16 +52,10 @@
             @endif
         </div>
         <div class="card flex flex-col w-full p-0 mx-1  border-4 border-red-500">
-            <div class="">
-                {{-- <livewire:item-search :order="$order" /> --}}
-                @include('layouts.partials.productSearch', [])
-            </div>
-            <div>
 
-                @include('layouts.partials.orderProductsSelect', [
-                    'categories' => $order->shop?->categories,
-                    // 'products' => $products,
-                ])
-            </div>
+            @include('layouts.partials.orderProductsSelect', [
+                'categories' => $order->shop?->categories,
+                // 'products' => $products,
+            ])
         </div>
     @endsection

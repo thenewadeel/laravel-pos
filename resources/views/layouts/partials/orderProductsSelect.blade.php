@@ -1,6 +1,7 @@
 <div class="card p-0 m-0 max-h-[77vh] overflow-y-scroll">
-    <div class="card-header p-1 m-0 text-lg font-bold text-center">
+    <div class="card-header p-1 m-0 text-lg font-bold text-center flex flex-row justify-between items-center">
         Categories & Product List
+        @include('layouts.partials.productSearch', [])
     </div>
     <div class="card-body p-1 m-0">
         {{-- <div class=""> --}}

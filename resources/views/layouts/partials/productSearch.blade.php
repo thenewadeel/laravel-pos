@@ -1,13 +1,20 @@
-<div class="flex flex-wrap border-2 border-green-500">
-    searching. . .
-    <input type="text" class="w-full outline-none bg-white text-gray-600 text-sm px-4 py-3" placeholder="Search..."
-        oninput="filterProducts()" id="searchInput">
+<div class="flex flex-col ">
+    <div class="form-inline justify-content-center">
 
-    {{ $products->count() }}
+
+        <input type="text" class="form-control " placeholder="Search..." oninput="filterProducts()" id="searchInput">
+        <button class="btn btn-danger btn-sm btn-delete" onclick="clearSearch()">Clear</button>
+
+
+        {{-- <button class="btn btn-danger btn-delete" data-url="{{ route('shops.destroy', $shop) }}"><i
+                    class="fas fa-trash"></i></button> --}}
+    </div>
+
+    {{-- {{ $products->count() }} --}}
     <div id="product-list"
-        class="border-4 border-green-800 shadow-[0px_0px_5px] shadow-black flex flex-wrap max-h-[42vh] md:max-h-[38vh] overflow-y-scroll rounded-md">
+        class=" shadow-[0px_0px_5px] shadow-black flex flex-wrap max-h-[42vh] md:max-h-[38vh] overflow-y-scroll rounded-md">
         @foreach ($products as $product)
-            <span data-productname="{{ strtolower($product->name) }}" style="display:none" class="max-w-[4em]">
+            <span data-productname="{{ $product->name }}" style="display:none">
                 <livewire:itemCard :product="$product" :order="$order" />
             </span>
         @endforeach
@@ -29,6 +36,15 @@
                     li[i].style.display = "none";
                 }
             }
+        }
+
+        function clearSearch() {
+            ul = document.getElementById('product-list');
+            li = ul.getElementsByTagName('span');
+            for (i = 0; i < li.length; i++) {
+                li[i].style.display = "none";
+            }
+            document.getElementById('searchInput').value = '';
         }
     </script>
 

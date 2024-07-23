@@ -43,27 +43,7 @@ class DiscountSeeder extends Seeder
             'method' => 'REVERSE',
             'type' => 'CHARGES',
         ]);
-        Discount::create([
-            'name' => 'Fazool Charges',
-            'percentage' => 13.5,
-            'amount' => 500,
-            'method' => 'NATURAL',
-            'type' => 'CHARGES',
-        ]);
-        Discount::create([
-            'name' => 'Nirala Discount',
-            'percentage' => 30,
-            'amount' => 300,
-            'method' => 'NATURAL',
-            'type' => 'DISCOUNT',
-        ]);
-        Discount::create([
-            'name' => 'Nirala Reverse',
-            'percentage' => 30,
-            'amount' => 300,
-            'method' => 'REVERSE',
-            'type' => 'DISCOUNT',
-        ]);
+
 
         // Seed the pivot table
         // for ($i = 0; $i < 20; $i++) {

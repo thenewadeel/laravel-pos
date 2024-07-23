@@ -1,8 +1,9 @@
 <div class="card p-0 m-0">
-    <div class="card-header p-1 m-0 text-lg font-bold text-center">
+    <div class="card-header p-1 m-0 text-lg font-bold text-center" onclick="toggleOrderData()">
         Order Data
+        <i class="fas fa-chevron-down transition-all duration-300 text-slate-500"></i>
     </div>
-    <div class="card-body p-1 m-0">
+    <div class="card-body p-1 m-0 hidden transition-all duration-300" id="orderDataBody">
 
         <form action="{{ route('orders.update', ['order' => $order->id]) }}" method="POST">
             @csrf
@@ -67,60 +68,6 @@
                         </ul>
                     </div>
                 </div>
-
-                <script>
-                    (function() {
-                        document.getElementById('customerDropdown').addEventListener('click', function(e) {
-                            if (e.target.tagName === 'LI') {
-                                var customerId = e.target.querySelector('.font-normal').getAttribute('data-id');
-                                // console.log(customerId);
-                                document.getElementById('customer_id').value = customerId;
-                                document.getElementById('searchCustomer').value = e.target.querySelector('span:last-child')
-                                    .textContent;
-                                document.getElementById('customerDropdown').style.display = 'none';
-                            }
-                        });
-
-                        document.addEventListener('click', function(e) {
-                            var dropdown = document.getElementById('customerDropdown');
-                            if (!dropdown.contains(e.target) && e.target.id !== 'searchCustomer') {
-                                dropdown.style.display = 'none';
-                            }
-                        });
-                    })();
-
-                    document.getElementById('searchCustomer').addEventListener('input', function() {
-                        var input = this.value.toLowerCase();
-                        var dropdown = document.getElementById('customerDropdown');
-                        var items = dropdown.getElementsByTagName('li');
-
-                        Array.prototype.forEach.call(items, function(item) {
-                            var text = item.textContent.toLowerCase();
-                            var displayStyle = text.includes(input) ? 'block' : 'none';
-                            item.style.display = displayStyle;
-                        });
-
-                        dropdown.style.display = 'block';
-                    });
-                </script>
-                <script>
-                    function handleTypeChange(event) {
-                        switch (event.target.value) {
-                            case 'dine-in':
-                                document.getElementById('table_number-div').style.display = 'flex';
-                                id = "table_number"
-                                document.getElementById('waiter_name-div').style.display = 'flex';
-
-                                break;
-                            default:
-                                document.getElementById('table_number-div').style.display = 'none';
-                                document.getElementById('waiter_name-div').style.display = 'none';
-                                document.getElementById('table_number').value = null;
-                                document.getElementById('waiter_name').value = null;
-                                break;
-                        }
-                    }
-                </script>
             </div>
             <div class="form-group col flex p-0 m-0">
                 <label for="notes" class="col-md-4">Notes:</label>
@@ -131,5 +78,62 @@
             <button type="submit" class="btn btn-primary col flex p-0 m-0">Update</button>
         </form>
     </div>
+    <script>
+        (function() {
+            document.getElementById('customerDropdown').addEventListener('click', function(e) {
+                if (e.target.tagName === 'LI') {
+                    var customerId = e.target.querySelector('.font-normal').getAttribute('data-id');
+                    // console.log(customerId);
+                    document.getElementById('customer_id').value = customerId;
+                    document.getElementById('searchCustomer').value = e.target.querySelector('span:last-child')
+                        .textContent;
+                    document.getElementById('customerDropdown').style.display = 'none';
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                var dropdown = document.getElementById('customerDropdown');
+                if (!dropdown.contains(e.target) && e.target.id !== 'searchCustomer') {
+                    dropdown.style.display = 'none';
+                }
+            });
+        })();
+
+        document.getElementById('searchCustomer').addEventListener('input', function() {
+            var input = this.value.toLowerCase();
+            var dropdown = document.getElementById('customerDropdown');
+            var items = dropdown.getElementsByTagName('li');
+
+            Array.prototype.forEach.call(items, function(item) {
+                var text = item.textContent.toLowerCase();
+                var displayStyle = text.includes(input) ? 'block' : 'none';
+                item.style.display = displayStyle;
+            });
+
+            dropdown.style.display = 'block';
+        });
+
+        function handleTypeChange(event) {
+            switch (event.target.value) {
+                case 'dine-in':
+                    document.getElementById('table_number-div').style.display = 'flex';
+                    id = "table_number"
+                    document.getElementById('waiter_name-div').style.display = 'flex';
+
+                    break;
+                default:
+                    document.getElementById('table_number-div').style.display = 'none';
+                    document.getElementById('waiter_name-div').style.display = 'none';
+                    document.getElementById('table_number').value = null;
+                    document.getElementById('waiter_name').value = null;
+                    break;
+            }
+        }
+
+        function toggleOrderData() {
+            document.getElementById('orderDataBody').classList.toggle('hidden');
+        }
+    </script>
+
 
 </div>

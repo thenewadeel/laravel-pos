@@ -55,8 +55,8 @@
     </header>
 
     <div class="container">
-        <div style=";;;;text-align: center"><span style=";;;;font-weight: bold;">Order Receipt</span> for
-            <span>order #
+        <div style=";;;;text-align: center"><span style=";;;;font-weight: bold;">Order Receipt</span>
+            <span>#
                 {{ $order->POS_number }}</span>
         </div>
         <div class="d-flex justify-content-between">
@@ -71,14 +71,16 @@
             <span>Customer:</span>
             <span>{{ $order?->customer?->name }}</span>
         </div>
-        <div class="d-flex justify-content-between">
-            <span>Table #:</span>
-            <span>{{ $order->table_number }}</span>
-        </div>
-        <div class="d-flex justify-content-between">
-            <span>Waiter:</span>
-            <span>{{ $order->waiter_name }}</span>
-        </div>
+        @if ($order->type != 'take-away')
+            <div class="d-flex justify-content-between">
+                <span>Table #:</span>
+                <span>{{ $order->table_number }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span>Waiter:</span>
+                <span>{{ $order->waiter_name }}</span>
+            </div>
+        @endif
         <div class="d-flex justify-content-between">
             <span>Type:</span>
             <span>{{ $order->type }}</span>
@@ -96,7 +98,8 @@
             </tr>
             @foreach ($order->items as $item)
                 <tr>
-                    <td>{{ $item->product->name }}</td>
+                    <td style="font-size: 0.8rem;">
+                        {{ $item->product->name }}</td>
                     <td style=";;;;text-align:right">{{ number_format($item->product->price) }}
                     </td>
                     <td style=";;;;text-align:center">{{ $item->quantity }}</td>
@@ -110,24 +113,22 @@
                     {{ config('settings.currency_symbol') }}{{ number_format($order->total()) }}</td>
             </tr>
 
-            <tr>
-                <th colspan="2">
-                    <span style=";;;;">Discounts :</span>
-                    <span style=";;;;">
-                        @if ($order->discounts()->count() == 0)
-                            {{ 'None' }}
-                        @else
+            @if ($order->discounts()->count() > 0)
+                <tr>
+                    <th colspan="2">
+                        <span style=";;;;">Discounts :</span>
+                        <span style="font-size: 0.8rem;">
                             @foreach ($order->discounts()->get() as $discount)
                                 {{ $discount->name }} ({{ number_format($discount->percentage) }}%)@if (!$loop->last)
                                     ,
                                 @endif
                             @endforeach
-                        @endif
-                    </span>
-                </th>
-                <td style="text-align:right" colspan="2">
-                    {{ config('settings.currency_symbol') }}{{ number_format($order->discountAmount()) }}</td>
-            </tr>
+                        </span>
+                    </th>
+                    <td style="text-align:right" colspan="2">
+                        {{ config('settings.currency_symbol') }}{{ number_format($order->discountAmount()) }}</td>
+                </tr>
+            @endif
             <tr>
                 <th colspan="2">Net Amount Payable</th>
                 <td style=";;;;text-align:right" colspan="2">
@@ -137,25 +138,71 @@
             <tr>
                 <th colspan="2">Received Amount</th>
                 <td style=";;;;text-align:right" colspan="2">
-                    {{ config('settings.currency_symbol') }}{{ $order->receivedAmount() }}</td>
+                    {{ config('settings.currency_symbol') }}{{ number_format($order->receivedAmount()) }}</td>
             </tr>
 
         </table>
     </div>
 
-    <footer>
-        <div style="" class="text-center">
-            <span style="font-size: 1.5rem; display: block;">{{ $orderStatus ? $orderStatus : '' }}</span>
+    <footer style="
+    display:flex;
+    flex-direction: column;
+    text-align: center;">
+        <div
+            style="font-size: 1.5rem; 
+        text-align: center;
+        border:1px solid;
+        border-radius: 0.375rem;
+        width:min-content;
+        margin:0.5rem;
+        text-align: center;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        display: inline-block">
+            {{ $orderStatus ? $orderStatus : '' }}
+            @if ($orderStatus == __('order.Not_Paid') || $orderStatus == __('order.Partial'))
+                {{ number_format($order->balance()) }}
+            @endif
         </div>
+        @if ($orderStatus == __('order.Not_Paid') || $orderStatus == __('order.Partial'))
+            <div style="
+            font-size: 0.8rem; 
+            display: block;
+            margin:0.5rem"
+                class="text-left">
+                <br />
+                <span style="text-align: left;">Please Sign Here : _______________
+                </span>
+                <br />
+                <span style="font-style: italic">
+                    ({{ $order?->customer?->name }})
+                </span>
+            </div>
+        @endif
 
-        <p class="text-center" style=";;;;">
+        <p style="text-align: center">
             {{-- Quetta Club welcomes you with warm hospitality. --}}
             Thank you for visiting!
         </p>
-        <p class="text-center" style=";;;;font-style: italic;">
-            Bill generated by {{ $order?->user?->getFullname() }} on {{ $order?->shop?->name }} at
-            {{ $order->created_at->format('d M-y h:i:s A') }}, printed on {{ now() }}
+        <hr style=";;;;border:none;
+        border-top:3px double rgb(0 0 0 / 35%);
+        margin:0.15rem 0;">
+        <p style=";;;;font-style: italic;
+        font-size:0.75rem;
+        color: rgb(100 116 139)">
+            Bill generated by {{ $order?->user?->getFullname() }} at
+            {{ $order->created_at->format('d M-y h:i:s A') }}, printed on
+            {{ now()->format('d M-y h:i:s A') }}
         </p>
+        @if ($order->notes)
+            <p
+                style=";;;;font-style: italic;
+        font-size:0.75rem;
+        color: rgb(100 116 139);
+        text-align:left">
+                {{ $order?->notes }}
+            </p>
+        @endif
     </footer>
 
 </body>

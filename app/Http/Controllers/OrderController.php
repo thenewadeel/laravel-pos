@@ -444,7 +444,7 @@ class OrderController extends Controller
 
         $pdf = Pdf::loadView('pdf.order80mm2', compact('order', 'orderStatus'));
         $pdf->set_option('dpi', 72);
-        $pdf->setPaper([0, 0, 204, 650], 'portrait'); // 80mm thermal paper
+        $pdf->setPaper([0, 0, 204, 400 + 25 * $order->items->count()], 'portrait'); // 80mm thermal paper
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 
@@ -496,24 +496,25 @@ class OrderController extends Controller
 
     public function getOrderStatus(Order $order)
     {
-        if ($order->state == 'closed') {
-            $orderStatus = '';
-            switch ($label = $order->stateLabel()) {
-                case __('order.Not_Paid'):
-                    $orderStatus = 'UNPAID';
-                    break;
-                case __('order.Partial'):
-                    $orderStatus = 'Part-Chit';
-                    break;
-                case __('order.Paid'):
-                    $orderStatus = 'PAID';
-                    break;
-                case __('order.Change'):
-                    $orderStatus = 'Change';
-                    break;
-            }
-            return $orderStatus;
-        } else return '|';
+        return $order->stateLabel();
+        // if ($order->state == 'closed') {
+        // $orderStatus = '';
+        // switch ($label = $order->stateLabel()) {
+        //     case __('order.Not_Paid'):
+        //         $orderStatus = 'CHIT';
+        //         break;
+        //     case __('order.Partial'):
+        //         $orderStatus = 'Part-Chit';
+        //         break;
+        //     case __('order.Paid'):
+        //         $orderStatus = 'PAID';
+        //         break;
+        //     case __('order.Change'):
+        //         $orderStatus = 'Change';
+        //         break;
+        // }
+        // return $orderStatus;
+        // } else return '|' . $order->stateLabel();
     }
 
     public function printToPOS(Order $order)

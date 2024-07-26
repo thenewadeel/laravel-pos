@@ -30,7 +30,8 @@
                 // a = li[i].getElementsByTagName('a')[0];
                 // txtValue = a.textContent || a.innerText;
                 // console.log(li);
-                if (li[i].dataset.productname.toUpperCase().indexOf(filter) > -1) {
+                const productName = li[i].dataset?.productname ?? '';
+                if (productName.toUpperCase().indexOf(filter) > -1) {
                     li[i].style.display = "contents";
                 } else {
                     li[i].style.display = "none";

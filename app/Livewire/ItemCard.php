@@ -77,7 +77,7 @@ class ItemCard extends Component
             $this->message = 'Product added to order successfully';
             // $this->reset();
             $this->setupQuantities();
-            $this->dispatch('item-added-to-order', orderId: $order->id);
+            $this->dispatch('item-added-to-order', orderId: $order->id)->self();
             $this->dispatch('order-updated', orderId: $order->id);
         } else {
             $this->message =  'Product not added';
@@ -85,7 +85,7 @@ class ItemCard extends Component
         // return redirect()->route('orders.edit', $order)->with('success', 'Product added to order successfully');
     }
 
-    #[On('order-updated')]
+    #[On('item-added-to-order')]
     public function updateOrder($orderId)
     {
         if ($this->order->id == $orderId) {

@@ -67,8 +67,8 @@ class OrderItemsEdit extends Component
             $this->dispatch('order-updated', orderId: $this->order->id);
         }
     }
-    // #[On('order-updated')]
-    #[On('item-added-to-order')]
+    // #[On('item-added-to-order')]
+    #[On('order-updated')]
     public function updatePostList($orderId)
     {
         if ($this->order->id == $orderId) {

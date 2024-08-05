@@ -103,14 +103,14 @@
                     <li class="nav-item has-treeview">
                         <a href="{{ route('reports.dailySale') }}" class="nav-link {{ activeSegment('reports') }}">
                             <i class="nav-icon fas fa-list"></i>
-                            <p>{{ __('reports.daily_sale') }}</p>
+                            <p>{{ __('common.Daily_Sale_Report') }}</p>
                         </a>
                     </li>
                     <li class="nav-item has-treeview">
                         <a href="{{ route('reports.productsReport') }}"
                             class="nav-link {{ activeSegment('reports') }}">
                             <i class="nav-icon fas fa-list"></i>
-                            <p>{{ __('reports.products') }}</p>
+                            <p>{{ __('common.Products_Report') }}</p>
                         </a>
                     </li>
                 @endif

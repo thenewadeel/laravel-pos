@@ -72,20 +72,54 @@
     </div>
     <div class="card">
         <div class="card-header font-bold text-lg">
-            Report
+            <div class=" flex flex-row justify-between">
+                QCL - Daily Sale Report
+
+                <button onclick="exportToExcel('salesTable', 'Sales Report {{ request('date', date('Y-m-d')) }}')"
+                    class="btn btn-dark btn-sm border-2 border-green-800 text-black">{{ __('common.Download_To_Excel') }}</button>
+            </div>
         </div>
         <div class="card-body">
             <table id="salesTable" class="table table-bordered table-striped table-hover table-sm">
-                <thead style="display:none">
-                    {{-- style="display:none"> --}}
-                    <tr>
-                        <td colspan="9" class="text-right font-serif"> QCL-POS Daily Shop Wise Sales Report -
-                            {{ request('date', date('Y-m-d')) }}
+                <thead>
+                    <tr class="table-primary">
+                        <td colspan="8" class="text-center font-serif font-bold text-lg">
+                            QCL - POS Sale Report
                         </td>
                     </tr>
-                    <tr></tr>
-                    <tr></tr>
-                    <tr></tr>
+                    <tr class="table-striped">
+                        <td class="font-bold text-center">
+                            {{-- ---{{ $item }}--- --}}
+                            Period Covered :
+                        </td>
+                        <td>
+                            {{ request('start_date', date('Y-m-d')) }}
+                        </td>
+                        <td>-</td>
+                        <td>{{ request('end_date', date('Y-m-d')) }}</td>
+                    </tr>
+                    <tr class="table-striped ">
+                        <td class="font-bold text-center">
+                            Shops Included :
+                        </td>
+                        <td colspan="7">
+                            @if (empty(request('shops', [])))
+                                ALL
+                            @endif
+                            @foreach (request('shops', []) as $shop_id)
+                                @php
+                                    $shop = $shops->firstWhere('id', $shop_id);
+                                @endphp
+                                @if ($shop)
+                                    @if (!$loop->first)
+                                        ,
+                                    @endif
+                                    {{ $shop->name }}
+                                @endif
+                            @endforeach
+                        </td>
+
+                    </tr>
                 </thead>
                 <?php
                 //total 	Chit 	Discount 	Amount
@@ -241,10 +275,6 @@
                     </tr>
                 </thead>
             </table>
-            <div class="card-footer">
-                <button onclick="exportToExcel('salesTable', 'Sales Report {{ request('date', date('Y-m-d')) }}')"
-                    class="btn btn-info">{{ __('common.Download_To_Excel') }}</button>
-            </div>
         </div>
     </div>
 @endsection

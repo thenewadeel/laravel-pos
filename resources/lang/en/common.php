@@ -58,4 +58,6 @@ return [
     'really_delete'     =>  'Do you really want to delete this?',
     'yes_delete'        =>  'Yes, delete it!',
     'No'         =>  'No, cancel!',
+    'Products_Report' => 'Products Report',
+    'Daily_Sale_Report' => 'Daily Sale',
 ];

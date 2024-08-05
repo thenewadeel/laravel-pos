@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', __('common.Daily_Sale'))
-@section('content-header', __('common.Daily_Sale'))
+@section('title', __('common.Products_Report'))
+@section('content-header', __('common.Products_Report'))
 
 @section('content')
     <div class="card">

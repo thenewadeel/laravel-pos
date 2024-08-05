@@ -32,11 +32,14 @@ class OrdersSeeder extends Seeder
                 'customer_id' => $customer->id,
                 'table_number' => $faker->randomElement(['1', '2', '3', '4', '5']),
                 'waiter_name' => $faker->name,
-                'state' => $faker->randomElement(['preparing', 'served', 'closed', 'wastage']),
+                'state' => $faker->randomElement(['closed',]),
                 'type' => $faker->randomElement(['dine-in', 'take-away', 'delivery']),
                 'created_at' => $faker->dateTimeBetween('-7 day', '-1 day'),
                 'notes' => $faker->sentence,
             ]);
+            if (random_int(1, 100) <= 70) {
+                $order->assignPOS();
+            }
 
             // Create 3-5 random products for each order
             $products = Product::all()->random(random_int(1, 5));

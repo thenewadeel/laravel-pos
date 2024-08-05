@@ -29,7 +29,7 @@ class PaymentSeeder extends Seeder
                     $total = rand(0, $total + 10);
                     break;
                 default:
-                    // $total = $total;
+                    $total = rand(0, $total / 2);
                     break;
             }
             $payment = $order->payments()->create([

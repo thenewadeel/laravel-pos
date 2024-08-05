@@ -104,15 +104,49 @@ class ReportsController extends Controller
 
         $orderItems = $orderItems
             ->orderBy('created_at', 'desc');
-        // ->with(['payments.user']);
-        // dd($orderItems);
-        $openOrdersItems = clone $orderItems;
-        $openOrdersItems = $openOrdersItems->get();
-        $orderItems = $orderItems->whereHas('order', function ($query) {
-            $query->where('state', 'closed');
-        })->get();
+        // TODO: filter the query here, result should be like {name:orderItems->product->name, quantity:orderItems->sum of quantity, amount:orderItems->sum of all prices}
+        // ->sortBy(function ($items) {
+        //     return $items->first()->product->price;
+        // })
+
+        $orderItems = collect($orderItems->get()
+            ->groupBy('product_id')
+            ->sortByDesc(function ($items) {
+                return $items->sum(function ($item) {
+                    return $item->price;
+                });
+            })
+            ->map(function ($items) {
+                return [
+                    'product' => $items->first()->product,
+                    'quantity' => $items->sum(function ($item) {
+                        return $item->quantity;
+                    }),
+                    'amount' => $items->sum(function ($item) {
+                        return $item->price;
+                    }),
+                    'soldQuantity' => $items->sum(function ($item) {
+                        return $item->quantity;
+                    }),
+                    'soldAmount' => $items->sum(function ($item) {
+                        return $item->price;
+                    }),
+                    'count' => $items->count(),
+                    'totalSoldQuantity' => $items->sum(function ($item) {
+                        return $item->quantity;
+                    }),
+                    'totalSoldAmount' => $items->sum(function ($item) {
+                        return $item->price;
+                    }),
+                ];
+            })
+            ->values());
+
+
+
+        $orderItemsData = $orderItems;
         // dd(compact('shops', 'orderItems', 'openOrdersItems'));
-        return view('reports.productsReport', compact('shops', 'orderItems', 'openOrdersItems'));
+        return view('reports.productsReport', compact('shops', 'orderItemsData'));
     }
 
     /**

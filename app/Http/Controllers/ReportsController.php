@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Reports;
 use Illuminate\Http\Request;
 use App\Traits\ListOf;
@@ -67,6 +68,51 @@ class ReportsController extends Controller
         $openOrders = $openOrders->get();
         $orders = $orders->where('state', 'closed')->get();
         return view('reports.dailySale', compact('shops', 'orders', 'openOrders'));
+    }
+
+    public function productsReport(Request $request)
+    {
+        // dd($request->all());
+        $shops = Shop::all();
+
+        $filters = [
+            // 'shop_id' => $request->input('shop_id'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+        ];
+
+        $orderItems = OrderItem::query();
+
+        if ($request->has('start_date')) {
+            $orderItems->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
+        } else {
+            $orderItems->whereDate('created_at', now());
+        }
+        // if ($request->has('shop_id')) {
+        //     $orders->where('shop_id', $filters['shop_id']);
+        // }
+        if ($request->has('shops')) {
+            $request->validate([
+                'shops' => 'required|array',
+                'shops.*' => 'required|exists:shops,id',
+            ]);
+
+            $orderItems->whereHas('order', function ($query) use ($request) {
+                $query->whereIn('shop_id', $request['shops']);
+            });
+        }
+
+        $orderItems = $orderItems
+            ->orderBy('created_at', 'desc');
+        // ->with(['payments.user']);
+        // dd($orderItems);
+        $openOrdersItems = clone $orderItems;
+        $openOrdersItems = $openOrdersItems->get();
+        $orderItems = $orderItems->whereHas('order', function ($query) {
+            $query->where('state', 'closed');
+        })->get();
+        // dd(compact('shops', 'orderItems', 'openOrdersItems'));
+        return view('reports.productsReport', compact('shops', 'orderItems', 'openOrdersItems'));
     }
 
     /**

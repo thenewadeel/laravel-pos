@@ -37,6 +37,7 @@ class PaymentSeeder extends Seeder
                 'tip' => 0,
                 'order_id' => $order->id,
                 'user_id' => $user->id,
+                'created_at' => $order->created_at
             ]);
         });
     }

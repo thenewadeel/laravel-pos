@@ -60,4 +60,5 @@ return [
     'No'         =>  'No, cancel!',
     'Products_Report' => 'Products Report',
     'Daily_Sale_Report' => 'Daily Sale',
+    'Cashiers_Report' => 'Cashiers Report',
 ];

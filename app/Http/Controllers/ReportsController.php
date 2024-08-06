@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Payment;
 use App\Models\Reports;
 use Illuminate\Http\Request;
 use App\Traits\ListOf;
@@ -147,6 +148,83 @@ class ReportsController extends Controller
         $orderItemsData = $orderItems;
         // dd(compact('shops', 'orderItems', 'openOrdersItems'));
         return view('reports.productsReport', compact('shops', 'orderItemsData'));
+    }
+
+    public function cashiersReport(Request $request)
+    {
+        // dd($request->all());
+        $shops = Shop::all();
+
+        $filters = [
+            // 'shop_id' => $request->input('shop_id'),
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+        ];
+
+        $payments = Payment::query();
+
+        if ($request->has('start_date')) {
+            $payments->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
+        } else {
+            $payments->whereDate('created_at', now());
+        }
+        // if ($request->has('shop_id')) {
+        //     $orders->where('shop_id', $filters['shop_id']);
+        // }
+        if ($request->has('shops')) {
+            $request->validate([
+                'shops' => 'required|array',
+                'shops.*' => 'required|exists:shops,id',
+            ]);
+
+            $payments->whereHas('order', function ($query) use ($request) {
+                $query->whereIn('shop_id', $request['shops']);
+            });
+        }
+
+        // $payments = $payments
+        //     ->orderBy('created_at', 'desc');
+
+
+        $payments = collect($payments->get()
+            ->groupBy('user_id')
+            ->sortByDesc(function ($payments) {
+                return $payments->sum(function ($payment) {
+                    return $payment->amount;
+                });
+            })
+            ->map(function ($payments) {
+                return [
+                    'user' => $payments->first()->user,
+                    'paymentsTotal' => $payments->sum(function ($payment) {
+                        return $payment->amount;
+                    }),
+                    'paymentsCount' => $payments->count(),
+                    'orders' => $payments->map(function ($p) {
+                        return $p->order;
+                    }),
+                    // 'soldQuantity' => $items->sum(function ($item) {
+                    //     return $item->quantity;
+                    // }),
+                    // 'soldAmount' => $items->sum(function ($item) {
+                    //     return $item->price;
+                    // }),
+                    // 'count' => $items->count(),
+                    // 'totalSoldQuantity' => $items->sum(function ($item) {
+                    //     return $item->quantity;
+                    // }),
+                    // 'totalSoldAmount' => $items->sum(function ($item) {
+                    //     return $item->price;
+                    // }),
+                ];
+            })
+            ->values());
+
+
+
+        $cashiersData = $payments;
+        // dd(compact('shops', 'orderItems', 'openOrdersItems'));
+        return view('reports.cashiersReport', compact('shops', 'cashiersData'));
     }
 
     /**

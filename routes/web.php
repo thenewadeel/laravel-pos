@@ -70,6 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::namespace('Accountant')->group(function () {
         Route::get('/dailySale', [ReportsController::class, 'dailySale'])->name('reports.dailySale');
         Route::get('/productsReport', [ReportsController::class, 'productsReport'])->name('reports.productsReport');
+        Route::get('/cashiersReport', [ReportsController::class, 'cashiersReport'])->name('reports.cashiersReport');
     });
 
     Route::namespace('Admin')->group(function () {

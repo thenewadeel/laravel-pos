@@ -39,6 +39,8 @@ return [
     'Barcode'           => 'Barcode',
     'Price'             => 'Price',
     'Quantity'          => 'Quantity',
+    'Category'          => 'Category',
+    'Created At'        => 'Created At',
     'Status'            => 'Status',
     'Edit_Product'      => 'Edit Product',
     'Update'            => 'Update',

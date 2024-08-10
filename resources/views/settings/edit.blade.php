@@ -6,7 +6,19 @@
 @section('content')
     @include('layouts.partials.alert.error', ['errors' => $errors])
 
+
     <livewire:user-profile />
+    @if (auth()->user()->type == 'admin')
+        <div class="card">
+            <div class="card-header text-lg font-bold">
+                Bulk Data Export/ Import
+            </div>
+            <div class="card-body">
+                <a href="{{ route('users.export') }}" class="btn btn-primary mb-2">Export Users</a>
+                <a href="{{ route('products.export') }}" class="btn btn-primary mb-2">Export Products</a>
+            </div>
+        </div>
+    @endif
     <div class="card">
         <div class="card-body">
             <form action="{{ route('settings.store') }}" method="post">
@@ -75,8 +87,8 @@
                 <button type="submit"
                     class="btn btn-outline-primary btn-sm btn-block">{{ __('settings.Change_Setting') }}</button>
             </form>
-
         </div>
+
         @if (auth()->user()->type == 'admin')
             <div class="card">
                 <div class="card-header text-lg font-bold">

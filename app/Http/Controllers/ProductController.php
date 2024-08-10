@@ -12,6 +12,8 @@ use App\Traits\ListOf;
 use Illuminate\Support\Facades\Log;
 // use App\Models\Category;
 use AliBayat\LaravelCategorizable\Category;
+use App\Exports\ProductsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -177,5 +179,10 @@ class ProductController extends Controller
             ]);
         }
         return back()->with('message', "Product deleted");
+    }
+
+    public function export()
+    {
+        return Excel::download(new ProductsExport, 'products.xlsx');
     }
 }

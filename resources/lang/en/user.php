@@ -25,6 +25,7 @@ user.ID 	user.Image 	user.Name 	Type 	user.eMail 	user.Shops
     'Image'        => 'Photo',
     'Name'        => 'Name',
     'eMail'    => 'Login',
+    'Type'       => 'Type',
     'Email'    => 'Login',
     'Shops'       => 'Shops/ Heads',
     'Active'        => 'Active',

@@ -14,7 +14,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Maatwebsite\Excel\Concerns\WithDrawings;
 
-class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize, WithColumnFormatting, WithDrawings //,WithStyles
+class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize, WithColumnFormatting //, WithDrawings //,WithStyles
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -28,22 +28,30 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
      */
     public function map($user): array
     {
+
+        // ('first_name');
+        // $table->string('last_name');
+        // $table->enum('type', ['admin', 'cashier', 'accountant', 'chef', 'stockBoy'])->default('cashier');
+        // $table->string('email')->unique();
+
         return [
-            $user->id,
+            // $user->id,
             $user->first_name,
             $user->last_name,
             $user->email,
+            $user->type,
             Date::dateTimeToExcel($user->created_at),
         ];
     }
     public function headings(): array
     {
         return [
-            'id',
-            'First Name',
-            'Last Name',
-            'Email',
-            'Created At',
+            // 'id',
+            __('user.FName'),
+            __('user.LName'),
+            __('user.Email'),
+            __('user.Type'),
+            __('user.Created At'),
         ];
     }
     public function columnFormats(): array

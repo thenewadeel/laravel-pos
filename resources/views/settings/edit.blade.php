@@ -6,6 +6,7 @@
 @section('content')
     @include('layouts.partials.alert.error', ['errors' => $errors])
 
+    <livewire:user-profile />
     <div class="card">
         <div class="card-body">
             <form action="{{ route('settings.store') }}" method="post">

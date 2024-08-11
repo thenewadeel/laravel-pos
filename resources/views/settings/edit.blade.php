@@ -20,6 +20,8 @@
         </div>
     @endif
     <div class="card">
+        <div class="card-header text-lg font-bold">
+            Preferences </div>
         <div class="card-body">
             <form action="{{ route('settings.store') }}" method="post">
                 @csrf
@@ -88,16 +90,16 @@
                     class="btn btn-outline-primary btn-sm btn-block">{{ __('settings.Change_Setting') }}</button>
             </form>
         </div>
-
-        @if (auth()->user()->type == 'admin')
-            <div class="card">
-                <div class="card-header text-lg font-bold">
-                    {{ __('settings.Discounts') }}
-                </div>
-                <div class="card-body">
-                    @include('layouts.partials.discountEdit')
-                </div>
-            </div>
-        @endif
     </div>
+
+    @if (auth()->user()->type == 'admin')
+        <div class="card">
+            <div class="card-header text-lg font-bold">
+                {{ __('settings.Discounts') }}
+            </div>
+            <div class="card-body">
+                @include('layouts.partials.discountEdit')
+            </div>
+        </div>
+    @endif
 @endsection

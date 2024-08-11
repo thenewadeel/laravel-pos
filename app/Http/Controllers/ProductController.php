@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 // use App\Models\Category;
 use AliBayat\LaravelCategorizable\Category;
 use App\Exports\ProductsExport;
+use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
@@ -184,5 +185,18 @@ class ProductController extends Controller
     public function export()
     {
         return Excel::download(new ProductsExport, 'products.xlsx');
+    }
+
+    public function import()
+    {
+        if (request()->file('xlsx_file')) {
+            // Excel::import(new UsersImport, 'users.xlsx');
+
+            Excel::import(new ProductsImport, request()->file('xlsx_file'));
+
+            return redirect('/products')->with('success', 'All good!');
+        } else {
+            return redirect()->back()->with('failure', 'File err');
+        }
     }
 }

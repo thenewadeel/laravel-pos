@@ -27,6 +27,16 @@
                     <button type="submit" class="btn btn-primary">Import Users</button>
                 </form>
             </div>
+            <div class="shadow-inner">
+                <form action="{{ route('products.import') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-4">
+                        <label for="xlsx_file" class="form-label">Select a file to import</label>
+                        <input type="file" name="xlsx_file" id="xlsx_file" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Import Products</button>
+                </form>
+            </div>
         </div>
     @endif
     <div class="card">

@@ -28,10 +28,13 @@ class ProductsExport implements FromCollection, WithMapping, WithHeadings, Shoul
      */
     public function map($product): array
     {
+        $cat = $product->categories->first();
+        $cat = $cat ? $cat->name : 'unknown';
         return [
+            $product->id,
             $product->name,
             $product->description,
-            $product->categories->first()->name,
+            $cat,
             $product->price,
             Date::dateTimeToExcel($product->created_at),
         ];
@@ -39,17 +42,32 @@ class ProductsExport implements FromCollection, WithMapping, WithHeadings, Shoul
     public function headings(): array
     {
         return [
-            __('product.Name'),
-            __('product.Description'),
-            __('product.Category'),
-            __('product.Price'),
-            __('product.Created At'),
+            'id',
+            'name',
+            'description',
+            'category',
+            'price',
+            'created_at',
+            // ('name');
+            // $table->text('description')->nullable();
+            // $table->text('category')->nullable();
+            // $table->string('image')->nullable();
+            // $table->string('barcode')->unique()->nullable();
+            // $table->decimal('price', 14, 2);
+            // $table->integer('quantity')->default('1000');
+            // $table->boolean('aval_status')->default(true);
+            // $table->string('kitchen_printer_ip'
+            // __('product.Name'),
+            // __('product.Description'),
+            // __('product.Category'),
+            // __('product.Price'),
+            // __('product.Created At'),
         ];
     }
     public function columnFormats(): array
     {
         return [
-            'E' => NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             // 'C' => NumberFormat::FORMAT_CURRENCY_EUR_INTEGER,
         ];
     }

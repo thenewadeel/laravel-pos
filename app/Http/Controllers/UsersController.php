@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\UserResource;
+use App\Imports\UsersImport;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ListOf;
 use App\Models\Shop;
@@ -195,5 +196,17 @@ class UsersController extends Controller
     public function export()
     {
         return Excel::download(new UsersExport, 'users.xlsx');
+    }
+    public function import()
+    {
+        if (request()->file('xlsx_file')) {
+            // Excel::import(new UsersImport, 'users.xlsx');
+
+            Excel::import(new UsersImport, request()->file('xlsx_file'));
+
+            return redirect('/users')->with('success', 'All good!');
+        } else {
+            return redirect()->back()->with('failure', 'File err');
+        }
     }
 }

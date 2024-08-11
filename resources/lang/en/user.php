@@ -29,6 +29,7 @@ user.ID 	user.Image 	user.Name 	Type 	user.eMail 	user.Shops
     'Email'    => 'Login',
     'Shops'       => 'Shops/ Heads',
     'Active'        => 'Active',
+    'Created At'      => 'Created At',
     'Created_At'      => 'Join Date',
     'Create_User'      => 'New Staff',
     'Actions'     => 'Actions',

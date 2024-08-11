@@ -17,6 +17,16 @@
                 <a href="{{ route('users.export') }}" class="btn btn-primary mb-2">Export Users</a>
                 <a href="{{ route('products.export') }}" class="btn btn-primary mb-2">Export Products</a>
             </div>
+            <div class="shadow-inner">
+                <form action="{{ route('users.import') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-4">
+                        <label for="xlsx_file" class="form-label">Select a file to import</label>
+                        <input type="file" name="xlsx_file" id="xlsx_file" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Import Users</button>
+                </form>
+            </div>
         </div>
     @endif
     <div class="card">

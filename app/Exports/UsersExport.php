@@ -46,12 +46,17 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
     public function headings(): array
     {
         return [
+            'first_name',
+            'last_name',
+            'email',
+            'type',
+            'created_at',
             // 'id',
-            __('user.FName'),
-            __('user.LName'),
-            __('user.Email'),
-            __('user.Type'),
-            __('user.Created At'),
+            // __('user.FName'),
+            // __('user.LName'),
+            // __('user.Email'),
+            // __('user.Type'),
+            // __('user.Created At'),
         ];
     }
     public function columnFormats(): array

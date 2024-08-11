@@ -80,7 +80,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 
-        Route::get('/export', [UsersController::class, 'export']);
+        // Bulk Excel Exports
+        Route::get('/usersexport', [UsersController::class, 'export'])->name('users.export');
+        Route::get('/productsexport', [ProductController::class, 'export'])->name('products.export');
+        // Excel Imports
+        Route::post('/usersimport', [UsersController::class, 'import'])->name('users.import');
+        Route::post('/productsimport', [ProductController::class, 'import'])->name('products.import');
         Route::get('/download', [UsersController::class, 'downloadinExcel']);
 
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

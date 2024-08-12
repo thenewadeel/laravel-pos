@@ -11,31 +11,108 @@
     @if (auth()->user()->type == 'admin')
         <div class="card">
             <div class="card-header text-lg font-bold">
-                Bulk Data Export/ Import
+                Bulk Data Operations
             </div>
-            <div class="card-body">
-                <a href="{{ route('users.export') }}" class="btn btn-primary mb-2">Export Users</a>
-                <a href="{{ route('products.export') }}" class="btn btn-primary mb-2">Export Products</a>
+            {{-- <div class="card-body"> --}}
+
+            <div
+                class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-slate-200 rounded-lg p-1 m-2">
+                <div class="text-md font-bold text-gray-800 m-2">Exports:</div>
+                <div class="flex flex-col md:flex-row justify-evenly w-full">
+                    <a href="{{ route('users.export') }}" class="btn btn-outline-info m-2 shadow-md">
+                        <i class="fas fa-save fa-lg"></i>
+                        Export Users</a>
+                    <a href="{{ route('products.export') }}" class="btn btn-outline-info m-2 shadow-md">
+                        <i class="fas fa-save fa-lg"></i>
+                        Export Products</a>
+                    <a href="" class="btn btn-outline-info m-2 shadow-md">
+                        <i class="fas fa-save fa-lg"></i>
+                        Export Shops</a>
+                    <a href="" class="btn btn-outline-info m-2 shadow-md">
+                        <i class="fas fa-save fa-lg"></i>
+                        Export Customers</a>
+                </div>
             </div>
-            <div class="shadow-inner">
-                <form action="{{ route('users.import') }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div class="mb-4">
-                        <label for="xlsx_file" class="form-label">Select a file to import</label>
-                        <input type="file" name="xlsx_file" id="xlsx_file" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Import Users</button>
-                </form>
+            <div
+                class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-red-200 rounded-lg p-1 m-2">
+                <div class="text-md font-bold text-gray-800 m-2">Deletes:</div>
+                <div class="flex flex-col md:flex-row justify-evenly w-full">
+                    <a href="" class="btn btn-outline-danger m-2 shadow-md">
+                        <i class="fas fa-trash fa-lg"></i>
+                        Clear Users</a>
+                    <a href="" class="btn btn-outline-danger m-2 shadow-md">
+                        <i class="fas fa-trash fa-lg"></i>
+                        Clear Products</a>
+                    <a href="" class="btn btn-outline-danger m-2 shadow-md">
+                        <i class="fas fa-trash fa-lg"></i>
+                        Clear Shops</a>
+                    <a href="" class="btn btn-outline-danger m-2 shadow-md">
+                        <i class="fas fa-trash fa-lg"></i>
+                        Clear Customers</a>
+                </div>
             </div>
-            <div class="shadow-inner">
-                <form action="{{ route('products.import') }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div class="mb-4">
-                        <label for="xlsx_file" class="form-label">Select a file to import</label>
-                        <input type="file" name="xlsx_file" id="xlsx_file" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Import Products</button>
-                </form>
+
+            <div
+                class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-slate-200 rounded-lg p-2 m-2">
+                <div class="text-md font-bold text-gray-800 m-2">Imports:</div>
+
+                <div class="flex flex-col md:flex-row justify-evenly w-full">
+
+                    <form action="{{ route('users.import') }}" method="post" enctype="multipart/form-data"
+                        class="flex flex-col items-center justify-center p-2  border-2 border-slate-200 rounded-md mx-1">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="xlsx_file" class="form-label">Upload a Users file</label>
+                            <input type="file" name="xlsx_file" id="xlsx_file" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload fa-lg"></i>
+                            Import Users</button>
+                    </form>
+                    <form action="{{ route('products.import') }}" method="post"
+                        enctype="multipart/form-data"class="flex flex-col items-center justify-center p-2  border-2 border-slate-200 rounded-md mx-1">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="xlsx_file" class="form-label">Upload a Products file</label>
+                            <input type="file" name="xlsx_file" id="xlsx_file" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-blk">
+                            <i class="fas fa-upload fa-lg"></i>
+                            Import Products</button>
+                    </form>
+                    <form action="{{ route('products.import') }}" method="post"
+                        enctype="multipart/form-data"class="flex flex-col items-center justify-center p-2  border-2 border-slate-200 rounded-md mx-1">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="xlsx_file" class="form-label">Upload a Shops file</label>
+                            <input type="file" name="xlsx_file" id="xlsx_file" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-blk">
+                            <i class="fas fa-upload fa-lg"></i>
+                            Import Shops</button>
+                    </form>
+                    <form action="{{ route('products.import') }}" method="post"
+                        enctype="multipart/form-data"class="flex flex-col items-center justify-center p-2  border-2 border-slate-200 rounded-md mx-1">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="xlsx_file" class="form-label">Upload a Customers file</label>
+                            <input type="file" name="xlsx_file" id="xlsx_file" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-blk">
+                            <i class="fas fa-upload fa-lg"></i>
+                            Import Customers</button>
+                    </form>
+                </div>
+            </div>
+            <div
+                class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-slate-200 rounded-lg p-2 m-2">
+                <div class="text-md font-bold text-gray-800 m-2">Database:</div>
+
+                <div class="flex flex-col md:flex-row justify-start w-full">
+                    <a href="" class="btn btn-success m-2 shadow-md">
+                        <i class="fas fa-database fa-lg"></i>
+                        Backup DB</a>
+                </div>
             </div>
         </div>
     @endif
@@ -97,8 +174,8 @@
                     <label for="default_printer_ip"
                         class="text-center w-1/4">{{ __('settings.default_printer_ip') }}</label>
                     <input type="text" name="default_printer_ip"
-                        class="form-control w-3/4 @error('default_printer_ip') is-invalid @enderror" id="default_printer_ip"
-                        placeholder="{{ __('settings.default_printer_ip') }}"
+                        class="form-control w-3/4 @error('default_printer_ip') is-invalid @enderror"
+                        id="default_printer_ip" placeholder="{{ __('settings.default_printer_ip') }}"
                         value="{{ old('default_printer_ip', config('settings.default_printer_ip')) }}">
                     @error('default_printer_ip')
                         <span class="invalid-feedback" role="alert">

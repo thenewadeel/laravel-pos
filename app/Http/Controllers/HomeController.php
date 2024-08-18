@@ -26,7 +26,7 @@ class HomeController extends Controller
     public function index()
     {
         if (auth()->user()->type == 'cashier') {
-            return redirect()->route('order.index');
+            return redirect()->route('orders.index');
         }
 
         $orders = Order::with(['items', 'payments'])->get();

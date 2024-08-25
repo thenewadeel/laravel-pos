@@ -197,6 +197,7 @@
                                     {{ $orderItem->order->user->getFullName() }}</td> --}}
                         </tr>
                         <tr id="details-{{ $cashiersVector['user']->id }}" class="hidden">
+                            <td></td>
                             <td colspan="4">
                                 @foreach ($cashiersVector['orders'] as $order)
                                     @include('layouts.partials.orderPeek', ['order' => $order])
@@ -229,7 +230,7 @@
             const tableData = removeLinksAndInputs(
                 document.getElementById(tableId).outerHTML
             );
-            const downloadName = `dailySaleReport_${getRandomNumbers()}.xls`;
+            const downloadName = `CashiersReport_${getRandomNumbers()}.xls`;
             downloadData(tableData, downloadName, "application/vnd.ms-excel");
         }
 

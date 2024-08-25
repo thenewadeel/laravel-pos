@@ -299,7 +299,7 @@
             const tableData = removeLinksAndInputs(
                 document.getElementById(tableId).outerHTML
             );
-            const downloadName = `dailySaleReport_${getRandomNumbers()}.xls`;
+            const downloadName = `ProductsSaleReport_${getRandomNumbers()}.xls`;
             downloadData(tableData, downloadName, "application/vnd.ms-excel");
         }
 

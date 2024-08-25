@@ -1,11 +1,276 @@
+[x] with every order (only with dining)
+[x] table number
+[x] QT number
+[x] Waiter name / Rider Name
+[ ] Tagg-able Models. . . ? with filter interface. . . !
 
-with every order (only with dining)
-table number 
-QT number
-Waiter name / Rider Name
+[x] Orders on chits :
+[x] signature by member on tablet
 
-Orders on chits :
-    signature by member on tablet
+[x] misc Item
+[ ] order print auto on Payment
+[x] order edit data
+[ ] print job queues
+[ ] running KOTs
+[ ] editable qty in order-items-edit component
 
+### Reports
 
-    
+[ ] Date Range
+[ ] Drop down search in order-index (chit bills, columns, etc)
+
+# RUN sed -i 's/<policy domain="coder" rights="none" pattern="PDF"\ />/<policy domain="coder" rights="read|write" pattern="PDF"\/>/g' /etc/ImageMagick-6/policy.xml
+
+1+ Locations
+1+ Registers
+Unlimited Users
+Unlimited Inventory
+Single Business Entity
+Unlimited Revenue
+Advanced Reporting
+Basic Loyalty Program
+Static Website
+Basic eCommerce Store
+
+## Device Support
+
+[ ] iPad
+[ ] PC
+[ ] Mac
+
+## Online/Offline
+
+[ ] When your internet is back, transactions are automatically synced back to the cloud.
+Fully customisable
+
+## Customisation
+
+[ ] Product options
+[ ] Tax rules
+[ ] Receipt content
+[ ] Categories
+[ ] Layout
+
+## Search or scan
+
+[ ] Search or scan barcode to add items to the shopping basket.
+
+## Be mobile
+
+[ ] Take your iPad point of sale register to your customer, and accept orders anywhere.
+
+# Checkout
+
+## Discounts
+
+[ ] Apply discounts to an entire sale
+[ ] Apply XXXXX for particular product line items
+
+## Park sales
+
+[ ] Park orders for later fulfilment
+[ ] Park lay-by orders with partial and periodic payments
+
+## Custom Sale
+
+[ ] Add custom sale items on the fly right at the checkout
+
+## Easy order flow
+
+[ ] Pay, take payment, pops open the cash drawer and receipt is printed
+
+## Order Notes
+
+[ ] Attach notes to any order so tracking special orders is easier
+
+# Payments
+
+## Integrated card payments
+
+[ ] Integrates with in-store payment providers like PayPal Here, Tyro and iZettle.
+
+[ ] Use your existing card terminal
+
+[ ] Track card payments made using an external card terminal
+
+## Gift cards
+
+[ ] Sell gift cards, that your customers can use as payment method
+[ ] Track gift card usage and balances
+
+## ‘On Account’ sales
+
+[ ] Sell on account, automatically post outstanding sales data to your Xero or QuickBooks Online accounting system
+
+## Partial payments
+
+[ ] Ability to park orders with partial payments, you can accept deposits and lay-bys.
+
+## Custom payment types
+
+[ ] Create and track custom payment types e.g., Cheques.
+
+# Inventory
+
+## Unlimited products
+
+[ ] Paid plans come with unlimited products
+
+## Product options/variations
+
+[ ] Setup product variants such as colours, size and material
+[ ] Manage bar codes and stock at variant levels
+
+## Bulk import & export
+
+[ ] Product import template to import all products at once
+
+## Stock management
+
+[ ] Manage stock down to variant
+[ ] Track stock levels
+[ ] Transfer inventory between stores and manage purchase orders
+
+## Painless stock-takes
+
+[ ] Generate full or partial stock-takes
+[ ] Take iPad register on warehouse/shop floor with you to take count
+
+## Real-time Sync
+
+[ ] Inventory gets updated everywhere, instantly
+
+# eCommerce
+
+## Integrated ecommerce
+
+[ ] Sync all your products and take your integrated online store live with few easy clicks
+
+## Streamlined
+
+[ ] All orders come through to your register. Whether order was placed in-store or online, your staff have to use only one system to process
+
+# Inventory Scan App
+
+[ ] Inventory scanner application turns your iPad, iPhone, or any Android device with a camera into a bar-code scanner
+[ ] Counting by scanning your inventory on the spot – whether it be store shelf, receiving dock, or warehouse
+
+# Store management
+
+## Cash float
+
+[ ] Manage cash float including tracking of all cash amounts added to and removed from cash drawer
+
+## Daily Sales totals
+
+[ ]
+
+## Staff access & pin
+
+[ ] You decide what each of your team member can see and do in your POS system
+[ ] Log all changes and transactions with individual staff PIN
+
+## Cash calculator
+
+[ ] Before closing, simply add current values by denominations and save totals, discrepancies and counting in shift reports
+
+## Order history
+
+[ ] Scan order receipt to view the past order
+[ ] Search it using customer or order numbers
+
+## Returns & refunds
+
+[ ] Refund past orders to the customer
+
+## Transaction Report
+
+[ ] Keeps track of all daily transactions for every sale, payment & refunds
+
+# Customer management
+
+## Customer profiles
+
+[ ] Centrally managed customer profiles
+
+## Purchase history
+
+[ ] Complete (in-store & online) purchase history linked to customer profile
+
+## Bulk import
+
+[ ] Your existing customers list with easy CSV import
+
+## Loyalty rewards
+
+[ ] Flexible loyalty rewards program and win their repeat business
+
+## Hike Customer Display
+
+[ ] Use a customer display to show the order details to your customers while they are waiting to pay
+[ ] You can use an iPad, PC, or any tablet device as a customer display.
+[ ] Versatile, customizable screen that creates an elevated experience for your customers by increasing their trust and satisfaction in your business
+
+# Reporting
+
+## Shift reports
+
+[ ] Generate daily totals shift reports to keep track of all payment types and transactions including cash, cards, gift cards, on account sales and returns
+
+## Transaction & sales reports
+
+[ ] All daily transaction for every sale, payment & refunds
+
+# Multi-store
+
+## Multiple outlets
+
+[ ] Set-up and start using new outlet
+[ ] Pop-up store
+[ ] Warehouse
+
+## Powerful multi-store reporting
+
+[ ] Consolidated report to see how your business is doing in general and you can also drill down to a particular site level
+[ ] Access these real-time reports from anywhere in the world
+
+## Access control
+
+[ ] Specify who works at which store for access permissions
+[ ] Roster setup
+
+## Advance inventory
+
+[ ] Manage separate inventory for each and every store location
+
+# Integrations
+
+## Accounting integration
+
+[ ] Post transactions
+[ ] Customer records
+[ ] Daily Sales Totals to your accounting system
+
+## eCommerce integration
+
+[ ] Integrates with Shopify, BigCommerce and WooCommerce
+[ ] Sync all sales, inventory and customer records
+
+# Hardware
+
+[ ] Complete retail POS system with integrated scanner, printer, cash drawer and payment processors
+
+# 24/7 support
+
+## Help centre
+
+[ ] Knowledge base docs
+[ ] User guides are available online
+
+## Video tutorials
+
+[ ] Video tutorials to help you and your team get started
+
+## 24/7 email & live chat support
+
+[ ] Support team is available 24 hours a day, 7 days a week, by email and live chat

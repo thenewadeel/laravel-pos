@@ -25,15 +25,16 @@
                     <a href="{{ route('products.export') }}" class="btn btn-outline-info m-2 shadow-md">
                         <i class="fas fa-save fa-lg"></i>
                         Export Products</a>
-                    <a href="" class="btn btn-outline-info m-2 shadow-md">
+                    <a href="{{ route('shops.export') }}" class="btn btn-outline-info m-2 shadow-md">
                         <i class="fas fa-save fa-lg"></i>
                         Export Shops</a>
-                    <a href="" class="btn btn-outline-info m-2 shadow-md">
+                    <a href="{{ route('customers.export') }}" class="btn btn-outline-info m-2 shadow-md">
                         <i class="fas fa-save fa-lg"></i>
                         Export Customers</a>
                 </div>
             </div>
-            <div
+            {{-- TODO: Deletes --}}
+            {{-- <div
                 class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-red-200 rounded-lg p-1 m-2">
                 <div class="text-md font-bold text-gray-800 m-2">Deletes:</div>
                 <div class="flex flex-col md:flex-row justify-evenly w-full">
@@ -50,7 +51,7 @@
                         <i class="fas fa-trash fa-lg"></i>
                         Clear Customers</a>
                 </div>
-            </div>
+            </div> --}}
 
             <div
                 class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-slate-200 rounded-lg p-2 m-2">
@@ -80,7 +81,7 @@
                             <i class="fas fa-upload fa-lg"></i>
                             Import Products</button>
                     </form>
-                    <form action="{{ route('products.import') }}" method="post"
+                    <form action="{{ route('shops.import') }}" method="post"
                         enctype="multipart/form-data"class="flex flex-col items-center justify-center p-2  border-2 border-slate-200 rounded-md mx-1">
                         @csrf
                         <div class="mb-4">
@@ -91,7 +92,7 @@
                             <i class="fas fa-upload fa-lg"></i>
                             Import Shops</button>
                     </form>
-                    <form action="{{ route('products.import') }}" method="post"
+                    <form action="{{ route('customers.import') }}" method="post"
                         enctype="multipart/form-data"class="flex flex-col items-center justify-center p-2  border-2 border-slate-200 rounded-md mx-1">
                         @csrf
                         <div class="mb-4">
@@ -104,7 +105,8 @@
                     </form>
                 </div>
             </div>
-            <div
+            {{-- TODO: DB Backup & Retore --}}
+            {{-- <div
                 class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-slate-200 rounded-lg p-2 m-2">
                 <div class="text-md font-bold text-gray-800 m-2">Database:</div>
 
@@ -113,7 +115,7 @@
                         <i class="fas fa-database fa-lg"></i>
                         Backup DB</a>
                 </div>
-            </div>
+            </div> --}}
         </div>
     @endif
     <div class="card">
@@ -122,7 +124,7 @@
         <div class="card-body">
             <form action="{{ route('settings.store') }}" method="post">
                 @csrf
-                {{-- 
+                {{--
                 <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
                     <label for="app_name" class="text-center w-1/4">{{ __('settings.App_name') }}</label>
                     <input type="text" name="app_name" class="form-control w-3/4 @error('app_name') is-invalid @enderror"
@@ -174,8 +176,8 @@
                     <label for="default_printer_ip"
                         class="text-center w-1/4">{{ __('settings.default_printer_ip') }}</label>
                     <input type="text" name="default_printer_ip"
-                        class="form-control w-3/4 @error('default_printer_ip') is-invalid @enderror"
-                        id="default_printer_ip" placeholder="{{ __('settings.default_printer_ip') }}"
+                        class="form-control w-3/4 @error('default_printer_ip') is-invalid @enderror" id="default_printer_ip"
+                        placeholder="{{ __('settings.default_printer_ip') }}"
                         value="{{ old('default_printer_ip', config('settings.default_printer_ip')) }}">
                     @error('default_printer_ip')
                         <span class="invalid-feedback" role="alert">

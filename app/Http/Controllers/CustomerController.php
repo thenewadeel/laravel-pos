@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CustomersExport;
 use App\Http\Requests\CustomerStoreRequest;
+use App\Imports\CustomersImport;
 use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\ListOf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -80,9 +83,7 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
-    {
-    }
+    public function show(Customer $customer) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -142,5 +143,20 @@ class CustomerController extends Controller
             ]);
         }
         return back()->with('message', "Customer deleted");
+    }
+
+    public function export()
+    {
+        return Excel::download(new CustomersExport, 'customers.xlsx');
+    }
+    public function import()
+    {
+        if (request()->file('xlsx_file')) {
+            Excel::import(new CustomersImport, request()->file('xlsx_file'));
+
+            return redirect('/customers')->with('success', 'All good!');
+        } else {
+            return redirect()->back()->with('failure', 'File err');
+        }
     }
 }

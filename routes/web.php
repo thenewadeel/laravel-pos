@@ -83,9 +83,14 @@ Route::middleware('auth')->group(function () {
         // Bulk Excel Exports
         Route::get('/usersexport', [UsersController::class, 'export'])->name('users.export');
         Route::get('/productsexport', [ProductController::class, 'export'])->name('products.export');
+        Route::get('/shopsexport', [ShopController::class, 'export'])->name('shops.export');
+        Route::get('/customersexport', [CustomerController::class, 'export'])->name('customers.export');
         // Excel Imports
         Route::post('/usersimport', [UsersController::class, 'import'])->name('users.import');
         Route::post('/productsimport', [ProductController::class, 'import'])->name('products.import');
+        Route::post('/shopsimport', [ShopController::class, 'import'])->name('shops.import');
+        Route::post('/cutomersimport', [CustomerController::class, 'import'])->name('customers.import');
+
         Route::get('/download', [UsersController::class, 'downloadinExcel']);
 
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -103,7 +108,7 @@ Route::middleware('auth')->group(function () {
             ->name('shop.updateCategories');
 
 
-        // Route to get products filtered by categories 
+        // Route to get products filtered by categories
         Route::get('/productsbyCat', [ProductController::class, 'productsbyCat'])
             ->name('productsbyCat');
 

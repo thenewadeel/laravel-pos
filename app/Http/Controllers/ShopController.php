@@ -16,6 +16,8 @@ use App\Exports\ShopOrdersExport;
 use App\Exports\UsersExport;
 // use App\Models\Category;
 use AliBayat\LaravelCategorizable\Category;
+use App\Exports\ShopsExport;
+use App\Imports\ShopsImport;
 use App\Models\Order;
 use App\Traits\ListOf;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
@@ -296,5 +298,22 @@ class ShopController extends Controller
         // This method is called when the object is destroyed.
         // It can be used to clean up resources like files, database connections, etc.
         // In this case, there's nothing to clean up, so we don't need to do anything.
+    }
+
+    public function export()
+    {
+        return Excel::download(new ShopsExport, 'shops.xlsx');
+    }
+    public function import()
+    {
+        if (request()->file('xlsx_file')) {
+            // Excel::import(new UsersImport, 'users.xlsx');
+
+            Excel::import(new ShopsImport, request()->file('xlsx_file'));
+
+            return redirect('/shops')->with('success', 'All good!');
+        } else {
+            return redirect()->back()->with('failure', 'File err');
+        }
     }
 }

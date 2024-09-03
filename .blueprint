@@ -1,0 +1,18 @@
+models:
+    CategoryProducts: {  }
+    Customer: { name: 'string:70', membership_number: 'string:20', email: 'string:191 nullable default:NULL', phone: 'string:191 nullable default:NULL', address: 'string:191 nullable default:NULL', photo: 'string:191 nullable default:NULL' }
+    Discount: { name: 'string:191', percentage: 'decimal:5,2 unsigned', amount: 'decimal:10,2 unsigned', method: "enum:'NATURAL','REVERSE' default:'NATURAL'", type: "enum:'DISCOUNT','CHARGES' default:'DISCOUNT'" }
+    Expense: { head: 'string:191', amount: 'decimal:8,2', notes: 'string:191 nullable default:NULL', user_id: 'biginteger unsigned', shop_id: 'biginteger unsigned nullable default:NULL' }
+    InventoryItem: { head: "enum:'dry','maint','coffee shop','other' default:'maint'", floor_balance: 'decimal:10,2', last_rate: 'decimal:8,2 default:1.00', item_id: 'biginteger unsigned', inventory_id: 'biginteger unsigned nullable default:NULL' }
+    InventoryTransaction: { type: "enum:'UP','DOWN' default:'UP'", vendor: 'string:191 nullable default:NULL', notes: 'text nullable default:NULL', user_id: 'biginteger unsigned nullable default:NULL', inventory_id: 'biginteger unsigned nullable default:NULL' }
+    InventoryTransactionItem: { vendor: 'string:191 nullable default:NULL', qty: integer, rate: 'decimal:8,2', notes: 'text nullable default:NULL', item_id: 'biginteger unsigned', transaction_id: 'biginteger unsigned' }
+    Item: { name: 'string:191', description: 'text nullable default:NULL', qty_type: "enum:'number','kg','box','pack' default:'number'" }
+    Order: { POS_number: 'string:191 nullable default:NULL', table_number: 'string:191 nullable default:NULL', waiter_name: 'string:191 nullable default:NULL', notes: 'string:191 nullable default:NULL', state: "enum:'preparing','served','closed','wastage' default:'preparing'", type: "enum:'dine-in','take-away','delivery' default:'dine-in'", customer_id: 'biginteger unsigned nullable default:NULL', user_id: 'biginteger unsigned', shop_id: 'biginteger unsigned nullable default:NULL' }
+    OrderItem: { price: 'decimal:14,4', quantity: 'integer default:1', order_id: 'biginteger unsigned', product_id: 'biginteger unsigned nullable default:NULL' }
+    Payment: { amount: 'decimal:14,4', tip: 'decimal:14,4 default:0.0000', order_id: 'biginteger unsigned', user_id: 'biginteger unsigned' }
+    Product: { name: 'string:191', description: 'text nullable default:NULL', image: 'string:191 nullable default:NULL', price: 'decimal:14,2', quantity: 'integer default:1000', aval_status: 'boolean default:1', kitchen_printer_ip: "string:191 default:'192.168.0.162'" }
+    Reports: {  }
+    Setting: { key: 'string:191', value: 'text nullable default:NULL', user_id: 'biginteger unsigned nullable default:NULL' }
+    Shop: { name: 'string:191', description: 'text nullable default:NULL', image: 'string:191 nullable default:NULL', surcharge_percentage: 'decimal:5,2 unsigned default:0.00', printer_ip: "string:191 default:'192.168.0.162'" }
+    ShopCategories: {  }
+    User: { image: 'string:191 nullable default:NULL', first_name: 'string:191', last_name: 'string:191', type: "enum:'admin','cashier','order-taker','accountant','chef','stockBoy' nullable default:NULL", email: 'string:191', password: 'string:191', remember_token: 'string:100 nullable default:NULL' }

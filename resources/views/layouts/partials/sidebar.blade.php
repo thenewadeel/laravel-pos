@@ -81,12 +81,12 @@
                         </a>
                     </li> --}}
                 @endif
-                {{-- <li class="nav-item has-treeview">
-                    <a href="{{ route('cart.index') }}" class="nav-link {{ activeSegment('cart') }}">
+                <li class="nav-item has-treeview">
+                    <a href="{{ route('tokenShop') }}" class="nav-link {{ activeSegment('tokenShop') }}">
                         <i class="nav-icon fas fa-cart-plus"></i>
-                        <p>{{ __('cart.title') }}</p>
+                        <p>Token Shop</p>
                     </a>
-                </li> --}}
+                </li>
                 {{-- <li class="nav-item has-treeview">
                     <a href="{{ route('cart.indexTokens') }}" class="nav-link {{ activeSegment('cart') }}">
                         <i class="nav-icon fas fa-cart-plus"></i>

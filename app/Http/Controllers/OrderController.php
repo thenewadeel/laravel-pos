@@ -19,6 +19,7 @@ use AliBayat\LaravelCategorizable\Category;
 use App\Http\Requests\OrderNewRequest;
 use Illuminate\Log\Logger;
 use App\Jobs\PrintOrderTokensJob;
+use Doctrine\DBAL\Schema\View;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
 use Exception;
@@ -53,47 +54,47 @@ class OrderController extends Controller
             $orders = Order::whereIn('shop_id', $shops);
         }
         // FILTERS
-        // POS Number	
+        // POS Number
         // dd($request->has('pos_number'), $request);
         if ($request->has('pos_number') && $request['pos_number'] != null) {
             $orders = $orders->where('pos_number', $request['pos_number']);
         }
-        // Customer Name	
+        // Customer Name
         if ($request->has('customer_name') && $request['customer_name'] != null) {
             $orders = $orders->whereHas('customer', function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request['customer_name'] . '%');
             });
         }
-        // Type	
+        // Type
         if ($request->has('type') && $request['type'] != null) {
             // dd($request->type);
             $orders = $orders->where('type', $request['type']);
         }
-        // Table #	
+        // Table #
         if ($request->has('table_number') && $request['table_number'] != null) {
             $orders = $orders->where('table_number', $request['table_number']);
         }
-        // Waiter Name	
+        // Waiter Name
         if ($request->has('waiter_name') && $request['waiter_name'] != null) {
             $orders = $orders->where('waiter_name', 'LIKE', '%' . $request['waiter_name'] . '%');
         }
-        // Shop Name	
+        // Shop Name
         if ($request->has('shop_name') && $request['shop_name'] != null) {
             $orders = $orders->whereHas('shop', function ($query) use ($request) {
                 $query->where('name', 'LIKE', '%' . $request['shop_name'] . '%');
             });
         }
-        // Total	
+        // Total
 
-        // Discount	
-        // Net Amount	
-        // Cash	
-        // Chit	
+        // Discount
+        // Net Amount
+        // Cash
+        // Chit
 
-        // Taken By	
+        // Taken By
         // if ($request->has('Taken_By')) {
 
-        // Closed By	
+        // Closed By
         // if ($request->has('Closed_By')) {
 
         // Status
@@ -850,5 +851,25 @@ class OrderController extends Controller
             logger('Failed to connect to printer: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to connect to printer: ' . $e->getMessage());
         }
+    }
+    public function tokenShop()
+    {
+        $products =
+            Category::find(1)->entries(Product::class)->get();
+        // = Product::where([
+        //     'category' => 'tokenisable'
+        // ]);
+        //TODO User shop
+        $shop =    Shop::firstOrCreate(['name' => 'Token Shop']);
+        $customer = Customer::firstOrCreate([
+            'name' => 'Token Customer',
+            'membership_number' => 999
+        ]);
+        $order =        Order::create([
+            'shop_id' => $shop->id,
+            'user_id' => auth()->user()->id,
+            'customer_id' => $customer->id
+        ]);
+        return view('tokenshop.main', compact('order', 'products'));
     }
 }

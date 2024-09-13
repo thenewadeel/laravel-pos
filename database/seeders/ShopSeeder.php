@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use AliBayat\LaravelCategorizable\Category;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -49,5 +50,24 @@ class ShopSeeder extends Seeder
                 $randomUser->shops()->save($shopRecord);
             }
         };
+
+        foreach (
+            [
+                'Token Shop 1',
+                'Token Shop 2',
+                'Token Shop 3',
+                'Token Shop 4',
+                'Token Shop 5',
+                'Token Shop 6'
+            ] as $token_shop
+        ) {
+            $shopRecord = Shop::updateOrCreate([
+                'name' => $token_shop,
+                'description' => 'desc',
+                'image' => '',
+            ]);
+
+            $shopRecord->categories()->sync(Category::where('name', 'tokenisable')->first());
+        }
     }
 }

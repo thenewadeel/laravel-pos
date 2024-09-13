@@ -93,6 +93,8 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/download', [UsersController::class, 'downloadinExcel']);
 
+        Route::get('/tokenShop', [OrderController::class, 'tokenShop'])->name('tokenShop');
+
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
         Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
         Route::post('/cart/change-qty', [CartController::class, 'changeQty']);

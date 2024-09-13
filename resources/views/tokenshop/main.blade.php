@@ -44,7 +44,7 @@
             @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
                 <livewire:order-token-payment :order="$order" />
             @endif
-            asdasdasd
+
         </div>
         <div class="card flex flex-wrap w-full p-0 mx-1  border-4 border-red-500">
             @foreach ($products as $product)

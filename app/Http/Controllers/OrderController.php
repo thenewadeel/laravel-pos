@@ -860,7 +860,8 @@ class OrderController extends Controller
         //     'category' => 'tokenisable'
         // ]);
         //TODO User shop
-        $shop =    Shop::firstOrCreate(['name' => 'Token Shop']);
+        $shop = auth()->user()->shops->first();
+        //Shop::firstOrCreate(['name' => 'Token Shop']);
         $customer = Customer::firstOrCreate([
             'name' => 'Token Customer',
             'membership_number' => 999

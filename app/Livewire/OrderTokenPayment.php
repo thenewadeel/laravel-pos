@@ -132,8 +132,11 @@ class OrderTokenPayment extends Component
                         // $kitchen_printer->setTextSize(1, 1);
                         $printer->text($item->product->name);
                         // $printer->text("\n");
-                        $printer->setJustification(Printer::JUSTIFY_RIGHT);
+                        $printer->setJustification(Printer::JUSTIFY_CENTER);
+                        $printer->text("\n");
                         $printer->text(" - " . $item->quantity . "\n");
+                        $printer->text("\n");
+                        $printer->text("\n");
                         $printer->text("\n");
 
                         // $printer->text("Rate:(" . $item->product->price . ")");

@@ -64,6 +64,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/printPreview/{order}', [OrderController::class, 'printPreview'])->name('orders.print.preview');
     Route::get('/orders/printPOS/{order}', [OrderController::class, 'printToPOS'])->name('orders.print.POS');
     Route::get('/orders/printPOSQT/{order}', [OrderController::class, 'printToPOSQT'])->name('orders.print.QT');
+
+    Route::get('/orders/{order}/feedback', [OrderController::class, 'getFeedback'])->name('orders.getFeedback');
+    Route::post('/orders/{order}/storefeedback', [OrderController::class, 'storeFeedback'])->name('orders.storeFeedback');
+
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 
 

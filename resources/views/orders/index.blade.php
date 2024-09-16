@@ -228,6 +228,17 @@
                                             class="btn btn-outline-primary btn-sm py-0 my-0 px-2 align-middle">
                                             <i class="fas fa-edit text-xs "></i>
                                         </a>
+                                    @else
+                                        @if ($order->hasFeedback())
+                                            @include('layouts.partials.rating.preview', [
+                                                'rating' => $order->feedback,
+                                            ])
+                                        @else
+                                            <a href="{{ route('orders.getFeedback', $order) }}"
+                                                class="btn btn-outline-primary btn-sm py-0 my-0 px-2 align-middle">
+                                                <i class="fas fa-comment-dots text-xs "></i>
+                                            </a>
+                                        @endif
                                     @endif
                                     {{-- <a href="{{ route('orders.show', $order) }}"
                                         class="btn btn-info btn-sm py-0 my-0 px-2 align-middle">

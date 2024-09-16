@@ -129,7 +129,7 @@ class Order extends Model
             return $i->price;
         })->sum();
     }
-    public function discountedTotal() //final amount after discounting 
+    public function discountedTotal() //final amount after discounting
     {
         $totalPrice = $this->total();
         foreach ($this->discounts as $discount) {
@@ -189,5 +189,13 @@ class Order extends Model
         } elseif ($this->receivedAmount() > $this->discountedTotal()) {
             return  __('order.Change');
         }
+    }
+    public function hasFeedback()
+    {
+        return Feedback::where('order_id', $this->id)->exists();
+    }
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
     }
 }

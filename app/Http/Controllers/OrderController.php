@@ -19,6 +19,7 @@ use AliBayat\LaravelCategorizable\Category;
 use App\Http\Requests\OrderNewRequest;
 use Illuminate\Log\Logger;
 use App\Jobs\PrintOrderTokensJob;
+use App\Models\Feedback;
 use Doctrine\DBAL\Schema\View;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
@@ -872,5 +873,46 @@ class OrderController extends Controller
             'customer_id' => $customer->id
         ]);
         return view('tokenshop.main', compact('order', 'products'));
+    }
+
+    public function getFeedback(Order $order)
+    {
+        return view('feedback.create', compact('order'));
+    }
+
+    public function storeFeedback(Order $order, Request $request)
+    {
+        // dd($request);
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'order_id' => 'required|exists:orders,id',
+            'user_id' => 'required|exists:users,id',
+            // 'comments' => 'required',
+            'presentation_and_plating' => 'required|integer|between:1,5',
+            'taste_and_quality' => 'required|integer|between:1,5',
+
+            // Service:
+            'friendliness' => 'required|integer|between:1,5',
+            'service' => 'required|integer|between:1,5',
+            'knowledge_and_recommendations' => 'required|integer|between:1,5',
+
+            // Ambiance:
+            'atmosphere' => 'required|integer|between:1,5',
+            'cleanliness' => 'required|integer|between:1,5',
+
+            // Value for Money:
+            'overall_experience' => 'required|integer|between:1,5',
+
+            // Comments
+            'comments' => 'nullable|string',
+
+        ]);
+        // $request->request->add(['user_id' => auth()->user()->id]);
+        // $request->request->add(['order_id' => $order->id]);
+
+        Feedback::create($request->all());
+        return redirect()->back()->with('message', 'Thanks for your feedback');
     }
 }

@@ -913,6 +913,7 @@ class OrderController extends Controller
         // $request->request->add(['order_id' => $order->id]);
 
         Feedback::create($request->all());
-        return redirect()->back()->with('message', 'Thanks for your feedback');
+        // return redirect()->back()->with('message', 'Thanks for your feedback');
+        return redirect()->route('orders.index')->with('message', 'Thanks for your feedback');
     }
 }

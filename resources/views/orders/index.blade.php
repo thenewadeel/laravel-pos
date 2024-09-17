@@ -230,13 +230,13 @@
                                         </a>
                                     @else
                                         @if ($order->hasFeedback())
-                                            @include('layouts.partials.rating.preview', [
+                                            {{-- @include('layouts.partials.rating.preview', [
                                                 'rating' => $order->feedback,
-                                            ])
+                                            ]) --}}
                                         @else
                                             <a href="{{ route('orders.getFeedback', $order) }}"
-                                                class="btn btn-outline-primary btn-sm py-0 my-0 px-2 align-middle">
-                                                <i class="fas fa-comment-dots text-xs "></i>
+                                                class="btn btn-danger btn-sm p-0 px-2 align-middle">
+                                                <i class="fas fa-thumbs-up text-xs "></i>
                                             </a>
                                         @endif
                                     @endif

@@ -229,7 +229,7 @@
                                             <i class="fas fa-edit text-xs "></i>
                                         </a>
                                     @else
-                                        @if ($order->hasFeedback())
+                                        @if ($order->hasFeedback()||$order->type!='dine-in')
                                             {{-- @include('layouts.partials.rating.preview', [
                                                 'rating' => $order->feedback,
                                             ]) --}}

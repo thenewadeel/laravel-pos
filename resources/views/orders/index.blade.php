@@ -235,7 +235,7 @@
                                             ]) --}}
                                         @else
                                             <a href="{{ route('orders.getFeedback', $order) }}"
-                                                class="btn btn-danger btn-sm p-0 px-2 align-middle">
+                                                class="btn btn-primary btn-sm p-0 px-2 align-middle">
                                                 <i class="fas fa-thumbs-up text-xs "></i>
                                             </a>
                                         @endif

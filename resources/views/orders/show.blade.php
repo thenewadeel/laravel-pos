@@ -22,6 +22,15 @@
         {{-- <a href="{{ route('orders.print.preview', $order) }}" class="btn btn-primary ">
             {{ __('order.Print_Preview') }} <i class="fas fa-print"></i></a> --}}
         @include('layouts.partials.orderPrintBtns', ['order' => $order])
+        @if ($order->hasFeedback() || $order->type != 'dine-in')
+            {{-- @include('layouts.partials.rating.preview', [
+                'rating' => $order->feedback,
+            ]) --}}
+        @else
+            <a href="{{ route('orders.getFeedback', $order) }}" class="btn btn-primary p-0 px-2 align-middle">
+                <i class="fas fa-thumbs-up text-xs mr-2"></i>Feedback
+            </a>
+        @endif
         <a href="{{ route('orders.index') }}" class="btn btn-dark btn-sm">
             <i class="nav-icon fas fa-list"></i>
             {{ __('order.title_Short') }}
@@ -152,6 +161,8 @@
                 class="btn btn-primary {{ $next == $order->id ? 'disabled' : '' }}">
                 <i class="fas fa-chevron-right"></i>
             </a>
+            @else
+            <div class=""></div>
         @endif
     </div>
 @endsection

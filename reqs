@@ -14,6 +14,34 @@
 [ ] running KOTs
 [ ] editable qty in order-items-edit component
 
+[ ] Products updated => orders disturbed
+[ ] Order Index Filters to lock on today
+[ ] Order Index Filters { add Shops, status (closed, open, chit)}
+[ ] edit customer name in order->edit
+[ ] item search scoped to shop
+[ ] bulk printing of chit bills
+[ ] modal ip dialog for broken printers (when NW is down, printer broken, etc)
+[ ] bill cancellation rights & mech
+[ ] clear all unsaved bills
+
+## Interface
+
+ [ ] sidebar v-scroll disable
+
+
+ [ ] Add strength of guests for order-taker / per order attribute to be added
+ [ ] all open bills cashier wise & shop wise
+ [ ] advance payments with receipt number PV
+ [ ] Order index auto refresh
+ [ ] Cashiers report summary (number of bills and cash ->shop/head wise)
+ [ ] customer search bar should select first customer on enter
+ [ ] auto sort columns on order index
+ [ ] seperate grouping for beverages / bakery items, and other like food categories
+ [ ] order-type : delivery seperate report (pos numbers, day wise)
+ [ ] menu ammendment record
+ [ ] order open on 23 and closed on 25 . . . consistent report on cash and sale (payments are considered by order->creation date instead of payments creation date) [manual click to close the day by admin]
+ [ ] payment via POS
+
 ### Reports
 
 [ ] Date Range

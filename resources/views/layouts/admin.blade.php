@@ -25,7 +25,7 @@
     </script>
 </head>
 
-<body class="hold-transition sidebar-mini sidebar-collapse">
+<body class="hold-transition sidebar-mini sidebar-collapse layout-fixed ">
     <!-- Site wrapper -->
     <div class="wrapper">
 

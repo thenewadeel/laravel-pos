@@ -26,7 +26,7 @@
 
 ## Interface
 
- [ ] sidebar v-scroll disable
+ [x] sidebar v-scroll disable
 
 
  [ ] Add strength of guests for order-taker / per order attribute to be added

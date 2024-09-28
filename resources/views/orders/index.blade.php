@@ -26,11 +26,11 @@
     {{-- <a href="{{ route('orders.index') }}" class="btn btn-dark btn-sm">
         <i class="nav-icon fas fa-list"></i>
         {{ __('order.title_Short') }}
-    </a> --}}
+    </a>
     <a href="{{ route('cart.index') }}" class="btn btn-dark btn-sm">
         <i class="nav-icon fas fa-shopping-cart"></i>
         {{ __('cart.title_Short') }}
-    </a>
+    </a> --}}
 @endsection
 
 @section('content')

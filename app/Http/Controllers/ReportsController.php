@@ -44,7 +44,11 @@ class ReportsController extends Controller
         $orders = Order::query();
 
         if ($request->has('start_date')) {
+            if ($request->has('end_date')) {
             $orders->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
+            } else {
+                $orders->where('created_at', $filters['start_date']);
+            }
         } else {
             $orders->whereDate('created_at', now());
         }
@@ -85,7 +89,12 @@ class ReportsController extends Controller
         $orderItems = OrderItem::query();
 
         if ($request->has('start_date')) {
+            if ($request->has('end_date')) {
             $orderItems->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
+            } else {
+                $orderItems->where('created_at', $filters['start_date']);
+            }
+
         } else {
             $orderItems->whereDate('created_at', now());
         }
@@ -164,7 +173,12 @@ class ReportsController extends Controller
         $payments = Payment::query();
 
         if ($request->has('start_date')) {
+            if ($request->has('end_date')) {
             $payments->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
+            } else {
+                $payments->where('created_at', $filters['start_date']);
+            }
+            // $payments->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
         } else {
             $payments->whereDate('created_at', now());
         }

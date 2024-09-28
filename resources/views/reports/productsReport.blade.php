@@ -198,7 +198,7 @@
                     // $totalSoldQty = 0;
                     // $totalSoldAmount = 0;
                     // $totalDiscountAmount = 0;
-                    
+
                     // $totalTotal = 0;
                     ?>
                     @foreach ($orderItemsData as $orderItemsVector)
@@ -214,12 +214,16 @@
                                     </a>
                                 </td> --}}
                             <td style="width:40%" title="{{ print_r($orderItemsVector, true) }}">
+                                @if($orderItemsVector['product'])
                                 <a href="{{ route('products.edit', ['product' => $orderItemsVector['product']->id]) }}">
                                     {{ $orderItemsVector['product']->name }}
                                 </a>
                             </td>
                             <td class="text-right" style="width:10%">
                                 {{ number_format($orderItemsVector['product']->price, 2) }}
+                                @else
+<span class="text-danger"> No Product Valid </span>
+@endif
                             </td>
                             <td class="text-right" style="width:10%">
                                 {{ $orderItemsVector['soldQuantity'] }}
@@ -245,7 +249,7 @@
                         // $grandTotalSoldQty += $orderItem->quantity;
                         // $totalSoldAmount += $orderItem->price;
                         // $grandTotalSoldAmount += $orderItem->price;
-                        
+
                         // $totalBalance += $order->balance();
                         // $totalDiscountAmount += $order->discountAmount();
                         // $totalTotal += $order->total();

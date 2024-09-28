@@ -135,7 +135,7 @@
 
                                         @case('deleted')
                                             @if ($activity->log_name == 'orders')
-                                                {{ $activity->properties['attributes']['POS_number'] }}
+                                                {{ $activity->properties['attributes']['POS_number'] ??'err' }}
                                             @elseif ($activity->log_name == 'orders-items')
                                                 @php($order = App\Models\Order::find($activity->properties['old']['order_id']))
                                                 <a href="{{ route('orders.show', $order) }}" title="{{ $activity->properties }}">

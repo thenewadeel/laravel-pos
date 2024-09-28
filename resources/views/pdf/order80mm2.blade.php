@@ -148,8 +148,9 @@
     display:flex;
     flex-direction: column;
     text-align: center;">
-        <div
-            style="font-size: 1.5rem; 
+        @if ($order->POS_number)
+            <div
+                style="font-size: 1.5rem;
         text-align: center;
         border:1px solid;
         border-radius: 0.375rem;
@@ -159,25 +160,28 @@
         padding-left: 0.5rem;
         padding-right: 0.5rem;
         display: inline-block">
-            {{ $orderStatus ? $orderStatus : '' }}
-            @if ($orderStatus == __('order.Not_Paid') || $orderStatus == __('order.Partial'))
-                {{ number_format($order->balance()) }}
-            @endif
-        </div>
-        @if ($orderStatus == __('order.Not_Paid') || $orderStatus == __('order.Partial'))
-            <div style="
-            font-size: 0.8rem; 
+                @if ($order->state == 'closed')
+                    {{ $orderStatus ? $orderStatus : '' }}
+                @endif
+                @if ($orderStatus == __('order.Not_Paid') || $orderStatus == __('order.Partial'))
+                    {{ number_format($order->balance()) }}
+                @endif
+            </div>
+            @if ($order->state == 'closed' && $orderStatus == __('order.Not_Paid') || $orderStatus == __('order.Partial'))
+                <div style="
+            font-size: 0.8rem;
             display: block;
             margin:0.5rem"
-                class="text-left">
-                <br />
-                <span style="text-align: left;">Please Sign Here : _______________
-                </span>
-                <br />
-                <span style="font-style: italic">
-                    ({{ $order?->customer?->name }})
-                </span>
-            </div>
+                    class="text-left">
+                    <br />
+                    <span style="text-align: left;">Please Sign Here : _______________
+                    </span>
+                    <br />
+                    <span style="font-style: italic">
+                        ({{ $order?->customer?->name }})
+                    </span>
+                </div>
+            @endif
         @endif
 
         <p style="text-align: center">

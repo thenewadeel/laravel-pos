@@ -9,9 +9,11 @@
         <a href="{{ route('orders.print.POS', $order) }}" class="btn btn-outline-dark btn-sm py-0 my-0 px-1 align-middle">
             <span class="text-sm font-bold">POS</span>
         </a>
-        <a href="{{ route('orders.print.QT', $order) }}"
-            class="btn btn-outline-danger btn-sm py-0 my-0 px-1 align-middle">
-            <span class="text-sm font-bold">KoT</span>
-        </a>
+        @if ($order->state != 'closed')
+            <a href="{{ route('orders.print.QT', $order) }}"
+                class="btn btn-outline-danger btn-sm py-0 my-0 px-1 align-middle">
+                <span class="text-sm font-bold">KoT</span>
+            </a>
+        @endif
     @endif
 </div>

@@ -38,21 +38,42 @@ class OrderController extends Controller
     {
         return Order::class;
     }
+
+    private function handleDateFilter(Request $request, $query)
+    {
+        $start_date = $request->query('start_date');
+        $end_date = $request->query('end_date');
+
+        if ($start_date && $end_date) {
+            $query->whereBetween('created_at', [$start_date, $end_date]);
+        } else if ($start_date) {
+            $query->whereDate('created_at', $start_date);
+        } else {
+            $query->whereDate('created_at', now()->startOfDay());
+        }
+        return $query;
+    }
     public function index(Request $request)
     {
+        $orders = Order::query();
+
+        if ($request->has('all') && $request['all'] == '1') {
+            //     //no date filtering....
+        } else {
+            $orders = $this->handleDateFilter($request, $orders);
+        }
+
         $request = $request->collect()->filter(function ($value) {
             return null !== $value;
         })->toArray();
         $request = collect($request);
         // dd($request);
         if (auth()->user()->type == 'admin') {
-            $orders = Order::query();
+            // $orders = Order::query();
         } else {
-            $u = User::with('shops')->find(auth()->id());
-
-            $shops = $u->shops()->pluck('shops.id')->toArray();
+            $shops = User::with('shops')->find(auth()->id())->shops()->pluck('shops.id')->toArray();
             // dd($shops);
-            $orders = Order::whereIn('shop_id', $shops);
+            $orders = $orders->whereIn('shop_id', $shops);
         }
         // FILTERS
         // POS Number
@@ -110,17 +131,18 @@ class OrderController extends Controller
         //     $filters = array_intersect(['dine-in', 'take-away', 'delivery'], $request->type);
         //     $orders = $orders->whereIn('type', $filters);
         // }
-        $today = now()->startOfDay();
-        if ($request->has('all') && $request['all'] == '1') {
-            //no date filtering....
-        } elseif ($request->has('start_date') && $request->has('end_date')) {
-            $orders = $orders->whereBetween('created_at', [$request['start_date'], $request['end_date'] . ' 23:59:59']);
-        } elseif ($request->has('start_date')) {
-            $orders = $orders->whereDate('created_at', '>=', $request['start_date']);
-        } elseif ($request->count() > 0) {
-        } else {
-            $orders = $orders->whereDate('created_at', $today);
-        }
+// extracted out to function
+        // $today = now()->startOfDay();
+        // if ($request->has('all') && $request['all'] == '1') {
+        //     //no date filtering....
+        // } elseif ($request->has('start_date') && $request->has('end_date')) {
+        //     $orders = $orders->whereBetween('created_at', [$request['start_date'], $request['end_date'] . ' 23:59:59']);
+        // } elseif ($request->has('start_date')) {
+        //     $orders = $orders->whereDate('created_at', '>=', $request['start_date']);
+        // } elseif ($request->count() > 0) {
+        // } else {
+        //     $orders = $orders->whereDate('created_at', $today);
+        // }
 
         $unpaid = $request->has('unpaid') && $request['unpaid'] == '1';
         // $chit = $request->has('chit') && $request->chit == '1';
@@ -139,6 +161,49 @@ class OrderController extends Controller
         // }
 
         $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->get(); //->paginate(25);
+
+        // Payment State [open,closed, paid, chit, part-chit]
+        if ($request->has('payment_state') && $request['payment_state'] != null) {
+            // dd($orders);
+            // logger($orders->first());
+            // logger('$orders Inside');
+            // logger($request['payment_state']);
+            if ($request['payment_state'] == 'open') {
+                $orders = $orders->filter(function (Order $order) {
+                    return $order->state == 'preparing' || $order->state == 'served' || $order->state == 'wastage';
+                });
+            } elseif ($request['payment_state'] == 'closed') {
+                $orders = $orders->filter(function (Order $order) {
+                    return $order->state == 'closed';
+                });
+            } elseif ($request['payment_state'] == 'paid') { {
+                    $orders = $orders->filter(function (Order $order) {
+                        return $order->state == 'closed' && $order->balance() == 0;
+                    });
+                }
+            } elseif ($request['payment_state'] == 'chit') {
+                $orders = $orders->filter(function (Order $order) {
+                    return $order->state == 'closed' && $order->balance() > 0 && $order->payments()->count() == 0;
+                });
+            } elseif ($request['payment_state'] == 'part-chit') { {
+                    $orders =  $orders->filter(function (Order $order) {
+                        return $order->state == 'closed' && $order->balance() > 0 && $order->payments()->count() > 0;
+                    });
+                }
+            }
+        }
+
+        // if (isset($states[$request['payment_state']])) {
+        //     // dd($request['payment_state']);
+        //     if (is_callable($states[$request['payment_state']])) {
+        //         $states[$request['payment_state']]($orders);
+        //     } else {
+        //         dd(90);
+        //     }
+        // }
+
+        // logger($orders->count());
+        // logger('$orders Outside');
 
         $total = $orders->map(function ($i) {
             return $i->total();

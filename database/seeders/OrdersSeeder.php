@@ -31,7 +31,7 @@ class OrdersSeeder extends Seeder
                 $user = \App\Models\User::inRandomOrder()->first();
                 $shop = \App\Models\Shop::inRandomOrder()->first();
                 $customer = \App\Models\Customer::inRandomOrder()->first();
-                $creation_time = $faker->dateTimeBetween('-97 day', '-1 day');
+                $creation_time = $faker->dateTimeBetween('-97 day', '+1 day');
                 $orders[] =
                     [
                         'user_id' => $user->id,
@@ -39,7 +39,7 @@ class OrdersSeeder extends Seeder
                         'customer_id' => $customer->id,
                         'table_number' => $faker->randomElement(['1', '2', '3', '4', '5']),
                         'waiter_name' => $faker->name,
-                        'state' => $faker->randomElement(['closed',]),
+                    'state' => $faker->randomElement(['preparing', 'closed', 'wastage']),
                         'type' => $faker->randomElement(['dine-in', 'take-away', 'delivery']),
                         'created_at' => $creation_time,
                         'notes' => $faker->sentence,

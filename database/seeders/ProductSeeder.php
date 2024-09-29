@@ -71,7 +71,7 @@ class ProductSeeder extends Seeder
         // DB::table('category_products')->delete();
         DB::table('categories')->delete();
 
-        $csvFilePath = base_path('seedData/tambola_products.csv');
+        $csvFilePath = base_path('seedData/products.csv');
         if (file_exists($csvFilePath)) {
             $products = array_map('str_getcsv', file($csvFilePath));
             $header = array_shift($products);

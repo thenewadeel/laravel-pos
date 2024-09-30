@@ -45,6 +45,7 @@ return [
     'Actions'           => 'Actions',
     'Edit'              => 'Edit',
     'Delete'            => 'Delete',
+    'Delete_all_drafts' => 'Delete All Drafts',
     'Close'             => 'Close',
     'Index'             => 'All Orders',
     'Open'            => 'Open',

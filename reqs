@@ -22,7 +22,7 @@
 [x] bulk printing of chit bills
 [ ] modal ip dialog for broken printers (when NW is down, printer broken, etc)
 [ ] bill cancellation rights & mech
-[ ] clear all unsaved bills
+[x] clear all unsaved bills
 
 ## Interface
 

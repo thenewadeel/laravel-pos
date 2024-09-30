@@ -12,6 +12,14 @@
         </i>
     </a>
     @if (auth()->user()->type == 'admin')
+    <form action="{{ route('orders.destroyAllDrafts') }}" method="POST" class="d-inline">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm">
+            <i class="fas fa-trash mr-1"></i>{{ __('order.Delete_all_drafts') }}
+        </button>
+    </form>
+
         <a href="{{ route('orders.index', ['all' => true]) }}" class="btn btn-info btn-sm">
             <i class="fas fa-filter mr-1"></i>{{ __('common.All') }}
         </a>

@@ -408,7 +408,11 @@ class OrderController extends Controller
 
         return redirect()->route('orders.edit', $order)->with('success', 'Payment deleted successfully');
     }
-
+    public function destroyAllDrafts()
+    {
+        Order::whereNull('POS_number')->delete();
+        return redirect()->back()->with('success', 'All drafts deleted successfully');
+    }
     public function updateDiscounts(Order $order, Request $request)
     {
         if ($order->state == 'closed') {

@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders/{order}/feedback', [OrderController::class, 'getFeedback'])->name('orders.getFeedback');
     Route::post('/orders/{order}/storefeedback', [OrderController::class, 'storeFeedback'])->name('orders.storeFeedback');
+    Route::delete('/orders-deleteAllDrafts', [OrderController::class, 'destroyAllDrafts'])->name('orders.destroyAllDrafts');
 
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
 

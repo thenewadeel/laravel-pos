@@ -238,7 +238,20 @@ class OrderController extends Controller
         $discounts = Discount::orderBy('type')->get();
         $shops = Shop::all();
         $customers = Customer::all();
-        $products = Product::all();
+        if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin') {
+            $products = Product::all();
+        } else {
+            $products = auth()->user()->shops->map(function ($shop) {
+                return $shop->products();
+            })->flatten();
+            // dd($products);
+            // $cats = auth()->user()->shops->map(function ($shop) {
+            //     return $shop->categories;
+            // })->flatten();
+            // $products = $cats->map(function ($cat) {
+            //     return $cat->entries(Product::class);
+            // });
+        }
         return view('orders.edit', compact('order', 'shops', 'customers', 'users', 'discounts', 'products'));
     }
 

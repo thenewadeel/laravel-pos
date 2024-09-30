@@ -21,17 +21,17 @@ class Shop extends Model
 
     public function products()
     {
-        $categories = Category::query();
+        // $categories = Category::query();
         $category_ids = $this->categoriesIds();
 
-
-        $categories = $categories->where('type', 'product');
+        // $categories = $categories->where('type', 'product');
         // $categories = $categories->whereIn('id', $category_ids);
-        $products = Product::query('category_id', $category_ids);
-        // $categories = $categories->get();
-        // foreach ($category_ids as $cat) {
-        //     $products = $products->merge(Category::find($cat)->entries(Product::class));
-        // }
+        // Product::query('category_id', $category_ids);
+
+        $products =  Category::whereIn('id', $category_ids)->get()->map(function ($cat) {
+            return $cat->allEntries(Product::class)->get();
+        })->flatten();
+
         return $products; //= Category::whereIn('id', Shop::first()->categoriesIds())->get();
         // return $this->hasMany(Product::class);
     }

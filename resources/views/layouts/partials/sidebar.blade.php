@@ -120,6 +120,13 @@
                             <p>{{ __('common.Cashiers_Report') }}</p>
                         </a>
                     </li>
+                    <li class="nav-item has-treeview">
+                        <a href="{{ route('reports.chitsReport') }}"
+                            class="nav-link {{ activeSegment('reports') }}">
+                            <i class="nav-icon fas fa-list"></i>
+                            <p>{{ __('common.Chits_Report') }}</p>
+                        </a>
+                    </li>
                 @endif
                 <li class="nav-item has-treeview">
                     <a href="{{ route('settings.index') }}" class="nav-link {{ activeSegment('settings') }}">

@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/orders/{order}/item/{item}', [OrderController::class, 'destroyItem'])
         ->name('order.items.destroy');
     Route::get('/orders/print/{order}', [OrderController::class, 'printPdf'])->name('orders.print');
+    Route::get('/orders/printBulk/{orderIdsArray}', [OrderController::class, 'printBulkPdf'])->where('orders', '.*')->name('orders.printBulk');
     Route::get('/orders/printTokens/{order}', [OrderController::class, 'printTokens'])->name('orders.printTokens');
     Route::get('/orders/printPreview/{order}', [OrderController::class, 'printPreview'])->name('orders.print.preview');
     Route::get('/orders/printPOS/{order}', [OrderController::class, 'printToPOS'])->name('orders.print.POS');
@@ -75,6 +76,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dailySale', [ReportsController::class, 'dailySale'])->name('reports.dailySale');
         Route::get('/productsReport', [ReportsController::class, 'productsReport'])->name('reports.productsReport');
         Route::get('/cashiersReport', [ReportsController::class, 'cashiersReport'])->name('reports.cashiersReport');
+        Route::get('/chitsReport', [ReportsController::class, 'chitsReport'])->name('reports.chitsReport');
     });
 
     Route::namespace('Admin')->group(function () {

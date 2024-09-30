@@ -25,6 +25,7 @@ use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
 use Exception;
 use Mike42\Escpos\EscposImage;
+use ZipArchive;
 
 // use Mike42\ecspo;EscposImage
 
@@ -527,7 +528,38 @@ class OrderController extends Controller
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 
+    public function printBulkPdf(Request $request, $orderIdsArray)
+    {
+        // dd($orderIdsArray);
+        $orderIds =  explode(',', $orderIdsArray);
+        $orders = Order::with(['items.product', 'payments', 'customer', 'shop'])
+        ->whereIn('id', $orderIds)
+            ->get();
 
+        $zip = new ZipArchive();
+        $zipName = 'orders-' . now()->format('YmdHis') . '.zip';
+        $zipPath = storage_path('app/' . $zipName);
+        $zip->open($zipPath, ZipArchive::CREATE);
+
+        foreach ($orders as $order) {
+            $orderStatus = $this->getOrderStatus($order);
+
+            $pdf = Pdf::loadView('pdf.order80mm2', compact('order', 'orderStatus'));
+            $pdf->set_option('dpi', 72);
+            $pdf->setPaper([0, 0, 204, 400 + 25 * $order->items->count()], 'portrait'); // 80mm thermal paper
+            $filename = preg_replace('/[^a-zA-Z0-9_-]/', '_', $order->POS_number);
+            if (empty($filename)) {
+                $filename = $order->id;
+            }
+            $pdf->save(storage_path('app/' . $filename . '.pdf'));
+            $zip->addFile(storage_path('app/' . $filename . '.pdf'), $filename . '.pdf');
+        }
+
+        $zip->close();
+        return response()->download($zipPath, $zipName, [
+            'Content-Type' => 'application/zip',
+        ]);
+    }
 
     public function printTokens($id)
     {

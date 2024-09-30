@@ -16,7 +16,7 @@
 
 [ ] Products updated => orders disturbed
 [x] Order Index Filters to lock on today
-[ ] Order Index Filters { add Shops, status (closed, open, chit)}
+[x] Order Index Filters { add Shops, status (closed, open, chit)}
 [ ] edit customer name in order->edit
 [ ] item search scoped to shop
 [ ] bulk printing of chit bills

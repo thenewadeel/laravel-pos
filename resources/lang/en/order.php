@@ -61,6 +61,7 @@ return [
     'Type'              => 'Type',
     'Table_Number'      => 'Table #',
     'Waiter_Name'       => 'Waiter Name',
+    'Shops'             => 'Shops',
     'Shop_Name'         => 'Shop Name',
     'Discount'          => 'Discount',
     'Part_Chit'              => 'Part-Chit',

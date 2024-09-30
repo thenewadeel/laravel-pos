@@ -101,10 +101,9 @@ class OrderController extends Controller
             $orders = $orders->where('waiter_name', 'LIKE', '%' . $request['waiter_name'] . '%');
         }
         // Shop Name
-        if ($request->has('shop_name') && $request['shop_name'] != null) {
-            $orders = $orders->whereHas('shop', function ($query) use ($request) {
-                $query->where('name', 'LIKE', '%' . $request['shop_name'] . '%');
-            });
+        if ($request->has('shop_ids') && $request['shop_ids'] != null) {
+            // dd($request['shop_ids']);
+            $orders = $orders->whereIn('shop_id', $request['shop_ids']);
         }
         // Total
 

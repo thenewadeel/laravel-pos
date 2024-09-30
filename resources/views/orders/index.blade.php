@@ -67,6 +67,34 @@
                         'Shop_Name --}}
                 @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
                     <form action="{{ route('orders.index') }}" method="GET">
+                        <div class="form-inline flex flex-row justify-items-stretch justify-content-between  m-0 p-2 rounded-md border border-gray-300">
+
+                            <?php if (auth()->user()->type == 'admin') {
+                                $shops = App\Models\Shop::get();
+                            } else {
+                                $shops = auth()->user()->shops;
+                            } ?>
+                            <div class="form-group flex flex-row overflow-scroll">
+                                <div class="ml-2 block text-sm font-bold text-gray-700 "
+                                                for="shop_id_selector">
+                                                {{ __('order.Shops') }}:
+                            </div>
+                                <div class="flex flex-wrap w-[75%]  " id='shop_id_selector'>
+                                    @foreach ($shops as $shop)
+                                        <div class="m-1 rounded-md flex items-center p-1 {{in_array($shop->id, request('shop_ids', [])) ? ' bg-blue-300 ':'bg-sky-100'}}">
+                                            <input class="form-check-input focus:ring-indigo-500 h-4 w-4 text-indigo-600 "
+                                                type="checkbox" name="shop_ids[]" value="{{ $shop->id }}"
+                                                id="shop{{ $shop->id }}" {{ in_array($shop->id, request('shop_ids', [])) ? 'checked' : '' }}>
+                                            <label class="ml-2 block text-sm font-medium text-gray-700 "
+                                                for="shop{{ $shop->id }}">
+                                                {{ $shop->name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-inline flex flex-row justify-items-stretch justify-content-between  m-0 p-2">
                             <div class="input-group ">
                                 <input type="date" name="start_date" class="form-control "
@@ -131,6 +159,9 @@
                         <th class="col-1 align-middle">{{ __('order.POS_Number') }}</th>
                         {{-- <th>{{ __('order.Date') }}</th> --}}
                         <th class="col-2 text-center align-middle">{{ __('order.Customer_Name') }}</th>
+                        @if (auth()->user()->type == 'admin' || auth()->user()->type == 'cashier')
+                            <th class="col-2 text-center align-middle">{{ __('order.Shop_Name') }}</th>
+                        @endif
                         <th class="col-1 text-center align-middle">{{ __('order.Type') }}</th>
                         <th class="col-1 text-center align-middle">{{ __('order.Table_Number') }}</th>
                         <th class="col-1 text-center align-middle">{{ __('order.Waiter_Name') }}</th>
@@ -164,6 +195,9 @@
                             </td>
                             {{-- <td>{{ $order->created_at->format('d-M-y') }}</td> --}}
                             <td class=" align-middle">{{ $order->getCustomerName() }}</td>
+                            @if (auth()->user()->type == 'admin' || auth()->user()->type == 'cashier')
+                                <td class="text-center align-middle">{{ $order->shop->name }}</td>
+                            @endif
                             <td class="text-center align-middle">{{ $order->type }}</td>
                             <td class="text-center align-middle">{{ $order->table_number }}</td>
                             <td class=" align-middle">{{ $order->waiter_name }}</td>

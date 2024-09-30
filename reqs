@@ -15,7 +15,7 @@
 [ ] editable qty in order-items-edit component
 
 [ ] Products updated => orders disturbed
-[ ] Order Index Filters to lock on today
+[x] Order Index Filters to lock on today
 [ ] Order Index Filters { add Shops, status (closed, open, chit)}
 [ ] edit customer name in order->edit
 [ ] item search scoped to shop

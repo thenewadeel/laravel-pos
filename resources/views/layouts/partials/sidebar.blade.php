@@ -35,45 +35,61 @@
                             <p>{{ __('dashboard.title') }}</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-cogs"></i>
+                            <p>
+                                Management
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
 
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('shops.index') }}" class="nav-link {{ activeSegment('shops') }}">
-                            <i class="nav-icon fas fa-cart-plus"></i>
-                            <p>{{ 'Shops' }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('products.index') }}" class="nav-link {{ activeSegment('products') }}">
-                            <i class="nav-icon fas fa-th-large"></i>
-                            <p>{{ __('product.title') }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('categories.index') }}" class="nav-link {{ activeSegment('categories') }}">
-                            <i class="nav-icon fas fa-list"></i>
-                            <p>{{ __('Categories') }}</p>
-                        </a>
-                    </li>
 
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('customers.index') }}" class="nav-link {{ activeSegment('customers') }}">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>{{ __('customer.title') }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('users.index') }}" class="nav-link {{ activeSegment('users') }}">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>{{ 'Users' }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('activities.index') }}" class="nav-link {{ activeSegment('activities') }}">
-                            <i class="nav-icon fas fa-users"></i>
-                            <p>{{ 'Activities' }}</p>
-                        </a>
-                    </li>
 
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('shops.index') }}" class="nav-link {{ activeSegment('shops') }}">
+                                    <i class="nav-icon fas fa-cart-plus"></i>
+                                    <p>{{ 'Shops' }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('products.index') }}"
+                                    class="nav-link {{ activeSegment('products') }}">
+                                    <i class="nav-icon fas fa-th-large"></i>
+                                    <p>{{ __('product.title') }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('categories.index') }}"
+                                    class="nav-link {{ activeSegment('categories') }}">
+                                    <i class="nav-icon fas fa-list"></i>
+                                    <p>{{ __('Categories') }}</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('customers.index') }}"
+                                    class="nav-link {{ activeSegment('customers') }}">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>{{ __('customer.title') }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('users.index') }}" class="nav-link {{ activeSegment('users') }}">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>{{ 'Users' }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('activities.index') }}"
+                                    class="nav-link {{ activeSegment('activities') }}">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>{{ 'Activities' }}</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     {{-- <li class="nav-item has-treeview">
                         <a href="{{ route('expenses.index') }}" class="nav-link {{ activeSegment('expenses') }}">
                             <i class="nav-icon fas fa-list"></i>
@@ -93,39 +109,51 @@
                         <p>{{ __('cart.title2') }}</p>
                     </a>
                 </li> --}}
-                <li class="nav-item has-treeview">
+                <li class="nav-item">
                     <a href="{{ route('orders.index') }}" class="nav-link {{ activeSegment('orders') }}">
                         <i class="nav-icon fas fa-cart-plus"></i>
                         <p>{{ __('order.title') }}</p>
                     </a>
                 </li>
-                @if (auth()->user()->type == 'admin')
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('reports.dailySale') }}" class="nav-link {{ activeSegment('reports') }}">
-                            <i class="nav-icon fas fa-list"></i>
-                            <p>{{ __('common.Daily_Sale_Report') }}</p>
+                @if (auth()->user()->type == 'admin'||auth()->user()->type == 'accountant')
+                    {{-- <li class="nav-header">Reports</li> --}}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon far fa-envelope"></i>
+                            <p>
+                                Reports
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
                         </a>
-                    </li>
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('reports.productsReport') }}"
-                            class="nav-link {{ activeSegment('reports') }}">
-                            <i class="nav-icon fas fa-list"></i>
-                            <p>{{ __('common.Products_Report') }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('reports.cashiersReport') }}"
-                            class="nav-link {{ activeSegment('reports') }}">
-                            <i class="nav-icon fas fa-list"></i>
-                            <p>{{ __('common.Cashiers_Report') }}</p>
-                        </a>
-                    </li>
-                    <li class="nav-item has-treeview">
-                        <a href="{{ route('reports.chitsReport') }}"
-                            class="nav-link {{ activeSegment('reports') }}">
-                            <i class="nav-icon fas fa-list"></i>
-                            <p>{{ __('common.Chits_Report') }}</p>
-                        </a>
+                        <ul class="nav nav-treeview" style="display: none;">
+                            <li class="nav-item">
+                                <a href="{{ route('reports.dailySale') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-chart-pie"></i>
+                                    <p>{{ __('common.Daily_Sale_Report') }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reports.productsReport') }}"
+                                    class="nav-link {{ activeSegment('reports') }}">
+                                    <i class="nav-icon fas fa-boxes"></i>
+                                    <p>{{ __('common.Products_Report') }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reports.cashiersReport') }}"
+                                class="nav-link {{ activeSegment('reports') }}">
+                                <i class="nav-icon fas fa-cash-register"></i>
+                                <p>{{ __('common.Cashiers_Report') }}</p>
+                            </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('reports.chitsReport') }}"
+                                    class="nav-link {{ activeSegment('reports') }}">
+                                    <i class="nav-icon fas fa-file-invoice"></i>
+                                    <p>{{ __('common.Chits_Report') }}</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 @endif
                 <li class="nav-item has-treeview">

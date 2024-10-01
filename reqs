@@ -32,7 +32,7 @@
  [ ] Add strength of guests for order-taker / per order attribute to be added
  [ ] all open bills cashier wise & shop wise
  [ ] advance payments with receipt number PV
- [ ] Order index auto refresh
+ [x] Order index auto refresh (component for auto-reload added)
  [x] Cashiers report summary (number of bills and cash ->shop/head wise)
  [ ] customer search bar should select first customer on enter
  [ ] auto sort columns on order index

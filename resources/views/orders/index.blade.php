@@ -4,7 +4,7 @@
 @section('content-header', __('order.Orders_List'))
 @section('content-actions')
 
-
+    @include('layouts.partials.autoReload')
     <a class="btn btn-outline-danger font-bold btn-sm" id="btn-new-order"
         onclick="document.getElementById('myModal').style.display='block'">
         <i class="fas fa-plus mr-1">

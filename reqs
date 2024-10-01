@@ -17,7 +17,7 @@
 [ ] Products updated => orders disturbed
 [x] Order Index Filters to lock on today
 [x] Order Index Filters { add Shops, status (closed, open, chit)}
-[ ] edit customer name in order->edit
+[x] edit customer name in order->edit (Added button to add new customer)
 [x] item search scoped to shop for order-takers (cashiers and admin get all products)
 [x] bulk printing of chit bills
 [ ] modal ip dialog for broken printers (when NW is down, printer broken, etc)

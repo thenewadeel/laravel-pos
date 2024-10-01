@@ -42,7 +42,9 @@
             </div>
             <div class="form-group flex flex-col p-0 m-0">
                 <div class="flex flex-row p-0 m-0">
-                    <label for="searchCustomer" class="col-md-4 p-0 m-0">Customer:</label>
+                    <label for="searchCustomer" class="col-md-4 p-0 m-0">Customer:
+                        <a href="{{ route('customers.create') }}" class="btn btn-outline-info btn-sm">Add New</a>
+                    </label>
                     <input id="searchCustomer" type="text" placeholder="Search customer..."
                         value="{{ $order->customer->membership_number ?? '' }} {{ $order->customer->name ?? '' }}"
                         class="form-control ">

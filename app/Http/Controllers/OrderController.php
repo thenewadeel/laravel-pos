@@ -239,7 +239,7 @@ class OrderController extends Controller
         $discounts = Discount::orderBy('type')->get();
         $shops = Shop::all();
         $customers = Customer::all();
-        if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin') {
+        if (auth()->user()->type == 'admin') { //auth()->user()->type == 'cashier' ||
             $products = Product::all();
         } else {
             $products = auth()->user()->shops->map(function ($shop) {

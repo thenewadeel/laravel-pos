@@ -33,7 +33,7 @@
  [ ] all open bills cashier wise & shop wise
  [ ] advance payments with receipt number PV
  [ ] Order index auto refresh
- [ ] Cashiers report summary (number of bills and cash ->shop/head wise)
+ [x] Cashiers report summary (number of bills and cash ->shop/head wise)
  [ ] customer search bar should select first customer on enter
  [ ] auto sort columns on order index
  [ ] seperate grouping for beverages / bakery items, and other like food categories

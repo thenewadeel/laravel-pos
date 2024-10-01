@@ -115,7 +115,7 @@
                         <p>{{ __('order.title') }}</p>
                     </a>
                 </li>
-                @if (auth()->user()->type == 'admin'||auth()->user()->type == 'accountant')
+                @if (auth()->user()->type == 'admin' || auth()->user()->type == 'accountant')
                     {{-- <li class="nav-header">Reports</li> --}}
                     <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -141,10 +141,10 @@
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('reports.cashiersReport') }}"
-                                class="nav-link {{ activeSegment('reports') }}">
-                                <i class="nav-icon fas fa-cash-register"></i>
-                                <p>{{ __('common.Cashiers_Report') }}</p>
-                            </a>
+                                    class="nav-link {{ activeSegment('reports') }}">
+                                    <i class="nav-icon fas fa-cash-register"></i>
+                                    <p>{{ __('common.Cashiers_Report') }}</p>
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a href="{{ route('reports.chitsReport') }}"
@@ -154,6 +154,14 @@
                                 </a>
                             </li>
                         </ul>
+                    </li>
+                @elseif(auth()->user()->type == 'cashier')
+                    <li class="nav-item">
+                        <a href="{{ route('reports.cashiersReport') }}"
+                            class="nav-link {{ activeSegment('reports') }}">
+                            <i class="nav-icon fas fa-cash-register"></i>
+                            <p>{{ __('common.Cashiers_Report') }}</p>
+                        </a>
                     </li>
                 @endif
                 <li class="nav-item has-treeview">

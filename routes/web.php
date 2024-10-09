@@ -70,7 +70,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders/{order}/storefeedback', [OrderController::class, 'storeFeedback'])->name('orders.storeFeedback');
     Route::delete('/orders-deleteAllDrafts', [OrderController::class, 'destroyAllDrafts'])->name('orders.destroyAllDrafts');
 
-    Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shops.export');
+    Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shop.export');
 
 
     Route::namespace('Accountant')->group(function () {

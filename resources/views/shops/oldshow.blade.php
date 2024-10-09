@@ -7,7 +7,7 @@
         $from = now()->subMonths(6)->startOfMonth()->format('Y-m-d');
         $to = now()->endOfMonth()->format('Y-m-d');
     @endphp --}}
-    <form method="get" action="{{ route('shops.export', $shop) }}" class="form-inline">
+    <form method="get" action="{{ route('shop.export', $shop) }}" class="form-inline">
         {{-- <div class="form-group mr-3">
             <label for="from">From</label>
             <input type="date" id="from" name="from" class="form-control" required value="{{ $from }}">

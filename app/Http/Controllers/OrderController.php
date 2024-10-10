@@ -160,7 +160,7 @@ class OrderController extends Controller
         //     // $orders = $orders->whereHas('discounts', 'hasAny');
         // }
 
-        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->get(); //->paginate(25);
+        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->paginate(25);//->get(); //;
 
         // Payment State [open,closed, paid, chit, part-chit]
         if ($request->has('payment_state') && $request['payment_state'] != null) {

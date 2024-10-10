@@ -313,7 +313,7 @@
                     </tr>
                 </tfoot>
             </table>
-            {{-- {{ $orders->render() }} --}}
+            {{ $orders->render() }}
         </div>
     </div>
 @endsection

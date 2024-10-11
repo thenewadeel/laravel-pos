@@ -143,6 +143,11 @@
 
         {{-- {{ $order }} --}}
     </div>
+    <div class="flex flex-col">
+        @foreach ($histories as $history)
+            @include('layouts.partials.orderhistory.show', ['orderHistory' => $history])
+        @endforeach
+    </div>
 
 
 @endsection

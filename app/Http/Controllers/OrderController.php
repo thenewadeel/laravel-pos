@@ -20,6 +20,7 @@ use App\Http\Requests\OrderNewRequest;
 use Illuminate\Log\Logger;
 use App\Jobs\PrintOrderTokensJob;
 use App\Models\Feedback;
+use App\Models\OrderHistory;
 use Doctrine\DBAL\Schema\View;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
@@ -446,6 +447,10 @@ class OrderController extends Controller
         $next = Order::where('id', '>', $order->id)
             ->where('user_id', $order->user_id)
             ->min('id');
+
+        // histories
+        $histories = OrderHistory::where('order_id', $order->id)->orderBy('created_at')->get();
+
         // $currentKey = array_search($order->id, $orders);
         // $next = $currentKey === false ? null : $orders[($currentKey + 1) % count($orders)];
         // $previous = $currentKey === false ? null : $orders[($currentKey - 1 + count($orders)) % count($orders)];
@@ -458,6 +463,7 @@ class OrderController extends Controller
             ]),
             'next' => $next,
             'previous' => $previous,
+            'histories' => $histories
         ]);
     }
     public function store(OrderStoreRequest $request)

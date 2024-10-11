@@ -198,4 +198,8 @@ class Order extends Model
     {
         return $this->hasOne(Feedback::class);
     }
+    public function history()
+    {
+        return $this->hasMany(OrderHistory::class);
+    }
 }

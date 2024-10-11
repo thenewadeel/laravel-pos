@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Controllers\OrderHistoryController;
 use App\Models\Order;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -75,6 +76,11 @@ class ItemCard extends Component
             }
             // $order->items()->create($validatedData);
             $this->message = 'Product added to order successfully';
+
+            // Create order history
+            $orderHistoryController = new OrderHistoryController();
+            $orderHistoryController->store($request = null, $order->id, 'item-added', $itemName = $product->name, $itemQty = $quantity);
+
             // $this->reset();
             $this->setupQuantities();
             $this->dispatch('item-added-to-order', orderId: $order->id)->self();

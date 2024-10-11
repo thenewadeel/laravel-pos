@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\OrderHistory;
+use App\Models\OrderItem;
 
 class OrderHistoryController extends Controller
 {
@@ -18,14 +19,19 @@ class OrderHistoryController extends Controller
         return view('partials.orderhistory.show', compact('orderHistory'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request = null, $orderId, $actionType,  $itemName = null, $itemQty = null, $printerIdentifier = null, string $paymentAmount = null, $POSNumber = null)
     {
-        $orderHistory = new OrderHistory([
-            'order_id' => $request->input('order_id'),
-            'user_id' => auth()->user()->id,
-            'description' => $request->input('description'),
-        ]);
-        $orderHistory->save();
-        return redirect()->route('partials.orderhistory.index');
+        // dd($request, $orderId, $actionType, $printerIdentifier, $itemName, $itemQty);
+
+        // Create order history record
+        $history = new OrderHistory();
+        $history->order_id = $orderId;
+        $history->user_id = auth()->user()->id; // Assuming authenticated user
+        $history->action_type = $actionType;
+        $history->save();
+        $history->description = $history->generateDescription(itemName: $itemName, itemQty: $itemQty, printerIdentifier: $printerIdentifier, paymentAmount: $paymentAmount, POSNumber: $POSNumber);
+        $history->save();
+
+        return response()->json(['message' => 'Order history created successfully']);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Controllers\OrderHistoryController;
 use App\Models\Order;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -64,14 +65,25 @@ class OrderPayment extends Component
 
     public function payAndClose()
     {
+        $amt = ($this->customerPayment >= $this->order->balance()) ? $this->order->balance() : $this->customerPayment;
         $this->order->payments()->create([
             'order_id' => $this->order->id,
             'user_id' => auth()->user()->id,
-            'amount' => ($this->customerPayment >= $this->order->balance()) ? $this->order->balance() : $this->customerPayment,
+            'amount' => $amt,
         ]);
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $this->order->id, actionType: 'payment-added', paymentAmount: $amt);
+
         if ($this->order->POS_number == null) $this->order->assignPOS();
         $this->order->state = 'closed';
         $this->order->save();
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $this->order->id, actionType: 'closed');
+
         return $this->redirect('/orders/' . $this->order->id);
     }
 }

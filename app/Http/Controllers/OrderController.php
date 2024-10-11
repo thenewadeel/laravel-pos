@@ -276,6 +276,10 @@ class OrderController extends Controller
         $request->merge(['user_id' => auth()->id()]);
         $order = Order::create($request->all());
 
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'created');
+
         return redirect()->route('orders.edit', $order)->with('success', 'Order created successfully');
     }
     public function newEdit()

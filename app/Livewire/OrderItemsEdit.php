@@ -108,6 +108,12 @@ class OrderItemsEdit extends Component
             $this->order->discounts()->attach($discountId);
         }
 
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $this->order->id, actionType: 'discount-changed');
+
+
         activity('order-discount')
             ->causedBy(auth()->user())
             ->performedOn($this->order)

@@ -19,7 +19,7 @@ class OrderHistoryController extends Controller
         return view('partials.orderhistory.show', compact('orderHistory'));
     }
 
-    public function store(Request $request = null, $orderId, $actionType,  $itemName = null, $itemQty = null, $printerIdentifier = null, string $paymentAmount = null, $POSNumber = null)
+    public function store(Request $request = null, $orderId, $actionType,  $itemName = null, $itemQty = null, $printerIdentifier = null, string $paymentAmount = null, $POSNumber = null, $pdfFilePath = null)
     {
         // dd($request, $orderId, $actionType, $printerIdentifier, $itemName, $itemQty);
 
@@ -29,7 +29,7 @@ class OrderHistoryController extends Controller
         $history->user_id = auth()->user()->id; // Assuming authenticated user
         $history->action_type = $actionType;
         $history->save();
-        $history->description = $history->generateDescription(itemName: $itemName, itemQty: $itemQty, printerIdentifier: $printerIdentifier, paymentAmount: $paymentAmount, POSNumber: $POSNumber);
+        $history->description = $history->generateDescription(itemName: $itemName, itemQty: $itemQty, printerIdentifier: $printerIdentifier, paymentAmount: $paymentAmount, POSNumber: $POSNumber, pdfFilePath: $pdfFilePath);
         $history->save();
 
         return response()->json(['message' => 'Order history created successfully']);

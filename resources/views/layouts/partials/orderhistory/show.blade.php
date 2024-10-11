@@ -27,6 +27,13 @@
     </div>
 
     <div class=" w-2/3">
-        {{ $orderHistory->description }}
+        @if (Str::contains($orderHistory->action_type, 'pdf-generated'))
+            <a class="text-blue-600 roundedn-md px-2 border-2 border-slate-300 shadow-md cursor-pointer hover:bg-blue-900 hover:text-white" href="{{ Storage::url($orderHistory->description) }}" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-download text-sm mr-2"></i>
+                Download
+            </a>
+        @else
+            {{ $orderHistory->description }}
+        @endif
     </div>
 </div>

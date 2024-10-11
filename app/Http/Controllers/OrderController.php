@@ -526,12 +526,14 @@ class OrderController extends Controller
     }
     public function printPreview($id)
     {
+        // dd('printPreview', $id);
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
         return View('pdf.order', compact('order'));
     }
     public function printPdf($id)
     {
+        // dd('printPdf', $id);
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
         $orderStatus = $this->getOrderStatus($order);
@@ -539,6 +541,19 @@ class OrderController extends Controller
         $pdf = Pdf::loadView('pdf.order80mm2', compact('order', 'orderStatus'));
         $pdf->set_option('dpi', 72);
         $pdf->setPaper([0, 0, 204, 400 + 25 * $order->items->count()], 'portrait'); // 80mm thermal paper
+
+        // Save a copy of generated pdf in storage
+        $path = storage_path('app/public/order_pdfs');
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        $pdfPath = $path . '/' . $order->id . '.pdf';
+        $pdf->save($pdfPath);
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'pdf-generated', pdfFilePath: $pdfPath);
+
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 

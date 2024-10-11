@@ -926,6 +926,16 @@ class OrderController extends Controller
             // logger($ip);
             // logger($items);
             $kitchen_printer_ip = $ip ?? config('settings.default_printer_ip');
+
+            // Create order history
+            $itemNamesWithQty = $items->map(function ($item) {
+                return $item->product->name . ':' . $item->quantity;
+            })->implode(', ');
+            $itemNamesConcatenated = $itemNamesWithQty;
+            // logger($itemNamesConcatenated);
+            $orderHistoryController = new OrderHistoryController();
+            $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'kot-printed', printerIdentifier: $kitchen_printer_ip, itemName: $itemNamesConcatenated);
+
             // logger('$kitchen_printer_ip');
             // logger($kitchen_printer_ip);
             try {
@@ -980,6 +990,11 @@ class OrderController extends Controller
     private function print_POS_Order(Order $order)
     {
         $shop_printer_ip = $order->shop->printer_ip ?? config('settings.default_printer_ip');
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'pos-print-printed', printerIdentifier: $shop_printer_ip);
+
         try {
             $connector = new NetworkPrintConnector($shop_printer_ip, 9100, 5);
             $shop_printer = new Printer($connector);

@@ -131,7 +131,7 @@ class OrderController extends Controller
         //     $filters = array_intersect(['dine-in', 'take-away', 'delivery'], $request->type);
         //     $orders = $orders->whereIn('type', $filters);
         // }
-// extracted out to function
+        // extracted out to function
         // $today = now()->startOfDay();
         // if ($request->has('all') && $request['all'] == '1') {
         //     //no date filtering....
@@ -240,7 +240,9 @@ class OrderController extends Controller
         $shops = Shop::all();
         $customers = Customer::all();
         if (auth()->user()->type == 'admin') { //auth()->user()->type == 'cashier' ||
-            $products = Product::all();
+            $products = $shops->map(function ($shop) {
+                return $shop->products();
+            })->flatten();
         } else {
             $products = auth()->user()->shops->map(function ($shop) {
                 return $shop->products();
@@ -275,6 +277,10 @@ class OrderController extends Controller
         $request->merge(['user_id' => auth()->id()]);
         $order = Order::create($request->all());
 
+        // Create order history for creation
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request, $order->id, 'created');
+
         return redirect()->route('orders.edit', $order)->with('success', 'Order created successfully');
     }
     public function newEdit()
@@ -285,6 +291,7 @@ class OrderController extends Controller
         $shops = Shop::all();
         $customers = Customer::all();
         $products = Product::all();
+        dd('obsolete method. Needs developer inspection');
         return view('orders.edit', compact('order', 'shops', 'customers', 'users', 'discounts', 'products'));
     }
 
@@ -313,6 +320,10 @@ class OrderController extends Controller
         $validatedData['user_id'] = auth()->user()->id;
 
         $order->update($validatedData);
+
+        // Create order history for creation
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request, $order->id, 'updated');
 
         return redirect()->route('orders.edit', $order)->with('success', 'Order updated successfully');
     }
@@ -383,6 +394,10 @@ class OrderController extends Controller
             $order->items()->create($validatedData);
         }
         // $order->items()->create($validatedData);
+
+        // Create order history for creation
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request, $order->id, 'item-added', $orderItem = $order->items()->where('product_id', $product->id)->first());
 
         return redirect()->route('orders.edit', $order)->with('success', 'Product added to order successfully');
     }
@@ -472,6 +487,10 @@ class OrderController extends Controller
             'type' => $request->order_type,
             'notes' => $request->notes,
         ]);
+
+        // Create order history for creation
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request, $order->id, 'created');
 
         $cart = $request->user()->cart()->get();
         foreach ($cart as $item) {

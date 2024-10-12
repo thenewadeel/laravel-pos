@@ -143,6 +143,7 @@
 
         {{-- {{ $order }} --}}
     </div>
+    @if (auth()->user()->type == 'accountant' || auth()->user()->type == 'admin')
     <div class="flex flex-col bg-gray-50 rounded-md shadow-sm p-2 mx-2 ">
         <h4 class="text-lg font-bold mb-2 self-center text-center w-full bg-slate-100 rounded-md shadow-inner">Order History</h4>
         <div class="h-min overflow-y-scroll max-h-[600px]">
@@ -152,6 +153,7 @@
             @endforeach
         </div>
     </div>
+    @endif
 
 
 @endsection

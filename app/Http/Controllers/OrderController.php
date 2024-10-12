@@ -794,11 +794,10 @@ class OrderController extends Controller
         // $printer->text("Quetta Club Limited\n");
         // $printer->setFont(Printer::FONT_C); // change font
         // $printer->text("Quetta Club Limited\n");
-        $printer->setFont(Printer::FONT_A); // change font
         // $printer->text("Chand Raat Festival\n");
         // $printer->text("2024\n");
 
-        $printer->text(str_repeat("-", 22) . "\n");
+        $printer->text(str_repeat("-", 16) . "\n");
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->setTextSize(1, 1);
         // if ($order->type) {
@@ -806,11 +805,23 @@ class OrderController extends Controller
         //     $printer->text("Order Type:");
         //     $printer->text($order->type . "\n");
         // }
-        $printer->setTextSize(1, 1);
         $printer->text("POS Order Receipt: ");
-        $printer->setTextSize(1, 1);
         $printer->text($order->POS_number . "\n");
-        $printer->setTextSize(1, 1);
+
+        $printer->text("Customer: ");
+        if ($order->customer) {
+            $printer->text($order->customer->name . "\n");
+        } else {
+            $printer->text("Walk in Customer\n");
+        }
+
+        $printer->text("Order of: ");
+        $printer->text($order->shop->name . "\n");
+
+        if ($order->type) {
+            $printer->text("Order Type:");
+            $printer->text($order->type . "\n");
+        }
 
         if ($order->type == 'dine-in' && $order->table_number) {
             $printer->setTextSize(2, 2);
@@ -819,47 +830,22 @@ class OrderController extends Controller
             $printer->setTextSize(1, 1);
         }
         if ($order->waiter_name) {
-            //$printer->setTextSize(2, 2);
             $printer->text("Waiter: ");
             $printer->text($order->waiter_name  . "\n");
         }
+
+        $printer->text("Order Date: " . $order->created_at . "\n");
+
         if ($order->notes) {
             $printer->text("Notes: " . $order->notes  . "\n");
         }
 
-        //$printer->setTextSize(2, 2);
-        $printer->text("Order for: ");
-        $printer->text($order->shop->name . "\n");
-
-
-
-
-
-
         //$printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
         //$printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->setTextSize(1, 1);
-        $printer->text("POS Order Receipt: ");
-        $printer->setTextSize(1, 1);
-        $printer->text($order->POS_number . "\n");
-        $printer->setTextSize(1, 1);
 
         // $printer->dataHeader('POS ' . $order->POS_number);
         // $printer->setFooter("User: " . $order->user ? $order->user->getFullName() : "Guest" . "  Shop: " . $order->shop ? $order->shop->name : "Unknown");
-        $printer->text("Customer: ");
 
-        if ($order->customer) {
-            $printer->text($order->customer->name . "\n");
-        } else {
-            $printer->text("Walk in Customer\n");
-        }
-
-        if ($order->type) {
-            //$printer->setTextSize(2, 2);
-            $printer->text("Order Type:");
-            $printer->text($order->type . "\n");
-        }
-        $printer->text("Order Date: " . $order->created_at . "\n");
         // $printer->text("Items:\n");
         // $printer->text('- ' . $item->product->name . '(' . $item->product->price * $item->quantity . ')' . ' x ' . $item->quantity . "\n");
         $printer->setEmphasis(false);
@@ -882,19 +868,20 @@ class OrderController extends Controller
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->text("G.Total: " . number_format((int) $order->discountedTotal(), 0) . "\n");
 
-            if ($order->state == 'closed') {
-                if ($order->balance() == 0) {
-                    $printer->text("\nPAID\n");
-                } else if ($order->balance() > 0)
-                    $printer->text("\nCHIT\n");
-            }
+            $balance = $order->balance();
 
             $printer->setJustification(Printer::JUSTIFY_CENTER);
             $printer->setTextSize(2, 2);
-            if ($order->balance() > 0) {
-                $printer->text("Chit Amount: " . $order->balance()  . "\n");
+
+            if ($order->state == 'closed') {
+                if ($balance == 0) {
+                    $printer->text("\nPAID\n");
+                } else if ($balance > 0) {
+                    $printer->text("\nCHIT\n");
+                    $printer->text(number_format((int)$balance, 0)  . "\n");
+                }
             } else {
-                $printer->text("Order PAID\n");
+                $printer->text("\nBalance: " . $balance  . "\n");
             }
 
             // $printer->setJustification(Printer::JUSTIFY_LEFT);

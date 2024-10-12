@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Controllers\OrderHistoryController;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -35,11 +36,21 @@ class OrderItemsEdit extends Component
             'quantity' => 1,
             'price' => $product->price,
         ]);
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, $this->order->id, 'item-added', $itemName = $product->name, $itemQty = 1);
+
+
         $this->dispatch('order-updated', orderId: $this->order->id);
     }
     public function deleteItem($id)
     {
         $item = OrderItem::find($id);
+        // dd($itemname);
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $this->order->id, actionType: 'item-removed', itemName: $item->product->name, itemQty: 0);
         if ($item->order->id == $this->order->id) {
             $item->delete();
         }
@@ -53,6 +64,11 @@ class OrderItemsEdit extends Component
             'quantity' => $newQty,
             'price' => $item->product->price * ($newQty)
         ]);
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, $this->order->id, 'item-added', $itemName = $item->product->name, $itemQty = $newQty);
+
         $this->dispatch('order-updated', orderId: $this->order->id);
     }
     public function decreaseQty($itemId)
@@ -64,6 +80,11 @@ class OrderItemsEdit extends Component
                 'quantity' => $newQty,
                 'price' => $item->product->price * ($newQty)
             ]);
+
+            // Create order history
+            $orderHistoryController = new OrderHistoryController();
+            $orderHistoryController->store($request = null, $this->order->id, 'item-removed', $itemName = $item->product->name, $itemQty = $newQty);
+
             $this->dispatch('order-updated', orderId: $this->order->id);
         }
     }
@@ -86,6 +107,12 @@ class OrderItemsEdit extends Component
         } else {
             $this->order->discounts()->attach($discountId);
         }
+
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $this->order->id, actionType: 'discount-changed');
+
 
         activity('order-discount')
             ->causedBy(auth()->user())

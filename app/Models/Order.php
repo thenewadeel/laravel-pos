@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\OrderHistoryController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -73,6 +74,11 @@ class Order extends Model
     {
         $this->POS_number = sprintf('%04d', (int)Order::where('POS_number', '!=', 'null')->where('created_at', '>=', $this->created_at->startOfMonth())->count() + 1) . '-' . $this->created_at->format('d-m-Y');
         $this->save();
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $this->id, actionType: 'pos-assigned', POSNumber: $this->POS_number);
+
     }
     public function items()
     {
@@ -197,5 +203,9 @@ class Order extends Model
     public function feedback()
     {
         return $this->hasOne(Feedback::class);
+    }
+    public function history()
+    {
+        return $this->hasMany(OrderHistory::class);
     }
 }

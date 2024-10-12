@@ -20,6 +20,7 @@ use App\Http\Requests\OrderNewRequest;
 use Illuminate\Log\Logger;
 use App\Jobs\PrintOrderTokensJob;
 use App\Models\Feedback;
+use App\Models\OrderHistory;
 use Doctrine\DBAL\Schema\View;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
@@ -160,7 +161,7 @@ class OrderController extends Controller
         //     // $orders = $orders->whereHas('discounts', 'hasAny');
         // }
 
-        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->paginate(25);//->get(); //;
+        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->paginate(25); //->get(); //;
 
         // Payment State [open,closed, paid, chit, part-chit]
         if ($request->has('payment_state') && $request['payment_state'] != null) {
@@ -277,9 +278,9 @@ class OrderController extends Controller
         $request->merge(['user_id' => auth()->id()]);
         $order = Order::create($request->all());
 
-        // Create order history for creation
+        // Create order history
         $orderHistoryController = new OrderHistoryController();
-        $orderHistoryController->store($request, $order->id, 'created');
+        $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'created');
 
         return redirect()->route('orders.edit', $order)->with('success', 'Order created successfully');
     }
@@ -461,6 +462,10 @@ class OrderController extends Controller
         $next = Order::where('id', '>', $order->id)
             ->where('user_id', $order->user_id)
             ->min('id');
+
+        // histories
+        $histories = OrderHistory::where('order_id', $order->id)->orderBy('created_at')->get();
+
         // $currentKey = array_search($order->id, $orders);
         // $next = $currentKey === false ? null : $orders[($currentKey + 1) % count($orders)];
         // $previous = $currentKey === false ? null : $orders[($currentKey - 1 + count($orders)) % count($orders)];
@@ -473,6 +478,7 @@ class OrderController extends Controller
             ]),
             'next' => $next,
             'previous' => $previous,
+            'histories' => $histories
         ]);
     }
     public function store(OrderStoreRequest $request)
@@ -535,12 +541,14 @@ class OrderController extends Controller
     }
     public function printPreview($id)
     {
+        // dd('printPreview', $id);
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
         return View('pdf.order', compact('order'));
     }
     public function printPdf($id)
     {
+        // dd('printPdf', $id);
         $order = Order::with(['items.product', 'payments', 'customer', 'shop'])
             ->findOrFail($id);
         $orderStatus = $this->getOrderStatus($order);
@@ -548,6 +556,19 @@ class OrderController extends Controller
         $pdf = Pdf::loadView('pdf.order80mm2', compact('order', 'orderStatus'));
         $pdf->set_option('dpi', 72);
         $pdf->setPaper([0, 0, 204, 400 + 25 * $order->items->count()], 'portrait'); // 80mm thermal paper
+
+        // Save a copy of generated pdf in storage
+        $path = storage_path('app/public/order_pdfs');
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        $pdfPath = $path . '/' . $order->id . '.pdf';
+        $pdf->save($pdfPath);
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'pdf-generated', pdfFilePath: $pdfPath);
+
         return $pdf->download('order_' . $order->id . '.pdf');
     }
 
@@ -556,7 +577,7 @@ class OrderController extends Controller
         // dd($orderIdsArray);
         $orderIds =  explode(',', $orderIdsArray);
         $orders = Order::with(['items.product', 'payments', 'customer', 'shop'])
-        ->whereIn('id', $orderIds)
+            ->whereIn('id', $orderIds)
             ->get();
 
         $zip = new ZipArchive();
@@ -874,7 +895,7 @@ class OrderController extends Controller
                 $printer->text("Chit Amount: " . $order->balance()  . "\n");
             } else {
                 $printer->text("Order PAID\n");
-        }
+            }
 
             // $printer->setJustification(Printer::JUSTIFY_LEFT);
         }
@@ -920,6 +941,16 @@ class OrderController extends Controller
             // logger($ip);
             // logger($items);
             $kitchen_printer_ip = $ip ?? config('settings.default_printer_ip');
+
+            // Create order history
+            $itemNamesWithQty = $items->map(function ($item) {
+                return $item->product->name . ':' . $item->quantity;
+            })->implode(', ');
+            $itemNamesConcatenated = $itemNamesWithQty;
+            // logger($itemNamesConcatenated);
+            $orderHistoryController = new OrderHistoryController();
+            $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'kot-printed', printerIdentifier: $kitchen_printer_ip, itemName: $itemNamesConcatenated);
+
             // logger('$kitchen_printer_ip');
             // logger($kitchen_printer_ip);
             try {
@@ -974,6 +1005,11 @@ class OrderController extends Controller
     private function print_POS_Order(Order $order)
     {
         $shop_printer_ip = $order->shop->printer_ip ?? config('settings.default_printer_ip');
+
+        // Create order history
+        $orderHistoryController = new OrderHistoryController();
+        $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'pos-print-printed', printerIdentifier: $shop_printer_ip);
+
         try {
             $connector = new NetworkPrintConnector($shop_printer_ip, 9100, 5);
             $shop_printer = new Printer($connector);

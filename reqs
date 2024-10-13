@@ -30,10 +30,10 @@
  [ ] search item -> not found -> form to add new product item
  [ ] KoT counter check with order final total
  [ ] amount of 1000 reduced in bill -> generate alarm
- [ ] order editing to be reflected in order->show
+ [x] order editing to be reflected in order->show
  [ ] order with 0 sum should not be saved
  [ ] pagination in All orders
- [ ] open bill should not reflect chit amount
+ [x] open bill should not reflect chit amount
  [x] editing order changes ownership of order (no change if user is present)
  [ ] order edit (save & print/ paid & print)
  [ ] order print buttons in order-edit
@@ -42,7 +42,7 @@
  [ ] chit to paid conversion rights and vice versa
  [ ] order edit view ratio 40-60
  [x] sidebar v-scroll disable
- [ ] matching bill prints (pdf and pos)
+ [x] matching bill prints (pdf and pos)
  [ ] addl reports
 
  [ ] Add strength of guests for order-taker / per order attribute to be added

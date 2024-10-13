@@ -121,7 +121,13 @@ class ShopController extends Controller
         // logger($request);
         // $filters = $request->only(['shop_id']);
         // $orders = $this->getOrders($shop, $filters)->get();
-        $orders = Order::where('shop_id', $shop->id)->orderBy('created_at', 'desc')->get();
+        $start = now()->startOfMonth();
+        $end = now();
+        $orders = Order::where('shop_id', $shop->id)
+            ->where('state', 'closed')
+            ->whereBetween('created_at', [$start, $end])
+            ->orderBy('created_at', 'desc')
+            ->get();
         $categories = Category::all();
         // get previous user id
         $previous = Shop::where('id', '<', $shop->id)

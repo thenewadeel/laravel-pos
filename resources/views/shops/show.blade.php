@@ -28,7 +28,7 @@
 @php($itemSales = \App\Models\OrderItem::whereIn('order_id', $orders->pluck('id'))->get())
 @php(
     $graphData = $itemSales->groupBy('product.name')->map(function ($gp) {
-            return $gp->sum('quantity');
+            return $gp->sum('price');
         })->sortByDesc(function ($value, $key) {
             return $value;
         })->take(15)
@@ -52,13 +52,13 @@
                     @endforeach
                 </div>
             </div>
-            <div class="d-flex justify-content-between align-items-center d-flex flex flex-row w-100">
-                <h4 class="mb-0">Total Orders: {{ $orders->count() }}</h4>
-                <div style="width: 50%; height: 500px;">
+            <h4 class="mb-0">Total Orders: {{ $orders->count() }}</h4>
+            <div class=" justify-content-between align-items-center flex flex-col md:flex-row w-full">
+                <div style="width: 100%; height: auto;">
                     <canvas id="myChart"></canvas>
                 </div>
 
-                <div style="width: 50%; height: 500px;">
+                <div style="width: 100%;">
                     <canvas id="myChart2"></canvas>
                 </div>
             </div>
@@ -110,9 +110,9 @@
                 data: {
                     labels: @json($graphData->keys()),
                     datasets: [{
-                        label: 'Sales',
-                        backgroundColor: 'rgb(75, 192, 192)',
-                        borderColor: 'rgb(75, 192, 192)',
+                        label: 'Sales by Product',
+                        backgroundColor: 'rgb(220, 53, 69)',
+                        borderColor: 'rgb(220, 53, 69)',
 
                         type: 'bar',
 
@@ -144,28 +144,29 @@
             document.getElementById('myChart'), {
                 type: 'line',
                 data: {
-                    labels: @json(
-                        $itemSales->pluck('created_at')->map(function ($date) {
-                                return \Carbon\Carbon::parse($date)->format('M d');
-                            })->unique()->values()->toArray()),
+@php($LABELS =   $itemSales->pluck('created_at')->map(function ($date) {
+    return \Carbon\Carbon::parse($date)->format('M d');
+})->unique()->values()->toArray())
+                            labels: @json($LABELS),
                     datasets: [{
-                        label: 'Sales',
-                        backgroundColor: 'rgb(75, 192, 192)',
-                        borderColor: 'rgb(75, 192, 192)',
+                        label: 'Sales by Date',
+                        backgroundColor: 'rgb(220, 53, 69)',
+                        borderColor: 'rgb(220, 53, 69)',
                         yAxisID: 'y2',
                         type: 'line',
-                        data: @json(
-                            $orders->groupBy(function ($order) {
-                                    return \Carbon\Carbon::parse($order->created_at)->format('Y-m-d');
-                                })->map(function ($group) {
-                                    return $group->sum(function ($order) {
-                                        return $order->items->sum('price');
-                                    });
-                                })->values()->toArray())
+@php($salesData = $orders->groupBy(function ($order) {
+    return \Carbon\Carbon::parse($order->created_at)->format('Y-m-d');
+})->map(function ($group) {
+        return $group->sum(function ($order) {
+            return $order->items->sum('price');
+        });
+})->values()->toArray())
+                        data: @json($salesData)
                     }, {
                         label: 'Orders',
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(173, 216, 230, 0.5)',
+                        borderColor: 'rgb(40, 122, 198)',
+                        borderWidth: 1,
                         type: 'bar',
                         data: @json(
                             $orders->groupBy(function ($date) {
@@ -173,8 +174,7 @@
                                 })->map(function ($group) {
                                     return $group->count();
                                 })->values()->toArray())
-                    }]
-                },
+                    }]                },
                 options: {
                     scales: {
                         x: {

@@ -290,7 +290,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="5" class="text-right align-middle">Totals : </th>
+                        <th colspan="6" class="text-right align-middle">Totals : </th>
                         {{-- <th></th>
                         <th></th>
                         <th></th>
@@ -313,7 +313,7 @@
                     </tr>
                 </tfoot>
             </table>
-            {{ $orders->render() }}
+            {{-- {{ $orders->links() }} --}}
         </div>
     </div>
 @endsection

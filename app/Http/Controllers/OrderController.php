@@ -25,6 +25,7 @@ use Doctrine\DBAL\Schema\View;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\Printer;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Mike42\Escpos\EscposImage;
 use ZipArchive;
 
@@ -43,6 +44,7 @@ class OrderController extends Controller
 
     private function handleDateFilter(Request $request, $query)
     {
+        Log::info('Starting handleDateFilter', ['request' => $request->all()]);
         $start_date = $request->query('start_date');
         $end_date = $request->query('end_date');
 
@@ -53,22 +55,74 @@ class OrderController extends Controller
         } else {
             $query->whereDate('created_at', now()->startOfDay());
         }
+
+        Log::info('Ending handleDateFilter', ['modifiedQuery' => $query->toSql(), 'modifiedQueryBindings' => $query->getBindings()]);
+
         return $query;
     }
+
+    private function handleOrderFilters(Request $request, $orderQuery)
+    {
+        Log::info('Starting handleOrderFilters', ['request' => $request->all()]);
+
+        // Shop Filter
+        $shop_id = $request->query('shop_ids');
+        if ($shop_id) {
+            $orderQuery->whereIn('shop_id', $shop_id);
+        }
+
+        // POS Number
+        $pos_number = $request->query('pos_number');
+        if ($pos_number) {
+            $orderQuery = $orderQuery->where('pos_number', $pos_number);
+        }
+
+        // Type
+        $type = $request->query('type');
+        if ($type) {
+            $orderQuery = $orderQuery->where('type', $type);
+        }
+        // Table #
+        $table_number = $request->query('table_number');
+        if ($request->has('table_number') && $request['table_number'] != null) {
+            $orderQuery = $orderQuery->where('table_number', $table_number);
+        }
+
+        // Waiter Name
+        $waiter_name = $request->query('waiter_name');
+        if ($waiter_name) {
+            $orderQuery = $orderQuery->where('waiter_name', 'LIKE', '%' . $waiter_name . '%');
+        }
+
+        // Customer Name
+        $customer_name = $request->query('customer_name');
+        if ($customer_name) {
+            $orderQuery = $orderQuery->whereHas('customer', function ($query) use ($customer_name) {
+                $query->where('name', 'LIKE', '%' . $customer_name . '%');
+            });
+        }
+
+        Log::info('Ending handleOrderFilters', ['modifiedQuery' => $orderQuery->toSql(), 'modifiedQueryBindings' => $orderQuery->getBindings()]);
+
+        return $orderQuery;
+    }
+
     public function index(Request $request)
     {
         $orders = Order::query();
-
-        if ($request->has('all') && $request['all'] == '1') {
+        $all = $request->query('all');
+        $unpaid = $request->query('unpaid');
+        if ($all) {
             //     //no date filtering....
+        } else if ($unpaid) {
+            $orders = $orders->whereDoesntHave('payments');
         } else {
             $orders = $this->handleDateFilter($request, $orders);
         }
 
-        $request = $request->collect()->filter(function ($value) {
-            return null !== $value;
-        })->toArray();
-        $request = collect($request);
+        // FILTERS
+        $this->handleOrderFilters($request, orderQuery: $orders);
+
         // dd($request);
         if (auth()->user()->type == 'admin') {
             // $orders = Order::query();
@@ -77,91 +131,8 @@ class OrderController extends Controller
             // dd($shops);
             $orders = $orders->whereIn('shop_id', $shops);
         }
-        // FILTERS
-        // POS Number
-        // dd($request->has('pos_number'), $request);
-        if ($request->has('pos_number') && $request['pos_number'] != null) {
-            $orders = $orders->where('pos_number', $request['pos_number']);
-        }
-        // Customer Name
-        if ($request->has('customer_name') && $request['customer_name'] != null) {
-            $orders = $orders->whereHas('customer', function ($query) use ($request) {
-                $query->where('name', 'LIKE', '%' . $request['customer_name'] . '%');
-            });
-        }
-        // Type
-        if ($request->has('type') && $request['type'] != null) {
-            // dd($request->type);
-            $orders = $orders->where('type', $request['type']);
-        }
-        // Table #
-        if ($request->has('table_number') && $request['table_number'] != null) {
-            $orders = $orders->where('table_number', $request['table_number']);
-        }
-        // Waiter Name
-        if ($request->has('waiter_name') && $request['waiter_name'] != null) {
-            $orders = $orders->where('waiter_name', 'LIKE', '%' . $request['waiter_name'] . '%');
-        }
-        // Shop Name
-        if ($request->has('shop_ids') && $request['shop_ids'] != null) {
-            // dd($request['shop_ids']);
-            $orders = $orders->whereIn('shop_id', $request['shop_ids']);
-        }
-        // Total
 
-        // Discount
-        // Net Amount
-        // Cash
-        // Chit
-
-        // Taken By
-        // if ($request->has('Taken_By')) {
-
-        // Closed By
-        // if ($request->has('Closed_By')) {
-
-        // Status
-        // if ($request->has('Status')) {
-
-        // if ($request->has('state')) {
-        //     $filters = array_intersect(['preparing', 'served', 'closed', 'wastage'], $request->state);
-        //     $orders = $orders->whereIn('state', $filters);
-        // }
-
-        // if ($request->has('type')) {
-        //     $filters = array_intersect(['dine-in', 'take-away', 'delivery'], $request->type);
-        //     $orders = $orders->whereIn('type', $filters);
-        // }
-        // extracted out to function
-        // $today = now()->startOfDay();
-        // if ($request->has('all') && $request['all'] == '1') {
-        //     //no date filtering....
-        // } elseif ($request->has('start_date') && $request->has('end_date')) {
-        //     $orders = $orders->whereBetween('created_at', [$request['start_date'], $request['end_date'] . ' 23:59:59']);
-        // } elseif ($request->has('start_date')) {
-        //     $orders = $orders->whereDate('created_at', '>=', $request['start_date']);
-        // } elseif ($request->count() > 0) {
-        // } else {
-        //     $orders = $orders->whereDate('created_at', $today);
-        // }
-
-        $unpaid = $request->has('unpaid') && $request['unpaid'] == '1';
-        // $chit = $request->has('chit') && $request->chit == '1';
-        // $discounted = $request->has('discounted') && $request->discounted == '1';
-
-        if ($unpaid) {
-            $orders = $orders->whereDoesntHave('payments');
-        }
-        // if ($chit) {
-        //     // $orders = $orders->where(function ($query) {
-        //     //     $query->where('balance', '>', 0);
-        //     // });
-        // }
-        // if ($discounted) {
-        //     // $orders = $orders->whereHas('discounts', 'hasAny');
-        // }
-
-        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->paginate(25); //->get(); //;
+        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->get(); //->paginate(25); //
 
         // Payment State [open,closed, paid, chit, part-chit]
         if ($request->has('payment_state') && $request['payment_state'] != null) {
@@ -184,27 +155,15 @@ class OrderController extends Controller
                 }
             } elseif ($request['payment_state'] == 'chit') {
                 $orders = $orders->filter(function (Order $order) {
-                    return $order->state == 'closed' && $order->balance() > 0 && $order->payments()->count() == 0;
+                    return $order->state == 'closed' && $order->receivedAmount() == 0 && $order->balance() > 0;
                 });
             } elseif ($request['payment_state'] == 'part-chit') { {
                     $orders =  $orders->filter(function (Order $order) {
-                        return $order->state == 'closed' && $order->balance() > 0 && $order->payments()->count() > 0;
+                        return $order->state == 'closed' && $order->receivedAmount() > 0 && $order->balance() > 0;
                     });
                 }
             }
         }
-
-        // if (isset($states[$request['payment_state']])) {
-        //     // dd($request['payment_state']);
-        //     if (is_callable($states[$request['payment_state']])) {
-        //         $states[$request['payment_state']]($orders);
-        //     } else {
-        //         dd(90);
-        //     }
-        // }
-
-        // logger($orders->count());
-        // logger('$orders Outside');
 
         $total = $orders->map(function ($i) {
             return $i->total();

@@ -1,70 +1,87 @@
+## Wishlist
+
+### Critical
+
+[ ] Products updated => orders disturbed
+[ ] bill cancellation rights & mech
+[ ] order POS counter reset every month
+[ ] product report (item was sold in following order : POS Numbers list)
+[ ] running KOTs
+[ ] addl reports
+[ ] KoT counter check with order final total
+[ ] all open bills cashier wise & shop wise
+[ ] amount of 1000 reduced in bill -> generate alarm
+[ ] payment via POS
+[ ] chit to paid conversion rights and vice versa
+[ ] order open on 23 and closed on 25 . . . consistent report on cash and sale (payments are considered by
+order->creation date instead of payments creation date) [manual click to close the day by admin]
+[ ] order-type : delivery seperate report (pos numbers, day wise)
+[ ] advance payments with receipt number PV
+
+### QoL
+
+[ ] order with 0 sum should not be saved
+[ ] auto sort columns on order index
+[ ] at 0001 hrs cashier & order-taker order index is ZERO... should show previous open bills
+[ ] modal ip dialog for broken printers (when NW is down, printer broken, etc)
+[ ] seperate grouping for beverages / bakery items, and other like food categories
+[ ] print job queues
+[ ] editable qty in order-items-edit component
+[ ] customer search bar should select first customer on enter
+[ ] order print auto on Payment
+[ ] menu ammendment record
+[ ] Tagg-able Models. . . ? with filter interface. . . !
+
+### Appearance
+
+[ ] order print buttons in order-edit
+[ ] accountant can make new orders (remove the New btn from order->index)
+[ ] order edit view ratio 40-60
+[ ] Add strength of guests for order-taker / per order attribute to be added
+[ ] Date Range sliders
+[ ] pagination in All orders
+[ ] expand order details column in order->edit
+[ ] search item -> not found -> form to add new product item
+[ ] order edit (save & print/ paid & print)
+
+### Candidates / Runner ups
+
+[ ] item price modifiable for some items (maybe only for cashier)
+
+## Prev
+
 [x] with every order (only with dining)
 [x] table number
 [x] QT number
 [x] Waiter name / Rider Name
-[ ] Tagg-able Models. . . ? with filter interface. . . !
 
 [x] Orders on chits :
 [x] signature by member on tablet
 
 [x] misc Item
-[ ] order print auto on Payment
 [x] order edit data
-[ ] print job queues
-[ ] running KOTs
-[ ] editable qty in order-items-edit component
 
-[ ] Products updated => orders disturbed
 [x] Order Index Filters to lock on today
 [x] Order Index Filters { add Shops, status (closed, open, chit)}
 [x] edit customer name in order->edit (Added button to add new customer)
 [x] item search scoped to shop for order-takers (admin get all products)
 [x] bulk printing of chit bills
-[ ] modal ip dialog for broken printers (when NW is down, printer broken, etc)
-[ ] bill cancellation rights & mech
 [x] clear all unsaved bills
-[ ] expand order details column in order->edit
-[ ] accountant can make new orders (remove the New btn from order->index)
-## Interface
- [ ] order POS counter reset every month
- [ ] search item -> not found -> form to add new product item
- [ ] KoT counter check with order final total
- [ ] amount of 1000 reduced in bill -> generate alarm
- [x] order editing to be reflected in order->show
- [ ] order with 0 sum should not be saved
- [ ] pagination in All orders
- [x] open bill should not reflect chit amount
- [x] editing order changes ownership of order (no change if user is present)
- [ ] order edit (save & print/ paid & print)
- [ ] order print buttons in order-edit
- [ ] at 0001 hrs cashier & order-taker order index is ZERO... should show previous open bills
- [ ] product report (item was sold in following order : POS Numbers list)
- [ ] chit to paid conversion rights and vice versa
- [ ] order edit view ratio 40-60
- [x] sidebar v-scroll disable
- [x] matching bill prints (pdf and pos)
- [ ] addl reports
 
- [ ] Add strength of guests for order-taker / per order attribute to be added
- [ ] all open bills cashier wise & shop wise
- [ ] advance payments with receipt number PV
- [x] Order index auto refresh (component for auto-reload added) [breaks in deployed system, unchecks on reload]
- [x] Cashiers report summary (number of bills and cash ->shop/head wise)
- [ ] customer search bar should select first customer on enter
- [ ] auto sort columns on order index
- [ ] seperate grouping for beverages / bakery items, and other like food categories
- [ ] order-type : delivery seperate report (pos numbers, day wise)
- [ ] menu ammendment record
- [ ] order open on 23 and closed on 25 . . . consistent report on cash and sale (payments are considered by order->creation date instead of payments creation date) [manual click to close the day by admin]
- [ ] payment via POS
- [ ] item price modifiable for some items (maybe only for cashier)
+## Completed
 
-### Reports
+[x] order editing to be reflected in order->show (OrderHistory module)
+[x] open bill should not reflect chit amount
+[x] editing order changes ownership of order (no change if user is present)
+[x] sidebar v-scroll disable
+[x] matching bill prints (pdf and pos)
+[x] Order index auto refresh (component for auto-reload added) [breaks in deployed system, unchecks on reload]
+[x] Cashiers report summary (number of bills and cash ->shop/head wise)
+[x] Drop down search in order-index (chit bills, columns, etc)
 
-[ ] Date Range
-[ ] Drop down search in order-index (chit bills, columns, etc)
-
-# RUN sed -i 's/<policy domain="coder" rights="none" pattern="PDF"\ />/<policy domain="coder" rights="read|write" pattern="PDF"\/>/g' /etc/ImageMagick-6/policy.xml
+# RUN sed -i 's/
+<policy domain="coder" rights="none" pattern="PDF"\ />/
+<policy domain="coder" rights="read|write" pattern="PDF"\ />/g' /etc/ImageMagick-6/policy.xml
 
 1+ Locations
 1+ Registers
@@ -193,7 +210,8 @@ Fully customisable
 
 ## Streamlined
 
-[ ] All orders come through to your register. Whether order was placed in-store or online, your staff have to use only one system to process
+[ ] All orders come through to your register. Whether order was placed in-store or online, your staff have to use only
+one system to process
 
 # Inventory Scan App
 
@@ -217,7 +235,8 @@ Fully customisable
 
 ## Cash calculator
 
-[ ] Before closing, simply add current values by denominations and save totals, discrepancies and counting in shift reports
+[ ] Before closing, simply add current values by denominations and save totals, discrepancies and counting in shift
+reports
 
 ## Order history
 
@@ -254,13 +273,15 @@ Fully customisable
 
 [ ] Use a customer display to show the order details to your customers while they are waiting to pay
 [ ] You can use an iPad, PC, or any tablet device as a customer display.
-[ ] Versatile, customizable screen that creates an elevated experience for your customers by increasing their trust and satisfaction in your business
+[ ] Versatile, customizable screen that creates an elevated experience for your customers by increasing their trust and
+satisfaction in your business
 
 # Reporting
 
 ## Shift reports
 
-[ ] Generate daily totals shift reports to keep track of all payment types and transactions including cash, cards, gift cards, on account sales and returns
+[ ] Generate daily totals shift reports to keep track of all payment types and transactions including cash, cards, gift
+cards, on account sales and returns
 
 ## Transaction & sales reports
 
@@ -276,7 +297,8 @@ Fully customisable
 
 ## Powerful multi-store reporting
 
-[ ] Consolidated report to see how your business is doing in general and you can also drill down to a particular site level
+[ ] Consolidated report to see how your business is doing in general and you can also drill down to a particular site
+level
 [ ] Access these real-time reports from anywhere in the world
 
 ## Access control

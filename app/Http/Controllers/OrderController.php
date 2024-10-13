@@ -102,6 +102,14 @@ class OrderController extends Controller
             });
         }
 
+        // Order Taker Name
+        $order_taker = $request->query('order_taker');
+        if ($order_taker) {
+            $orderQuery = $orderQuery->whereHas('user', function ($query) use ($order_taker) {
+                $query->where('first_name', 'LIKE', '%' . $order_taker . '%')->orWhere('last_name', 'LIKE', '%' . $order_taker . '%');
+            });
+        }
+
         Log::info('Ending handleOrderFilters', ['modifiedQuery' => $orderQuery->toSql(), 'modifiedQueryBindings' => $orderQuery->getBindings()]);
 
         return $orderQuery;
@@ -114,7 +122,7 @@ class OrderController extends Controller
         $unpaid = $request->query('unpaid');
         if ($all) {
             //     //no date filtering....
-        } else if ($unpaid) {
+        } elseif ($unpaid) {
             $orders = $orders->whereDoesntHave('payments');
         } else {
             $orders = $this->handleDateFilter($request, $orders);
@@ -149,9 +157,9 @@ class OrderController extends Controller
                     return $order->state == 'closed';
                 });
             } elseif ($request['payment_state'] == 'paid') { {
-                    $orders = $orders->filter(function (Order $order) {
-                        return $order->state == 'closed' && $order->balance() == 0;
-                    });
+                $orders = $orders->filter(function (Order $order) {
+                    return $order->state == 'closed' && $order->balance() == 0;
+                });
                 }
             } elseif ($request['payment_state'] == 'chit') {
                 $orders = $orders->filter(function (Order $order) {
@@ -159,10 +167,10 @@ class OrderController extends Controller
                 });
             } elseif ($request['payment_state'] == 'part-chit') { {
                     $orders =  $orders->filter(function (Order $order) {
-                        return $order->state == 'closed' && $order->receivedAmount() > 0 && $order->balance() > 0;
-                    });
-                }
+                    return $order->state == 'closed' && $order->receivedAmount() > 0 && $order->balance() > 0;
+                });
             }
+        }
         }
 
         $total = $orders->map(function ($i) {
@@ -201,11 +209,11 @@ class OrderController extends Controller
         $customers = Customer::all();
         if (auth()->user()->type == 'admin') { //auth()->user()->type == 'cashier' ||
             $products = $shops->map(function ($shop) {
-                return $shop->products();
+                    return $shop->products();
             })->flatten();
         } else {
             $products = auth()->user()->shops->map(function ($shop) {
-                return $shop->products();
+                    return $shop->products();
             })->flatten();
             // dd($products);
             // $cats = auth()->user()->shops->map(function ($shop) {
@@ -227,9 +235,9 @@ class OrderController extends Controller
                 [
                     "name" => $request->searchCustomer,
                     "membership_number" => 555,
-                    // "address" => $request->customer_address,
-                    // "email" => $request->customer_email,
-                    // "user_id" => $request->customer_id
+                // "address" => $request->customer_address,
+                // "email" => $request->customer_email,
+                // "user_id" => $request->customer_id
                 ]
             );
             $request['customer_id'] = $customer->id;

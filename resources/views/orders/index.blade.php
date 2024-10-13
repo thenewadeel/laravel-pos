@@ -12,13 +12,13 @@
         </i>
     </a>
     @if (auth()->user()->type == 'admin')
-    <form action="{{ route('orders.destroyAllDrafts') }}" method="POST" class="d-inline">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger btn-sm">
-            <i class="fas fa-trash mr-1"></i>{{ __('order.Delete_all_drafts') }}
-        </button>
-    </form>
+        <form action="{{ route('orders.destroyAllDrafts') }}" method="POST" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash mr-1"></i>{{ __('order.Delete_all_drafts') }}
+            </button>
+        </form>
 
         <a href="{{ route('orders.index', ['all' => true]) }}" class="btn btn-info btn-sm">
             <i class="fas fa-filter mr-1"></i>{{ __('common.All') }}
@@ -94,6 +94,8 @@
                             <input type="search" name="customer_name" placeholder="{{ __('order.Customer_Name') }}"
                                 value="{{ request('customer_name') }}" id="customerName"
                                 class="form-control p-0 m-0 w-auto">
+                            <input type="search" name="order_taker" placeholder="{{ __('order.Order_Taker') }}"
+                                value="{{ request('order_taker') }}" id="orderTaker" class="form-control p-0 m-0 w-auto">
                             <select name="type" id="type" class="form-control p-0 m-0 w-auto">
                                 <option value="">{{ __('order.Type') }}</option>
                                 <option {{ request('type') == 'dine-in' ? 'selected' : '' }} value="dine-in">
@@ -219,7 +221,7 @@
                                             @endif
                                         @endforeach
                                     @else
-                                        Unknown
+                                        -
                                     @endif
                                 </td>
                             @endif

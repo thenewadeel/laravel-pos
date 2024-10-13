@@ -34,7 +34,7 @@
  [ ] order with 0 sum should not be saved
  [ ] pagination in All orders
  [ ] open bill should not reflect chit amount
- [ ] editing order changes ownership of order (no change if user is present)
+ [x] editing order changes ownership of order (no change if user is present)
  [ ] order edit (save & print/ paid & print)
  [ ] order print buttons in order-edit
  [ ] at 0001 hrs cashier & order-taker order index is ZERO... should show previous open bills

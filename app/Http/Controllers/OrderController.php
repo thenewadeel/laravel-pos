@@ -319,7 +319,7 @@ class OrderController extends Controller
             // 'state' => 'nullable|in:preparing,served,closed,wastage',
         ]);
 
-        $validatedData['user_id'] = auth()->user()->id;
+        // $validatedData['user_id'] = auth()->user()->id;
 
         $order->update($validatedData);
 

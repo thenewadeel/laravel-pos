@@ -117,6 +117,9 @@ class OrderController extends Controller
 
     public function index(Request $request)
     {
+
+        $start = microtime(true);
+
         $orders = Order::query();
         $all = $request->query('all');
         $unpaid = $request->query('unpaid');
@@ -139,8 +142,11 @@ class OrderController extends Controller
             // dd($shops);
             $orders = $orders->whereIn('shop_id', $shops);
         }
-
-        $orders = $orders->with(['items', 'payments', 'customer', 'shop'])->orderBy('created_at', 'desc')->get(); //->paginate(25); //
+        //->with(['payments', 'customer', 'shop'])
+        $orders = $orders
+            ->with(['payments', 'shop'])
+            ->orderBy('created_at', 'desc')
+            ->get(); //->paginate(25); //
 
         // Payment State [open,closed, paid, chit, part-chit]
         if ($request->has('payment_state') && $request['payment_state'] != null) {
@@ -156,44 +162,72 @@ class OrderController extends Controller
                 $orders = $orders->filter(function (Order $order) {
                     return $order->state == 'closed';
                 });
-            } elseif ($request['payment_state'] == 'paid') { {
+            } elseif ($request['payment_state'] == 'paid') {
                 $orders = $orders->filter(function (Order $order) {
                     return $order->state == 'closed' && $order->balance() == 0;
                 });
-                }
             } elseif ($request['payment_state'] == 'chit') {
                 $orders = $orders->filter(function (Order $order) {
                     return $order->state == 'closed' && $order->receivedAmount() == 0 && $order->balance() > 0;
                 });
-            } elseif ($request['payment_state'] == 'part-chit') { {
-                    $orders =  $orders->filter(function (Order $order) {
+            } elseif ($request['payment_state'] == 'part-chit') {
+                $orders = $orders->filter(function (Order $order) {
                     return $order->state == 'closed' && $order->receivedAmount() > 0 && $order->balance() > 0;
                 });
             }
         }
-        }
 
-        $total = $orders->map(function ($i) {
-            return $i->total();
-        })->sum();
-        $receivedAmount = $orders->map(function ($i) {
-            return $i->receivedAmount();
-        })->sum();
-        $totalTotal = $orders->map(function ($i) {
-            return $i->total();
-        })->sum();
-        $totalDiscountAmount = $orders->map(function ($i) {
-            return $i->discountAmount();
-        })->sum();
-        $totalNetAmount = $orders->map(function ($i) {
-            return $i->discountedTotal();
-        })->sum();
-        $totalReceivedAmount = $orders->map(function ($i) {
-            return $i->receivedAmount();
-        })->sum();
-        $totalChitAmount = $orders->map(function ($i) {
-            return $i->balance();
-        })->sum();
+        $end = microtime(true);
+        logger('Execution time: ' . ($end - $start) . ' seconds');
+
+        $totals = $orders
+            ->map(function ($i) {
+                return [
+                    'total' => $i->total(),
+                    'receivedAmount' => $i->receivedAmount(),
+                    'discountAmount' => $i->discountAmount(),
+                    'discountedTotal' => $i->discountedTotal(),
+                    'balance' => $i->balance(),
+                ];
+            })
+            ->toArray();
+        $total = array_sum(array_column($totals, 'total'));
+        $receivedAmount = array_sum(array_column($totals, 'receivedAmount'));
+        $totalTotal = array_sum(array_column($totals, 'total'));
+        $totalDiscountAmount = array_sum(array_column($totals, 'discountAmount'));
+        $totalNetAmount = array_sum(array_column($totals, 'discountedTotal'));
+        $totalReceivedAmount = array_sum(array_column($totals, 'receivedAmount'));
+        $totalChitAmount = array_sum(array_column($totals, 'balance'));
+
+        // $end = microtime(true);
+        // logger('Mid Execution time: ' . ($end - $start) . ' seconds');
+
+        // $total = $orders->map(function ($i) {
+        //     return $i->total();
+        // })->sum();
+        // $receivedAmount = $orders->map(function ($i) {
+        //     return $i->receivedAmount();
+        // })->sum();
+        // $totalTotal = $orders->map(function ($i) {
+        //     return $i->total();
+        // })->sum();
+        // $totalDiscountAmount = $orders->map(function ($i) {
+        //     return $i->discountAmount();
+        // })->sum();
+        // $totalNetAmount = $orders->map(function ($i) {
+        //     return $i->discountedTotal();
+        // })->sum();
+        // $totalReceivedAmount = $orders->map(function ($i) {
+        //     return $i->receivedAmount();
+        // })->sum();
+        // $totalChitAmount = $orders->map(function ($i) {
+        //     return $i->balance();
+        // })->sum();
+
+        $end = microtime(true);
+        logger('End Execution time: ' . ($end - $start) . ' seconds');
+        // dd($orders->count());
+
         return view('orders.index', compact('orders', 'total', 'receivedAmount', 'totalTotal', 'totalDiscountAmount', 'totalNetAmount', 'totalReceivedAmount', 'totalChitAmount'));
     }
 

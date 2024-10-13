@@ -126,6 +126,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | PHP Settings
+    |--------------------------------------------------------------------------
+    |
+    | Here you may change various php settings that will be set when your
+    | application is started. By default, Laravel sets sensible values for
+    | the following, but you may change them to fit your needs.
+    |
+    */
+
+    'php' => [
+        'timezone' => 'Asia/Karachi',
+        'memory_limit' => '512M',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |

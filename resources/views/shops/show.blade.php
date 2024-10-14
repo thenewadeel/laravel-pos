@@ -102,7 +102,7 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"
         integrity="sha512-ZwR1/gSZM3ai6vCdI+LVF1zSq/5HznD3ZSTk7kajkaj4D292NLuduDCO1c/NT8Id+jE58KYLKT7hXnbtryGmMg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
-    <script src="{{ asset('js/libs/Chart.js/4.4.1/chart.umd.js') }}" ></script>
+    <script src="{{ asset('js/libs/Chart.js/4.4.1/chart.umd.js') }}"></script>
     <script type="text/javascript">
         new Chart(
             document.getElementById('myChart2'), {
@@ -144,28 +144,43 @@
             document.getElementById('myChart'), {
                 type: 'line',
                 data: {
-@php($LABELS =   $itemSales->pluck('created_at')->map(function ($date) {
-    return \Carbon\Carbon::parse($date)->format('M d');
-})->unique()->values()->toArray())
-                            labels: @json($LABELS),
+                    @php(
+    $LABELS = $itemSales->pluck('created_at')->map(function ($date) {
+            $carbonDate = \Carbon\Carbon::parse($date);
+            return $carbonDate->format('d M D');
+        })->unique()->values()->toArray()
+)
+                    labels: @json($LABELS),
                     datasets: [{
                         label: 'Sales by Date',
-                        backgroundColor: 'rgb(220, 53, 69)',
-                        borderColor: 'rgb(220, 53, 69)',
+                        backgroundColor: @json($LABELS).map(function(day) {
+                            if (day.includes("Fri") || day.includes("Sat") || day.includes("Sun")) {
+                                return 'rgba(220, 53, 69, 0.2)'
+                            }
+                            return 'rgba(20, 53, 69, 0.6)'
+                        }),
+                        borderColor: 'rgb(20, 53, 69)',
                         yAxisID: 'y2',
                         type: 'line',
-@php($salesData = $orders->groupBy(function ($order) {
-    return \Carbon\Carbon::parse($order->created_at)->format('Y-m-d');
-})->map(function ($group) {
-        return $group->sum(function ($order) {
-            return $order->items->sum('price');
-        });
-})->values()->toArray())
+                        @php(
+    $salesData = $orders->groupBy(function ($order) {
+            return \Carbon\Carbon::parse($order->created_at)->format('Y-m-d');
+        })->map(function ($group) {
+            return $group->sum(function ($order) {
+                return $order->items->sum('price');
+            });
+        })->values()->toArray()
+)
                         data: @json($salesData)
                     }, {
                         label: 'Orders',
-                        backgroundColor: 'rgba(173, 216, 230, 0.5)',
-                        borderColor: 'rgb(40, 122, 198)',
+                        backgroundColor: @json($LABELS).map(function(day) {
+                            if (day.includes("Fri") || day.includes("Sat") || day.includes("Sun")) {
+                                return 'rgb(220, 245, 153)'
+                            }
+                            return 'rgba(173, 216, 230, 0.5)'
+                        }),
+                        borderColor:  'rgb(40, 122, 198)',
                         borderWidth: 1,
                         type: 'bar',
                         data: @json(
@@ -174,7 +189,8 @@
                                 })->map(function ($group) {
                                     return $group->count();
                                 })->values()->toArray())
-                    }]                },
+                    }]
+                },
                 options: {
                     scales: {
                         x: {

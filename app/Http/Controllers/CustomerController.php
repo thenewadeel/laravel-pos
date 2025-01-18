@@ -25,14 +25,18 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (request()->wantsJson()) {
             return response(
                 Customer::all()
             );
         }
-        $customers = Customer::latest()->paginate(25);
+        $customers = Customer::query();
+        if ($request->search) {
+            $customers->where('name', 'LIKE', "%{$request->search}%");
+        }
+        $customers = $customers->latest()->paginate(25);
         return view('customers.index')->with('customers', $customers);
     }
 

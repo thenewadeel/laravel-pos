@@ -30,10 +30,13 @@
                 <img width="50" src="{{ $category['image'] }}" alt="">
             </td>
             <td>{{ $category['kitchen_printer_ip'] }}</td>
-            <td>
-                <ul>
+            <td class="max-w-60">
+                <ul class="max-h-48 overflow-y-scroll">
                     @foreach ($category['items'] as $product)
-                        <li><a>{{ $product->name }}</a></li>
+                        <li class="flex flex-row justify-between">
+                            <a href="{{ route('products.edit', $product['id']) }}">{{ $product->name }}</a>
+                            <span class="text-xs">({{ config('settings.currency_symbol') }}{{ number_format($product->price,0) }})</span>
+                        </li>
                     @endforeach
                 </ul>
             </td>

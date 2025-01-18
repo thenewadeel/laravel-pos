@@ -55,6 +55,7 @@
                             </td>
                         </tr>
                     @endforeach
+                    @if(auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
                     <tr>
                         <td colspan="5">
                             <div class="flex flex-row">
@@ -76,6 +77,7 @@
                             </div>
                         </td>
                     </tr>
+                    @endif
                     <tr>
                         <td class="text-center font-weight-bold">{{ $order->items->count() }}x Items</td>
                         <td class="text-right font-weight-bold">Total</td>

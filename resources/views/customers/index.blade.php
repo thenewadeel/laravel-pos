@@ -3,7 +3,21 @@
 @section('title', 'Members Index')
 @section('content-header', 'Members Index')
 @section('content-actions')
-    <a href="{{ route('customers.create') }}" class="btn btn-primary">{{ __('Add_Customer') }}</a>
+<div>
+    <form method="GET" class="form-inline ml-3" action="{{ route('customers.index') }}">
+        @csrf
+        <div class="input-group input-group-sm">
+            <input type="search" name="search" class="form-control form-control-navbar"
+                placeholder="{{ __('customer.Search_Customers') }}" value="{{ request('search') }}">
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-navbar">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+    <a href="{{ route('customers.create') }}" class="btn btn-primary">{{ __('customer.Add_Customer') }}</a>
+</div>
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('plugins/sweetalert2/sweetalert2.min.css') }}">

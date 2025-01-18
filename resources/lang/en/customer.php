@@ -50,4 +50,5 @@ return [
     'yes_delete'        => 'Yes, delete it!',
     'No'                => 'No',
     'Actions'           => 'Actions',
+    'Search_Customers'  => 'Search Customers',
 ];

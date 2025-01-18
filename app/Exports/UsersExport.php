@@ -40,7 +40,7 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
             $user->last_name,
             $user->email,
             $user->type,
-            Date::dateTimeToExcel($user->created_at),
+            $user->created_at ? Date::dateTimeToExcel($user->created_at) : '',
         ];
     }
     public function headings(): array

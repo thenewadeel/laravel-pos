@@ -51,7 +51,7 @@ class QueryExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
             $order->total(),
             $order->customer->membership_number,
             $order->customer->name,
-            $order->created_at,
+            $order->created_at ? Date::dateTimeToExcel($order->created_at) : '',
         ];
     }
 

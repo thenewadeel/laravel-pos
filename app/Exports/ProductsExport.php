@@ -36,7 +36,7 @@ class ProductsExport implements FromCollection, WithMapping, WithHeadings, Shoul
             $product->description,
             $cat,
             $product->price,
-            Date::dateTimeToExcel($product->created_at),
+            $product->created_at ? Date::dateTimeToExcel($product->created_at) : '',
         ];
     }
     public function headings(): array

@@ -47,7 +47,7 @@ class CustomersExport implements FromCollection, WithMapping, WithHeadings, Shou
             $customer->adress,
             // $customer->photo,
             $customer->type,
-            Date::dateTimeToExcel($customer->created_at),
+            $customer->created_at ? Date::dateTimeToExcel($customer->created_at) : '',
         ];
     }
     public function headings(): array

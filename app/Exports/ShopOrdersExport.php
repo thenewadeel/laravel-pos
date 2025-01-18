@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ShopOrdersExport implements WithHeadings, WithMapping
 {
@@ -30,7 +31,7 @@ class ShopOrdersExport implements WithHeadings, WithMapping
             $order->total(),
             $order->customer->membership_number,
             $order->customer->name,
-            $order->created_at,
+            $order->created_at ? Date::dateTimeToExcel($order->created_at) : '',
         ];
     }
 

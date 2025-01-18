@@ -43,7 +43,7 @@ class ShopsExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
             $shop->description,
             $cat,
             $shop->printer_ip,
-            Date::dateTimeToExcel($shop->created_at),
+            $shop->created_at ? Date::dateTimeToExcel($shop->created_at) : '',
         ];
     }
     public function headings(): array

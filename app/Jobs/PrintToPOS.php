@@ -195,9 +195,9 @@ class PrintToPOS implements ShouldQueue
                 foreach ($this->order->items as $item) {
                     $shop_printer->setJustification(Printer::JUSTIFY_LEFT);
                     $shop_printer->setTextSize(1, 1);
-                    $shop_printer->text($item->product->name);
+                    $shop_printer->text($item->product->name ?? $item->prduct_name);
                     $shop_printer->setTextSize(1, 1);
-                    $shop_printer->text("\n Rate(" . $item->product->price . ")");
+                    $shop_printer->text("\n Rate(" . $item->product->price ?? $item->prduct_rate . ")");
                     $shop_printer->text("\n");
                     $shop_printer->setTextSize(1, 1);
                     $shop_printer->setJustification(Printer::JUSTIFY_CENTER);

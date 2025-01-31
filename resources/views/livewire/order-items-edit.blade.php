@@ -18,10 +18,10 @@
                 </thead>
                 <tbody>
                     @foreach ($order->items as $item)
-                        <tr class="">
+                        <tr class="" title="{{ $item}}">
 
-                            <td class="align-middle">{{ $item->product->name }}</td>
-                            <td class="align-middle text-right">{{ $item->product->price }}</td>
+                            <td class="align-middle">{{ $item->product->name ??$item->product_name }}</td>
+                            <td class="align-middle text-right">{{ $item->product->price ?? $item->product_rate }}</td>
                             <td class="align-middle">
                                 <div
                                     class="text-center px-0 py-2 flex flex-row items-center overflow-hidden border-2 border-slate-200 w-max rounded-lg ">

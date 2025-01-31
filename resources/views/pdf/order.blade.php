@@ -92,8 +92,8 @@
             </tr>
             @foreach ($order->items as $item)
                 <tr>
-                    <td>{{ $item->product->name }}</td>
-                    <td style=";;;text-align:right">{{ number_format($item->product->price) }}</td>
+                    <td>{{ $item->product->name??$item->product_name }}</td>
+                    <td style=";;;text-align:right">{{ number_format($item->product->price??$item->product_rate) }}</td>
                     <td style=";;;text-align:center">{{ $item->quantity }}</td>
                     <td style=";;;text-align:right">{{ number_format($item->price, 2) }}</td>
                 </tr>

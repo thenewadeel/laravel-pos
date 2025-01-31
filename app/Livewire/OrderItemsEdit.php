@@ -35,6 +35,8 @@ class OrderItemsEdit extends Component
             'product_id' => $product->id,
             'quantity' => 1,
             'price' => $product->price,
+            'product_rate' => $product->price,
+            'product_name' => $product->name,
         ]);
 
         // Create order history

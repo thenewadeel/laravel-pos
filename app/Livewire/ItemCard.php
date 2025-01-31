@@ -70,6 +70,8 @@ class ItemCard extends Component
                 ]);
             } else {
                 $validatedData['product_id'] = $product->id;
+                $validatedData['product_name'] = $product->name;
+                $validatedData['product_rate'] = $product->price;
                 $validatedData['quantity'] = $quantity;
                 $validatedData['price'] = $product->price * $quantity;
                 $order->items()->create($validatedData);

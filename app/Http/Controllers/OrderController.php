@@ -394,6 +394,9 @@ class OrderController extends Controller
         } else {
             $validatedData['product_id'] = $product->id;
             $validatedData['price'] = $product->price * $request->quantity;
+            $validatedData['quantity'] = $request->quantity;
+            $validatedData['product_name'] = $product->name;
+            $validatedData['product_rate'] = $product->price;
             $order->items()->create($validatedData);
         }
         // $order->items()->create($validatedData);
@@ -935,7 +938,7 @@ class OrderController extends Controller
 
             // Create order history
             $itemNamesWithQty = $items->map(function ($item) {
-                return $item->product->name . ':' . $item->quantity;
+                return $item->product->name ?? $item->product_name . ':' . $item->quantity;
             })->implode(', ');
             $itemNamesConcatenated = $itemNamesWithQty;
             // logger($itemNamesConcatenated);
@@ -955,10 +958,10 @@ class OrderController extends Controller
                         $kitchen_printer->setEmphasis(true);
                         //$kitchen_printer->setTextSize(2, 2);
                         // $kitchen_printer->setTextSize(1, 1);
-                        $kitchen_printer->text($item->product->name);
+                        $kitchen_printer->text($item->product->name ?? $item->product_name);
                         $kitchen_printer->text("\n");
                         $kitchen_printer->setJustification(Printer::JUSTIFY_RIGHT);
-                        $kitchen_printer->text("Rate:(" . $item->product->price . ")");
+                        $kitchen_printer->text("Rate:(" . $item->product->price ?? $item->product_rate . ")");
                         $kitchen_printer->text("\n");
 
                         $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -1013,9 +1016,9 @@ class OrderController extends Controller
                 foreach ($order->items as $item) {
                     $shop_printer->setJustification(Printer::JUSTIFY_LEFT);
                     $shop_printer->setTextSize(1, 1);
-                    $shop_printer->text($item->product->name);
+                    $shop_printer->text($item->product->name ?? $item->product_name);
                     $shop_printer->setTextSize(1, 1);
-                    $shop_printer->text("\n Rate(" . $item->product->price . ")");
+                    $shop_printer->text("\n Rate(" . $item->product->price ?? $item->product_rate . ")");
                     $shop_printer->text("\n");
                     $shop_printer->setTextSize(1, 1);
                     $shop_printer->setJustification(Printer::JUSTIFY_CENTER);

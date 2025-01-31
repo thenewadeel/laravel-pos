@@ -19,6 +19,7 @@ use AliBayat\LaravelCategorizable\Category;
 use App\Http\Requests\OrderNewRequest;
 use Illuminate\Log\Logger;
 use App\Jobs\PrintOrderTokensJob;
+use App\Jobs\PrintToPOS;
 use App\Models\Feedback;
 use App\Models\OrderHistory;
 use Doctrine\DBAL\Schema\View;
@@ -243,11 +244,11 @@ class OrderController extends Controller
         $customers = Customer::all();
         if (auth()->user()->type == 'admin') { //auth()->user()->type == 'cashier' ||
             $products = $shops->map(function ($shop) {
-                    return $shop->products();
+                return $shop->products();
             })->flatten();
         } else {
             $products = auth()->user()->shops->map(function ($shop) {
-                    return $shop->products();
+                return $shop->products();
             })->flatten();
             // dd($products);
             // $cats = auth()->user()->shops->map(function ($shop) {
@@ -269,9 +270,9 @@ class OrderController extends Controller
                 [
                     "name" => $request->searchCustomer,
                     "membership_number" => 555,
-                // "address" => $request->customer_address,
-                // "email" => $request->customer_email,
-                // "user_id" => $request->customer_id
+                    // "address" => $request->customer_address,
+                    // "email" => $request->customer_email,
+                    // "user_id" => $request->customer_id
                 ]
             );
             $request['customer_id'] = $customer->id;
@@ -677,12 +678,14 @@ class OrderController extends Controller
     {
         try {
             // $this->print_POS_Category_wise_Token($order);
-            $this->print_POS_Order($order);
+            PrintToPOS::dispatch($order, auth()->user()); //->delay(now()->addSeconds(10));;
+            // $this->print_POS_Order($order);
         } catch (Exception $e) {
             logger('Failed: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed xxx: ' . $e->getMessage());
         }
-        return redirect()->back()->with('success', 'Order printed successfully');
+
+        return redirect()->back()->with('success', 'Order queued for printing');
     }
     public function printToPOSQT(Order $order)
     {

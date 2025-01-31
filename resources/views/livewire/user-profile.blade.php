@@ -32,7 +32,16 @@
                         </span>
                     @enderror
                 </div>
-
+                <div class="form-group m-2">
+                    <label for="fav_printer_ip">{{ __('user.FavPrinterIp') }}</label>
+                    <input type="text" name="fav_printer_ip" class="form-control @error('fav_printer_ip') is-invalid @enderror"
+                        id="fav_printer_ip" placeholder="{{ __('user.FavPrinterIp') }}" wire:model="fav_printer_ip">
+                    @error('fav_printer_ip')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
 
                 <div class="font-[sans-serif] max-w-md mx-auto">
                     <label class="text-base text-gray-500 font-semibold mb-2 block">{{ __('user.Choose_file') }}</label>

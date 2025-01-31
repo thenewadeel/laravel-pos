@@ -15,6 +15,7 @@ class UserProfile extends Component
     public $photo, $photo_file;
     public $first_name;
     public $last_name;
+    public $fav_printer_ip;
     // email":"admin@qcl.pos"
     public $rules = [
         'first_name' => 'sometimes|string|max:255',
@@ -23,6 +24,7 @@ class UserProfile extends Component
         // 'type' => 'sometimes|nullable|string|in:user,admin,cashier,accountant,order-taker,chef,stockBoy',
         // 'password' => 'sometimes|nullable|string|min:8|confirmed',
         'photo' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Example image validation
+        'fav_printer_ip' => 'sometimes|nullable|ip',
     ];
     public $editing = false;
     public $status;
@@ -36,6 +38,7 @@ class UserProfile extends Component
         $this->photo = $this->user->image;
         $this->first_name = $this->user->first_name;
         $this->last_name = $this->user->last_name;
+        $this->fav_printer_ip = $this->user->fav_printer_ip;
     }
     public function toggleEditing()
     {
@@ -54,6 +57,7 @@ class UserProfile extends Component
         $userfields = [
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
+            'fav_printer_ip' => $this->fav_printer_ip
         ];
         // Handle image upload if provided
         if ($this->photo_file) {

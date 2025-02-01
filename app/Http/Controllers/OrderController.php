@@ -126,6 +126,7 @@ class OrderController extends Controller
         $unpaid = $request->query('unpaid');
         if ($all) {
             //     //no date filtering....
+            $orders = $orders->where('state', '<>', 'closed');
         } elseif ($unpaid) {
             $orders = $orders->whereDoesntHave('payments');
         } else {

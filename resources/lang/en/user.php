@@ -39,4 +39,6 @@ user.ID 	user.Image 	user.Name 	Type 	user.eMail 	user.Shops
     'LName' => 'Last Name',
     'Password' => 'Password',
     'password_confirmation' => 'Confirm Password',
+    'Fav_printer_ip' => 'Favourite Printer IP Address',
+    'Fav_printer_ip_set' => 'Printer IP Address'
 ];

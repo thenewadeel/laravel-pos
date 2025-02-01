@@ -33,9 +33,10 @@
                     @enderror
                 </div>
                 <div class="form-group m-2">
-                    <label for="fav_printer_ip">{{ __('user.FavPrinterIp') }}</label>
-                    <input type="text" name="fav_printer_ip" class="form-control @error('fav_printer_ip') is-invalid @enderror"
-                        id="fav_printer_ip" placeholder="{{ __('user.FavPrinterIp') }}" wire:model="fav_printer_ip">
+                    <label for="fav_printer_ip">{{ __('user.Fav_printer_ip') }}</label>
+                    <input type="text" name="fav_printer_ip"
+                        class="form-control @error('fav_printer_ip') is-invalid @enderror" id="fav_printer_ip"
+                        placeholder="{{ __('user.Fav_printer_ip_set') }}" wire:model="fav_printer_ip">
                     @error('fav_printer_ip')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

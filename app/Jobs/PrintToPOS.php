@@ -52,7 +52,7 @@ class PrintToPOS implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public Order $order, public User $user)
+    public function __construct(public Order $order, public User $user, public bool $koToken = false)
     {
         //
     }
@@ -63,11 +63,23 @@ class PrintToPOS implements ShouldQueue
     public function handle(): void
     {
         // Log::alert($this->order);
-        Log::debug("Executing PrintToPOS job for order  $this->order->id with POS # $this->order->POS_number");
-
-        $this->print_POS_Order($this->order);
-
-        Log::debug("{{{{{{{{----{{$this->order}}-----}}}}}}}}");
+        if ($this->koToken) {
+            Log::debug("Executing PrintKoToken job for order with POS # " . $this->order->POS_number);
+            $this->print_POS_Category_wise_Token($this->order);
+        } else {
+            $printerIp = $this->user->fav_printer_ip ?? $this->order->shop->printer_ip ?? config('settings.default_printer_ip');
+            Log::debug("Executing PrintToPOS job for order with POS # " . $this->order->POS_number . " on printer ip $printerIp");
+            $this->print_POS_Order($printerIp);
+            // Create order history
+            $orderHistoryController = new OrderHistoryController();
+            $orderHistoryController->store(
+                $request = null,
+                orderId: $this->order->id,
+                actionType: 'pos-print-printed',
+                printerIdentifier: $printerIp,
+                userId: $this->user->id
+            );
+        }
     }
 
     private function print_POS_Header(Printer $printer, String $heading = "Quetta Club Limited\n---------------------\n*** Customer Bill ***\n")
@@ -176,13 +188,9 @@ class PrintToPOS implements ShouldQueue
         $printer->text("\n \n");
         $printer->cut();
     }
-    private function print_POS_Order()
+    private function print_POS_Order($shop_printer_ip)
     {
-        $shop_printer_ip = $this->user->fav_printer_ip ??
-            $this->order->shop->printer_ip ?? config('settings.default_printer_ip');
-
-
-
+        // $shop_printer_ip = $this->user->fav_printer_ip ??            $this->order->shop->printer_ip ?? config('settings.default_printer_ip');
         try {
             $connector = new NetworkPrintConnector($shop_printer_ip, 9100, 5);
             $shop_printer = new Printer($connector);
@@ -190,8 +198,8 @@ class PrintToPOS implements ShouldQueue
                 // ... Print stuff
 
                 $this->print_POS_Header($shop_printer);
-                // logger($order);
-                // logger($order->items);
+                // Log::debug($order);
+                // Log::debug($order->items);
                 foreach ($this->order->items as $item) {
                     $shop_printer->setJustification(Printer::JUSTIFY_LEFT);
                     $shop_printer->setTextSize(1, 1);
@@ -266,19 +274,86 @@ class PrintToPOS implements ShouldQueue
                 Log::alert("Failed to connect to printer B {$this->user->fav_printer_ip}: " . $e->getMessage());
             } finally {
                 $shop_printer->close();
-
-                // Create order history
-                $orderHistoryController = new OrderHistoryController();
-                $orderHistoryController->store(
-                    $request = null,
-                    orderId: $this->order->id,
-                    actionType: 'pos-print-printed',
-                    printerIdentifier: $this->order->shop->printer_ip ?? config('settings.default_printer_ip')
-                );
             }
         } catch (Exception $e) {
             Log::alert("Failed to connect to printer A {$this->user->fav_printer_ip}: " . $e->getMessage());
             $this->fail($e);
+        }
+    }
+    private function print_POS_Category_wise_Token(Order $order)
+    {
+        // Log::debug('printing Cat-tokens job started');
+
+        $items_by_category = $order->items->groupBy(function ($item) {
+            return $item->product->categories[0]->kitchen_printer_ip  ?? config('settings.default_printer_ip');
+        });
+        // Log::debug($items_by_category);
+        foreach ($items_by_category as $ip => $items) {
+            // Log::debug('$ip');
+            // Log::debug($ip);
+            // Log::debug($items);
+            $kitchen_printer_ip = $ip ?? config('settings.default_printer_ip');
+
+            // Create order history
+            $itemNamesWithQty = $items->map(function ($item) {
+                return $item->product->name ?? $item->product_name . ':' . $item->quantity;
+            })->implode(', ');
+            $itemNamesConcatenated = $itemNamesWithQty;
+            // Log::debug($itemNamesConcatenated);
+            $orderHistoryController = new OrderHistoryController();
+            $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'kot-printed', printerIdentifier: $kitchen_printer_ip, itemName: $itemNamesConcatenated, userId: $this->user->id);
+
+            // Log::debug('$kitchen_printer_ip');
+            // Log::debug($kitchen_printer_ip);
+            try {
+                $connector = new NetworkPrintConnector($kitchen_printer_ip, 9100, 5);
+                $kitchen_printer = new Printer($connector);
+                try {
+                    $this->print_POS_Header($kitchen_printer, $order, $heading = "Quetta Club Limited\n---------------------\nQCL - Kitchen KOT\n");
+                    foreach ($items as $item) {
+
+                        $kitchen_printer->setJustification(Printer::JUSTIFY_LEFT);
+                        $kitchen_printer->setEmphasis(true);
+                        //$kitchen_printer->setTextSize(2, 2);
+                        // $kitchen_printer->setTextSize(1, 1);
+                        $kitchen_printer->text($item->product->name ?? $item->product_name);
+                        $kitchen_printer->text("\n");
+                        $kitchen_printer->setJustification(Printer::JUSTIFY_RIGHT);
+                        $kitchen_printer->text("Rate:(" . $item->product->price ?? $item->product_rate . ")");
+                        $kitchen_printer->text("\n");
+
+                        $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
+                        $kitchen_printer->text("\n");
+                        $kitchen_printer->setTextSize(2, 2);
+                        $kitchen_printer->text("QTY: " . $item->quantity . "\n");
+                        //$kitchen_printer->text("\n");
+                        $kitchen_printer->setEmphasis(false);
+
+                        // $kitchen_printer->setTextSize(2, 2);
+                        // $kitchen_printer->setEmphasis(true);
+                        // $kitchen_printer->text("Amount: " . (int) $item->price . "\n");
+                        $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
+                        $kitchen_printer->setTextSize(1, 1);
+                        $kitchen_printer->text(str_repeat("-", 42) . "\n");
+                    }
+                    $kitchen_printer->setEmphasis(true);
+                    $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
+                    $kitchen_printer->setTextSize(1, 1);
+                    $kitchen_printer->text("\nTotal Items:" . count($items) . "\n");
+                    $kitchen_printer->setEmphasis(false);
+                    $kitchen_printer->setJustification(Printer::JUSTIFY_LEFT);
+                    $this->print_POS_Footer($kitchen_printer, $order, false);
+                } catch (Exception $e) {
+                    Log::alert("Failed to connect to printer Bb {$kitchen_printer}: " . $e->getMessage());
+                } finally {
+                    $kitchen_printer->close();
+                }
+            } catch (Exception $e) {
+                Log::alert("Failed to connect to kitchen_printer_ip Aa {$kitchen_printer_ip}: " . $e->getMessage());
+                $this->fail($e);
+                // Log::debug('Failed to connect to kitchen_printer: ' . $kitchen_printer_ip . $e->getMessage());
+                // return redirect()->back()->with('error', 'Failed to connect to kitchen_printer: ' . $kitchen_printer_ip . $e->getMessage());
+            }
         }
     }
 }

@@ -692,14 +692,15 @@ class OrderController extends Controller
     }
     public function printToPOSQT(Order $order)
     {
-        try {
-            $this->print_POS_Category_wise_Token($order);
-            // $this->print_POS_Order($order);
-        } catch (Exception $e) {
-            logger('Failed: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed xxx: ' . $e->getMessage());
-        }
-        return redirect()->back()->with('success', 'Order printed successfully');
+        // try {
+        PrintToPOS::dispatch($order, auth()->user(), $koToken = true);
+        // $this->print_POS_Category_wise_Token($order);
+        // $this->print_POS_Order($order);
+        // } catch (Exception $e) {
+        //     logger('Failed: ' . $e->getMessage());
+        //     return redirect()->back()->with('error', 'Failed xxx: ' . $e->getMessage());
+        // }
+        return redirect()->back()->with('success', 'Order KoT queued for printing');
     }
 
     private function print_POS_Token(Printer $printer, Order $order, OrderItem $item)

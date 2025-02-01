@@ -76,9 +76,14 @@
                         <ul
                             class="py-1 max-h-32 rounded-md text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5 ring-1 ring-black ring-opacity-5">
                             @foreach (App\Models\Customer::all() as $customer)
-                                <li
+                                <li id="customer_id_{{ $customer->id }}"
                                     class=" py-2 pl-3 pr-9 text-gray-900 cursor-pointer hover:bg-indigo-500 hover:text-white">
-                                    <div class="flex items-center justify-between">
+                                    <div class="flex items-center justify-between cursor-pointer"
+                                        onclick="
+                                            document.getElementById('customer_id').value = {{ $customer->id }};
+                                            document.getElementById('searchCustomer').value = '{{ $customer->name }}';
+                                            document.getElementById('customerDropdown').style.display = 'none';
+                                            ">
                                         <span class="font-normal text-indigo-600" id="customer_id_{{ $customer->id }}"
                                             data-id="{{ $customer->id }}">{{ $customer->membership_number }}</span>
                                         <span>{{ $customer->name }}</span>
@@ -91,23 +96,25 @@
 
                 <script>
                     (function() {
-                        document.getElementById('customerDropdown').addEventListener('click', function(e) {
-                            if (e.target.tagName === 'LI') {
-                                var customerId = e.target.querySelector('.font-normal').getAttribute('data-id');
-                                // console.log(customerId);
-                                document.getElementById('customer_id').value = customerId;
-                                document.getElementById('searchCustomer').value = e.target.querySelector('span:last-child')
-                                    .textContent;
-                                document.getElementById('customerDropdown').style.display = 'none';
-                            }
-                        });
+                        // document.getElementById('customerDropdown').addEventListener('click', function(e) {
+                        //     console.log(e.target);
+                        //     if (e.target.tagName === 'LI') {
+                        //         var customerId = e.target.querySelector('.font-normal').getAttribute('data-id');
+                        //         // console.log(customerId);
+                        //         document.getElementById('customer_id').value = customerId;
+                        //         document.getElementById('searchCustomer').value = e.target.querySelector('span:last-child')
+                        //             .textContent;
+                        //         document.getElementById('customerDropdown').style.display = 'none';
+                        //     }
+                        // });
 
-                        document.addEventListener('click', function(e) {
-                            var dropdown = document.getElementById('customerDropdown');
-                            if (!dropdown.contains(e.target) && e.target.id !== 'searchCustomer') {
-                                dropdown.style.display = 'none';
-                            }
-                        });
+
+                        // document.addEventListener('click', function(e) {
+                        //     var dropdown = document.getElementById('customerDropdown');
+                        //     if (!dropdown.contains(e.target) && e.target.id !== 'searchCustomer') {
+                        //         dropdown.style.display = 'none';
+                        //     }
+                        // });
                     })();
 
                     document.getElementById('searchCustomer').addEventListener('input', function() {

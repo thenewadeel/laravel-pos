@@ -1,15 +1,26 @@
+## Dev Wishlist
+
+[ ] bill footers/headers via app settings
+[ ] jobs need a monitor/ restarting mini interface
+[ ] KoT printing auditing
+[ ]
+[ ]
+[ ]
+[ ]
+
 ## Wishlist
 
 ### Critical
 
-[ ] Products updated => orders disturbed
+[x] Products updated => orders disturbed
+(added minimal product info in order_item pivot, order items will sustain menu change commit:4755f0d439ee289a65d4a4a79ab7dcc95253e5b4)
 [ ] bill cancellation rights & mech
-[ ] order POS counter reset every month
 [ ] product report (item was sold in following order : POS Numbers list)
 [ ] running KOTs
 [ ] addl reports
 [ ] KoT counter check with order final total
-[ ] all open bills cashier wise & shop wise
+[x] all open bills cashier wise & shop wise
+(Reprogrammed All button in order-index to show all open orders commit:f22d441502015b782501a6f3c4393036987be4ef )
 [ ] amount of 1000 reduced in bill -> generate alarm
 [ ] payment via POS
 [ ] chit to paid conversion rights and vice versa
@@ -25,7 +36,8 @@ order->creation date instead of payments creation date) [manual click to close t
 [ ] at 0001 hrs cashier & order-taker order index is ZERO... should show previous open bills
 [ ] modal ip dialog for broken printers (when NW is down, printer broken, etc)
 [ ] seperate grouping for beverages / bakery items, and other like food categories
-[ ] print job queues
+[x] print job queues
+{FINALLY!}
 [ ] editable qty in order-items-edit component
 [ ] customer search bar should select first customer on enter
 [ ] order print auto on Payment
@@ -34,13 +46,17 @@ order->creation date instead of payments creation date) [manual click to close t
 
 ### Appearance
 
-[ ] order print buttons in order-edit
+[x] order print buttons in order-edit
+(done in minor changes commit: )
 [ ] accountant can make new orders (remove the New btn from order->index)
-[ ] order edit view ratio 40-60
+[x] order edit view ratio 40-60
+(done in minor changes commit: )
 [ ] Add strength of guests for order-taker / per order attribute to be added
 [ ] Date Range sliders
 [ ] pagination in All orders
-[ ] expand order details column in order->edit
+
+<!-- [ ] expand order details column in order->edit -->
+
 [ ] search item -> not found -> form to add new product item
 [ ] order edit (save & print/ paid & print)
 
@@ -48,8 +64,9 @@ order->creation date instead of payments creation date) [manual click to close t
 
 [ ] item price modifiable for some items (maybe only for cashier)
 
-## Prev
+## Completed
 
+[x] order POS counter reset every month
 [x] with every order (only with dining)
 [x] table number
 [x] QT number
@@ -68,8 +85,6 @@ order->creation date instead of payments creation date) [manual click to close t
 [x] bulk printing of chit bills
 [x] clear all unsaved bills
 
-## Completed
-
 [x] order editing to be reflected in order->show (OrderHistory module)
 [x] open bill should not reflect chit amount
 [x] editing order changes ownership of order (no change if user is present)
@@ -80,6 +95,7 @@ order->creation date instead of payments creation date) [manual click to close t
 [x] Drop down search in order-index (chit bills, columns, etc)
 
 # RUN sed -i 's/
+
 <policy domain="coder" rights="none" pattern="PDF"\ />/
 <policy domain="coder" rights="read|write" pattern="PDF"\ />/g' /etc/ImageMagick-6/policy.xml
 

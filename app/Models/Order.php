@@ -78,7 +78,6 @@ class Order extends Model
         // Create order history
         $orderHistoryController = new OrderHistoryController();
         $orderHistoryController->store($request = null, orderId: $this->id, actionType: 'pos-assigned', POSNumber: $this->POS_number);
-
     }
     public function items()
     {
@@ -207,5 +206,86 @@ class Order extends Model
     public function history()
     {
         return $this->hasMany(OrderHistory::class);
+    }
+
+    /*
+    -----------------   SCOPES   -----------------
+        - start_date
+        - end_date
+        - order_type
+    - payment_type
+        - order_status
+        - customer
+        - order-taker
+        - shop_name
+        - cashiers
+        - item_name
+    */
+    public function scopeStart_date($query, $start_date)
+    {
+        return $query->whereDate('created_at', '>=', $start_date);
+    }
+    public function scopeEnd_date($query, $end_date)
+    {
+        return $query->whereDate('created_at', '<=', $end_date);
+    }
+    public function scopeDate_between($query, $start_date, $end_date)
+    {
+        return $query->whereBetween('created_at', [$start_date, $end_date]);
+    }
+    public function scopeOrder_type($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+    // public function scopePayment_type($query, $payment_type)
+    // {
+    //     return $query->whereHas('payments', function ($query) use ($payment_type) {
+    //         $query->where('payment_type', $payment_type);
+    //     });
+    // }
+    public function scopeOrder_status($query, $order_status)
+    {
+        switch ($order_status) {
+            case 'open':
+                return $query->where('state', '!=', 'closed');
+            case 'closed':
+                return $query->where('state', 'closed');
+        }
+    }
+    public function scopeCustomer_id($query, $customer_id)
+    {
+        return $query->where('customer_id', $customer_id);
+    }
+    public function scopeCustomer_name($query, $customer_name)
+    {
+        return $query->whereHas('customer', function ($query) use ($customer_name) {
+            $query->where('name', 'LIKE', '%' . $customer_name . '%');
+        });
+    }
+    public function scopeOrder_takers($query, $user_id)
+    {
+        return $query->whereIn('user_id', $user_id);
+    }
+    public function scopeShops_id($query, $shop_ids)
+    {
+        return $query->whereIn('shop_id', $shop_ids);
+    }
+    public function scopeCashiers($query, $cashiers)
+    {
+        return $query->whereHas('payments', function ($query) use ($cashiers) {
+            $query->whereIn('user_id', $cashiers);
+        });
+    }
+    public function scopeItem_name($query, $item_name)
+    {
+        return $query->whereHas('items', function ($query) use ($item_name) {
+            $query->where('product_name', 'LIKE', '%' . $item_name . '%');
+        });
+    }
+    public function scopeItem_id($query, $item_id)
+    {
+        return $query->whereHas('items', function ($query) use ($item_id) {
+            $query->where('product_id', $item_id);
+        });
     }
 }

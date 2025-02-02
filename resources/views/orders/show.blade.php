@@ -81,7 +81,7 @@
         </div>
         <div class="d-flex justify-content-between">
             <span>Cashier:</span>
-            <span>{{ $order->payments->first()->user->name() ?? 'unknown' }}</span>
+            <span>{{ $order->payments?->first()?->user?->name() ?? '-' }}</span>
         </div>
         <table class="table table-bordered">
 

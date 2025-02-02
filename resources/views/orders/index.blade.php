@@ -96,34 +96,14 @@
                                 class="form-control p-0 m-0 w-auto">
                             <input type="search" name="order_taker" placeholder="{{ __('order.Order_Taker') }}"
                                 value="{{ request('order_taker') }}" id="orderTaker" class="form-control p-0 m-0 w-auto">
-                            <select name="type" id="type" class="form-control p-0 m-0 w-auto">
-                                <option value="">{{ __('order.Type') }}</option>
-                                <option {{ request('type') == 'dine-in' ? 'selected' : '' }} value="dine-in">
-                                    {{ __('order.Dine_In') }}</option>
-                                <option {{ request('type') == 'take-away' ? 'selected' : '' }} value="take-away">
-                                    {{ __('order.Take_Away') }}</option>
-                                <option {{ request('type') == 'delivery' ? 'selected' : '' }} value="delivery">
-                                    {{ __('order.Delivery') }}</option>
-                            </select>
+                            @include('layouts.partials.filterSelectOrderType')
                             <input type="search" name="table_number" placeholder="{{ __('order.Table_Number') }}"
                                 value="{{ request('table_number') }}" id="tableNumber" class="form-control p-0 m-0 w-auto">
                             <input type="search" name="waiter_name" placeholder="{{ __('order.Waiter_Name') }}"
                                 value="{{ request('waiter_name') }}" style="width:200px" id="waiterName"
                                 class="form-control p-0 m-0 w-auto">
                             {{-- Payment State filter [open,closed, paid, chit, part-chit] --}}
-                            <select name="payment_state" id="payment_state" class="form-control p-0 m-0 w-auto">
-                                <option value="">{{ __('order.Payment_Status') }}</option>
-                                <option {{ request('payment_state') == 'open' ? 'selected' : '' }} value="open">
-                                    {{ __('order.Open') }}</option>
-                                <option {{ request('payment_state') == 'closed' ? 'selected' : '' }} value="closed">
-                                    {{ __('order.Closed') }}</option>
-                                <option {{ request('payment_state') == 'paid' ? 'selected' : '' }} value="paid">
-                                    {{ __('order.Paid') }}</option>
-                                <option {{ request('payment_state') == 'chit' ? 'selected' : '' }} value="chit">
-                                    {{ __('order.Chit') }}</option>
-                                <option {{ request('payment_state') == 'part-chit' ? 'selected' : '' }} value="part-chit">
-                                    {{ __('order.Part_Chit') }}</option>
-                            </select>
+                            @include('layouts.partials.filterSelectOrderPaymentState')
                             <div class="btn-group  btn-block">
                                 <button type="submit" class="btn btn-outline-primary btn-sm"><i
                                         class="fas fa-filter"></i>{{ __('common.Filter') }}</button>

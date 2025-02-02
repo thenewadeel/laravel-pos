@@ -1,7 +1,6 @@
-<div
-    class="form-inline flex flex-wrap md:flex-row justify-items-stretch justify-content-between  m-0 p-2 rounded-md ">
+<div class="form-inline flex flex-wrap md:flex-row justify-items-stretch justify-content-between  m-0 p-2 rounded-md ">
 
-    <?php if (auth()->user()->type == 'admin') {
+    <?php if (auth()->user()->type == 'admin' || auth()->user()->type == 'accountant') {
         $shops = App\Models\Shop::get();
     } else {
         $shops = auth()->user()->shops;

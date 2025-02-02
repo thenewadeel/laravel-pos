@@ -212,13 +212,16 @@ class Order extends Model
     -----------------   SCOPES   -----------------
         - start_date
         - end_date
+        - date_between
         - order_type
     - payment_type
         - order_status
-        - customer
-        - order-taker
-        - shop_name
+        - customer_ids
+        - customer_name
+        - order_takers
+        - shop_ids
         - cashiers
+        - item_ids
         - item_name
     */
     public function scopeStart_date($query, $start_date)
@@ -252,9 +255,9 @@ class Order extends Model
                 return $query->where('state', 'closed');
         }
     }
-    public function scopeCustomer_id($query, $customer_id)
+    public function scopeCustomer_ids($query, $customer_ids)
     {
-        return $query->where('customer_id', $customer_id);
+        return $query->where('customer_id', $customer_ids);
     }
     public function scopeCustomer_name($query, $customer_name)
     {
@@ -262,11 +265,11 @@ class Order extends Model
             $query->where('name', 'LIKE', '%' . $customer_name . '%');
         });
     }
-    public function scopeOrder_takers($query, $user_id)
+    public function scopeOrder_takers($query, $user_ids)
     {
-        return $query->whereIn('user_id', $user_id);
+        return $query->whereIn('user_id', $user_ids);
     }
-    public function scopeShops_id($query, $shop_ids)
+    public function scopeShop_ids($query, $shop_ids)
     {
         return $query->whereIn('shop_id', $shop_ids);
     }
@@ -282,10 +285,17 @@ class Order extends Model
             $query->where('product_name', 'LIKE', '%' . $item_name . '%');
         });
     }
-    public function scopeItem_id($query, $item_id)
+    /**
+     * Filter orders by item IDs.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int|array $item_ids
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeItem_ids($query, $item_ids)
     {
-        return $query->whereHas('items', function ($query) use ($item_id) {
-            $query->where('product_id', $item_id);
+        return $query->whereHas('items', function ($query) use ($item_ids) {
+            $query->where('product_id', $item_ids);
         });
     }
 }

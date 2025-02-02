@@ -76,8 +76,12 @@
             <span>{{ $order->type }}</span>
         </div>
         <div class="d-flex justify-content-between">
-            <span>User:</span>
+            <span>Order-Taker:</span>
             <span>{{ $order->user->getFullname() }}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+            <span>Cashier:</span>
+            <span>{{ $order->payments->first()->user->name() ?? 'unknown' }}</span>
         </div>
         <table class="table table-bordered">
 
@@ -90,7 +94,7 @@
             @foreach ($order->items as $item)
                 <tr>
                     <td>{{ $item->product->name ?? $item->product_name }}</td>
-                    <td style="text-align:right">{{ number_format($item->product->price??$item->product_rate) }}</td>
+                    <td style="text-align:right">{{ number_format($item->product->price ?? $item->product_rate) }}</td>
                     <td style="text-align:center">{{ $item->quantity }}</td>
                     <td style="text-align:right">{{ number_format($item->price, 2) }}</td>
                 </tr>
@@ -144,15 +148,16 @@
         {{-- {{ $order }} --}}
     </div>
     @if (auth()->user()->type == 'accountant' || auth()->user()->type == 'admin')
-    <div class="flex flex-col bg-gray-50 rounded-md shadow-sm p-2 mx-2 ">
-        <h4 class="text-lg font-bold mb-2 self-center text-center w-full bg-slate-100 rounded-md shadow-inner">Order History</h4>
-        <div class="h-min overflow-y-scroll max-h-[600px]">
+        <div class="flex flex-col bg-gray-50 rounded-md shadow-sm p-2 mx-2 ">
+            <h4 class="text-lg font-bold mb-2 self-center text-center w-full bg-slate-100 rounded-md shadow-inner">Order
+                History</h4>
+            <div class="h-min overflow-y-scroll max-h-[600px]">
 
-            @foreach ($histories as $history)
-            @include('layouts.partials.orderhistory.show', ['orderHistory' => $history])
-            @endforeach
+                @foreach ($histories as $history)
+                    @include('layouts.partials.orderhistory.show', ['orderHistory' => $history])
+                @endforeach
+            </div>
         </div>
-    </div>
     @endif
 
 
@@ -172,7 +177,7 @@
                 class="btn btn-primary {{ $next == $order->id ? 'disabled' : '' }}">
                 <i class="fas fa-chevron-right"></i>
             </a>
-            @else
+        @else
             <div class=""></div>
         @endif
     </div>

@@ -86,8 +86,12 @@
             <span>{{ $order->type }}</span>
         </div>
         <div class="d-flex justify-content-between">
-            <span>Cashier:</span>
+            <span>Order-Taker:</span>
             <span>{{ $order->user->getFullname() }}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+            <span>Cashier:</span>
+            <span>{{ $order->payments->first()->user->name() ?? 'unknown' }}</span>
         </div>
         <table class="itemtable" style=";;;;border-collapse: collapse; border-spacing: 0;">
             <tr style=";;;;text-align:left">
@@ -100,7 +104,7 @@
                 <tr>
                     <td style="font-size: 0.8rem;">
                         {{ $item->product->name ?? $item->product_name }}</td>
-                    <td style=";;;;text-align:right">{{ number_format($item->product->price??$item->product_rate) }}
+                    <td style=";;;;text-align:right">{{ number_format($item->product->price ?? $item->product_rate) }}
                     </td>
                     <td style=";;;;text-align:center">{{ $item->quantity }}</td>
                     <td style=";;;;text-align:right">{{ number_format($item->price) }}</td>
@@ -167,7 +171,7 @@
                     {{ number_format($order->balance()) }}
                 @endif
             </div>
-            @if ($order->state == 'closed' && $orderStatus == __('order.Not_Paid') || $orderStatus == __('order.Partial'))
+            @if (($order->state == 'closed' && $orderStatus == __('order.Not_Paid')) || $orderStatus == __('order.Partial'))
                 <div style="
             font-size: 0.8rem;
             display: block;

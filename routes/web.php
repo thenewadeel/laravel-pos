@@ -87,6 +87,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 
+        // Maintenance Tasks
+        Route::get('/settings/ordersExporterMonitor', [SettingController::class, 'ordersExporterMonitor'])->name('orders.exporter.monitor');
+        Route::get('/settings/ordersExporterBurner', [SettingController::class, 'ordersExporterBurner'])->name('orders.exporter.burn');
         // Bulk Excel Exports
         Route::get('/usersexport', [UsersController::class, 'export'])->name('users.export');
         Route::get('/productsexport', [ProductController::class, 'export'])->name('products.export');

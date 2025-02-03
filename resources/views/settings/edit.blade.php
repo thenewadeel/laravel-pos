@@ -31,6 +31,9 @@
                     <a href="{{ route('customers.export') }}" class="btn btn-outline-info m-2 shadow-md">
                         <i class="fas fa-save fa-lg"></i>
                         Export Customers</a>
+                    @include('layouts.partials.orderExporterInterface', ['errors' => $errors])
+                    @include('layouts.partials.userJobs', ['errors' => $errors])
+
                 </div>
             </div>
             {{-- TODO: Deletes --}}

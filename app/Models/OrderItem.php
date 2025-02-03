@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
@@ -35,5 +36,21 @@ class OrderItem extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+    public function isBurnt()
+    {
+        return ($this->product_name && $this->product_rate && $this->product_id == null);
+    }
+    public function bakeItem()
+    {
+        if ($this->product->id) {
+            // Log::info("OrderItem with ID # " . $this->id . " is being baked");
+            $this->product_name = $this->product->name;
+            $this->product_rate = $this->product->price;
+            $this->product_id = null;
+
+            $this->save();
+            // Log::info("OrderItem " . $this . " is baked");
+        }
     }
 }

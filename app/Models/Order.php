@@ -208,20 +208,56 @@ class Order extends Model
         return $this->hasMany(OrderHistory::class);
     }
 
+    public function isBurnt()
+    {
+        return $this->state == 'closed' && $this->items->every(function ($item) {
+            return $item->isBurnt();
+        });
+    }
+    public function scopeBurnt($query)
+    {
+        return $query->where('state', 'closed')->whereHas('items', function ($query) {
+            return $query->where('product_id', null);
+        });
+    }
+
+    public function scopeNotBurnt($query)
+    {
+        return $query->where('state', '!=', 'closed')->orWhereHas('items', function ($query) {
+            return $query->where('product_id', '!=', null);
+        });
+    }
+
+    public function bakeOrder()
+    {
+        if ($this->state == 'closed') {
+            if (!$this->isBurnt()) {
+
+                Log::warning("Order with POS # " . $this->POS_number . " is being baked. With " . count($this->items) . " items");
+                foreach ($this->items as $item) {
+                    $item->bakeItem();
+                }
+            } else {
+                Log::warning("Burnt Order!");
+            }
+        } else {
+            Log::warning("Open Order with POS # " . $this->POS_number . " is being baked!!! ;which can't be right.");
+        }
+    }
     /*
     -----------------   SCOPES   -----------------
         - start_date
         - end_date
         - date_between
-        - order_type
+        - order_type >
     - payment_type
         - order_status
-        - customer_ids
+        - customer_ids >
         - customer_name
-        - order_takers
-        - shop_ids
-        - cashiers
-        - item_ids
+        - order_takers >
+        - shop_ids >
+        - cashiers >
+        - item_ids >
         - item_name
     */
     public function scopeStart_date($query, $start_date)

@@ -35,13 +35,12 @@ class ShopsExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
         // 'printer_ip',
         // 'created_at',
 
-        $cat = $shop->categories->first();
-        $cat = $cat ? $cat->name : 'unknown';
+        $categories = $shop->categories->pluck('name')->implode(', ');
         return [
             $shop->id,
             $shop->name,
             $shop->description,
-            $cat,
+            $categories,
             $shop->printer_ip,
             $shop->created_at ? Date::dateTimeToExcel($shop->created_at) : '',
         ];

@@ -67,6 +67,7 @@ class ProductsExport implements FromCollection, WithMapping, WithHeadings, Shoul
     public function columnFormats(): array
     {
         return [
+            'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
             'F' => NumberFormat::FORMAT_DATE_DDMMYYYY,
             // 'C' => NumberFormat::FORMAT_CURRENCY_EUR_INTEGER,
         ];

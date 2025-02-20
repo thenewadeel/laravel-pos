@@ -42,28 +42,23 @@ class ShopsImport implements WithHeadingRow,   WithUpserts, OnEachRow //ToModel
                 // Shop::firstOrCreate([
                 'id' => $row['id'],
                 'name' => $row['name'],
-                'description' => $row['description'],
             ], [
+                'description' => $row['description'],
                 // 'category' => $row['category'],
                 'printer_ip' => $row['printer_ip'],
                 'created_at' => $row['created_at'],
                 // ]);
             ]);
-        $shop->categories()->sync(
-            // setRelation(
-            // attachCategory(
-            // $category->id
-            // 'category',
-            // new Category([
-            // $category =
-            Category::updateOrCreate([
-                // [
-                'name' => $row['category']
-            ], [
-                'type' => 'product'
-                // ]
-            ])
-        );
+        $cats = explode(',', $row['category']);
+        foreach ($cats as $cat) {
+            $shop->categories()->sync(
+                Category::updateOrCreate([
+                    'name' => $cat,
+                ], [
+                    'type' => 'product'
+                ])
+            );
+        }
         // Log::info("Shop imported: " . $shop->id);
         return $shop;
     }

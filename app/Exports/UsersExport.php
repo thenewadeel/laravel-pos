@@ -33,6 +33,7 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
         // $table->string('last_name');
         // $table->enum('type', ['admin', 'cashier', 'accountant', 'chef', 'stockBoy'])->default('cashier');
         // $table->string('email')->unique();
+        $shops = $user->shops->pluck('name')->implode(', ');
 
         return [
             // $user->id,
@@ -41,6 +42,7 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
             $user->email,
             $user->type,
             $user->created_at ? Date::dateTimeToExcel($user->created_at) : '',
+            $shops
         ];
     }
     public function headings(): array
@@ -51,6 +53,7 @@ class UsersExport implements FromCollection, WithMapping, WithHeadings, ShouldAu
             'email',
             'type',
             'created_at',
+            'shops',
             // 'id',
             // __('user.FName'),
             // __('user.LName'),

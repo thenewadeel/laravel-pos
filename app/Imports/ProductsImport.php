@@ -42,9 +42,9 @@ class ProductsImport implements WithHeadingRow,   WithUpserts, OnEachRow //ToMod
             // new Product([
             Product::updateOrCreate([
                 // Product::firstOrCreate([
-                'id' => $row['id']
-            ], [
+                'id' => $row['id'],
                 'name' => $row['name'],
+            ], [
                 'description' => $row['description'],
                 // 'category' => $row['category'],
                 'price' => $row['price'],
@@ -57,7 +57,7 @@ class ProductsImport implements WithHeadingRow,   WithUpserts, OnEachRow //ToMod
             // $category->id
             // 'category',
             // new Category([
-            // $category = 
+            // $category =
             Category::updateOrCreate([
                 // [
                 'name' => $row['category']

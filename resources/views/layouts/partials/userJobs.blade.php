@@ -18,10 +18,11 @@
                         <td class="px-4 py-2">{{ $jobLog->status }}</td>
                         <td class="px-4 py-2">
                             @if ($jobLog->progress)
-                                <div class="progress" style="height: 1.5rem;">
+                                <div class="progress" style="height: 1.5rem;width: 5rem;">
                                     <div class="progress-bar" role="progressbar"
                                         style="width: {{ $jobLog->progress }}%;" aria-valuenow="{{ $jobLog->progress }}"
-                                        aria-valuemin="0" aria-valuemax="100">{{ $jobLog->progress }}%</div>
+                                        aria-valuemin="0" aria-valuemax="100">{{ number_format($jobLog->progress, 0) }}%
+                                    </div>
                                 </div>
                             @else
                                 N/A

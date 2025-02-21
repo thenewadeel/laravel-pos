@@ -78,6 +78,7 @@ class OrderTokenPayment extends Component
         ]);
         if ($this->order->POS_number == null) $this->order->assignPOS();
         $this->order->state = 'closed';
+        $this->order->bakeOrder();
         $this->order->save();
         $this->printTokens();
         return $this->redirect(('/tokenShop'));

@@ -48,7 +48,7 @@ class PrintToPOS implements ShouldQueue
      *
      * @var int
      */
-    public $backoff = 3;
+    public $backoff = [30, 60, 90, 120];
     /**
      * Create a new job instance.
      */

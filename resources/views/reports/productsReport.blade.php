@@ -214,46 +214,44 @@
                                     </a>
                                 </td> --}}
                             <td style="width:40%" title="{{ print_r($orderItemsVector, true) }}">
-                                @if($orderItemsVector['product'])
-                                <a href="{{ route('products.edit', ['product' => $orderItemsVector['product']->id]) }}">
-                                    {{ $orderItemsVector['product']->name }}
-                                </a>
+                                @if ($orderItemsVector['product_name'])
+                                    {{ $orderItemsVector['product_name'] }}
                             </td>
                             <td class="text-right" style="width:10%">
-                                {{ number_format($orderItemsVector['product']->price, 2) }}
-                                @else
-<span class="text-danger"> No Product Valid </span>
-@endif
-                            </td>
-                            <td class="text-right" style="width:10%">
-                                {{ $orderItemsVector['soldQuantity'] }}
-                            </td>
-                            <td class="text-right" style="width:10%">
-                                {{ number_format($orderItemsVector['soldAmount'], 2) }}
-                            </td>
-                            {{-- <td class="text-right">
+                                {{ number_format($orderItemsVector['product_price'], 2) }}
+                            @else
+                                <span class="text-danger"> No Product Valid </span>
+                    @endif
+                    </td>
+                    <td class="text-right" style="width:10%">
+                        {{ $orderItemsVector['soldQuantity'] }}
+                    </td>
+                    <td class="text-right" style="width:10%">
+                        {{ number_format($orderItemsVector['soldAmount'], 2) }}
+                    </td>
+                    {{-- <td class="text-right">
                                     {{ $orderItem->order?->customer?->name }}
                                 </td>
                                 <td>
                                     {{ $orderItem->order->user->getFullName() }}</td> --}}
-                        </tr>
-                        {{-- <td>{{ $order->user->getFullName() }}</td>
+                    </tr>
+                    {{-- <td>{{ $order->user->getFullName() }}</td>
                                 <td>
                                     @foreach ($order->payments->groupBy('user_id') as $userId => $payments)
                                         {{ $payments->first()->user->getFullName() . ' - (' . number_format($payments->sum('amount'), 2) . ')' }}<br />
                                     @endforeach
                                 </td> --}}
-                        <?php
-                        // $totalPosNumber += 1;
-                        // $totalSoldQty += $orderItem->quantity;
-                        // $grandTotalSoldQty += $orderItem->quantity;
-                        // $totalSoldAmount += $orderItem->price;
-                        // $grandTotalSoldAmount += $orderItem->price;
+                    <?php
+                    // $totalPosNumber += 1;
+                    // $totalSoldQty += $orderItem->quantity;
+                    // $grandTotalSoldQty += $orderItem->quantity;
+                    // $totalSoldAmount += $orderItem->price;
+                    // $grandTotalSoldAmount += $orderItem->price;
 
-                        // $totalBalance += $order->balance();
-                        // $totalDiscountAmount += $order->discountAmount();
-                        // $totalTotal += $order->total();
-                        ?>
+                    // $totalBalance += $order->balance();
+                    // $totalDiscountAmount += $order->discountAmount();
+                    // $totalTotal += $order->total();
+                    ?>
                     @endforeach
                     {{-- <tr class="table-bordered font-bold  text-right">
                             <td></td>

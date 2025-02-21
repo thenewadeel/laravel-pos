@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Traits\ListOf;
 use App\Models\Shop;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Models\Activity;
 
 class ReportsController extends Controller
@@ -45,7 +46,7 @@ class ReportsController extends Controller
 
         if ($request->has('start_date')) {
             if ($request->has('end_date')) {
-            $orders->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
+                $orders->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
             } else {
                 $orders->where('created_at', $filters['start_date']);
             }
@@ -87,14 +88,17 @@ class ReportsController extends Controller
         ];
 
         $orderItems = OrderItem::query();
+        $orderItems->whereHas('order', function ($query) {
+            $query->where('state', 'closed');
+        });
+
 
         if ($request->has('start_date')) {
             if ($request->has('end_date')) {
-            $orderItems->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
+                $orderItems->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
             } else {
                 $orderItems->where('created_at', $filters['start_date']);
             }
-
         } else {
             $orderItems->whereDate('created_at', now());
         }
@@ -120,7 +124,7 @@ class ReportsController extends Controller
         // })
 
         $orderItems = collect($orderItems->get()
-            ->groupBy('product_id')
+            ->groupBy('product_name')
             ->sortByDesc(function ($items) {
                 return $items->sum(function ($item) {
                     return $item->price;
@@ -128,7 +132,8 @@ class ReportsController extends Controller
             })
             ->map(function ($items) {
                 return [
-                    'product' => $items->first()->product,
+                    'product_name' => $items->first()->product_name,
+                    'product_price' => $items->first()->product_rate,
                     'quantity' => $items->sum(function ($item) {
                         return $item->quantity;
                     }),
@@ -174,7 +179,7 @@ class ReportsController extends Controller
 
         if ($request->has('start_date')) {
             if ($request->has('end_date')) {
-            $payments->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
+                $payments->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
             } else {
                 $payments->where('created_at', $filters['start_date']);
             }

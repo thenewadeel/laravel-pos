@@ -14,7 +14,6 @@
                 Bulk Data Operations
             </div>
             {{-- <div class="card-body"> --}}
-
             <div
                 class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-slate-200 rounded-lg p-1 m-2">
                 <div class="text-md font-bold text-gray-800 m-2">Exports:</div>
@@ -31,20 +30,18 @@
                     <a href="{{ route('customers.export') }}" class="btn btn-outline-info m-2 shadow-md">
                         <i class="fas fa-save fa-lg"></i>
                         Export Customers</a>
-                    @include('layouts.partials.orderExporterInterface', ['errors' => $errors])
-                    @include('layouts.partials.userJobs', ['errors' => $errors])
-
                 </div>
             </div>
             {{-- TODO: Deletes --}}
-            {{-- <div
+            <div
                 class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-red-200 rounded-lg p-1 m-2">
                 <div class="text-md font-bold text-gray-800 m-2">Deletes:</div>
                 <div class="flex flex-col md:flex-row justify-evenly w-full">
                     <a href="" class="btn btn-outline-danger m-2 shadow-md">
                         <i class="fas fa-trash fa-lg"></i>
                         Clear Users</a>
-                    <a href="" class="btn btn-outline-danger m-2 shadow-md">
+                    <a href="{{ route('products.clear') }}" class="btn btn-outline-danger m-2 shadow-md"
+                        onclick="return confirm('Are you sure you want to delete all products?')">
                         <i class="fas fa-trash fa-lg"></i>
                         Clear Products</a>
                     <a href="" class="btn btn-outline-danger m-2 shadow-md">
@@ -54,7 +51,7 @@
                         <i class="fas fa-trash fa-lg"></i>
                         Clear Customers</a>
                 </div>
-            </div> --}}
+            </div>
 
             <div
                 class=" flex flex-col md:flex-row items-center justify-start bg-white border-2 border-slate-200 rounded-lg p-2 m-2">
@@ -179,8 +176,8 @@
                     <label for="default_printer_ip"
                         class="text-center w-1/4">{{ __('settings.default_printer_ip') }}</label>
                     <input type="text" name="default_printer_ip"
-                        class="form-control w-3/4 @error('default_printer_ip') is-invalid @enderror" id="default_printer_ip"
-                        placeholder="{{ __('settings.default_printer_ip') }}"
+                        class="form-control w-3/4 @error('default_printer_ip') is-invalid @enderror"
+                        id="default_printer_ip" placeholder="{{ __('settings.default_printer_ip') }}"
                         value="{{ old('default_printer_ip', config('settings.default_printer_ip')) }}">
                     @error('default_printer_ip')
                         <span class="invalid-feedback" role="alert">
@@ -201,6 +198,19 @@
             </div>
             <div class="card-body">
                 @include('layouts.partials.discountEdit')
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header text-lg font-bold">
+                Jobs </div>
+            <div class="card-body">
+                @include('layouts.partials.orderExporterInterface', ['errors' => $errors])
+                <div class="flex flex-col md:flex-row justify-evenly w-full">
+
+                    @include('layouts.partials.userJobs', ['errors' => $errors])
+
+                </div>
             </div>
         </div>
     @endif

@@ -6,6 +6,7 @@ use App\Jobs\OffloadOrders;
 use App\Jobs\OffloadOrdersJob;
 use App\Models\JobLog;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Traits\ListOf;
@@ -62,5 +63,10 @@ class SettingController extends Controller
     {
         OffloadOrders::dispatch(Order::where('state', "<>", 'closed')->limit(100)->get(), auth()->user(), false);
         return back()->with('success', 'Monitor running');
+    }
+    public function clearProducts(Request $request)
+    {
+        Product::query()->delete();
+        return back()->with('success', 'All products deleted');
     }
 }

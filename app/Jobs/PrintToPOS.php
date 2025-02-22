@@ -338,7 +338,7 @@ class PrintToPOS implements ShouldQueue
                 $connector = new NetworkPrintConnector($kitchen_printer_ip, 9100, 5);
                 $kitchen_printer = new Printer($connector);
                 try {
-                    $this->print_POS_Header($kitchen_printer, $order, $heading = "Quetta Club Limited\n---------------------\nQCL - Kitchen KOT\n");
+                    $this->print_POS_Header($kitchen_printer, $heading = "Quetta Club Limited\n---------------------\nQCL - Kitchen KOT\n");
                     foreach ($items as $item) {
 
                         $kitchen_printer->setJustification(Printer::JUSTIFY_LEFT);

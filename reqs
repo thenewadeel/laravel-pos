@@ -3,24 +3,19 @@
 [ ] bill footers/headers via app settings
 [ ] jobs need a monitor/ restarting mini interface
 [ ] KoT printing auditing
-[ ]
-[ ]
-[ ]
-[ ]
+[ ] Offloading Orders
+[x] Added Supervisor in production for processing queues
 
 ## Wishlist
 
 ### Critical
 
-[x] Products updated => orders disturbed
-(added minimal product info in order_item pivot, order items will sustain menu change commit:4755f0d439ee289a65d4a4a79ab7dcc95253e5b4)
 [ ] bill cancellation rights & mech
 [ ] product report (item was sold in following order : POS Numbers list)
 [ ] running KOTs
 [ ] addl reports
 [ ] KoT counter check with order final total
-[x] all open bills cashier wise & shop wise
-(Reprogrammed All button in order-index to show all open orders commit:f22d441502015b782501a6f3c4393036987be4ef )
+
 [ ] amount of 1000 reduced in bill -> generate alarm
 [ ] payment via POS
 [ ] chit to paid conversion rights and vice versa
@@ -29,6 +24,46 @@ order->creation date instead of payments creation date) [manual click to close t
 [ ] order-type : delivery seperate report (pos numbers, day wise)
 [ ] advance payments with receipt number PV
 
+### Orders Offloading
+
+#### Filters
+
+    - start_date
+    - end_date
+    - order_type
+    - payment_type
+    - order_status
+    - customer
+    - order-taker
+    - shop_name
+    - cashiers
+    - item_name
+
+#### Columns
+
+    - POS_number
+    - table_number
+    - waiter_name
+    - notes
+    - type
+    - customer_membership_no
+    - customer_name
+    - user_name (order-taker)
+    - shop_name
+    - total
+    - discount_amount
+    - discounted_total
+    - cash
+        - cashiers
+    - chit
+    - balance
+    - order_items
+        - item_name
+        - quantity
+        - rate
+        - price
+
+
 ### QoL
 
 [ ] order with 0 sum should not be saved
@@ -36,8 +71,6 @@ order->creation date instead of payments creation date) [manual click to close t
 [ ] at 0001 hrs cashier & order-taker order index is ZERO... should show previous open bills
 [ ] modal ip dialog for broken printers (when NW is down, printer broken, etc)
 [ ] seperate grouping for beverages / bakery items, and other like food categories
-[x] print job queues
-{FINALLY!}
 [ ] editable qty in order-items-edit component
 [ ] customer search bar should select first customer on enter
 [ ] order print auto on Payment
@@ -46,11 +79,7 @@ order->creation date instead of payments creation date) [manual click to close t
 
 ### Appearance
 
-[x] order print buttons in order-edit
-(done in minor changes commit: )
 [ ] accountant can make new orders (remove the New btn from order->index)
-[x] order edit view ratio 40-60
-(done in minor changes commit: )
 [ ] Add strength of guests for order-taker / per order attribute to be added
 [ ] Date Range sliders
 [ ] pagination in All orders
@@ -65,6 +94,18 @@ order->creation date instead of payments creation date) [manual click to close t
 [ ] item price modifiable for some items (maybe only for cashier)
 
 ## Completed
+
+[x] order print buttons in order-edit
+(done in minor changes commit: )
+[x] order edit view ratio 40-60
+[x] print job queues
+{FINALLY!}
+(done in minor changes commit: )
+[x] Products updated => orders disturbed
+(added minimal product info in order_item pivot, order items will sustain menu change commit:4755f0d439ee289a65d4a4a79ab7dcc95253e5b4)
+[x] all open bills cashier wise & shop wise
+[x] all open bills cashier wise & shop wise
+(Reprogrammed All button in order-index to show all open orders commit:f22d441502015b782501a6f3c4393036987be4ef )
 
 [x] order POS counter reset every month
 [x] with every order (only with dining)

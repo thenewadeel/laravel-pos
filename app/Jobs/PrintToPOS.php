@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Http\Controllers\OrderHistoryController;
+use App\Models\JobLog;
 use App\Models\Order;
 use App\Models\User;
 use Exception;
@@ -52,6 +53,7 @@ class PrintToPOS implements ShouldQueue
     /**
      * Create a new job instance.
      */
+    protected $jobLogId;
     public function __construct(public Order $order, public User $user, public bool $koToken = false)
     {
         //
@@ -62,6 +64,24 @@ class PrintToPOS implements ShouldQueue
      */
     public function handle(): void
     {
+        $jobId = $this->job->getJobId();
+        if ($jobId) { // If the job is queued
+            $jobLog = JobLog::where('job_id', $jobId)->first();
+            if ($jobLog) {
+                $this->jobLogId = $jobLog->id;
+                $jobLog->status = 'processing';
+                $jobLog->save();
+            } else {
+                // Store the job details and user ID in the database
+                $jobLog = new JobLog();
+                $jobLog->user_id = $this->user->id;
+                $jobLog->job_name = 'Print POS Bill';
+                $jobLog->job_id = $jobId; // Store the job ID
+                $jobLog->status = 'pending';
+                $jobLog->save();
+                $this->jobLogId = $jobLog->id;
+            }
+        }
         // Log::alert($this->order);
         if ($this->koToken) {
             Log::debug("Executing PrintKoToken job for order with POS # " . $this->order->POS_number);
@@ -203,9 +223,8 @@ class PrintToPOS implements ShouldQueue
                 foreach ($this->order->items as $item) {
                     $shop_printer->setJustification(Printer::JUSTIFY_LEFT);
                     $shop_printer->setTextSize(1, 1);
-                    $shop_printer->text($item->product->name ?? $item->prduct_name);
-                    $shop_printer->setTextSize(1, 1);
-                    $shop_printer->text("\n Rate(" . $item->product->price ?? $item->prduct_rate . ")");
+                    $shop_printer->text($item->product->name ?? $item->product_name);
+                    $shop_printer->text("\n Rate(" . $item?->product?->price ?? $item->product_rate . ")");
                     $shop_printer->text("\n");
                     $shop_printer->setTextSize(1, 1);
                     $shop_printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -214,7 +233,7 @@ class PrintToPOS implements ShouldQueue
                     $shop_printer->setJustification(Printer::JUSTIFY_RIGHT);
                     //$shop_printer->setTextSize(2, 2);
                     $shop_printer->setEmphasis(true);
-                    $shop_printer->text("Amount: " . number_format((int) $item->price) . "\n");
+                    $shop_printer->text("Amount: " . number_format((int) $item?->price ?? $item->product_rate) . "\n");
 
                     $shop_printer->setEmphasis(false);
 
@@ -271,13 +290,23 @@ class PrintToPOS implements ShouldQueue
 
                 $this->print_POS_Footer($shop_printer);
             } catch (Exception $e) {
-                Log::alert("Failed to connect to printer B {$this->user->fav_printer_ip}: " . $e->getMessage());
+                Log::alert("Failed to connect to printer B {$shop_printer_ip}: " . $e->getMessage());
             } finally {
                 $shop_printer->close();
+                if ($this->jobLogId) { // If the job is queued
+                    $jobLog = JobLog::find($this->jobLogId);
+                    $jobLog->status = 'completed';
+                    $jobLog->save();
+                }
             }
         } catch (Exception $e) {
-            Log::alert("Failed to connect to printer A {$this->user->fav_printer_ip}: " . $e->getMessage());
+            Log::alert("Failed to connect to printer A {$shop_printer_ip}: " . $e->getMessage());
             $this->fail($e);
+            if ($this->jobLogId) { // If the job is queued
+                $jobLog = JobLog::find($this->jobLogId);
+                $jobLog->status = 'Failed';
+                $jobLog->save();
+            }
         }
     }
     private function print_POS_Category_wise_Token(Order $order)
@@ -319,7 +348,7 @@ class PrintToPOS implements ShouldQueue
                         $kitchen_printer->text($item->product->name ?? $item->product_name);
                         $kitchen_printer->text("\n");
                         $kitchen_printer->setJustification(Printer::JUSTIFY_RIGHT);
-                        $kitchen_printer->text("Rate:(" . $item->product->price ?? $item->product_rate . ")");
+                        $kitchen_printer->text("Rate:(" . $item?->product?->price ?? $item->product_rate . ")");
                         $kitchen_printer->text("\n");
 
                         $kitchen_printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -347,10 +376,20 @@ class PrintToPOS implements ShouldQueue
                     Log::alert("Failed to connect to printer Bb {$kitchen_printer}: " . $e->getMessage());
                 } finally {
                     $kitchen_printer->close();
+                    if ($this->jobLogId) { // If the job is queued
+                        $jobLog = JobLog::find($this->jobLogId);
+                        $jobLog->status = 'completed';
+                        $jobLog->save();
+                    }
                 }
             } catch (Exception $e) {
                 Log::alert("Failed to connect to kitchen_printer_ip Aa {$kitchen_printer_ip}: " . $e->getMessage());
                 $this->fail($e);
+                if ($this->jobLogId) { // If the job is queued
+                    $jobLog = JobLog::find($this->jobLogId);
+                    $jobLog->status = 'Failed';
+                    $jobLog->save();
+                }
                 // Log::debug('Failed to connect to kitchen_printer: ' . $kitchen_printer_ip . $e->getMessage());
                 // return redirect()->back()->with('error', 'Failed to connect to kitchen_printer: ' . $kitchen_printer_ip . $e->getMessage());
             }

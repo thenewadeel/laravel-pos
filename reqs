@@ -1,3 +1,7 @@
+## Demo Setup
+
+[ ] Install NGINX on server [https://warden.serverdots.com:2087/]
+
 ## Dev Wishlist
 
 [ ] bill footers/headers via app settings
@@ -62,7 +66,6 @@ order->creation date instead of payments creation date) [manual click to close t
         - quantity
         - rate
         - price
-
 
 ### QoL
 

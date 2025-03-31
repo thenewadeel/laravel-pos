@@ -185,6 +185,32 @@
                         </span>
                     @enderror
                 </div>
+                <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
+                    <label for="token_print_title"
+                        class="text-center w-1/4">{{ __('settings.token_print_title') }}</label>
+                    <input type="text" name="token_print_title"
+                        class="form-control w-3/4 @error('token_print_title') is-invalid @enderror" id="token_print_title"
+                        placeholder="{{ __('settings.token_print_title') }}"
+                        value="{{ old('token_print_title', config('settings.token_print_title')) }}">
+                    @error('token_print_title')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
+                    <label for="token_print_subtitle"
+                        class="text-center w-1/4">{{ __('settings.token_print_subtitle') }}</label>
+                    <input type="text" name="token_print_subtitle"
+                        class="form-control w-3/4 @error('token_print_subtitle') is-invalid @enderror"
+                        id="token_print_subtitle" placeholder="{{ __('settings.token_print_subtitle') }}"
+                        value="{{ old('token_print_subtitle', config('settings.token_print_subtitle')) }}">
+                    @error('token_print_subtitle')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
                 <button type="submit"
                     class="btn btn-outline-primary btn-sm btn-block">{{ __('settings.Change_Setting') }}</button>
             </form>

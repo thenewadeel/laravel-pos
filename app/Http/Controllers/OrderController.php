@@ -1098,20 +1098,28 @@ class OrderController extends Controller
     public function tokenShop()
     {
         $products =
-            Category::find(1)->entries(Product::class)->get();
+            Category::where('name', 'tokenisable')->first()->entries(Product::class)->get();
         // = Product::where([
         //     'category' => 'tokenisable'
         // ]);
         //TODO User shop
-        $shop = auth()->user()->shops->first();
+        $userShops = auth()->user()->shops;
+        $tokenShops = Shop::whereHas('categories', function ($query) {
+            $query->where('type', 'product')->where('name', 'tokenisable');
+        })->get();
+        $validUserShops = $userShops->filter(function ($shop) {
+            return $shop->categories->where('type', 'product')->where('name', 'tokenisable')->count() > 0;
+        });
+        $shop = $validUserShops->count() > 0 ? $validUserShops->first() : $tokenShops->first();
         //Shop::firstOrCreate(['name' => 'Token Shop']);
         $customer = Customer::firstOrCreate([
             'name' => 'Token Customer',
             'membership_number' => 999
         ]);
-        $order =        Order::create([
+        $order = Order::firstOrCreate([
             'shop_id' => $shop->id,
             'user_id' => auth()->user()->id,
+            'state' => 'preparing',
             'customer_id' => $customer->id
         ]);
         return view('tokenshop.main', compact('order', 'products'));

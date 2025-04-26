@@ -26,13 +26,13 @@
                                 <div
                                     class="text-center px-0 py-2 flex flex-row items-center overflow-hidden border-2 border-slate-200 w-max rounded-lg ">
                                     @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
+                                        {{-- <div class="flex overflow-hidden border w-max rounded-lg"> --}}
+                                        <button type="button"
+                                            class="flex items-center justify-center w-6 h-6 font-semibold rounded-r-full rounded-l-md bg-red-200 border-2 border-red-500 align-middle"
+                                            wire:click="decreaseQty({{ $item->id }})">
+                                            -
+                                        </button>
                                     @endif
-                                    {{-- <div class="flex overflow-hidden border w-max rounded-lg"> --}}
-                                    <button type="button"
-                                        class="flex items-center justify-center w-6 h-6 font-semibold rounded-r-full rounded-l-md bg-red-200 border-2 border-red-500 align-middle"
-                                        wire:click="decreaseQty({{ $item->id }})">
-                                        -
-                                    </button>
                                     <span
                                         class="bg-transparent flex items-center justify-center w-8 h-6 font-semibold text-gray-800 text-base align-middle">
                                         {{ $item->quantity }}

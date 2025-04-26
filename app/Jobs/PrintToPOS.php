@@ -224,7 +224,7 @@ class PrintToPOS implements ShouldQueue
                     $shop_printer->setJustification(Printer::JUSTIFY_LEFT);
                     $shop_printer->setTextSize(1, 1);
                     $shop_printer->text($item->product->name ?? $item->product_name);
-                    $shop_printer->text("\n Rate(" . $item?->product?->price ?? $item->product_rate . ")");
+                    $shop_printer->text(" - Rate(" . ($item->product ? $item->product->price : $item->product_rate) . ")");
                     $shop_printer->text("\n");
                     $shop_printer->setTextSize(1, 1);
                     $shop_printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -233,7 +233,8 @@ class PrintToPOS implements ShouldQueue
                     $shop_printer->setJustification(Printer::JUSTIFY_RIGHT);
                     //$shop_printer->setTextSize(2, 2);
                     $shop_printer->setEmphasis(true);
-                    $shop_printer->text("Amount: " . number_format((int) $item?->price ?? $item->product_rate) . "\n");
+
+                    $shop_printer->text("Amount: " . number_format((int)($item->quantity * ($item->product ? $item->product->price : $item->product_rate)) . "\n"));
 
                     $shop_printer->setEmphasis(false);
 

@@ -10,10 +10,20 @@
 
 @section('content')
     {{-- <p class="login-box-msg">Sign in to start your session</p> --}}
-    <form action="{{ route('login') }}" method="post">
+    <form action="{{ route('login') }}" method="post" class="">
         @csrf
         <div class="form-group">
-
+            @if (env('DEMO_MODE') == true)
+                <div class="alert alert-info alert-dismissible flex  items-center">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <i class="icon fas fa-info-circle rounded-full bg-blue-100 p-2 text-blue-600"></i>
+                    {{-- <span class="text-sm font-semibold">Demo Mode</span> --}}
+                    <div>
+                        Username: <strong>admin@wt.pos</strong><br>
+                        Password: <strong>admin123</strong>
+                    </div>
+                </div>
+            @endif
             <div class="input-group">
                 <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
                     placeholder="Email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -57,11 +67,11 @@
             </div>
             <!-- /.col -->
             <button type="submit"
-                class=" bg-blue-950 text-white font-bold w-full text-center rounded-md min-h-10 hover:shadow-slate-950 hover:shadow-md transition-all duration-500 px-0 mx-0">Login</button>
+                class=" border-2 border-sky-500  w-full text-center rounded-md min-h-10 hover:shadow-slate-500 hover:shadow-sm hover:font-bold transition-all duration-50 px-0 mx-0">Login</button>
             <!-- /.col -->
         </div>
     </form>
-    {{-- 
+    {{--
     <p class="mb-1">
         <a href="{{ route('password.request') }}">I forgot my password</a>
     </p>

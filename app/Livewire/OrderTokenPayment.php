@@ -16,8 +16,8 @@ class OrderTokenPayment extends Component
 {
     public $order, $err;
     public $printer_ip = '192.168.0.162';
-    public $token_print_title = 'QCL - Grand Tambola';
-    public $token_print_subtitle = 'Sep 2024';
+    public $print_title = 'WT - Grand Tambola';
+    public $print_subtitle = 'Sep 2024';
     public $customerPayment, $modal_title, $modal_message, $change;
     public $showModal;
     public function mount(Order $order)

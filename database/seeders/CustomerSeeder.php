@@ -15,21 +15,15 @@ class CustomerSeeder extends Seeder
      */
     public function run(Faker $faker): void
     {
-        $Customers = [
-            ["Id" => 1, "Title" => "Mr Saillah Paacha"],
-            ["Id" => 3, "Title" => "Marker M.K. Mioo"],
-
-        ];
-        foreach (array_slice($Customers, 0, 120) as $entry) {
-
-            Customer::updateOrCreate([
-                'name' => $entry["Title"],
+        for ($i = 0; $i < 50; $i++) {
+            Customer::create([
+                'name' => $faker->name,
                 'photo' => '',
-                'membership_number' => $entry["Id"],
+                'membership_number' => $i + 1,
                 'email' => $faker->email,
                 'phone' => $faker->phoneNumber,
                 'address' => $faker->address,
             ]);
-        };
+        }
     }
 }

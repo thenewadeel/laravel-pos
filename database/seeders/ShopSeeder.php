@@ -15,50 +15,47 @@ class ShopSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach ([
-            "Brunch _ Take away",
-            "Restaurant _ Buffet",
-            "Coffee  Shop",
-            "Bakery",
-            "Home  Delivery",
-            "The Midnight Cafe",
-            "Golf Club",
-            "Hi Tea",
-            "Photo Shoot",
-            "Laundry",
-            // "Banquet",
-            // "Function",
-            // "Club Hall Charges",
-            // "Lawn Charges",
-            // "Stage",
-            // "Multimedia",
-            // "Sound",
-            "GR Mess",
-        ] as $shop) {
+        foreach (
+            [
+                "Take away",
+                "Restaurant",
+                "Buffet",
+                "Coffee Shop",
+                "Bakery",
+                "Hi Tea",
+                "Banquet",
+                // "Multimedia",
+                // "Sound",
+            ] as $shop
+        ) {
 
             $shopRecord = Shop::updateOrCreate([
                 'name' => $shop,
                 'description' => 'desc',
                 'image' => '',
             ]);
+            $categories = Category::inRandomOrder()->take(rand(1, 5))->pluck('id')->toArray();
+            $shopRecord->categories()->sync($categories);
 
-            $randomUser = User::where('type', 'cashier')
+            $cashiers = User::where('type', 'cashier')
                 ->inRandomOrder()
                 ->first();
 
-            if ($randomUser) {
-                $randomUser->shops()->save($shopRecord);
+
+            if ($cashiers) {
+                $cashiers->shops()->save($shopRecord);
             }
         };
 
+        User::where('type', '<>', 'cashier')
+            ->each(function ($user) {
+                $user->shops()->sync(Shop::pluck('id'));
+            });
         foreach (
             [
                 'Token Shop 1',
                 'Token Shop 2',
                 'Token Shop 3',
-                'Token Shop 4',
-                'Token Shop 5',
-                'Token Shop 6'
             ] as $token_shop
         ) {
             $shopRecord = Shop::updateOrCreate([

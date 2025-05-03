@@ -102,8 +102,11 @@ class PrintToPOS implements ShouldQueue
         }
     }
 
-    private function print_POS_Header(Printer $printer, String $heading = "Quetta Club Limited\n---------------------\n*** Customer Bill ***\n")
+    private function print_POS_Header(Printer $printer, String $heading = "xxx")
     {
+        if ($heading == "xxx") {
+            $heading = config('settings.club_name') . "\n---------------------\n*** Customer Bill ***\n";
+        }
         $printer->setTextSize(2, 2);
         $printer->setEmphasis(true);
         $printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -199,11 +202,11 @@ class PrintToPOS implements ShouldQueue
 
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->setTextSize(1, 1);
-            $printer->text("Address: Club Road, Quetta Cantt.\n");
-            $printer->text("Contact: Pascom 36251, PTCL 081-2849676\n");
-            $printer->text("http://www.facebook.com/quettaclublimited\n");
-            $printer->text("www.quettaclub.org\n");
-            $printer->text("E-mail: info@quettaclub.org");
+            $printer->text("Address: " . config('settings.club_address_line_1') . "\n");
+            $printer->text(config('settings.club_address_line_2') . "\n");
+            $printer->text(config('settings.social_facebook_url') . "\n");
+            $printer->text(config('settings.club_web_address') . "\n");
+            $printer->text(config('settings.club_email') . "");
         }
         $printer->text("\n \n");
         $printer->cut();
@@ -339,7 +342,11 @@ class PrintToPOS implements ShouldQueue
                 $connector = new NetworkPrintConnector($kitchen_printer_ip, 9100, 5);
                 $kitchen_printer = new Printer($connector);
                 try {
-                    $this->print_POS_Header($kitchen_printer, $heading = "Quetta Club Limited\n---------------------\nQCL - Kitchen KOT\n");
+                    $this->print_POS_Header($kitchen_printer, $heading =
+                        config('settings.club_name') .
+                        "\n---------------------\n" .
+                        config('settings.club_initials') .
+                        "- Kitchen KOT\n");
                     foreach ($items as $item) {
 
                         $kitchen_printer->setJustification(Printer::JUSTIFY_LEFT);

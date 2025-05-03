@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::updateOrCreate([
-            'email' => 'admin@qcl.pos',
+            'email' => 'admin@wt.pos',
             'first_name' => 'Zia',
             'last_name' => 'Khan',
             'type' => 'admin',
@@ -23,10 +23,10 @@ class UserSeeder extends Seeder
         ]);
 
         // Make 3 cashiers
-        $types = ['cashier', 'cashier', 'order-taker'];
+        $types = ['cashier', 'accountant', 'order-taker'];
         $firstNames = ['Faizan', 'Sameer', 'Ameen'];
-        $lastNames = ['Ahmed', 'Ali Shah', 'Shah'];
-        $emails = ['john@qcl.pos', 'emma@qcl.pos', 'david@qcl.pos'];
+        $lastNames = ['Ahmed', 'Ali', 'Shah'];
+        $emails = ['ahmed@wt.pos', 'ali@wt.pos', 'shah@wt.pos'];
         $passwords = ['password123', 'password123', 'password123'];
 
         foreach (range(0, 2) as $index) {

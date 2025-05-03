@@ -26,11 +26,11 @@
 
         <div
             class="login-logo  hidden md:flex md:w-1/2 hover:shadow-yellow-500 justify-center justify-items-center align-middle items-center">
-            <img src="{{ asset('images/qcl watermark.png') }}" alt="AdminLTE Logo"
+            <img src="{{ asset('images/watermark.png') }}" alt="Logo"
                 class="img rounded-3xl shadow  border-8 border-solid border-sky-950 hover:bg-blue-950 bg-opacity-35 hover:bg-opacity-90 bg-gray-900 max-w-80 max-h-80 filter hover:grayscale-0 grayscale-0 hover:shadow-none transition-all duration-500" />
         </div>
         <!-- /.login-logo -->
-        <div class="card md:w-1/2 max-w-96 max-h-96">
+        <div class="card md:w-1/2 max-w-96 max-h-full">
             <div href="../../index2.html" class="text-lg font-bold card-header text-center">{{ config('app.name') }}
             </div>
             <div class="card-body login-card-body">

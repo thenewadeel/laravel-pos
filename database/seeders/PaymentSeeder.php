@@ -14,7 +14,10 @@ class PaymentSeeder extends Seeder
     {
         $totalOrders = \App\Models\Order::count();
         $affectedOrders = (int)ceil($totalOrders * 0.8);
-        $randomOrders = \App\Models\Order::inRandomOrder()->limit($affectedOrders)->get();
+        $randomOrders = \App\Models\Order::where('created_at', '<', now()->format('Y-m-d'))
+            ->inRandomOrder()
+            ->limit($affectedOrders)
+            ->get();
 
         $randomOrders->each(function ($order, $index) {
             // $total = $order->items->sum(function ($orderItem) {
@@ -22,17 +25,17 @@ class PaymentSeeder extends Seeder
             // });
             $total = $order->discountedTotal();
             $user = $order->user;
-            switch ($index % 3) {
-                case 0:
-                    $total = rand(0, $total);
-                    break;
-                case 1:
-                    // $total = rand(0, $total + 10);
-                    break;
-                default:
-                    $total = rand(0, $total / 2);
-                    break;
-            }
+            // switch ($index % 3) {
+            //     case 0:
+            //         $total = rand(0, $total);
+            //         break;
+            //     case 1:
+            //         // $total = rand(0, $total + 10);
+            //         break;
+            //     default:
+            //         $total = rand(0, $total / 2);
+            //         break;
+            // }
             $payment = $order->payments()->create([
                 'amount' => $total,
                 'tip' => 0,
@@ -43,7 +46,6 @@ class PaymentSeeder extends Seeder
             if ($total == $order->discountedTotal()) {
                 $order->update(['state' => 'closed']);
             }
-
         });
     }
 }

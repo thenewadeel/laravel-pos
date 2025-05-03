@@ -71,7 +71,7 @@ class ProductSeeder extends Seeder
         // DB::table('category_products')->delete();
         DB::table('categories')->delete();
 
-        $csvFilePath = base_path('seedData/products.csv');
+        $csvFilePath = base_path('public/demo_products.csv');
         if (file_exists($csvFilePath)) {
             $products = array_map('str_getcsv', file($csvFilePath));
             $header = array_shift($products);
@@ -84,16 +84,26 @@ class ProductSeeder extends Seeder
                         'type' => 'product'
                     ]
                 );
-                $product = Product::updateOrCreate([
-                    'name' => $data['name'],
-                    'price' => $data['price'],
-                ]);
-                // DB::table('category_products')->insert([
-                //     'category_id' => $category->id,
-                //     'product_id' => $product->id,
-                // ]);
 
-                $product->attachCategory($category);
+                $existingProduct = Product::where('name', $data['name'])->first();
+                if (0 && $existingProduct) { //short cct to avoid variants func
+                    $product = $existingProduct->variants()->updateOrCreate([
+                        'product_id' => $existingProduct->id,
+                        'name' => $data['name'],
+                        'description' => $data['description'],
+                    ], [
+                        'price' => $data['price']  ?? $existingProduct->price,
+                    ]);
+                } else {
+                    $product = Product::updateOrCreate([
+                        'name' => $data['name'],
+                        'price' => $data['price'],
+                    ], [
+                        'description' => $data['description'],
+                    ]);
+                    $product->attachCategory($category);
+                }
+
                 // $product->categories()->attach($category);
             }
         }

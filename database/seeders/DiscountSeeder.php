@@ -13,34 +13,42 @@ class DiscountSeeder extends Seeder
      */
     public function run(): void
     {
-        $percentages = [40, 50, 20];
-        $names = ['MCM Cte', 'Staff', 'Special'];
-        $count = count($percentages);
-        for ($i = 0; $i < $count; $i++) {
-            $randomIndex = rand(0, $count - 1);
-            $randomPercentage = $percentages[$randomIndex];
-            $randomName = $names[$i];
-            Discount::create([
-                'name' => $randomName,
-                'percentage' => $randomPercentage,
-                'amount' => 0,
 
-            ]);
-        }
         // 'method', ['NATURAL', 'REVERSE'])->default('NATURAL');
         // $table->enum('type', ['DISCOUNT', 'CHARGES']
         Discount::create([
-            'name' => 'Sales.Tax',
-            'percentage' => 17.5,
+            'name' => 'Customer',
+            'percentage' => 20,
+            'amount' => 0,
+            'method' => 'NATURAL',
+            'type' => 'DISCOUNT',
+        ]);
+        Discount::create([
+            'name' => 'Staff',
+            'percentage' => 25,
+            'amount' => 0,
+            'method' => 'NATURAL',
+            'type' => 'DISCOUNT',
+        ]);
+        Discount::create([
+            'name' => 'Special',
+            'percentage' => 30,
+            'amount' => 0,
+            'method' => 'NATURAL',
+            'type' => 'DISCOUNT',
+        ]);
+        Discount::create([
+            'name' => 'Service Fee',
+            'percentage' => 3,
             'amount' => 0,
             'method' => 'NATURAL',
             'type' => 'CHARGES',
         ]);
         Discount::create([
-            'name' => 'Service Charges',
-            'percentage' => 1,
-            'amount' => 500,
-            'method' => 'REVERSE',
+            'name' => 'Sales Tax',
+            'percentage' => 17,
+            'amount' => 0,
+            'method' => 'NATURAL',
             'type' => 'CHARGES',
         ]);
 

@@ -42,10 +42,10 @@
                     </td>
                     <td style=";;;;text-align:left;">
                         <div style=";;;;font-size:1.4rem;margin:0rem;font-weight:bold;overflow:hidden">
-                            {{ config('app.companyName') }}
+                            {{ config('settings.club_name') }}
                         </div>
                         <div style=";;;;font-size:1.0rem;margin:0rem;text-align:left;">
-                            {{ config('app.address', 'Address') }}
+                            {{ config('settings.club_address_line_1', 'Address') }}
                         </div>
                     </td>
                 </tr>

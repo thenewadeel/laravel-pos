@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 class OrdersSeeder extends Seeder
 {
     private $BATCHES = 10;
-    private $ORDERS_IN_BATCH = 100;
+    private $ORDERS_IN_BATCH = 200;
     public function run(Faker $faker): void
     {
         $user = \App\Models\User::all()->random();
@@ -31,7 +31,7 @@ class OrdersSeeder extends Seeder
                 $user = \App\Models\User::inRandomOrder()->first();
                 $shop = \App\Models\Shop::inRandomOrder()->first();
                 $customer = \App\Models\Customer::inRandomOrder()->first();
-                $creation_time = $faker->dateTimeBetween('-97 day', '+1 day');
+                $creation_time = $faker->dateTimeBetween('-15 day', '+6 day');
                 $orders[] =
                     [
                         'user_id' => $user->id,
@@ -39,7 +39,7 @@ class OrdersSeeder extends Seeder
                         'customer_id' => $customer->id,
                         'table_number' => $faker->randomElement(['1', '2', '3', '4', '5']),
                         'waiter_name' => $faker->name,
-                    'state' => $faker->randomElement(['preparing', 'closed', 'wastage']),
+                        'state' => $faker->randomElement(['preparing', 'closed', 'wastage']),
                         'type' => $faker->randomElement(['dine-in', 'take-away', 'delivery']),
                         'created_at' => $creation_time,
                         'notes' => $faker->sentence,
@@ -64,6 +64,8 @@ class OrdersSeeder extends Seeder
                     $orderItems[] = [
                         'order_id' => $order->id,
                         'product_id' => $product->id,
+                        'product_name' => $product->name,
+                        'product_rate' => $product->price,
                         'price' => $product->price * $qty,
                         'quantity' => $qty,
                         'created_at' => $order->created_at

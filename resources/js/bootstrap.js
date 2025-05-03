@@ -36,8 +36,8 @@ window.SwalWithBootstrap = Swal.mixin({
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-import axios from "axios";
-window.axios = axios;
+// import axios from "axios";
+// window.axios = axios;
 
 /**
  * Set a default header for all axios requests. This is for the "X-Requested-With"
@@ -45,7 +45,7 @@ window.axios = axios;
  * to send a response as HTML or JSON. In this case, we're setting it to "XMLHttpRequest"
  * to indicate that we're making a non-browser request.
  */
-window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+// window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

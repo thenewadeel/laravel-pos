@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
         'discounts' => DiscountController::class
     ]);
 
-    Route::get('/createNeworder', [OrderController::class, 'newEdit'])->name('createNeworder');
+    // Route::get('/createNeworder', [OrderController::class, 'newEdit'])->name('createNeworder');
     Route::post('/makeNeworder', [OrderController::class, 'makeNew'])->name('makeNeworder');
 
     Route::get('/listOfProducts', [ProductController::class, 'listOf']);
@@ -61,8 +61,8 @@ Route::middleware('auth')->group(function () {
         ->name('order.items.destroy');
     Route::get('/orders/print/{order}', [OrderController::class, 'printPdf'])->name('orders.print');
     Route::get('/orders/printBulk/{orderIdsArray}', [OrderController::class, 'printBulkPdf'])->where('orders', '.*')->name('orders.printBulk');
-    Route::get('/orders/printTokens/{order}', [OrderController::class, 'printTokens'])->name('orders.printTokens');
-    Route::get('/orders/printPreview/{order}', [OrderController::class, 'printPreview'])->name('orders.print.preview');
+    // Route::get('/orders/printTokens/{order}', [OrderController::class, 'printTokens'])->name('orders.printTokens');
+    // Route::get('/orders/printPreview/{order}', [OrderController::class, 'printPreview'])->name('orders.print.preview');
     Route::get('/orders/printPOS/{order}', [OrderController::class, 'printToPOS'])->name('orders.print.POS');
     Route::get('/orders/printPOSQT/{order}', [OrderController::class, 'printToPOSQT'])->name('orders.print.QT');
 
@@ -88,7 +88,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 
         // Maintenance Tasks
-        Route::get('/settings/ordersExporterMonitor', [SettingController::class, 'ordersExporterMonitor'])->name('orders.exporter.monitor');
+        // Route::get('/settings/ordersExporterMonitor', [SettingController::class, 'ordersExporterMonitor'])->name('orders.exporter.monitor');
         Route::get('/settings/ordersExporterBurner', [SettingController::class, 'ordersExporterBurner'])->name('orders.exporter.burn');
         Route::get('/settings/clearProducts', [SettingController::class, 'clearProducts'])->name('products.clear');
         // Bulk Excel Exports
@@ -102,17 +102,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/shopsimport', [ShopController::class, 'import'])->name('shops.import');
         Route::post('/cutomersimport', [CustomerController::class, 'import'])->name('customers.import');
 
-        Route::get('/download', [UsersController::class, 'downloadinExcel']);
+        // Route::get('/download', [UsersController::class, 'downloadinExcel']);
 
         Route::get('/tokenShop', [OrderController::class, 'tokenShop'])->name('tokenShop');
 
-        Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-        Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
-        Route::post('/cart/change-qty', [CartController::class, 'changeQty']);
-        Route::delete('/cart/delete', [CartController::class, 'delete']);
-        Route::delete('/cart/empty', [CartController::class, 'empty']);
+        // Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+        // Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
+        // Route::post('/cart/change-qty', [CartController::class, 'changeQty']);
+        // Route::delete('/cart/delete', [CartController::class, 'delete']);
+        // Route::delete('/cart/empty', [CartController::class, 'empty']);
 
-        Route::get('/cartTokens', [CartController::class, 'indexTokens'])->name('cart.indexTokens');
+        // Route::get('/cartTokens', [CartController::class, 'indexTokens'])->name('cart.indexTokens');
 
 
         Route::post('/users/{user}/updateShops', [UsersController::class, 'updateShops'])
@@ -122,14 +122,14 @@ Route::middleware('auth')->group(function () {
 
 
         // Route to get products filtered by categories
-        Route::get('/productsbyCat', [ProductController::class, 'productsbyCat'])
-            ->name('productsbyCat');
+        // Route::get('/productsbyCat', [ProductController::class, 'productsbyCat'])
+        //     ->name('productsbyCat');
 
         // Transaltions route for React component
-        Route::get('/locale/{type}', function ($type) {
-            $translations = trans($type);
-            return response()->json($translations);
-        });
+        // Route::get('/locale/{type}', function ($type) {
+        //     $translations = trans($type);
+        //     return response()->json($translations);
+        // });
 
         Route::get('/activities', [ReportsController::class, 'activities'])->name('activities.index');
     });

@@ -59,11 +59,11 @@ class SettingController extends Controller
         OffloadOrders::dispatch(Order::NotBurnt()->get(), auth()->user());
         return back()->with('success', "Dispatched job with ID: ");
     }
-    public function ordersExporterMonitor(Request $request)
-    {
-        OffloadOrders::dispatch(Order::where('state', "<>", 'closed')->limit(100)->get(), auth()->user(), false);
-        return back()->with('success', 'Monitor running');
-    }
+    // public function ordersExporterMonitor(Request $request)
+    // {
+    //     OffloadOrders::dispatch(Order::where('state', "<>", 'closed')->limit(100)->get(), auth()->user(), false);
+    //     return back()->with('success', 'Monitor running');
+    // }
     public function clearProducts(Request $request)
     {
         Product::query()->delete();

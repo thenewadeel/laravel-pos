@@ -12,5 +12,5 @@ import "./bootstrap";
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-import "./components/Cart";
-import "./components/CartTokens";
+// import "./components/Cart";
+// import "./components/CartTokens";

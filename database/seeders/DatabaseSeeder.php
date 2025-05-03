@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DiscountSeeder::class);
         if (env('APP_DEBUG')) {
             $this->call(OrdersSeeder::class);
-            $this->call(ExpenseSeeder::class);
+            // $this->call(ExpenseSeeder::class);
             $this->call(PaymentSeeder::class);
         }
     }

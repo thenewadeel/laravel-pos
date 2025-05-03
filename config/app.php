@@ -13,9 +13,10 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
-    'companyName' => env('COMPANY_NAME', 'Quetta Club Ltd'),
-    'address' => env('COMPANY_ADDRESS', 'Club Road, Quetta'),
+    'name' => env('APP_NAME', 'WT-POS'),
+    'companyName' => env('CLUB_NAME', 'Wittness Tech'),
+    'address' => env('CLUB_ADDRESS_LINE_1', 'Lahore'),
+    'address' => env('DEMO_MODE', false),
     /*
     |--------------------------------------------------------------------------
     | Application Environment

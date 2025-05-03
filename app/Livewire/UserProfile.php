@@ -16,7 +16,7 @@ class UserProfile extends Component
     public $first_name;
     public $last_name;
     public $fav_printer_ip;
-    // email":"admin@qcl.pos"
+    // email":"admin@wt.pos"
     public $rules = [
         'first_name' => 'sometimes|string|max:255',
         'last_name' => 'sometimes|string|max:255',

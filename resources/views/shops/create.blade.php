@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="user_id">{{ __('shop.user_id') }}</label>
+                    {{-- <label for="user_id">{{ __('shop.user_idfg') }}</label> --}}
                     {{-- <input type="text" name="user_id" class="form-control @error('user_id') is-invalid @enderror"
                         id="user_id" placeholder="{{ __('shop.user_id') }}" value="{{ old('user_id') }}"> --}}
                     @error('description')
@@ -57,9 +57,8 @@
                     @enderror
                     @include ('layouts.partials.selector', [
                         'name' => 'user_id',
-                        // 'selected' => old('user_id', 'user_id'),
                         'options' => \App\Models\User::pluck('email', 'id')->toArray(),
-                    ]);
+                    ])
                 </div>
 
                 <button class="btn btn-primary" type="submit">{{ __('common.Create') }}</button>
@@ -69,10 +68,10 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+    {{-- <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             bsCustomFileInput.init();
         });
-    </script>
+    </script> --}}
 @endsection

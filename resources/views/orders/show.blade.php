@@ -9,7 +9,6 @@
 @section('content-actions')
     {{-- {{ $order }} --}}
     <div class="mb-2">
-
         {{-- <a href="{{ route('orders.index') }}" class="btn btn-primary">{{ __('order.Index') }}</a> --}}
         @if ($order->state !== 'closed')
             <a href="{{ route('orders.edit', $order) }}" class="btn btn-info btn-sm">

@@ -64,4 +64,6 @@ return [
     'Chits_Report' => 'Chits Report',
     'Download_Bulk_Chits' => 'Download Printable Order Chits',
     'Auto_Reload' => 'Auto Reload',
+    'Select_Filters' => 'Selection Filters',
+    'Date_Filters' => 'Date Range',
 ];

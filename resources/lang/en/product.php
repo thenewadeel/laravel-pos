@@ -53,5 +53,6 @@ return [
     'really_delete'     => 'Do you really want to delete this product?',
     'yes_delete'        => 'Yes, delete it!',
     'No'                => 'No',
+    'Kitchen_printer_ip' => 'Kitchen printer IP',
 
 ];

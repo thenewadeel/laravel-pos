@@ -35,11 +35,11 @@ class ProductController extends Controller
         if ($request->search) {
             $products = $products->where('name', 'LIKE', "%{$request->search}%");
         }
-        $itemsPerPage = 10;
+        $itemsPerPage = 50;
         if ($request->itemCount) {
             $itemsPerPage = $request->itemCount;
         }
-        $products = $products->with('categories')->latest()->paginate($itemsPerPage);
+        $products = $products->with('categories')->orderBy('id')->paginate($itemsPerPage);
         if (request()->wantsJson()) {
             // logger("asd");
             return ProductResource::collection($products);
@@ -47,18 +47,18 @@ class ProductController extends Controller
         return view('products.index')->with('products', $products);
     }
 
-    public function productsbyCat(Request $request)
-    {
-        // logger(['$request', $request]);
-        $category = Category::where('name', 'Tokenised Items')->firstOrFail();
-        $catProducts = $category->products;
-        $products = $category->products;
-        // dd($catProducts->toArray(), $catProducts, $request);
-        if (request()->wantsJson()) {
-            return ProductResource::collection($products);
-        }
-        return view('products.index')->with('products', $products);
-    }
+    // public function productsbyCat(Request $request)
+    // {
+    //     // logger(['$request', $request]);
+    //     $category = Category::where('name', 'Tokenised Items')->firstOrFail();
+    //     $catProducts = $category->products;
+    //     $products = $category->products;
+    //     // dd($catProducts->toArray(), $catProducts, $request);
+    //     if (request()->wantsJson()) {
+    //         return ProductResource::collection($products);
+    //     }
+    //     return view('products.index')->with('products', $products);
+    // }
 
     /**
      * Show the form for creating a new resource.

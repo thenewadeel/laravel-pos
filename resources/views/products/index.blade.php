@@ -32,6 +32,7 @@
                     <tr>
                         <th>{{ __('product.ID') }}</th>
                         <th>{{ __('product.Name') }}</th>
+                        <th>{{ __('product.Description') }}</th>
                         <th>{{ __('product.Price') }}</th>
                         {{-- <th>{{ 'Make' }}</th> --}}
                         <th>{{ 'Category' }}</th>
@@ -49,7 +50,20 @@
                         <tr>
                             <td title="{{ $product }}">{{ $product->id }}</td>
                             <td>{{ $product->name }}</td>
-                            <td>{{ $product->price }}</td>
+                            <td>
+                                {{ $product->description }} <br />
+                                {{--  $product->variants --}}
+                                @foreach ($product->variants as $variant)
+                                    {{ $variant->description }} <br />
+                                @endforeach
+                            </td>
+                            <td>
+                                {{ $product->price }} <br />
+                                {{--  $product->variants --}}
+                                @foreach ($product->variants as $variant)
+                                    {{ $variant->price }} <br />
+                                @endforeach
+                            </td>
                             {{-- <td>{{ $product->description }}</td> --}}
                             <td>{{ $product->categories()->pluck('name')->implode(', ') }}</td>
                             <td><img class="product-img" src="{{ Storage::url($product->image) }}" alt=""

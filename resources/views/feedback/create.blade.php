@@ -33,7 +33,8 @@
                                 <label for="name">{{ __('feedback.Name') }}</label>
                                 <input type="text" name="name"
                                     class="form-control @error('name') is-invalid @enderror" id="name"
-                                    placeholder="{{ __('feedback.Name') }}" value="{{ old('name') }}">
+                                    placeholder="{{ __('feedback.Name') }}"
+                                    value="{{ old('name') ?? $order->customer->name }}">
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -44,7 +45,8 @@
                                 <label for="email">{{ __('feedback.Email') }}</label>
                                 <input type="text" name="email"
                                     class="form-control @error('email') is-invalid @enderror" id="email"
-                                    placeholder="{{ __('feedback.Email') }}" value="{{ old('email') }}">
+                                    placeholder="{{ __('feedback.Email') }}"
+                                    value="{{ old('email') ?? $order->customer->email }}">
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -55,7 +57,8 @@
                                 <label for="phone">{{ __('feedback.Phone') }}</label>
                                 <input type="tel" name="phone"
                                     class="form-control @error('phone') is-invalid @enderror" id="phone"
-                                    placeholder="{{ __('feedback.Phone') }}" value="{{ old('phone') }}">
+                                    placeholder="{{ __('feedback.Phone') }}"
+                                    value="{{ old('phone') ?? $order->customer->phone }}">
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

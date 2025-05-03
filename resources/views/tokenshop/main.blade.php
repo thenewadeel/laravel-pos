@@ -48,7 +48,7 @@
         </div>
         <div class="card flex flex-wrap w-full p-0 mx-1  border-4 border-red-500">
             @foreach ($products as $product)
-                <livewire:itemCard2 :product="$product" :order="$order" />
+                <livewire:itemCardTokenised :product="$product" :order="$order" />
             @endforeach
             {{-- @include('layouts.partials.orderProductsSelect', [
                 'categories' => $order->shop?->categories,

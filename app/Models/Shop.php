@@ -38,12 +38,20 @@ class Shop extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_shop')->withTimestamps();
+        return $this->belongsToMany(User::class, 'user_shop')->where('type', 'cashier')->withTimestamps();
     }
     public function expenses()
     {
         return $this->hasMany(Expense::class);
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+    // public function items()
+    // {
+    //     return $this->hasManyThrough(Order::class, OrderItem::class);
+    // }
     // public function categories()
     // {
     //     return $this->belongsToMany(Category::class, 'shop_categories')->withTimestamps();

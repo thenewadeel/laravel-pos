@@ -31,11 +31,12 @@
             </td>
             <td>{{ $category['kitchen_printer_ip'] }}</td>
             <td class="max-w-60">
-                <ul class="max-h-48 overflow-y-scroll">
+                <ul class="max-h-48 overflow-y-scroll p-2 shadow-inner shadow-slate-500 rounded-md">
                     @foreach ($category['items'] as $product)
                         <li class="flex flex-row justify-between">
                             <a href="{{ route('products.edit', $product['id']) }}">{{ $product->name }}</a>
-                            <span class="text-xs">({{ config('settings.currency_symbol') }}{{ number_format($product->price,0) }})</span>
+                            <span
+                                class="text-xs">({{ config('settings.currency_symbol') }}{{ number_format($product->price, 0) }})</span>
                         </li>
                     @endforeach
                 </ul>

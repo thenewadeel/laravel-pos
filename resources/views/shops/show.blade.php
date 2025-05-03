@@ -23,11 +23,11 @@
     {{-- @php($modelObject = $order) --}}
 @endsection
 
-@php($orderItems = \App\Models\OrderItem::whereIn('order_id', $orders->pluck('id'))->get())
+@php($orderItems = \App\Models\OrderItem::whereIn('order_id', $orders->pluck('id'))->orderBy('created_at', 'desc')->get())
 
-@php($itemSales = \App\Models\OrderItem::whereIn('order_id', $orders->pluck('id'))->get())
+@php($itemSales = \App\Models\OrderItem::whereIn('order_id', $orders->pluck('id'))->orderBy('created_at', 'asc')->get())
 @php(
-    $graphData = $itemSales->groupBy('product.name')->map(function ($gp) {
+    $graphData = $itemSales->groupBy('product_name')->map(function ($gp) {
             return $gp->sum('price');
         })->sortByDesc(function ($value, $key) {
             return $value;
@@ -148,7 +148,7 @@
     $LABELS = $itemSales->pluck('created_at')->map(function ($date) {
             $carbonDate = \Carbon\Carbon::parse($date);
             return $carbonDate->format('d M D');
-        })->unique()->values()->toArray()
+        })->sort()->unique()->values()->toArray()
 )
                     labels: @json($LABELS),
                     datasets: [{
@@ -161,10 +161,10 @@
                         }),
                         borderColor: 'rgb(20, 53, 69)',
                         yAxisID: 'y2',
-                        type: 'line',
+                        type: 'bar',
                         @php(
     $salesData = $orders->groupBy(function ($order) {
-            return \Carbon\Carbon::parse($order->created_at)->format('Y-m-d');
+            return \Carbon\Carbon::parse($order->created_at)->format('d M D');
         })->map(function ($group) {
             return $group->sum(function ($order) {
                 return $order->items->sum('price');
@@ -180,9 +180,10 @@
                             }
                             return 'rgba(173, 216, 230, 0.5)'
                         }),
-                        borderColor:  'rgb(40, 122, 198)',
+                        borderColor: 'rgb(40, 122, 198)',
                         borderWidth: 1,
-                        type: 'bar',
+                        type: 'line',
+                        yAxisID: 'y',
                         data: @json(
                             $orders->groupBy(function ($date) {
                                     return \Carbon\Carbon::parse($date->created_at)->format('M d');

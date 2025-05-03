@@ -37,6 +37,10 @@ class OrderItem extends Model
     {
         return $this->belongsTo(Order::class);
     }
+    public function shop()
+    {
+        return $this->hasOneThrough(Shop::class, Order::class);
+    }
     public function isBurnt()
     {
         return ($this->product_name && $this->product_rate && $this->product_id == null);

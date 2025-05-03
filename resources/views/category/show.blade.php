@@ -37,6 +37,8 @@
                         <a href="{{ route('products.edit', $product) }}">
                             {{ $product->name }}
                         </a>
+                        <span
+                            class="ml-[1em] text-xs">({{ config('settings.currency_symbol') }}{{ number_format($product->price, 0) }})</span>
                     </div>
                     <form method="post"
                         action="{{ route('categories.products.delete', ['category_id' => $category->id, 'product_id' => $product->id]) }}">
@@ -112,6 +114,8 @@ item.className='';
                                         <input class="accent-red-500" type="checkbox" value="{{ $product->id }}"
                                             id="product-{{ $product->id }}" name="product_ids[]">
                                         {{ $product->name }}
+                                        <span
+                                            class="text-xs">({{ config('settings.currency_symbol') }}{{ number_format($product->price, 0) }})</span>
                                     </div>
                                 @endforeach
                             </div>

@@ -124,93 +124,37 @@
         <div class="card-body">
             <form action="{{ route('settings.store') }}" method="post">
                 @csrf
-                {{--
-                <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
-                    <label for="app_name" class="text-center w-1/4">{{ __('settings.App_name') }}</label>
-                    <input type="text" name="app_name" class="form-control w-3/4 @error('app_name') is-invalid @enderror"
-                        id="app_name" placeholder="{{ __('settings.App_name') }}"
-                        value="{{ old('app_name', config('settings.app_name')) }}">
-                    @error('app_name')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div> --}}
-
-                {{-- <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
-                    <label for="app_description">{{ __('settings.app_description') }}</label>
-                    <textarea name="app_description" class="form-control w-3/4 @error('app_description') is-invalid @enderror"
-                        id="app_description" placeholder="{{ __('settings.app_description') }}">{{ old('app_description', config('settings.app_description')) }}</textarea>
-                    @error('app_description')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div> --}}
-
-                <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
-                    <label for="currency_symbol" class="text-center w-1/4">{{ __('settings.Currency_symbol') }}</label>
-                    <input type="text" name="currency_symbol"
-                        class="form-control w-3/4 @error('currency_symbol') is-invalid @enderror" id="currency_symbol"
-                        placeholder="{{ __('settings.Currency_symbol') }}"
-                        value="{{ old('currency_symbol', config('settings.currency_symbol')) }}">
-                    @error('currency_symbol')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-                {{-- <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
-                    <label for="warning_quantity">{{ __('settings.warning_quantity') }}</label>
-                    <input type="text" name="warning_quantity"
-                        class="form-control w-3/4 @error('warning_quantity') is-invalid @enderror" id="warning_quantity"
-                        placeholder="{{ __('settings.warning_quantity') }}"
-                        value="{{ old('warning_quantity', config('settings.warning_quantity')) }}">
-                    @error('warning_quantity')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div> --}}
-                <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
-                    <label for="default_printer_ip"
-                        class="text-center w-1/4">{{ __('settings.default_printer_ip') }}</label>
-                    <input type="text" name="default_printer_ip"
-                        class="form-control w-3/4 @error('default_printer_ip') is-invalid @enderror"
-                        id="default_printer_ip" placeholder="{{ __('settings.default_printer_ip') }}"
-                        value="{{ old('default_printer_ip', config('settings.default_printer_ip')) }}">
-                    @error('default_printer_ip')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-                <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
-                    <label for="token_print_title"
-                        class="text-center w-1/4">{{ __('settings.token_print_title') }}</label>
-                    <input type="text" name="token_print_title"
-                        class="form-control w-3/4 @error('token_print_title') is-invalid @enderror" id="token_print_title"
-                        placeholder="{{ __('settings.token_print_title') }}"
-                        value="{{ old('token_print_title', config('settings.token_print_title')) }}">
-                    @error('token_print_title')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
-                <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
-                    <label for="token_print_subtitle"
-                        class="text-center w-1/4">{{ __('settings.token_print_subtitle') }}</label>
-                    <input type="text" name="token_print_subtitle"
-                        class="form-control w-3/4 @error('token_print_subtitle') is-invalid @enderror"
-                        id="token_print_subtitle" placeholder="{{ __('settings.token_print_subtitle') }}"
-                        value="{{ old('token_print_subtitle', config('settings.token_print_subtitle')) }}">
-                    @error('token_print_subtitle')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
+                @foreach (App\Models\Setting::all() as $setting)
+                    @if ($setting->key == 'club_logo')
+                        <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">xxx
+                            <label for="{{ $setting->key }}"
+                                class="text-center w-1/4">{{ __('settings.' . $setting->key) }}</label>
+                            <input type="text" name="{{ $setting->key }}"
+                                class="form-control w-3/4 @error($setting->key) is-invalid @enderror"
+                                id="{{ $setting->key }}" placeholder="{{ __('settings.' . $setting->key) }}"
+                                value="{{ old($setting->key, $setting->value) }}">
+                            @error($setting->key)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    @else
+                        <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
+                            <label for="{{ $setting->key }}"
+                                class="text-center w-1/4">{{ __('settings.' . $setting->key) }}</label>
+                            <input type="text" name="{{ $setting->key }}"
+                                class="form-control w-3/4 @error($setting->key) is-invalid @enderror"
+                                id="{{ $setting->key }}" placeholder="{{ __('settings.' . $setting->key) }}"
+                                value="{{ old($setting->key, $setting->value) }}">
+                            @error($setting->key)
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    @endif
+                @endforeach
                 <button type="submit"
                     class="btn btn-outline-primary btn-sm btn-block">{{ __('settings.Change_Setting') }}</button>
             </form>

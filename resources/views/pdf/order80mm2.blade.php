@@ -38,7 +38,7 @@
                 <tr>
                     <td style=";;;;text-align:left;width:60px;">
                         <img src="{{ public_path('images/logo_blk.jpg') }}"
-                            style=";;;;border-radius:50%;width:3.5rem;height:3.5rem;display:block;" alt="Logo">
+                            style=";;;;border-radius:5%;width:3.5rem;height:3.5rem;display:block;" alt="Logo">
                     </td>
                     <td style=";;;;text-align:left;">
                         <div style=";;;;font-size:1.4rem;margin:0rem;font-weight:bold;overflow:hidden">
@@ -189,7 +189,6 @@
         @endif
 
         <p style="text-align: center">
-            {{-- Quetta Club welcomes you with warm hospitality. --}}
             Thank you for visiting!
         </p>
         <hr style=";;;;border:none;

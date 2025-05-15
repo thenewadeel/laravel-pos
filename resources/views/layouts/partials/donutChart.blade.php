@@ -17,7 +17,7 @@
         'limit' => 15,
     ])
     @if (isset($limit))
-        @php($graphData = $graphData->slice(0, $limit)),
+        @php($graphData = $graphData->slice(0, $limit))
     @endif
     <div class="flex flex-col h-full">
         <div

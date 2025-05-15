@@ -98,7 +98,7 @@
                     'indexAxis' => 'x',
                     'xAxisLabel' => '',
                     'yAxisLabel' => '',
-                    // 'limit' => 5,
+                    'limit' => 365,
                 ])
             </div>
         </div>

@@ -7,21 +7,21 @@ $mapToLabelValueUsers = function ($model) {
 };
 
 $selectionSets = [
-    [
-        'name' => 'customer_ids',
-        'label' => 'Customers',
-        'items' => App\Models\Customer::select('id', 'name')->get()->map($mapToLabelValue)->toArray(),
-    ],
+    // [
+    //     'name' => 'customer_ids',
+    //     'label' => 'Customers',
+    //     'items' => App\Models\Customer::select('id', 'name')->get()->map($mapToLabelValue)->toArray(),
+    // ],
     [
         'name' => 'shop_ids',
         'label' => 'Shops',
         'items' => App\Models\Shop::select('id', 'name')->get()->map($mapToLabelValue)->toArray(),
     ],
-    [
-        'name' => 'product_ids',
-        'label' => 'Products',
-        'items' => App\Models\Product::select('id', 'name')->get()->map($mapToLabelValue)->toArray(),
-    ],
+    // [
+    //     'name' => 'product_ids',
+    //     'label' => 'Products',
+    //     'items' => App\Models\Product::select('id', 'name')->get()->map($mapToLabelValue)->toArray(),
+    // ],
     [
         'name' => 'cashiers',
         'label' => 'Cashiers',

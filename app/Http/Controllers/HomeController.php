@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        if (auth()->user()->type == 'cashier') {
+        if (auth()->user()->type != 'admin') {
             return redirect()->route('orders.index');
         }
 
@@ -66,7 +66,7 @@ class HomeController extends Controller
 
         $topSellingShops = $orderItems
             ->groupBy(function ($item) {
-                return $item->order->shop->name;
+                return $item->order ? ($item->order->shop ? $item->order->shop->name : 'Unknown shop') : 'Unknown order';
             })
             ->map(function ($v, $k) {
                 return $v->sum('price');
@@ -162,7 +162,7 @@ class HomeController extends Controller
     private function filterOrders($query, Request $request)
     {
         if (!$request->has('start_date') && !$request->has('end_date') && !$request->has('order_type') && !$request->has('order_status') && !$request->has('customer_id') && !$request->has('customer_name') && !$request->has('order_takers')) {
-            return $query;
+            return $query->whereBetween('created_at', [now()->startOfMonth(), now()]);
         }
         $orders = $query;
         Log::debug($request->all());

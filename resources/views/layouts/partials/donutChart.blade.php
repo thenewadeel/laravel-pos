@@ -14,7 +14,7 @@
         'xAxisLabel' => '',
         'yAxisLabel' => '',
         'indexAxis' => 'y', // Default to horizontal bar chart
-        'limit' => null,
+        'limit' => 15,
     ])
     @if (isset($limit))
         @php($graphData = $graphData->slice(0, $limit)),

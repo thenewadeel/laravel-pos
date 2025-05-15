@@ -26,4 +26,6 @@ return [
     'Customers_Count'   => 'Customers Count',
     'Orders_Count'      => 'Orders Count',
     'Balance'           => 'Balance',
+    'Average_Order_Value' => 'Average Order Value',
+    'Sales'             => 'Sales',
 ];

@@ -7,7 +7,7 @@
         <div class="form-group p-0 m-0 flex flex-col items-center">
             <input type="text" id="amount" name="amount"
                 class="form-control shadow-inner shadow-blue-500 rounded-md md:max-w-48 max-w-24 p-0 m-0 my-2 text-center font-bolder text-lg self-center"
-                style="font: bolder" required wire:model.live="customerPayment">
+                style="font: bolder" required wire:model.live="orderBalance">
             <button wire:click.prevent="checkPayment" class="btn btn-primary btn-block font-bold">
                 {{ __('order.Pay_Close') }}
             </button>

@@ -73,21 +73,23 @@ class Order extends Model
     public function assignPOS()
     {
         \DB::transaction(function () {
-            $latestOrder = Order::where('POS_number', '!=', null)
+            $latestOrder = Order::whereNotNull('POS_number')
                 ->where('created_at', '>=', $this->created_at->startOfMonth())
-                ->latest()
+                ->latest('POS_number')
                 ->lockForUpdate()
                 ->first();
 
-            $latestPOSNumber = $latestOrder ? explode('-', $latestOrder->POS_number)[0] : 0;
+            $latestPOSNumber = $latestOrder ? intval(explode('-', $latestOrder->POS_number)[0]) : 0;
 
             $posNumber = sprintf('%04d', $latestPOSNumber + 1) . '-' . $this->created_at->format('d-m-Y');
             $this->POS_number = $posNumber;
             $this->save();
 
-            // Create order history
-            $orderHistoryController = new OrderHistoryController();
-            $orderHistoryController->store($request = null, orderId: $this->id, actionType: 'pos-assigned', POSNumber: $posNumber);
+            app(OrderHistoryController::class)->store(
+                orderId: $this->id,
+                actionType: 'pos-assigned',
+                POSNumber: $posNumber
+            );
         });
     }
     public function items()

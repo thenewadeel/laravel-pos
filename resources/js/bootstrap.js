@@ -65,11 +65,11 @@ window.SwalWithBootstrap = Swal.mixin({
 // });
 import Chart from "chart.js/auto";
 
-import Alpine from "alpinejs";
-import collapse from "@alpinejs/collapse";
+// import Alpine from "alpinejs"; Already loaded via Livewire
+// import collapse from "@alpinejs/collapse";
 
-Alpine.plugin(collapse);
+// Alpine = window.Alpine;
 
-window.Alpine = Alpine;
+// Alpine.plugin(collapse);
 
-Alpine.start();
+// Alpine.start();

@@ -60,4 +60,5 @@
                 // 'products' => $products,
             ])
         </div>
-    @endsection
+    </div>
+@endsection

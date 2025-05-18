@@ -4,71 +4,11 @@
 @section('content-header', __('common.Daily_Sale'))
 
 @section('content')
-    <div class="card">
-        <div class="card-header font-bold text-lg">
-            Filters
-        </div>
-        <div class="card-body">
-            {{-- {{ $orders }}
-            <hr />
-            {{ $openOrders }} --}}
-            <form class="mb-4" action="{{ route('reports.dailySale') }}" method="GET">
-                <div class="col items-end px-4">
-                    @include('layouts.partials.dateRangeFormGroup', [
-                        'name' => 'dateRange',
-                        'start_date' => request('start_date', date('Y-m-d')),
-                        'end_date' => request('end_date', date('Y-m-d')),
-                        // 'stylingClasses' => 'col',
-                    ])
-                    <div class="form-group">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <label for="shop_id">Shops :</label>
-                            <div class="form-inline">
-                                <button class="btn btn-sm btn-outline-info" type="button"
-                                    onclick="selectAllCheckboxes(this)">Select All</button>
-                                <button class="btn btn-sm btn-outline-secondary" type="button"
-                                    onclick="deselectAllCheckboxes(this)">Select None</button>
-                            </div>
-                        </div>
-                        <div class="form-inline">
-                            @foreach ($shops as $shop)
-                                <div class="form-check form-check-inline badge-info p-1 m-1 rounded-lg">
-                                    <input class="form-check-input" type="checkbox" name="shops[]"
-                                        value="{{ $shop->id }}" id="shop{{ $shop->id }}">
-                                    <label class="form-check-label" for="shop{{ $shop->id }}">
-                                        {{ $shop->name }}
-                                    </label>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <script>
-                            function selectAllCheckboxes(selectAllButton) {
-                                var checkboxes = document.querySelectorAll('input[name="shops[]"]');
-                                checkboxes.forEach((checkbox) => {
-                                    checkbox.checked = true;
-                                });
-                                selectAllButton.disabled = true;
-                            }
-
-                            function deselectAllCheckboxes(deselectAllButton) {
-                                var checkboxes = document.querySelectorAll('input[name="shops[]"]');
-                                checkboxes.forEach((checkbox) => {
-                                    checkbox.checked = false;
-                                });
-                                deselectAllButton.parentNode.querySelector('button[type="button"]').disabled = false;
-                            }
-                        </script>
-                    </div>
-
-                    <div class="row">
-                        <button type="submit" class="btn btn-primary col-md-8">{{ __('common.Filter') }}</button>
-                        <a href="{{ route('reports.dailySale') }}"
-                            class="btn btn-danger col-md-4">{{ __('common.Clear') }}</a>
-                    </div>
-                </div>
-            </form>
-        </div>
+    <div class="border-0 border-red-400 p-2 w-min ml-2 z-30">
+        @include('layouts.partials.collapsibleFilterForm', [
+            'errors' => $errors,
+            'target_route_name' => 'reports.dailySale',
+        ])
     </div>
     <div class="card">
         <div class="card-header font-bold text-lg">

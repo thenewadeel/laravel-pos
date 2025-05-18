@@ -45,6 +45,10 @@ class HomeController extends Controller
             return $i->total();
         })->sum();
 
+        $discounts = $orders->map(function ($i) {
+            return $i->discountAmount();
+        })->sum();
+
         $income = $orders->map(function ($i) {
             return $i->receivedAmount();
         })->sum();
@@ -144,6 +148,7 @@ class HomeController extends Controller
             'orders' => $orders,
             'orders_count' => $orders_count,
             'sales' => $sales,
+            'discounts' => $discounts,
             'income' => $income,
             'balance' => $balance,
             'income_today' => $income_today,

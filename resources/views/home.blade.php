@@ -33,25 +33,36 @@
 
         @include('layouts.partials.dashboardCounter', [
             'title' => __('dashboard.Sales'),
-            'value' => number_format($sales / 1000000, 1) . 'M',
+            'value_prefix' => config('settings.currency_symbol'),
+            'value' => $sales,
+            'icon' => 'ion ion-dollar',
+        ])
+
+        @include('layouts.partials.dashboardCounter', [
+            'title' => __('dashboard.Discounts'),
+            'value_prefix' => config('settings.currency_symbol'),
+            'value' => $discounts,
             'icon' => 'ion ion-dollar',
         ])
 
         @include('layouts.partials.dashboardCounter', [
             'title' => __('dashboard.Income'),
-            'value' => number_format($income / 1000000, 1) . 'M',
+            'value_prefix' => config('settings.currency_symbol'),
+            'value' => $income,
             'icon' => 'ion ion-dollar',
         ])
 
         @include('layouts.partials.dashboardCounter', [
             'title' => __('dashboard.Balance'),
-            'value' => number_format($balance / 1000000, 1) . 'M',
+            'value_prefix' => config('settings.currency_symbol'),
+            'value' => $balance,
             'icon' => 'ion ion-money',
         ])
 
         @include('layouts.partials.dashboardCounter', [
             'title' => __('dashboard.Average_Order_Value'),
-            'value' => config('settings.currency_symbol') . number_format($average_order_value, 0),
+            'value_prefix' => config('settings.currency_symbol'),
+            'value' => $average_order_value,
             'icon' => 'ion ion-pie-graph',
         ])
 

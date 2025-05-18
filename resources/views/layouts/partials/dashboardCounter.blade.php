@@ -1,6 +1,7 @@
 @props([
     'title' => '',
     'value' => 0,
+    'value_prefix' => null,
     'route' => '',
     'icon' => 'ion ion-bag',
 ])
@@ -13,8 +14,16 @@
         </p>
         <hr class="my-0 py-0">
     </div>
-    <div class=" px-4 text-xl font-bold items-center align-middle flex flex-row flex-grow justify-between">
-        {{ $value }}
+    <div class=" px-4 text-xl font-bold items-center align-middle flex flex-row flex-grow justify-between"
+        title="{{ $value }}">
+        <span class="text-lg text-slate-400 opacity-75 ">{{ $value_prefix }}</span>
+        @if ($value < 1000)
+            {{ number_format($value, 0) }}
+        @elseif ($value < 1000000)
+            {{ number_format($value / 1000, 1) }}K
+        @else
+            {{ number_format($value / 1000000, 1) }}M
+        @endif
         <i class="{{ $icon }} text-slate-400 text-5xl  opacity-75">
         </i>
     </div>

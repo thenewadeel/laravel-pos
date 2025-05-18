@@ -28,4 +28,5 @@ return [
     'Balance'           => 'Balance',
     'Average_Order_Value' => 'Average Order Value',
     'Sales'             => 'Sales',
+    'Discounts'         => 'Discounts',
 ];

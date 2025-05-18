@@ -45,7 +45,6 @@ class OrderController extends Controller
 
     private function handleDateFilter(Request $request, $query)
     {
-        Log::info('Starting handleDateFilter', ['request' => $request->all()]);
         $start_date = $request->query('start_date');
         $end_date = $request->query('end_date');
 
@@ -57,14 +56,14 @@ class OrderController extends Controller
             $query->whereDate('created_at', now()->startOfDay());
         }
 
-        Log::info('Ending handleDateFilter', ['modifiedQuery' => $query->toSql(), 'modifiedQueryBindings' => $query->getBindings()]);
+        Log::debug('OrderController@handleDateFilter', ['modifiedQuery' => $query->toSql(), 'modifiedQueryBindings' => $query->getBindings()]);
 
         return $query;
     }
 
     private function handleOrderFilters(Request $request, $orderQuery)
     {
-        Log::info('Starting handleOrderFilters', ['request' => $request->all()]);
+        // Log::info('OrderController@handleOrderFilters', ['request' => $request->all()]);
 
         // Shop Filter
         $shop_id = $request->query('shop_ids');
@@ -111,7 +110,7 @@ class OrderController extends Controller
             });
         }
 
-        Log::info('Ending handleOrderFilters', ['modifiedQuery' => $orderQuery->toSql(), 'modifiedQueryBindings' => $orderQuery->getBindings()]);
+        Log::debug('OrderController@handleOrderFilters', ['modifiedQuery' => $orderQuery->toSql(), 'modifiedQueryBindings' => $orderQuery->getBindings()]);
 
         return $orderQuery;
     }

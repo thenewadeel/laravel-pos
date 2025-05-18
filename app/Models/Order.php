@@ -263,7 +263,7 @@ class Order extends Model
         - date_between
         - order_type >
     - payment_type
-        - order_status
+        - order_status [open|closed]
         - customer_ids >
         - customer_name
         - order_takers >

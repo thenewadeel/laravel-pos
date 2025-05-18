@@ -74,7 +74,11 @@ class HomeController extends Controller
         })->sum();
 
         $orderItems = \App\Models\OrderItem::whereIn('order_id', $orders->pluck('id'))
-            ->with('order.shop')
+            //     ->with('order.shop')
+            //     ->get();
+            ->select(['id', 'order_id', 'product_name', 'price']) // Only needed fields
+            ->with(['order:id,shop_id', 'order.shop:id,name']) // Minimal relations
+            // ->limit(10000)
             ->get();
 
         $topSellingShops = $orderItems

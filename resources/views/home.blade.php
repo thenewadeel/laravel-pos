@@ -22,6 +22,9 @@
             'title' => __('dashboard.Orders_Count'),
             'value' => $orders_count,
             'route' => 'orders.index',
+            'args' => [
+                'order_ids' => $orders->pluck('id')->join(','),
+            ],
         ])
 
         @include('layouts.partials.dashboardCounter', [

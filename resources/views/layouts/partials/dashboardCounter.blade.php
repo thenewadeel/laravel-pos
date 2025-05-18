@@ -4,6 +4,7 @@
     'value_prefix' => null,
     'route' => '',
     'icon' => 'ion ion-bag',
+    'args' => [],
 ])
 
 <div
@@ -30,7 +31,7 @@
     <div class="my-0 py-0 ">
         <hr class="my-0 py-0 ">
         @if ($route)
-            <a href="{{ route($route) }}"
+            <a href="{{ route($route, $args) }}"
                 class="text-sm text-blue-800 hover:underline flex flex-row justify-center items-center py-0 my-0">
                 {{ __('common.More_info') }}
                 <i class="fas fa-arrow-circle-right px-2"></i>

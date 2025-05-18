@@ -132,6 +132,11 @@ class OrderController extends Controller
             $orders = $this->handleDateFilter($request, $orders);
         }
 
+
+        if ($request->has('order_ids')) {
+            $ids = explode(',', $request->input('order_ids'));
+            $orders = Order::whereIn('id', $ids);
+        }
         // FILTERS
         $this->handleOrderFilters($request, orderQuery: $orders);
 

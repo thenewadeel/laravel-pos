@@ -257,6 +257,19 @@ class Order extends Model
         }
     }
     /*
+
+        'pos_number' => 'pos_number',
+        'table_number' => 'table_number',
+        'waiter_name' => 'waiter_name',
+        'type' => 'order_type',
+        'order_status' => 'order_status',
+            'customer_ids' => 'customer_ids',
+        'customer_name' => 'customer_name',
+        'order_taker' => 'order_taker',
+            'order_takers' => 'order_takers',
+        'shop_ids' => 'shop_ids',
+            'cashiers' => 'cashiers',
+        'item_name' => 'item_name',
     -----------------   SCOPES   -----------------
         - start_date
         - end_date
@@ -264,6 +277,8 @@ class Order extends Model
         - order_type >
     - payment_type
         - pos_number (like)
+        - table_number
+        - waiter_name
         - order_status [open|closed]
         - customer_ids >
         - customer_name
@@ -278,6 +293,14 @@ class Order extends Model
     public function scopePOS_number($query, $POS_number)
     {
         return $query->where('POS_number', 'LIKE', "%{$POS_number}%");
+    }
+    public function scopeTable_number($query, $table_number)
+    {
+        return $query->where('table_number', 'LIKE', "%{$table_number}%");
+    }
+    public function scopeWaiter_name($query, $waiter_name)
+    {
+        return $query->where('waiter_name', 'LIKE', "%{$waiter_name}%");
     }
     public function scopeStart_date($query, $start_date)
     {
@@ -356,10 +379,10 @@ class Order extends Model
      * @param int|array $item_ids
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeItem_ids($query, $item_ids)
-    {
-        return $query->whereHas('items', function ($query) use ($item_ids) {
-            $query->where('product_id', $item_ids);
-        });
-    }
+    // public function scopeItem_ids($query, $item_ids)
+    // {
+    //     return $query->whereHas('items', function ($query) use ($item_ids) {
+    //         $query->where('product_id', $item_ids);
+    //     });
+    // }
 }

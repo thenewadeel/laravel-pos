@@ -267,6 +267,7 @@ class Order extends Model
         - order_status [open|closed]
         - customer_ids >
         - customer_name
+        - order_taker (search by name)
         - order_takers >
         - shop_ids >
         - cashiers >
@@ -317,6 +318,15 @@ class Order extends Model
     {
         return $query->whereHas('customer', function ($query) use ($customer_name) {
             $query->where('name', 'LIKE', '%' . $customer_name . '%');
+        });
+    }
+    public function scopeOrder_taker($query, $order_taker_name)
+    {
+        return $query->whereHas('user', function ($query) use ($order_taker_name) {
+            $query->where(function ($query) use ($order_taker_name) {
+                $query->where('first_name', 'LIKE', '%' . $order_taker_name . '%')
+                    ->orWhere('last_name', 'LIKE', '%' . $order_taker_name . '%');
+            });
         });
     }
     public function scopeOrder_takers($query, $user_ids)

@@ -50,6 +50,7 @@ class OrderFilterService
             'order_status',
             'customer_id',
             'customer_name',
+            'order_taker',
             'order_takers'
         ]);
     }
@@ -66,6 +67,7 @@ class OrderFilterService
             'order_status' => $request->query('order_status'),
             'customer_id' => $request->query('customer_id'),
             'customer_name' => $request->query('customer_name'),
+            'order_taker' => $request->query('order_taker'),
             'order_takers' => $request->query('order_takers'),
             'shop_ids' => $request->query('shop_ids'),
             'cashiers' => $request->query('cashiers'),
@@ -109,6 +111,7 @@ class OrderFilterService
             'order_status' => 'order_status',
             'customer_ids' => 'customer_ids',
             'customer_name' => 'customer_name',
+            'order_taker' => 'order_taker',
             'order_takers' => 'order_takers',
             'shop_ids' => 'shop_ids',
             'cashiers' => 'cashiers',

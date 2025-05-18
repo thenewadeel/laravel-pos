@@ -4,19 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Customer;
+use App\Services\OrderFilterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
+    private $orderFilterService;
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+
+    public function __construct(OrderFilterService $orderFilterService)
     {
         $this->middleware('auth');
+        $this->orderFilterService = $orderFilterService;
     }
 
     /**
@@ -29,14 +33,19 @@ class HomeController extends Controller
         if (auth()->user()->type != 'admin') {
             return redirect()->route('orders.index');
         }
+        // $start = microtime(true);
 
         $orders = Order::query();
-        $orders = $this->filterOrders($orders, $request);
+        // $orders = $this->filterOrders($orders, $request);
+        // Log::info('Starting HomeController@index', ['request' => $request->all(), 'query' => $orders->toSql(), 'bindings' => $orders->getBindings()]);
+        $orders = $this->orderFilterService->applyFilters($orders, $request);
+        // Log::info('Ending HomeController@index', ['modifiedQuery' => $orders->toSql(), 'modifiedQueryBindings' => $orders->getBindings()]);
         $orders = $orders
             ->whereNotNull('POS_Number')
             ->orderBy('created_at', 'desc')
-            ->with(['items', 'payments'])
+            // ->with(['items', 'payments'])
             ->get();
+        Log::debug('HomeController@index', ['ordersCount' => $orders->count()]);
         $orders_count = $orders->count();
 
         $customers_count = Customer::count();

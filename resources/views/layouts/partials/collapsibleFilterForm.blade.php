@@ -1,9 +1,9 @@
 <?php
 $mapToLabelValue = function ($model) {
-    return ['label' => $model->name, 'value' => $model->id];
+    return ['value' => $model->id, 'label' => $model->name];
 };
 $mapToLabelValueUsers = function ($model) {
-    return ['label' => $model->name(), 'value' => $model->id];
+    return ['value' => $model->id, 'label' => $model->name()];
 };
 
 $selectionSets = [
@@ -35,7 +35,7 @@ $selectionSets = [
     [
         'name' => 'order_type',
         'label' => 'Order Type',
-        'items' => [[['value' => 'dine-in', 'label' => 'Dine-In'], ['value' => 'take-away', 'label' => 'Take-Away'], ['value' => 'delivery', 'label' => 'Delivery']]],
+        'items' => [['value' => 'dine-in', 'label' => 'Dine-In'], ['value' => 'take-away', 'label' => 'Take-Away'], ['value' => 'delivery', 'label' => 'Delivery']],
     ],
 ];
 ?>
@@ -74,45 +74,7 @@ $selectionSets = [
                         'selectionSets' => $selectionSets,
                     ])
                 </div>
-                {{-- @include('layouts.partials.filterModelSelect', [
-                        'models' => App\Models\Customer::select('id', 'name')->get(),
-                        'request_string' => 'customer_ids',
-                        'modelName' => 'Customers',
-                    ]) --}}
 
-                {{-- @include('layouts.partials.filterModelSelect', [
-                        'models' => App\Models\Shop::select('id', 'name')->get(),
-                        'request_string' => 'shop_ids',
-                        'modelName' => 'Shops',
-                    ])
-                    @include('layouts.partials.filterModelSelect', [
-                        'models' => App\Models\Product::select('id', 'name')->get(),
-                        'request_string' => 'item_ids',
-                        'modelName' => 'Products',
-                    ])
-                    @include('layouts.partials.filterModelSelect', [
-                        'models' => App\Models\User::where('type', 'cashier')->select('id', 'first_name', 'last_name')->get()->map(function ($user) {
-                                return ['id' => $user->id, 'name' => $user->name()];
-                            }),
-                        'request_string' => 'cashiers',
-                        'modelName' => 'Cashiers',
-                    ])
-                    @include('layouts.partials.filterModelSelect', [
-                        'models' => App\Models\User::where('type', 'order-taker')->select('id', 'first_name', 'last_name')->get()->map(function ($user) {
-                                return ['id' => $user->id, 'name' => $user->name()];
-                            }),
-                        'request_string' => 'order_takers',
-                        'modelName' => 'Order Takers',
-                    ])
-                    @include('layouts.partials.filterModelSelectDropdown', [
-                        'models' => [
-                            ['id' => 'dine-in', 'name' => 'Dine-In'],
-                            ['id' => 'take-away', 'name' => 'Take-Away'],
-                            ['id' => 'delivery', 'name' => 'Delivery'],
-                        ],
-                        'request_string' => 'order_type',
-                        'modelName' => 'Order Type',
-                    ]) --}}
                 <div class="flex space-x-2">
                     <button type="submit"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 w-2/3 rounded">{{ __('common.Filter') }}</button>

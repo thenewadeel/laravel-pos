@@ -44,42 +44,42 @@ $selectionSets = [
     <div x-data="{ expanded: false }">
         <button @click="expanded = ! expanded">
             <i class="ion ion-funnel text-3xl text-blue-500"></i>
-
         </button>
 
-        <div x-show="expanded" x-collapse.duration.1000ms class="border-0 border-yellow-500  min-w-96">
-            <form class="p-0 m-0 mb-4 md:px-4 max-w-screen-2xl" action="{{ route('home') }}" method="GET">
+        <div x-show="expanded" x-collapse.duration.1000ms class="border-0 border-yellow-500">
+            <form class="p-0 m-0 md:px-4 max-w-screen-2xl" action="{{ route('home') }}" method="GET">
                 <div
-                    class=" flex flex-col md:flex-row w-full m-0 p-0 md:px-2 my-2 rounded-md  border border-slate-900 justify-start">
-                    <div class="px-2 text-sm font-bold text-gray-700 ">
+                    class="flex flex-col md:flex-row w-full m-0 p-0 md:px-2 rounded-md border border-slate-400 justify-start bg-white">
+                    <div class="px-4 py-2 text-sm font-bold text-gray-700 bg-neutral-200">
                         {{ __('common.Date_Filters') }}:
                     </div>
-
-                    @include('layouts.partials.dateFilter', [
-                        'name' => 'dateRange',
-                        'start_date' => request('start_date', date('Y-m-d')),
-                        'end_date' => request('end_date', date('Y-m-d')),
-                        // 'stylingClasses' => 'col',
-                    ])
+                    <div class="flex flex-row space-x-2 px-4 py-2">
+                        @include('layouts.partials.dateFilter', [
+                            'name' => 'dateRange',
+                            'start_date' => request('start_date', date('Y-m-d')),
+                            'end_date' => request('end_date', date('Y-m-d')),
+                        ])
+                    </div>
                 </div>
 
 
                 <div
-                    class=" flex flex-col md:flex-row justify-content-between  m-0 p-0 md:px-2 my-2 rounded-md  items-center self-center border border-slate-900">
-                    <div class="px-2 text-sm font-bold text-gray-700 ">
+                    class="flex flex-col md:flex-row w-full m-0 p-0 md:px-2 rounded-md border border-slate-400 justify-start bg-white mt-2">
+                    <div class="px-4 py-2 text-sm font-bold text-gray-700 bg-neutral-200">
                         {{ __('common.Select_Filters') }}:
                     </div>
-
-                    @include('layouts.partials.dropdownMultiSelect', [
-                        'selectionSets' => $selectionSets,
-                    ])
+                    <div class="flex flex-row space-x-2 px-4 py-2 border-0 border-teal-300">
+                        @include('layouts.partials.dropdownMultiSelect', [
+                            'selectionSets' => $selectionSets,
+                        ])
+                    </div>
                 </div>
 
-                <div class="flex space-x-2">
+                <div class="flex flex-col space-2 px-2 mt-2 md:border-0 border-red-500 md:flex-row text-lg">
                     <button type="submit"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 w-2/3 rounded">{{ __('common.Filter') }}</button>
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 mx-4 rounded-md md:w-full">{{ __('common.Filter') }}</button>
                     <a href="{{ route('home') }}"
-                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 w-1/3 rounded text-center">{{ __('common.Clear') }}</a>
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold my-1 mx-4 rounded-md text-center md:w-full">{{ __('common.Clear') }}</a>
                 </div>
             </form>
         </div>

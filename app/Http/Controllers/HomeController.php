@@ -33,13 +33,11 @@ class HomeController extends Controller
         if (auth()->user()->type != 'admin') {
             return redirect()->route('orders.index');
         }
-        // $start = microtime(true);
 
         $orders = Order::query();
-        // $orders = $this->filterOrders($orders, $request);
-        // Log::info('Starting HomeController@index', ['request' => $request->all(), 'query' => $orders->toSql(), 'bindings' => $orders->getBindings()]);
+
         $orders = $this->orderFilterService->applyFilters($orders, $request);
-        // Log::info('Ending HomeController@index', ['modifiedQuery' => $orders->toSql(), 'modifiedQueryBindings' => $orders->getBindings()]);
+
         $orders = $orders
             ->whereNotNull('POS_Number')
             ->orderBy('created_at', 'desc')

@@ -46,41 +46,9 @@ class ReportsController extends Controller
     }
     public function dailySale(Request $request)
     {
-        // dd($request->all());
         $shops = Shop::all();
-
-        // $filters = [
-        //     // 'shop_id' => $request->input('shop_id'),
-        //     'start_date' => $request->input('start_date'),
-        //     'end_date' => $request->input('end_date'),
-        // ];
-
-        // $orders = Order::query();
-
-        // if ($request->has('start_date')) {
-        //     if ($request->has('end_date')) {
-        //         $orders->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
-        //     } else {
-        //         $orders->where('created_at', $filters['start_date']);
-        //     }
-        // } else {
-        //     $orders->whereDate('created_at', now());
-        // }
-        // // if ($request->has('shop_id')) {
-        // //     $orders->where('shop_id', $filters['shop_id']);
-        // // }
-        // if ($request->has('shops')) {
-        //     $request->validate([
-        //         'shops' => 'required|array',
-        //         'shops.*' => 'required|exists:shops,id',
-        //     ]);
-
-        //     $orders->whereIn('shop_id', $request['shops']);
-        // }
         $orders = Order::query();
         $orders = $this->orderFilterService->applyFilters($orders, $request);
-
-
 
         $orders = $orders
             ->orderBy('created_at', 'desc')
@@ -88,56 +56,32 @@ class ReportsController extends Controller
         $openOrders = clone $orders;
         $openOrders->where('state', '!=', 'closed');
         $openOrders = $openOrders->get();
-        $orders = $orders->where('state', 'closed')->get();
+        $orders = $orders
+            ->where('state', 'closed')
+            ->whereNotNull('POS_number')
+            ->get();
         return view('reports.dailySale', compact('shops', 'orders', 'openOrders'));
     }
 
     public function productsReport(Request $request)
     {
-        // dd($request->all());
         $shops = Shop::all();
+        $orders = Order::query();
+        $orders = $this->orderFilterService->applyFilters($orders, $request);
+        $orders = $orders
+            ->whereNotNull('POS_number')
+            ->where('state', 'closed')
+            // ->with(['payments.user'])
+            ->orderBy('created_at', 'desc')
+            ->pluck('id');
 
-        $filters = [
-            // 'shop_id' => $request->input('shop_id'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
-        ];
 
         $orderItems = OrderItem::query();
-        $orderItems->whereHas('order', function ($query) {
-            $query->where('state', 'closed');
-        });
+        $orderItems->whereIn('order_id', $orders);
 
-
-        if ($request->has('start_date')) {
-            if ($request->has('end_date')) {
-                $orderItems->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
-            } else {
-                $orderItems->where('created_at', $filters['start_date']);
-            }
-        } else {
-            $orderItems->whereDate('created_at', now());
-        }
-        // if ($request->has('shop_id')) {
-        //     $orders->where('shop_id', $filters['shop_id']);
-        // }
-        if ($request->has('shops')) {
-            $request->validate([
-                'shops' => 'required|array',
-                'shops.*' => 'required|exists:shops,id',
-            ]);
-
-            $orderItems->whereHas('order', function ($query) use ($request) {
-                $query->whereIn('shop_id', $request['shops']);
-            });
-        }
 
         $orderItems = $orderItems
             ->orderBy('created_at', 'desc');
-        // TODO: filter the query here, result should be like {name:orderItems->product->name, quantity:orderItems->sum of quantity, amount:orderItems->sum of all prices}
-        // ->sortBy(function ($items) {
-        //     return $items->first()->product->price;
-        // })
 
         $orderItems = collect($orderItems->get()
             ->groupBy('product_name')
@@ -184,38 +128,17 @@ class ReportsController extends Controller
     {
         // dd($request->all());
         $shops = Shop::all();
-
-        $filters = [
-            // 'shop_id' => $request->input('shop_id'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
-        ];
+        $orders = Order::query();
+        $orders = $this->orderFilterService->applyFilters($orders, $request);
+        $orders = $orders
+            ->whereNotNull('POS_number')
+            ->where('state', 'closed')
+            // ->with(['payments.user'])
+            ->orderBy('created_at', 'desc')
+            ->pluck('id');
 
         $payments = Payment::query();
-
-        if ($request->has('start_date')) {
-            if ($request->has('end_date')) {
-                $payments->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
-            } else {
-                $payments->where('created_at', $filters['start_date']);
-            }
-            // $payments->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
-        } else {
-            $payments->whereDate('created_at', now());
-        }
-        // if ($request->has('shop_id')) {
-        //     $orders->where('shop_id', $filters['shop_id']);
-        // }
-        if ($request->has('shops')) {
-            $request->validate([
-                'shops' => 'required|array',
-                'shops.*' => 'required|exists:shops,id',
-            ]);
-
-            $payments->whereHas('order', function ($query) use ($request) {
-                $query->whereIn('shop_id', $request['shops']);
-            });
-        }
+        $payments = $payments->whereIn('order_id', $orders);
 
         // $payments = $payments
         //     ->orderBy('created_at', 'desc');
@@ -266,55 +189,15 @@ class ReportsController extends Controller
     {
         // dd($request->all());
         $shops = Shop::all();
-
-        $filters = [
-            // 'shop_id' => $request->input('shop_id'),
-            'start_date' => $request->input('start_date'),
-            'end_date' => $request->input('end_date'),
-        ];
-
         $orders = Order::query();
-
-        if ($request->has('start_date')) {
-            if ($request->has('end_date')) {
-                $orders->whereBetween('created_at', [$filters['start_date'], $filters['end_date'] ? $filters['end_date'] : now()->endOfDay()]);
-            } else {
-                $orders->where('created_at', $filters['start_date']);
-            }
-        } else {
-            $orders->whereDate('created_at', now());
-        }
-        // if ($request->has('shop_id')) {
-        //     $orders->where('shop_id', $filters['shop_id']);
-        // }
-        if ($request->has('shops')) {
-            $request->validate([
-                'shops' => 'required|array',
-                'shops.*' => 'required|exists:shops,id',
-            ]);
-
-            $orders->whereIn('shop_id', $request['shops']);
-        }
-
-        // } elseif ($request['payment_state'] == 'chit') {
-        //     $orders = $orders->filter(function (Order $order) {
-        //         return $order->state == 'closed' && $order->balance() > 0 && $order->payments()->count() == 0;
-        //     });
-        // } elseif ($request['payment_state'] == 'part-chit') { {
-        //         $orders =  $orders->filter(function (Order $order) {
-        //             return $order->state == 'closed' && $order->balance() > 0 && $order->payments()->count() > 0;
-        //         });
-        //     }
-        // }
-
+        $orders = $this->orderFilterService->applyFilters($orders, $request);
         $orders = $orders
             ->whereNotNull('POS_Number')
+            ->where('state', 'closed')
             ->orderBy('created_at', 'desc')
-            ->with(['payments.user']);
-        // $openOrders = clone $orders;
-        // $openOrders->where('state', '!=', 'closed');
-        // $openOrders = $openOrders->get();
-        $orders = $orders->where('state', 'closed')->get();
+            ->with(['payments.user'])
+            ->get();
+
         $orders = $orders->filter(function (Order $order) {
             return $order->balance() > 0;
         });

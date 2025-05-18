@@ -4,12 +4,10 @@
 @section('content-header', __('common.Daily_Sale'))
 
 @section('content')
-    <div class="border-0 border-red-400 p-2 w-min ml-2 z-30">
-        @include('layouts.partials.collapsibleFilterForm', [
-            'errors' => $errors,
-            'target_route_name' => 'reports.dailySale',
-        ])
-    </div>
+    @include('layouts.partials.collapsibleFilterForm', [
+        'errors' => $errors,
+        'target_route_name' => 'reports.dailySale',
+    ])
     <div class="card">
         <div class="card-header font-bold text-lg">
             <div class=" flex flex-row justify-between">

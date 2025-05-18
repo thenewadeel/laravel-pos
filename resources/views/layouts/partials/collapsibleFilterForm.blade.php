@@ -75,6 +75,28 @@ $selectionSets = [
                     </div>
                 </div>
 
+
+                <div
+                    class="flex flex-col md:flex-wrap w-full m-0 p-0 md:px-2 rounded-md border border-slate-400 justify-start bg-white mt-2">
+                    <div class="px-4 py-2 text-sm font-bold text-gray-700 bg-neutral-200">
+                        {{ __('common.Select_Filters2') }}:
+                    </div>
+                    <div class="flex flex-wrap space-x-2 px-4 py-2 border-0 border-teal-300">
+                        <input type="search" name="pos_number" placeholder="{{ __('order.POS_Number') }}"
+                            value="{{ request('pos_number') }}" id="posNumber" class="form-control p-0 m-0 w-auto">
+                        <input type="search" name="customer_name" placeholder="{{ __('order.Customer_Name') }}"
+                            value="{{ request('customer_name') }}" id="customerName"
+                            class="form-control p-0 m-0 w-auto">
+                        <input type="search" name="order_taker" placeholder="{{ __('order.Order_Taker') }}"
+                            value="{{ request('order_taker') }}" id="orderTaker" class="form-control p-0 m-0 w-auto">
+                        <input type="search" name="table_number" placeholder="{{ __('order.Table_Number') }}"
+                            value="{{ request('table_number') }}" id="tableNumber" class="form-control p-0 m-0 w-auto">
+                        <input type="search" name="waiter_name" placeholder="{{ __('order.Waiter_Name') }}"
+                            value="{{ request('waiter_name') }}" style="width:200px" id="waiterName"
+                            class="form-control p-0 m-0 w-auto">
+                    </div>
+                </div>
+
                 <div class="flex flex-col space-2 px-2 mt-2 md:border-0 border-red-500 md:flex-row text-lg">
                     <button type="submit"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 mx-4 rounded-md md:w-full">{{ __('common.Filter') }}</button>

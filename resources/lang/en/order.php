@@ -84,5 +84,6 @@ return [
     'createNeworder' => 'New',
     'Order_Details' => 'Order Details',
     'Payment'       => 'Payment',
-    'Pay_Close'     => 'Pay & Close'
+    'Pay_Close'     => 'Pay & Close',
+    'Order_Taker'     => 'Order Taker'
 ];

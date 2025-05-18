@@ -263,6 +263,7 @@ class Order extends Model
         - date_between
         - order_type >
     - payment_type
+        - pos_number (like)
         - order_status [open|closed]
         - customer_ids >
         - customer_name
@@ -272,6 +273,11 @@ class Order extends Model
         - item_ids >
         - item_name
     */
+
+    public function scopePOS_number($query, $POS_number)
+    {
+        return $query->where('POS_number', 'LIKE', "%{$POS_number}%");
+    }
     public function scopeStart_date($query, $start_date)
     {
         return $query->whereDate('created_at', '>=', $start_date);

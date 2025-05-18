@@ -1,3 +1,7 @@
+@props([
+    'target_route_name' => 'home',
+    'target_route_args' => [],
+])
 <?php
 $mapToLabelValue = function ($model) {
     return ['value' => $model->id, 'label' => $model->name];
@@ -47,7 +51,8 @@ $selectionSets = [
         </button>
 
         <div x-show="expanded" x-collapse.duration.1000ms class="border-0 border-yellow-500">
-            <form class="p-0 m-0 md:px-4 max-w-screen-2xl" action="{{ route('home') }}" method="GET">
+            <form class="p-0 m-0 md:px-4 max-w-screen-2xl" action="{{ route($target_route_name, $target_route_args) }}"
+                method="GET">
                 <div
                     class="flex flex-col md:flex-row w-full m-0 p-0 md:px-2 rounded-md border border-slate-400 justify-start bg-white">
                     <div class="px-4 py-2 text-sm font-bold text-gray-700 bg-neutral-200">
@@ -100,7 +105,7 @@ $selectionSets = [
                 <div class="flex flex-col space-2 px-2 mt-2 md:border-0 border-red-500 md:flex-row text-lg">
                     <button type="submit"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold my-1 mx-4 rounded-md md:w-full">{{ __('common.Filter') }}</button>
-                    <a href="{{ route('home') }}"
+                    <a href="{{ route($target_route_name) }}"
                         class="bg-red-500 hover:bg-red-700 text-white font-bold my-1 mx-4 rounded-md text-center md:w-full">{{ __('common.Clear') }}</a>
                 </div>
             </form>

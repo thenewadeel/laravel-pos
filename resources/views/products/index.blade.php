@@ -52,17 +52,9 @@
                             <td>{{ $product->name }}</td>
                             <td>
                                 {{ $product->description }} <br />
-                                {{--  $product->variants --}}
-                                @foreach ($product->variants as $variant)
-                                    {{ $variant->description }} <br />
-                                @endforeach
                             </td>
                             <td>
                                 {{ $product->price }} <br />
-                                {{--  $product->variants --}}
-                                @foreach ($product->variants as $variant)
-                                    {{ $variant->price }} <br />
-                                @endforeach
                             </td>
                             {{-- <td>{{ $product->description }}</td> --}}
                             <td>{{ $product->categories()->pluck('name')->implode(', ') }}</td>

@@ -1,4 +1,4 @@
-<div class="mx-1 px-1">
+<div class="p-0 m-0">
     {{-- {{ $order }} --}}
     <div class="card" wire:loading.class="bg-red-200">
         <div class="card-header font-bold text-center text-lg p-0 m-0">

@@ -1,4 +1,4 @@
-<div class="card p-0 m-0 max-h-[77vh] overflow-y-scroll">
+<div class="card p-0 m-0 overflow-y-scroll">
     <div class="card-header p-1 m-0 text-lg font-bold text-center flex flex-row justify-between items-center">
         Categories & Product List
         @include('layouts.partials.productSearch', [])
@@ -14,16 +14,20 @@
                         onclick="toggleCat('{{ $category->id }}')">
                         {{ $category->name }}
                     </a>
-                    <div class="card-body p-0 m-0 flex row w-100" id="cat-items-{{ $category->id }}"
+                    <div class="overflow-scroll card-body p-0 m-0 flex row w-100 max-h-[37svh]"
+                        id="cat-items-{{ $category->id }}"
                         @if ($loop->first) style="display: flex-wrap"
-                        @else 
+                        @else
                             style="display: none" @endif>
                         @forelse (AliBayat\LaravelCategorizable\Category::find($category->id)->entries(App\Models\Product::class)->get() as $product)
+                            {{-- <div class=" border-2 border-lime-800"> --}}
+
                             <livewire:itemCard :product="$product" :order="$order" />
                             {{-- @include('layouts.partials.itemCard', [
                                 'order' => $order,
                                 'product' => $product,
-                            ]) --}}
+                                ]) --}}
+                            {{-- </div> --}}
                         @empty
                             <p>No items available.</p>
                         @endforelse

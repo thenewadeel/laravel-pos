@@ -9,32 +9,35 @@
             <table class="table table-striped  table-sm p-0 m-0">
                 <thead>
                     <tr class="text-center font-bold">
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Qty</th>
-                        <th>Amount</th>
-                        <th></th>
+                        <th class="p-0 m-0">Product</th>
+                        <th class="p-0 m-0">Price</th>
+                        <th class="p-0 m-0">Qty</th>
+                        <th class="p-0 m-0">Amt</th>
+                        <th class="p-0 m-0"></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($order->items as $item)
-                        <tr class="" title="{{ $item}}">
+                        <tr class="border-0 border-purple-600 w-full overflow-scroll p-0 m-0"
+                            title="{{ $item }}">
 
-                            <td class="align-middle">{{ $item->product->name ??$item->product_name }}</td>
-                            <td class="align-middle text-right">{{ $item->product->price ?? $item->product_rate }}</td>
-                            <td class="align-middle">
+                            <td class="align-middle  p-0 m-0 text-sm text-justify">
+                                {{ $item->product->name ?? $item->product_name }}</td>
+                            <td class="align-middle text-right p-0 m-0 border border-l-neutral-500">
+                                {{ number_format($item->product->price ?? $item->product_rate, 0) }}</td>
+                            <td class="align-middle p-0 m-0">
                                 <div
-                                    class="text-center px-0 py-2 flex flex-row items-center overflow-hidden border-2 border-slate-200 w-max rounded-lg ">
+                                    class="text-center m-0 px-0 py-1 flex flex-row items-center overflow-hidden border-0 border-slate-200 w-max rounded-lg shadow-inner shadow-teal-700 bg-slate-200 h-8">
                                     @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
                                         {{-- <div class="flex overflow-hidden border w-max rounded-lg"> --}}
                                         <button type="button"
-                                            class="flex items-center justify-center w-6 h-6 font-semibold rounded-r-full rounded-l-md bg-red-200 border-2 border-red-500 align-middle"
+                                            class="flex p-0 m-0 items-center justify-center w-6 h-6 font-bold  rounded-r-full rounded-l-md bg-red-200 border-2 border-red-500 align-middle"
                                             wire:click="decreaseQty({{ $item->id }})">
                                             -
                                         </button>
                                     @endif
                                     <span
-                                        class="bg-transparent flex items-center justify-center w-8 h-6 font-semibold text-gray-800 text-base align-middle">
+                                        class="border-0 p-0 m-0 border-neutral-300 flex items-center justify-center min-w-4 h-8 font-semibold  text-base align-middle">
                                         {{ $item->quantity }}
                                     </span>
                                     <button type="button"
@@ -44,39 +47,40 @@
                                     </button>
                                 </div>
                             </td>
-                            <td class="text-right align-middle">
+                            <td class="text-right align-middle p-0 m-0  border border-r-neutral-500">
                                 {{ number_format($item->quantity * $item->product->price, 0) }}
                             </td>
-                            <td class="align-middle">
+                            <td class="align-middle p-0 m-0">
                                 <button wire:click="deleteItem({{ $item->id }})"
-                                    class="btn btn-danger btn-sm align-middle">
+                                    class="btn btn-danger btn-sm align-middle p-1 m-0">
                                     <i class="fa fa-trash"></i>
                                 </button>
                             </td>
                         </tr>
                     @endforeach
-                    @if(auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
-                    <tr>
-                        <td colspan="5">
-                            <div class="flex flex-row">
-                                <div class="flex flex-col">
-                                    <input wire:model="miscProductName" placeholder="misc item" class="form-control">
+                    @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
+                        <tr>
+                            <td colspan="5">
+                                <div class="flex flex-row">
+                                    <div class="flex flex-col">
+                                        <input wire:model="miscProductName" placeholder="misc item"
+                                            class="form-control">
 
-                                    @if ($errors->has('miscProductName'))
-                                        <span>{{ $errors->first('miscProductName') }}</span>
-                                    @endif
+                                        @if ($errors->has('miscProductName'))
+                                            <span>{{ $errors->first('miscProductName') }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <input wire:model="miscProductPrice" placeholder="Amount" class="form-control"
+                                            type="number" step="0.1">
+                                        @if ($errors->has('miscProductPrice'))
+                                            <span>{{ $errors->first('miscProductPrice') }}</span>
+                                        @endif
+                                    </div>
+                                    <button wire:click="addMiscProduct" class="btn btn-sm btn-primary">Add</button>
                                 </div>
-                                <div class="flex flex-col">
-                                    <input wire:model="miscProductPrice" placeholder="Amount" class="form-control"
-                                        type="number" step="0.1">
-                                    @if ($errors->has('miscProductPrice'))
-                                        <span>{{ $errors->first('miscProductPrice') }}</span>
-                                    @endif
-                                </div>
-                                <button wire:click="addMiscProduct" class="btn btn-sm btn-primary">Add</button>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
                     @endif
                     <tr>
                         <td class="text-center font-weight-bold">{{ $order->items->count() }}x Items</td>

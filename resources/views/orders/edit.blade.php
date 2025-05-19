@@ -5,7 +5,7 @@
     {{ 'Order Edit' }}
 @endsection
 @section('content-header')
-    <div class="flex flex-row items-center">
+    <div class="flex flex-row justify-between md:justify-start space-x-2 border-0 border-cyan-300">
         <span title="{{ $order }}" class="mr-4">
             {{ 'Order:Edit' }}
         </span>
@@ -13,7 +13,7 @@
     </div>
 @endsection
 @section('content-actions')
-    <div class="mb-2">
+    <div class="flex flex-row justify-end space-x-2 border-0 border-green-500">
         @include('layouts.partials.orderPrintBtns', ['order' => $order])
 
         {{-- <a href="{{ route('orders.index') }}" class="btn btn-primary">{{ __('order.Index') }}</a> --}}
@@ -40,8 +40,8 @@
     {{-- @section('route-update', route('orders.update', ['order' => $order->id])) --}}
 
     {{-- @section('form-fields-left') --}}
-    <div class="flex md:flex-row flex-col h-[85vh]">
-        <div class="card flex flex-col md:w-[40%] p-0 mx-1 justify-between border-4 border-red-500">
+    <div class="flex md:flex-row flex-col ">
+        <div class="card flex flex-col md:w-[45%] p-0 mx-1 justify-between border-4 border-red-500">
 
             @if (auth()->user()->type == 'cashier' || auth()->user()->type == 'admin')
                 @include('layouts.partials.orderEditData', [])

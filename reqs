@@ -4,15 +4,13 @@
 https://support.cpanel.net/hc/en-us/articles/360060775934-How-to-install-Laravel-on-cPanel
 https://support.cpanel.net/hc/en-us/articles/360047331334-How-to-correct-PHP-Fatal-error-Allowed-memory-size-errors-from-cPanel
 
-## Dev Wishlist
+## Wishlist
 
-[ ] bill footers/headers via app settings
+### Dev
+
 [ ] jobs need a monitor/ restarting mini interface
 [ ] KoT printing auditing
 [ ] Offloading Orders
-[x] Added Supervisor in production for processing queues
-
-## Wishlist
 
 ### Critical
 
@@ -29,45 +27,6 @@ https://support.cpanel.net/hc/en-us/articles/360047331334-How-to-correct-PHP-Fat
 order->creation date instead of payments creation date) [manual click to close the day by admin]
 [ ] order-type : delivery seperate report (pos numbers, day wise)
 [ ] advance payments with receipt number PV
-
-### Orders Offloading
-
-#### Filters
-
-    - start_date
-    - end_date
-    - order_type
-    - payment_type
-    - order_status
-    - customer
-    - order-taker
-    - shop_name
-    - cashiers
-    - item_name
-
-#### Columns
-
-    - POS_number
-    - table_number
-    - waiter_name
-    - notes
-    - type
-    - customer_membership_no
-    - customer_name
-    - user_name (order-taker)
-    - shop_name
-    - total
-    - discount_amount
-    - discounted_total
-    - cash
-        - cashiers
-    - chit
-    - balance
-    - order_items
-        - item_name
-        - quantity
-        - rate
-        - price
 
 ### QoL
 
@@ -98,7 +57,49 @@ order->creation date instead of payments creation date) [manual click to close t
 
 [ ] item price modifiable for some items (maybe only for cashier)
 
+### Orders Filter Service
+
+#### Filters
+
+    [x] start_date
+    [x] end_date
+    [x] order_type
+    [ ] payment_type
+    [x] order_status
+    [x] customer name
+    [x] order-taker
+    [x] shop_name
+    [x] cashiers
+    [ ] item_name
+
+#### Columns
+
+    - POS_number
+    - table_number
+    - waiter_name
+    - notes
+    - type
+    - customer_membership_no
+    - customer_name
+    - user_name (order-taker)
+    - shop_name
+    - total
+    - discount_amount
+    - discounted_total
+    - cash
+        - cashiers
+    - chit
+    - balance
+    - order_items
+        - item_name
+        - quantity
+        - rate
+        - price
+
 ## Completed
+
+[x] bill footers/headers via app settings
+[x] Added Supervisor in production for processing queues
 
 [x] order print buttons in order-edit
 (done in minor changes commit: )
@@ -158,8 +159,8 @@ Basic eCommerce Store
 
 ## Device Support
 
-[ ] iPad
-[ ] PC
+[x] iPad
+[x] PC
 [ ] Mac
 
 ## Online/Offline
@@ -169,10 +170,10 @@ Fully customisable
 
 ## Customisation
 
-[ ] Product options
+[x] Product options
 [ ] Tax rules
-[ ] Receipt content
-[ ] Categories
+[x] Receipt content
+[x] Categories
 [ ] Layout
 
 ## Search or scan
@@ -181,23 +182,23 @@ Fully customisable
 
 ## Be mobile
 
-[ ] Take your iPad point of sale register to your customer, and accept orders anywhere.
+[x] Take your iPad point of sale register to your customer, and accept orders anywhere.
 
 # Checkout
 
 ## Discounts
 
-[ ] Apply discounts to an entire sale
+[x] Apply discounts to an entire sale
 [ ] Apply XXXXX for particular product line items
 
 ## Park sales
 
-[ ] Park orders for later fulfilment
+[x] Park orders for later fulfilment
 [ ] Park lay-by orders with partial and periodic payments
 
 ## Custom Sale
 
-[ ] Add custom sale items on the fly right at the checkout
+[x] Add custom sale items on the fly right at the checkout
 
 ## Easy order flow
 
@@ -205,7 +206,7 @@ Fully customisable
 
 ## Order Notes
 
-[ ] Attach notes to any order so tracking special orders is easier
+[x] Attach notes to any order so tracking special orders is easier
 
 # Payments
 
@@ -228,7 +229,7 @@ Fully customisable
 
 ## Partial payments
 
-[ ] Ability to park orders with partial payments, you can accept deposits and lay-bys.
+[x] Ability to park orders with partial payments, you can accept deposits and lay-bys.
 
 ## Custom payment types
 
@@ -247,7 +248,7 @@ Fully customisable
 
 ## Bulk import & export
 
-[ ] Product import template to import all products at once
+[x] Product import template to import all products at once
 
 ## Stock management
 
@@ -288,7 +289,7 @@ one system to process
 
 ## Daily Sales totals
 
-[ ]
+[x]
 
 ## Staff access & pin
 
@@ -303,7 +304,7 @@ reports
 ## Order history
 
 [ ] Scan order receipt to view the past order
-[ ] Search it using customer or order numbers
+[x] Search it using customer or order numbers
 
 ## Returns & refunds
 
@@ -311,13 +312,13 @@ reports
 
 ## Transaction Report
 
-[ ] Keeps track of all daily transactions for every sale, payment & refunds
+[x] Keeps track of all daily transactions for every sale, payment & refunds
 
 # Customer management
 
 ## Customer profiles
 
-[ ] Centrally managed customer profiles
+[x] Centrally managed customer profiles
 
 ## Purchase history
 
@@ -325,7 +326,7 @@ reports
 
 ## Bulk import
 
-[ ] Your existing customers list with easy CSV import
+[x] Your existing customers list with easy CSV import
 
 ## Loyalty rewards
 
@@ -347,19 +348,19 @@ cards, on account sales and returns
 
 ## Transaction & sales reports
 
-[ ] All daily transaction for every sale, payment & refunds
+[x] All daily transaction for every sale, payment & refunds
 
 # Multi-store
 
 ## Multiple outlets
 
-[ ] Set-up and start using new outlet
+[x] Set-up and start using new outlet
 [ ] Pop-up store
 [ ] Warehouse
 
 ## Powerful multi-store reporting
 
-[ ] Consolidated report to see how your business is doing in general and you can also drill down to a particular site
+[x] Consolidated report to see how your business is doing in general and you can also drill down to a particular site
 level
 [ ] Access these real-time reports from anywhere in the world
 
@@ -376,9 +377,9 @@ level
 
 ## Accounting integration
 
-[ ] Post transactions
-[ ] Customer records
-[ ] Daily Sales Totals to your accounting system
+[x] Post transactions
+[x] Customer records
+[x] Daily Sales Totals to your accounting system
 
 ## eCommerce integration
 

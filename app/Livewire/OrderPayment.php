@@ -66,6 +66,10 @@ class OrderPayment extends Component
 
     public function payAndClose()
     {
+        if ($this->order->balance() == 0 || $this->order->items()->count() == 0) {
+            return redirect()->route('orders.edit', $this->order->id)->with('message', __('order.No_Items_Or_Zero_Balance'));
+        }
+
         if ($this->order->POS_number == null) $this->order->assignPOS();
         if ($this->order->POS_number != null) {
             $amt = ($this->orderBalance >= $this->order->balance()) ? $this->order->balance() : $this->orderBalance;

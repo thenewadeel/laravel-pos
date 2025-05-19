@@ -7,8 +7,47 @@
                     class="fas fa-bars"></i></a>
         </li>
     </ul>
+    @include('layouts.partials.alert.success')
+    @include('layouts.partials.alert.error')
+    <style>
+        .alert {
+            position: fixed;
+            right: 0;
+            top: 10px;
+            z-index: 9999;
+            min-width: 300px;
+            width: auto;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 10px;
+            margin: 0;
+            background-color: #eee;
+            border-radius: 0;
+            border: 0;
+            text-align: center;
+            animation: slidein 3s forwards;
+        }
 
-    <!-- SEARCH FORM -->
+        @keyframes slidein {
+            0% {
+                right: -300px;
+            }
+
+            100% {
+                right: 0;
+            }
+        }
+    </style>
+    @if (session('message'))
+        <div class="alert alert-warning alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>
+                {{ session('message') }}
+            </strong>
+        </div>
+    @endif
     {{--
     <form class="form-inline ml-3">
       <div class="input-group input-group-sm">

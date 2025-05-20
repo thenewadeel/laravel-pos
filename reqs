@@ -6,6 +6,50 @@ https://support.cpanel.net/hc/en-us/articles/360047331334-How-to-correct-PHP-Fat
 
 ## Wishlist
 
+### Saas functionality required
+
+## Phase 1: Core SaaS Foundation (MVP)
+
+**Essential features to launch the SaaS platform**
+
+[ ] Multi-tenant architecture with separate databases for each client
+[ ] Role-based access control (Admin, Manager, Cashier, Order-taker, Accountant)
+[ ] Automated monthly billing & subscription management
+[ ] Client onboarding/offboarding system (basic)
+[ ] Mobile-responsive interface
+[ ] Real-time synchronization across devices
+[ ] Cloud-based deployment with offline capability
+[ ] Secure payment processing integration
+[ ] Automated backup system for client data
+
+## Phase 2: Scalability & Admin Tools
+
+**Enhancements for scalability, security, and business insights**
+
+-   API access for integrations
+-   Audit logging for critical operations
+-   Performance monitoring & alerts
+-   Scalable infrastructure to handle peak loads
+-   Automated software updates
+-   Usage analytics dashboard for admin
+-   Compliance with data protection regulations (GDPR, etc.)
+-   SLA monitoring & reporting
+
+## Phase 3: Advanced Customization & Growth Features
+
+**Premium features for enterprise clients & long-term growth**
+
+-   White-labeling options for clients
+-   Multi-language support
+-   Client-specific customization options (UI, workflows, reports)
+-   Enhanced onboarding/offboarding (automated workflows, guided setup)
+
+**Rationale:**
+
+-   Phase 1 ensures a functional, secure, and billable SaaS platform.
+-   Phase 2 improves reliability, compliance, and operational insights.
+-   Phase 3 adds premium features to attract larger clients and increase retention.
+
 ### Dev
 
 [ ] jobs need a monitor/ restarting mini interface
@@ -30,7 +74,7 @@ order->creation date instead of payments creation date) [manual click to close t
 
 ### QoL
 
-[ ] order with 0 sum should not be saved
+[x] order with 0 sum should not be saved
 [ ] auto sort columns on order index
 [ ] at 0001 hrs cashier & order-taker order index is ZERO... should show previous open bills
 [ ] modal ip dialog for broken printers (when NW is down, printer broken, etc)

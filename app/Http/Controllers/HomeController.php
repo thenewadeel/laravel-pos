@@ -74,7 +74,7 @@ class HomeController extends Controller
         $orderItems = \App\Models\OrderItem::whereIn('order_id', $orders->pluck('id'))
             //     ->with('order.shop')
             //     ->get();
-            ->select(['id', 'order_id', 'product_name', 'price']) // Only needed fields
+            ->select(['id', 'order_id', 'product_name', 'price', 'created_at']) // Only needed fields
             ->with(['order:id,shop_id', 'order.shop:id,name']) // Minimal relations
             // ->limit(10000)
             ->get();
@@ -100,7 +100,10 @@ class HomeController extends Controller
             ->take(25);
 
         $topSellingProducts = $orderItems
-            ->groupBy('product_name')
+            ->groupBy(function ($item) {
+                return $item->product_name;
+            })
+            // ->groupBy('product_name')
             ->map(function ($group) {
                 return $group->count();
             })
@@ -115,8 +118,8 @@ class HomeController extends Controller
                 $carbonDate = \Carbon\Carbon::parse($date);
                 return $carbonDate->format('d (D)');
             })
-            ->sort()
             ->unique()
+            ->sort()
             ->values()
             ->toArray();
         // dd($DateLabels);

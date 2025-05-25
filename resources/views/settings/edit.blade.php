@@ -126,7 +126,7 @@
                 @csrf
                 @foreach (App\Models\Setting::all() as $setting)
                     @if ($setting->key == 'club_logo')
-                        <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">xxx
+                        <div class="flex flex-row border-2 border-gray-200 rounded-md justify-center items-center">
                             <label for="{{ $setting->key }}"
                                 class="text-center w-1/4">{{ __('settings.' . $setting->key) }}</label>
                             <input type="text" name="{{ $setting->key }}"

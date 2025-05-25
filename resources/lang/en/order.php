@@ -85,6 +85,7 @@ return [
     'Order_Details' => 'Order Details',
     'Payment'       => 'Payment',
     'Pay_Close'     => 'Pay & Close',
+    'Pay_Next'     => 'Pay & Next',
     'Order_Taker'     => 'Order Taker',
     'No_Items_Or_Zero_Balance' => 'No Items or Zero Balance',
 ];

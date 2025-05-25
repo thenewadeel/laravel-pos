@@ -46,7 +46,7 @@
                             </td>
                             <td>{{ $user->email }}</td>
                             <td>
-                                @if ($user->type == 'cashier')
+                                @if ($user->type == 'cashier' || $user->type == 'order-taker')
                                     @foreach ($user->shops as $shop)
                                         {{ $shop->name }} ,
                                     @endforeach

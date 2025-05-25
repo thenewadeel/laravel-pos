@@ -1,7 +1,7 @@
 ---
 title: "WT - POS"
 # author: "M. Adeel Shahid"
-date: "24-Aug-24"
+date: "25-May-25"
 subtitle: "Software User Manual"
 keywords: []
 abstract: ""
@@ -13,7 +13,7 @@ papersize: a4
 documentclass: scrbook
 indent: true
 fontsize: 12pt
-mainfont: Libertinus Serif
+# mainfont: Sans Serif
 classoption:
     # - 3pt
     # - a4paper
@@ -53,7 +53,7 @@ It leverages Livewire, a library that allows for real-time, interactive updates 
 
 WT POS is housed within a virtual machine (VM), which is a good solution for on-site deployment. By using a VM, you can run WT POS on your own hardware without the need for additional hardware or software. A VM provides a self-contained environment that can be easily installed and managed. It also allows you to easily update and manage the software within the VM, without affecting the rest of your systems.
 
-![Database Design](diagrams/db%20design.png){width=650px}
+![Database Design](diagrams/db%20design.png)
 
 ### System Users
 
@@ -96,13 +96,13 @@ Products need to be set up once before functioning of the system. At later stage
 
 1. **Product Index**. Lists all the products available in POS System. Users can _View_/ _Edit_/ _Delete_ any product. Users can search for a _product_ by _name_ or _description_.
 
-![Product Index Page](screenshots/current/products%20-%20index%20-%20led.jpg){width=500px}
+![Product Index Page](screenshots/current/2.3.products%20-%20index%20-%20HD.jpg){width=500px}
 
 2. **Product Add/ Edit**. Simple form for editing product.
 
-![Product Edit Page](screenshots/current/products%20-%20edit%20-%20led.jpg){width=500px}
+![Product Edit Page](screenshots/current/2.3.products%20-%20edit%20-%20HD.jpg){width=500px}
 
-![Product Edit Page - Mob View](screenshots/current/products%20-%20edit%20-%20mob.jpg){width=200px}
+<!-- ![Product Edit Page - Mob View](screenshots/current/products%20-%20edit%20-%20mob.jpg){width=200px} -->
 
 ### Category System
 
@@ -115,17 +115,17 @@ POS system is designed to group products into categories. In addition to collect
 
 1. **Category Index**. Lists all the categories available in POS System. Users can _View_/ _Edit_/ _Delete_ any category.
 
-![Category Index Page](screenshots/current/categories%20-%20index%20-%20led.jpg){width=500px}
+![Category Index Page](screenshots/current/2.2.categories%20-%20index%20-%20HD.jpg){width=500px}
 
 2. **Category View**. Simple form for adding /deleting produts to a category.
 
-![Category View Page](screenshots/current/categories%20-%20show%20-%20led.jpg){width=500px}
+![Category View Page](screenshots/current/2.2.categories%20-%20show%20-%20HD.jpg){width=500px}
 
 3. **Category Add/ Edit**. Simple form for editing category. Kitchen Printer IP can be set in edit page.
 
-![Category Edit Page](screenshots/current/categories%20-%20edit%20-%20led.jpg){width=500px}
+![Category Edit Page](screenshots/current/2.2.categories%20-%20edit%20-%20HD.jpg){width=500px}
 
-![Category Edit Page - Mob View](screenshots/current/categories%20-%20edit%20-%20mob.jpg){width=200px}
+<!-- ![Category Edit Page - Mob View](screenshots/current/categories%20-%20edit%20-%20mob.jpg){width=200px} -->
 
 ### Shops Management
 
@@ -143,13 +143,13 @@ Just like Products, Shops need to be set up once before functioning of the syste
 
 1. **Shops Index**. Lists all the shops available in POS System. Users can _View_/ _Edit_/ _Delete_ any shop.
 
-![Shop Index Page](screenshots/current/shop%20-%20index%20-%20led.jpg){width=500px}
+![Shop Index Page](screenshots/current/2.1.shop%20-%20index%20-%20HD.jpg){width=500px}
 
 2. **Shop Add/ Edit**. Make a new Shop or edit an existing one. Shop Printer IP addresse can be configured here.
 
-![Shop Edit Page](screenshots/current/shop%20-%20edit%20-%20led.jpg){width=500px}
+![Shop Edit Page](screenshots/current/2.1.shop%20-%20edit%20-%20HD.jpg){width=500px}
 
-![Shop Edit Page - Mob View](screenshots/current/shop%20-%20edit%20-%20mob.jpg){width=200px}
+<!-- ![Shop Edit Page - Mob View](screenshots/current/shop%20-%20edit%20-%20mob.jpg){width=200px} -->
 
 ### Staff Management
 
@@ -166,29 +166,29 @@ System staff consists of _Admin_, _Cashiers_, _Order Takers_ and _Accountant_. T
 
 1. **User Index**. Lists all the users configured in the POS System. Admin can _View_/ _Edit_/ _Delete_ any user.
 
-![User Index Page](screenshots/current/users%20-%20index%20-%20led.jpg){width=500px}
+![User Index Page](screenshots/current/2.5.users%20-%20index%20-%20HD.jpg){width=500px}
 
 2. **User Add/ Edit**. User roles, profile photos and passwords can be changed from these pages.
 
-![User Edit Page](screenshots/current/users%20-%20edit%20-%20led.jpg){width=500px}
+![User Edit Page](screenshots/current/2.5.users%20-%20edit%20-%20HD.jpg){width=500px}
 
-![User Edit Page - Mob View](screenshots/current/users%20-%20edit%20-%20mob.jpg){width=200px}
+<!-- ![User Edit Page - Mob View](screenshots/current/users%20-%20edit%20-%20mob.jpg){width=200px} -->
 
 ### Printers Management
 
 POS System allows you to print saved Orders only. This is to keep from accidental order / KOT printing by novice users. Prints can be triggered from the Order print button group found in _orders index_ page or when viewing an order at the _order show_ page.
 
-![Order Print Buttons](screenshots/current/Order%20-%20print%20buttons.jpg){width=100px}
+![Order Print Buttons](screenshots/current/4.Order%20-%20print%20buttons.jpg){width=100px}
 
 #### PDF Prints
 
 All orders can be printed as a pdf file. This is useful for previewing the bill before printing to printer. It is also useful for record keeping and viewing old orders. The bill shows different text _(Paid, Chit or Part-Chit)_ based on payment info.
 
-![Paid Order](<screenshots/current/Order%20Receipt%20(paid)%20-%20order_1006.pdf.jpg>){width=200px}
+![Paid Order](<screenshots/current/4.5.Order Receipt (paid) - order_1006.pdf.jpg>){width=200px}
 
-![Chit Order](<screenshots/current/Order%20Receipt%20(chit)%20-%20order_1005.pdf.jpg>){width=200px}
+![Chit Order](<screenshots/current/4.5.Order Receipt (chit) - order_1005.pdf.jpg>){width=200px}
 
-![Part-Chit Order](<screenshots/current/Order%20Receipt%20(part-chit)%20-%20order_1004-1.pdf.jpg>){width=200px}
+![Part-Chit Order](<screenshots/current/4.5.Order Receipt (part-chit) - order_1004-1.pdf.jpg>){width=200px}
 
 #### POS Prints
 
@@ -211,7 +211,7 @@ The system supports backing up existing records in excel format. Following entit
 3. Products (including categories)
 4. Customers
 
-![Backups](screenshots/current/settings%20-%201%20-%20led.jpg){width=500px}
+![Backups](screenshots/current/6.settings%20-%201%20-%20HD.jpg){width=500px}
 
 #### Restoration
 
@@ -230,27 +230,27 @@ System generates following reports : -
 
 This is a sale report. It groups shop-wise the sales performed during the selected date range. Report can be used to close a sales day.
 
-![Sales Report](screenshots/current/dailySale%20-%201%20-%20led.jpg){width=500px}
+![Sales Report](screenshots/current/5.1.dailySale%20-%20HD.jpg){width=500px}
 
-![Sales Report Excel](screenshots/current/Reports%20-%20DailySale.jpg){width=500px}
+![Sales Report Excel](screenshots/current/5.Reports%20-%20DailySale.jpg){width=500px}
 
 #### Cashiers Report
 
 Cashiers report pivots the sales data by grouping on the Cashiers. This report can benefit during closing a sales day. It shows all payments taken in cash by respective cashiers.
 
-![Cashiers Report](screenshots/current/cashiersReport%20-%201%20-%20led.jpg){width=500px}
+![Cashiers Report](screenshots/current/5.3.cashiersReport%20-%20HD.jpg){width=500px}
 
-![Cashiers Report Details](screenshots/current/cashiersReport%20-%202%20-%20led.jpg){width=500px}
+<!-- ![Cashiers Report Details](screenshots/current/cashiersReport%20-%202%20-%20led.jpg){width=500px} -->
 
-![Cashiers Report Excel](screenshots/current/Reports%20-%20CashiersReport.jpg){width=500px}
+![Cashiers Report Excel](screenshots/current/5.Reports%20-%20CashiersReport.jpg){width=500px}
 
 #### Products Report
 
 By the end of a sales period it can be beneficial to know your top selling products as well as top grossing products. This report can be used to order logistics as per perceived sale of products.
 
-![Products Sales Report](screenshots/current/productsReport%20-%202%20-%20led.jpg){width=500px}
+![Products Sales Report](screenshots/current/5.2.productsReport%20-%20HD.jpg){width=500px}
 
-![Products Report Excel](screenshots/current/Reports%20-%20ProductsSale.jpg){width=500px}
+![Products Report Excel](screenshots/current/5.Reports%20-%20ProductsSale.jpg){width=500px}
 
 ## Troubleshooting
 

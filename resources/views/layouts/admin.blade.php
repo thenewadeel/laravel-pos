@@ -24,6 +24,7 @@
         ]); ?>
     </script>
     @livewireStyles
+    <script src="https://js-de.sentry-cdn.com/5d9f67628ea1184393411b2640ef25c7.min.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="hold-transition sidebar-mini sidebar-collapse layout-fixed ">

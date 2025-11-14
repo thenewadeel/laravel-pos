@@ -15,3 +15,8 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+seedData/*
+reports/*
+sql/*
+storage/clockwork/.gitignore
+screenshots/old/

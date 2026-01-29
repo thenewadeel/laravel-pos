@@ -3,6 +3,54 @@
 [ ] Install NGINX on server [https://warden.serverdots.com:2087/]
 https://support.cpanel.net/hc/en-us/articles/360060775934-How-to-install-Laravel-on-cPanel
 https://support.cpanel.net/hc/en-us/articles/360047331334-How-to-correct-PHP-Fatal-error-Allowed-memory-size-errors-from-cPanel
+[ ] bill footers/headers via app settings
+[ ] jobs need a monitor/ restarting mini interface
+[ ] KoT printing auditing
+[ ] Offloading Orders
+[ ]
+[ ]
+[ ]
+
+### Orders Offloading
+
+#### Filters
+
+    - start_date
+    - end_date
+    - order_type
+    - payment_type
+    - order_status
+    - customer
+    - order-taker
+    - shop_name
+    - cashiers
+    - item_name
+
+#### Columns
+
+    - POS_number
+    - table_number
+    - waiter_name
+    - notes
+    - type
+    - customer_membership_no
+    - customer_name
+    - user_name (order-taker)
+    - shop_name
+    - total
+    - discount_amount
+    - discounted_total
+    - cash
+        - cashiers
+    - chit
+    - balance
+    - order_items
+        - item_name
+        - quantity
+        - rate
+        - price
+
+> > > > > > > 4639b16 (night)
 
 ## Wishlist
 
@@ -26,29 +74,29 @@ https://support.cpanel.net/hc/en-us/articles/360047331334-How-to-correct-PHP-Fat
 
 **Enhancements for scalability, security, and business insights**
 
--   API access for integrations
--   Audit logging for critical operations
--   Performance monitoring & alerts
--   Scalable infrastructure to handle peak loads
--   Automated software updates
--   Usage analytics dashboard for admin
--   Compliance with data protection regulations (GDPR, etc.)
--   SLA monitoring & reporting
+- API access for integrations
+- Audit logging for critical operations
+- Performance monitoring & alerts
+- Scalable infrastructure to handle peak loads
+- Automated software updates
+- Usage analytics dashboard for admin
+- Compliance with data protection regulations (GDPR, etc.)
+- SLA monitoring & reporting
 
 ## Phase 3: Advanced Customization & Growth Features
 
 **Premium features for enterprise clients & long-term growth**
 
--   White-labeling options for clients
--   Multi-language support
--   Client-specific customization options (UI, workflows, reports)
--   Enhanced onboarding/offboarding (automated workflows, guided setup)
+- White-labeling options for clients
+- Multi-language support
+- Client-specific customization options (UI, workflows, reports)
+- Enhanced onboarding/offboarding (automated workflows, guided setup)
 
 **Rationale:**
 
--   Phase 1 ensures a functional, secure, and billable SaaS platform.
--   Phase 2 improves reliability, compliance, and operational insights.
--   Phase 3 adds premium features to attract larger clients and increase retention.
+- Phase 1 ensures a functional, secure, and billable SaaS platform.
+- Phase 2 improves reliability, compliance, and operational insights.
+- Phase 3 adds premium features to attract larger clients and increase retention.
 
 ### Dev
 
@@ -58,12 +106,13 @@ https://support.cpanel.net/hc/en-us/articles/360047331334-How-to-correct-PHP-Fat
 
 ### Critical
 
+(added minimal product info in order_item pivot, order items will sustain menu change commit:4755f0d439ee289a65d4a4a79ab7dcc95253e5b4)
 [ ] bill cancellation rights & mech
 [ ] product report (item was sold in following order : POS Numbers list)
 [ ] running KOTs
 [ ] addl reports
 [ ] KoT counter check with order final total
-
+(Reprogrammed All button in order-index to show all open orders commit:f22d441502015b782501a6f3c4393036987be4ef )
 [ ] amount of 1000 reduced in bill -> generate alarm
 [ ] payment via POS
 [ ] chit to paid conversion rights and vice versa
@@ -156,6 +205,7 @@ order->creation date instead of payments creation date) [manual click to close t
 [x] all open bills cashier wise & shop wise
 [x] all open bills cashier wise & shop wise
 (Reprogrammed All button in order-index to show all open orders commit:f22d441502015b782501a6f3c4393036987be4ef )
+[x] all open bills cashier wise & shop wise
 
 [x] order POS counter reset every month
 [x] with every order (only with dining)

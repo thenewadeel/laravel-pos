@@ -49,13 +49,13 @@ class OrderTest extends TestCase
         $response->assertRedirect();
         $this->assertDatabaseHas('orders', [
             'customer_id' => $this->customer->id,
-            'table' => 'Table 1',
+            'table_number' => 'Table 1',
             'type' => 'dine-in'
         ]);
         $this->assertDatabaseHas('order_items', [
             'product_id' => $this->product->id,
             'quantity' => 2,
-            'price' => $this->product->price
+            'price' => $this->product->price * 2
         ]);
     }
 

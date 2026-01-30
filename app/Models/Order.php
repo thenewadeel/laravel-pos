@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Controllers\OrderHistoryController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
@@ -90,7 +91,7 @@ class Order extends Model
     public function assignPOS()
     {
         $posNumber = null;
-        \DB::transaction(function () {
+        DB::transaction(function () {
             // $latestOrder = Order::whereNotNull('POS_number')
             //     ->where('created_at', '>=', $this->created_at->startOfMonth())
             //     ->latest('POS_number')
@@ -125,6 +126,10 @@ class Order extends Model
 
     public function setTypeAttribute($value)
     {
+        if ($value === null) {
+            $value = $this->attributes['type'] ?? 'dine-in';
+        }
+        
         $validTypes = ['dine-in', 'take-away', 'delivery'];
         if (!in_array($value, $validTypes)) {
             throw new \InvalidArgumentException("Invalid type: {$value}");
@@ -158,6 +163,12 @@ class Order extends Model
     public function calculateTotal()
     {
         return $this->items->sum('total_price');
+    }
+
+    public function updateTotalAmount()
+    {
+        $this->total_amount = $this->calculateTotal();
+        $this->save();
     }
 
     public function getDuration()

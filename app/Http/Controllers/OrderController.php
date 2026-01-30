@@ -482,14 +482,27 @@ class OrderController extends Controller
     }
     public function store(OrderStoreRequest $request)
     {
+        // Validate stock availability if items are provided in request
+        if ($request->has('items')) {
+            foreach ($request->items as $itemData) {
+                $product = Product::find($itemData['product_id']);
+                if (!$product) {
+                    return redirect()->back()->withErrors(['items' => 'Product not found']);
+                }
+                if ($product->quantity < $itemData['quantity']) {
+                    return redirect()->back()->withErrors(['items' => "Insufficient stock for product: {$product->name}"]);
+                }
+            }
+        }
+        
         // logger($request);
         $order = Order::create([
             'customer_id' => $request->customer_id,
             'user_id' => $request->user()->id,
             'shop_id' => $request->shop_id,
-            'table_number' => $request->table_number,
+            'table_number' => $request->table ?? $request->table_number,
             'waiter_name' => $request->waiter_name,
-            'type' => $request->order_type,
+            'type' => $request->type ?? $request->order_type ?? 'dine-in',
             'notes' => $request->notes,
         ]);
 
@@ -497,17 +510,44 @@ class OrderController extends Controller
         $orderHistoryController = new OrderHistoryController();
         $orderHistoryController->store($request, $order->id, 'created');
 
-        $cart = $request->user()->cart()->get();
-        foreach ($cart as $item) {
-            $order->items()->create([
-                'price' => $item->price * $item->pivot->quantity,
-                'quantity' => $item->pivot->quantity,
-                'product_id' => $item->id,
-            ]);
-            // $item->quantity = $item->quantity - $item->pivot->quantity;
-            // $item->save();
+        // Handle items from request or cart
+        if ($request->has('items')) {
+            foreach ($request->items as $itemData) {
+                $product = Product::find($itemData['product_id']);
+                $order->items()->create([
+                    'price' => $itemData['price'] * $itemData['quantity'],
+                    'quantity' => $itemData['quantity'],
+                    'product_id' => $itemData['product_id'],
+                    'unit_price' => $itemData['price'],
+                    'total_price' => $itemData['price'] * $itemData['quantity'],
+                    'product_name' => $product->name,
+                    'product_rate' => $product->price,
+                ]);
+                
+                // Deduct product quantity
+                $product->quantity -= $itemData['quantity'];
+                $product->save();
+            }
+        } else {
+            $cart = $request->user()->cart()->get();
+            foreach ($cart as $item) {
+                $order->items()->create([
+                    'price' => $item->price * $item->pivot->quantity,
+                    'quantity' => $item->pivot->quantity,
+                    'product_id' => $item->id,
+                    'unit_price' => $item->price,
+                    'total_price' => $item->price * $item->pivot->quantity,
+                    'product_name' => $item->name,
+                    'product_rate' => $item->price,
+                ]);
+                
+                // Deduct product quantity
+                $item->quantity -= $item->pivot->quantity;
+                $item->save();
+            }
+            $request->user()->cart()->detach();
         }
-        $request->user()->cart()->detach();
+        
         if ($request->amount) {
             $order->payments()->create([
                 'amount' => $request->amount,
@@ -517,8 +557,22 @@ class OrderController extends Controller
         if ($request->discountsToAdd) {
             $order->discounts()->sync($request->discountsToAdd);
         }
-        return ['message' => 'success', 'order' => $order];
+        
+        return redirect()->route('orders.show', $order)->with('success', 'Order created successfully');
     }
+
+    public function updateStatus(Request $request, Order $order)
+    {
+        $request->validate([
+            'state' => 'required|in:preparing,served,closed,wastage'
+        ]);
+
+        $order->state = $request->state;
+        $order->save();
+
+        return redirect()->route('orders.show', $order)->with('success', 'Order status updated successfully');
+    }
+
     public function printPdf($id)
     {
         // dd('printPdf', $id);

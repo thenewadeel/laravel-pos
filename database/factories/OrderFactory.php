@@ -14,8 +14,11 @@ class OrderFactory extends Factory
 
     public function definition(): array
     {
+        $date = now()->format('Ymd');
+        $random = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        
         return [
-            'POS_number' => 'POS-' . $this->faker->unique()->numberBetween(1000, 9999),
+            'POS_number' => "POS-{$date}-{$random}",
             'customer_id' => Customer::factory(),
             'shop_id' => Shop::factory(),
             'user_id' => User::factory(),

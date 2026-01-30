@@ -1,0 +1,279 @@
+# AGENTS - Laravel POS 2026 Upgrade Project
+
+This file provides persistent agent definitions, task assignments, and AI instruction references for the Laravel POS 2026 upgrade project.
+
+## Project Status: 🟢 ACTIVE - Phase 1 Foundation (Weeks 1-4)
+
+**Development Cycle Start**: January 29, 2026  
+**Current Week**: Week 1 - Environment Setup & Testing Foundation
+**Next Milestone**: Phase 1 Completion - February 26, 2026
+
+---
+
+## Agent Definitions
+
+### 1. Architecture Agent
+**Status**: 🟢 Active - Phase 1  
+**Current Tasks**: System analysis and technical oversight  
+**Skills**: System design, technical decision-making, Laravel architecture  
+**AI Instructions**: `ai-instructions/architecture-agent/` (TODO)  
+**Primary Tasks**: 
+- P1-AR-001: Architecture review (planned)
+- Technical specification validation
+- Technology stack decisions
+
+### 2. Backend Development Agent  
+**Status**: 🟡 Standby - Phase 2 activation
+**Current Tasks**: Planning Phase 2 activities  
+**Skills**: Laravel 10/11, PHP, API development, database design  
+**AI Instructions**: `ai-instructions/backend-agent/` (TODO)  
+**Future Tasks**:
+- P2-BE-001: Laravel 11 upgrade
+- P2-BE-002: Dependency management
+- P2-BE-003: API standardization
+
+### 3. Frontend Development Agent
+**Status**: 🔴 Inactive - Phase 3 activation  
+**Skills**: Vue.js 3, PWA development, mobile optimization, JavaScript  
+**AI Instructions**: `ai-instructions/frontend-agent/` (TODO)  
+**Future Tasks**:
+- P3-FE-001: Vue.js 3 architecture setup
+- P3-FE-002: PWA implementation
+- P3-FE-003: Offline functionality development
+
+### 4. Testing & QA Agent
+**Status**: 🟢 Active - Phase 1  
+**Current Task**: P1-TS-001 Comprehensive Testing Suite (80 hours)  
+**Skills**: PHPUnit, Laravel Dusk, TDD, quality assurance  
+**AI Instructions**: `ai-instructions/testing-agent/` (TODO)  
+**TDD Workflow**: `ai-instructions/workflows/tdd-process.md` ✅
+
+### 5. Security Agent
+**Status**: 🟢 Active - Phase 1  
+**Current Task**: P1-SA-001 Security Vulnerability Assessment (60 hours)  
+**Skills**: OWASP standards, penetration testing, security auditing  
+**AI Instructions**: `ai-instructions/security-agent/` (TODO)  
+
+### 6. Database Agent
+**Status**: 🟢 Active - Phase 1  
+**Current Tasks**: Database analysis and optimization planning  
+**Skills**: MySQL, database optimization, migration planning  
+**AI Instructions**: `ai-instructions/database-agent/` (TODO)  
+
+### 7. DevOps Agent
+**Status**: 🟢 Active - Phase 1  
+**Current Task**: P1-DE-001 Development Environment Setup (40 hours)  
+**Skills**: Docker, CI/CD, infrastructure management  
+**AI Instructions**: `ai-instructions/devops-agent/` (TODO)  
+
+### 8. Documentation Agent
+**Status**: 🟡 Standby - Phase 1 support  
+**Skills**: Technical writing, API documentation, user guides  
+**AI Instructions**: `ai-instructions/documentation-agent/` (TODO)  
+
+---
+
+## Active Tasks - Phase 1 Foundation
+
+### Week 1-2 Critical Tasks
+
+#### P1-DE-001: Development Environment Setup
+- **Status**: 🟡 In Progress
+- **Agent**: DevOps Agent
+- **Hours**: 40 hours allocated
+- **Dependencies**: None
+- **Script**: `scripts/setup-dev.sh` ✅
+- **Location**: `docs/features/plans/phase1-foundation/development-environment/`
+
+#### P1-TS-001: Comprehensive Testing Suite
+- **Status**: 🟡 Ready to Start
+- **Agent**: Testing & QA Agent  
+- **Hours**: 80 hours allocated
+- **Dependencies**: P1-DE-001
+- **Script**: `scripts/test-runner.sh` ✅ (TDD approach)
+- **Location**: `docs/features/plans/phase1-foundation/testing-suite/`
+
+#### P1-SA-001: Security Vulnerability Assessment
+- **Status**: 🟡 Ready to Start
+- **Agent**: Security Agent
+- **Hours**: 60 hours allocated  
+- **Dependencies**: P1-DE-001
+- **Location**: `docs/features/plans/phase1-foundation/security-audit/`
+
+### Week 3-4 Planning Tasks
+
+#### P1-PB-001: Performance Benchmarking
+- **Status**: ⚪ Planned
+- **Agent**: Backend Agent (lead), Database Agent (support)
+- **Hours**: 40 hours allocated
+- **Dependencies**: P1-TS-001
+- **Location**: `docs/features/plans/phase1-foundation/performance-benchmark/`
+
+---
+
+## Project Scripts and Automation
+
+### Available Scripts (scripts/)
+- **setup-dev.sh**: Complete development environment setup ✅
+- **test-runner.sh**: TDD-compliant test runner ✅
+- **security-audit.sh**: Security assessment automation (TODO)
+
+### Execution Commands
+```bash
+# Setup development environment
+./scripts/setup-dev.sh
+
+# Run TDD test cycle
+./scripts/test-runner.sh
+
+# Run full test suite with E2E
+./scripts/test-runner.sh --full
+
+# Security audit (when implemented)
+./scripts/security-audit.sh
+```
+
+---
+
+## AI Instructions Structure
+
+### Directory Organization
+```
+ai-instructions/
+├── README.md                    # Overview ✅
+├── workflows/                    # Common processes
+│   └── tdd-process.md          # TDD workflow ✅
+├── architecture-agent/           # Architecture agent (TODO)
+├── backend-agent/              # Backend agent (TODO)
+├── frontend-agent/             # Frontend agent (TODO)
+├── testing-agent/              # Testing agent (TODO)
+├── database-agent/             # Database agent (TODO)
+├── security-agent/            # Security agent (TODO)
+├── devops-agent/              # DevOps agent (TODO)
+└── documentation-agent/        # Documentation agent (TODO)
+```
+
+### AI Instruction Status
+- ✅ Available: TDD workflow, project overview
+- ⚪ In Progress: Individual agent instructions
+- 🔄 TODO: Security review, code review, debugging workflows
+
+---
+
+## Task Management Framework
+
+### Task Status Indicators
+- 🟢 Active: Currently being worked on
+- 🟡 Ready: Ready to start, dependencies met
+- ⚪ Planned: Scheduled for future
+- 🔴 Blocked: Dependencies not met
+- ✅ Completed: Finished and verified
+
+### Task Locations
+- **Plans**: `docs/features/plans/phase{n}-{category}/`
+- **Completions**: `docs/features/complete/`
+- **AI Instructions**: `ai-instructions/`
+
+### Quality Gates
+Each task must meet these gates before completion:
+1. Acceptance criteria satisfied
+2. Tests passing (≥80% coverage)
+3. Security review passed (if applicable)
+4. Code review completed
+5. Documentation updated
+
+---
+
+## Current Sprint (Week 1)
+
+### Sprint Goals
+1. ✅ Complete development environment setup
+2. 🎯 Begin comprehensive testing suite implementation
+3. 🎯 Initiate security vulnerability assessment
+4. 📊 Establish baseline metrics
+
+### Daily Standup Topics
+- Progress updates on active tasks
+- Blockers and dependency issues
+- Resource reallocation needs
+- Risk identification
+
+### Success Metrics
+- Environment setup: 100% complete
+- Test infrastructure: Operational
+- Security tools: Configured
+- Team readiness: All agents operational
+
+---
+
+## Risk Management
+
+### Current Risks
+- **Technical**: Docker environment compatibility issues
+- **Timeline**: Aggressive Phase 1 schedule (4 weeks)
+- **Resource**: Multiple critical tasks requiring specialized skills
+
+### Mitigation Status
+- ✅ Docker containers tested on multiple platforms
+- ✅ Buffer time allocated in Phase 1 schedule  
+- ✅ Cross-training plan for critical skills
+
+---
+
+## Communication Protocols
+
+### Daily Rhythm
+- **09:00**: Standup meeting (15 min)
+- **12:00**: Progress update to project manager
+- **17:00**: End-of-day status update
+
+### Weekly Rhythm  
+- **Friday 14:00**: Sprint review (60 min)
+- **Friday 16:00**: Stakeholder update
+- **Monday 09:00**: Sprint planning (30 min)
+
+### Escalation Paths
+- **Technical Blockers**: Architecture Agent → Technical Lead
+- **Security Issues**: Security Agent → CISO
+- **Infrastructure Problems**: DevOps Agent → Infrastructure Lead
+
+---
+
+## Next Phase Preparation
+
+### Phase 2: Backend Modernization (Weeks 5-8)
+**Focus**: Laravel 11 upgrade, API standardization, database optimization  
+**Key Deliverables**: Modernized backend, performance improvements, security hardening
+
+### Resource Planning for Phase 2
+- Backend Agent: Full activation
+- Testing Agent: Continued support
+- Security Agent: Backend security focus
+- Database Agent: Migration leadership
+
+---
+
+## Commit Guidelines
+
+### Commit Message Format
+```
+[type]: [agent] brief description
+
+Examples:
+feat: [backend] implement offline order creation
+fix: [security] resolve XSS vulnerability in search
+test: [testing] add comprehensive order tests
+docs: [devops] update Docker configuration
+```
+
+### Branch Strategy
+- `main`: Production-ready code
+- `develop`: Integration branch
+- `phase1-{task}`: Phase 1 feature branches
+- `phase2-{task}`: Phase 2 feature branches
+
+---
+
+**Last Updated**: January 30, 2026  
+**Next Review**: Daily standup meeting  
+**Document Version**: 1.0

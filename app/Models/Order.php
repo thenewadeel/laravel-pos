@@ -11,7 +11,7 @@ use Spatie\Activitylog\LogOptions;
 class Order extends Model
 {
     use LogsActivity;
-    protected static $recordEvents = ['updated', 'deleted'];
+    protected static $recordEvents = ['created', 'updated', 'deleted'];
     protected $fillable = [
         // Unique identifier for the order in the POS system
         'POS_number',
@@ -39,7 +39,12 @@ class Order extends Model
         // The name of the waiter who is assigned to this order
         'waiter_name',
         // Notes about the order
-        'notes'
+        'notes',
+        // Financial fields
+        'subtotal',
+        'discount_amount',
+        'tax_amount',
+        'total_amount'
     ];
     /**
      * The model's default values for attributes.
@@ -68,7 +73,18 @@ class Order extends Model
     {
         parent::boot();
 
-        // static::created();
+        static::creating(function ($order) {
+            if (empty($order->POS_number)) {
+                $order->POS_number = static::generatePOSNumberStatic();
+            }
+        });
+    }
+
+    public static function generatePOSNumberStatic()
+    {
+        $date = now()->format('Ymd');
+        $random = str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        return "POS-{$date}-{$random}";
     }
     public function assignPOS()
     {
@@ -90,6 +106,72 @@ class Order extends Model
         // Create order history
         $orderHistoryController = new OrderHistoryController();
         $orderHistoryController->store($request = null, orderId: $this->id, actionType: 'pos-assigned', POSNumber: $posNumber);
+    }
+
+    public function generatePOSNumber()
+    {
+        return static::generatePOSNumberStatic();
+    }
+
+    public function setStateAttribute($value)
+    {
+        $validStates = ['preparing', 'served', 'closed', 'wastage'];
+        if (!in_array($value, $validStates)) {
+            throw new \InvalidArgumentException("Invalid state: {$value}");
+        }
+        $this->attributes['state'] = $value;
+    }
+
+    public function setTypeAttribute($value)
+    {
+        $validTypes = ['dine-in', 'take-away', 'delivery'];
+        if (!in_array($value, $validTypes)) {
+            throw new \InvalidArgumentException("Invalid type: {$value}");
+        }
+        $this->attributes['type'] = $value;
+    }
+
+    public function canTransitionTo($newState)
+    {
+        $validTransitions = [
+            'preparing' => ['served', 'closed', 'wastage'],
+            'served' => ['closed'],
+            'closed' => [],
+            'wastage' => ['closed']
+        ];
+
+        return in_array($newState, $validTransitions[$this->state] ?? []);
+    }
+
+    public function transitionTo($newState)
+    {
+        if (!$this->canTransitionTo($newState)) {
+            return false;
+        }
+
+        $this->state = $newState;
+        $this->save();
+        return true;
+    }
+
+    public function calculateTotal()
+    {
+        return $this->items->sum('total_price');
+    }
+
+    public function getDuration()
+    {
+        return $this->created_at->diffInMinutes($this->updated_at);
+    }
+
+    public function scopeByState($query, $state)
+    {
+        return $query->where('state', $state);
+    }
+
+    public function scopeByShop($query, $shopId)
+    {
+        return $query->where('shop_id', $shopId);
     }
     public function items()
     {

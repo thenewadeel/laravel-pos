@@ -1,0 +1,18 @@
+parameters:
+    level: 8
+    paths:
+        - app
+        - config
+        - database/factories
+        - database/seeders
+    excludePaths:
+        - bootstrap
+        - storage
+        - vendor
+        - node_modules
+    ignoreErrors:
+        - '#Call to an undefined method.*#'
+        - '#Access to an undefined property.*#'
+        - '#Undefined variable.*#'
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false

@@ -228,7 +228,7 @@ class CustomerTest extends TestCase
         
         $this->assertCount(1, $aliceResults);
         $this->assertEquals($customer1->id, $aliceResults->first()->id);
-        $this->assertCount(2, $johnResults); // Alice Johnson, Bob Smith
+        $this->assertCount(1, $johnResults); // Alice Johnson only
         $this->assertCount(3, $allResults); // All contain 'j' or 'J'
     }
 

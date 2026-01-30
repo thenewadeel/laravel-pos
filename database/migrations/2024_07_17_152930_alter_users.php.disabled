@@ -12,10 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Skip this migration for SQLite as it doesn't support CHANGE syntax
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+        
         DB::statement("ALTER TABLE `users` CHANGE `type` `type` ENUM('admin', 'cashier', 'order-taker', 'accountant', 'chef', 'stockBoy');");
-        // Schema::table('users', function (Blueprint $table) {
-        // $table->enum('type', ['admin', 'cashier', 'order-taker', 'accountant', 'chef', 'stockBoy'])->change();
-        // });
     }
 
     /**

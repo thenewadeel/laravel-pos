@@ -14,10 +14,18 @@ return new class extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->decimal('subtotal', 10, 2)->default(0);
-            $table->decimal('discount_amount', 10, 2)->default(0);
-            $table->decimal('tax_amount', 10, 2)->default(0);
-            $table->decimal('total_amount', 10, 2)->default(0);
+            if (!Schema::hasColumn('orders', 'subtotal')) {
+                $table->decimal('subtotal', 10, 2)->default(0);
+            }
+            if (!Schema::hasColumn('orders', 'discount_amount')) {
+                $table->decimal('discount_amount', 10, 2)->default(0);
+            }
+            if (!Schema::hasColumn('orders', 'tax_amount')) {
+                $table->decimal('tax_amount', 10, 2)->default(0);
+            }
+            if (!Schema::hasColumn('orders', 'total_amount')) {
+                $table->decimal('total_amount', 10, 2)->default(0);
+            }
         });
     }
 

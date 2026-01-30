@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Controllers\OrderHistoryController;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -10,7 +11,7 @@ use Spatie\Activitylog\LogOptions;
 
 class Order extends Model
 {
-    use LogsActivity;
+    use HasFactory, LogsActivity;
     protected static $recordEvents = ['created', 'updated', 'deleted'];
     protected $fillable = [
         // Unique identifier for the order in the POS system

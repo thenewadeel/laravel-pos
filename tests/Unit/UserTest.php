@@ -462,14 +462,17 @@ class UserTest extends TestCase
         // RED: Performance metrics calculation needed
         $user = User::factory()->create();
         
+        $startDate = now()->subDays(30)->startOfDay();
+        $endDate = now()->endOfDay();
+        
         Order::factory()->count(20)->create([
             'user_id' => $user->id,
             'total_amount' => 50.00,
             'state' => 'closed',
-            'created_at' => now()->subDays(30),
+            'created_at' => now()->subDays(15), // Middle of the range
         ]);
         
-        $metrics = $user->getPerformanceMetrics(now()->subDays(30), now());
+        $metrics = $user->getPerformanceMetrics($startDate, $endDate);
         
         $this->assertEquals(20, $metrics['orders_processed']);
         $this->assertEquals(1000.00, $metrics['revenue_generated']);

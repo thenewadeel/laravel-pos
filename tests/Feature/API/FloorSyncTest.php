@@ -188,7 +188,7 @@ class FloorSyncTest extends TestCase
         ]);
 
         $response = $this->actingAs($this->user)
-            ->getJson("/api/v1/sync/tables/download?shop_id={$this->shop->id}&since={$lastSync->toIso8601String()}");
+            ->getJson("/api/v1/sync/tables/download?shop_id={$this->shop->id}&since=" . urlencode($lastSync->toDateTimeString()));
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -260,7 +260,7 @@ class FloorSyncTest extends TestCase
         $floor = Floor::factory()->create(['shop_id' => $this->shop->id]);
         
         $response = $this->actingAs($this->user)
-            ->getJson("/api/v1/sync/tables/download?shop_id={$this->shop->id}&since=" . now()->toIso8601String());
+            ->getJson("/api/v1/sync/tables/download?shop_id={$this->shop->id}&since=" . urlencode(now()->toDateTimeString()));
 
         $response->assertStatus(200)
             ->assertJson([

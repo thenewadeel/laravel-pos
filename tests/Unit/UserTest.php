@@ -298,20 +298,23 @@ class UserTest extends TestCase
         // RED: Working hours calculation needed
         $user = User::factory()->create();
         
-        Order::factory()->create([
+        $order1 = Order::factory()->create([
             'user_id' => $user->id,
             'created_at' => now()->setTime(9, 0),
             'updated_at' => now()->setTime(17, 0),
         ]);
-        Order::factory()->create([
+        $order2 = Order::factory()->create([
             'user_id' => $user->id,
             'created_at' => now()->subDays(1)->setTime(10, 0),
             'updated_at' => now()->subDays(1)->setTime(16, 30),
         ]);
         
-        $workingHours = $user->getWorkingHours(now()->subDays(7), now());
+        $startDate = now()->subDays(7)->startOfDay();
+        $endDate = now()->endOfDay();
         
-        $this->assertEquals(15.5, $workingHours); // 8 hours yesterday + 7.5 hours today
+        $workingHours = $user->getWorkingHours($startDate, $endDate);
+        
+        $this->assertEquals(14.5, $workingHours); // 6.5 hours yesterday + 8 hours today
     }
 
     /** @test */
@@ -389,7 +392,7 @@ class UserTest extends TestCase
         $this->assertEquals($user1->id, $aliceResults->first()->id);
         $this->assertCount(1, $smithResults);
         $this->assertEquals($user2->id, $smithResults->first()->id);
-        $this->assertCount(2, $allResults); // Alice Johnson, Bob Smith
+        $this->assertCount(3, $allResults); // Alice Johnson, Bob Smith, Charlie Brown
     }
 
     /** @test */
@@ -471,7 +474,7 @@ class UserTest extends TestCase
         $this->assertEquals(20, $metrics['orders_processed']);
         $this->assertEquals(1000.00, $metrics['revenue_generated']);
         $this->assertEquals(50.00, $metrics['average_order_value']);
-        $this->assertEquals(1.0, $metrics['orders_per_day']); // 20 / 30 days (approximate)
+        $this->assertEquals(0.67, $metrics['orders_per_day']); // 20 / 30 days = 0.67
     }
 
     /** @test */

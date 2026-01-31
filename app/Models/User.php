@@ -185,15 +185,15 @@ class User extends Authenticatable
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
 
-        $totalHours = 0;
+        $totalMinutes = 0;
         foreach ($orders as $order) {
             if ($order->created_at && $order->updated_at) {
-                $hours = $order->created_at->diffInHours($order->updated_at);
-                $totalHours += $hours;
+                $minutes = $order->created_at->diffInMinutes($order->updated_at);
+                $totalMinutes += $minutes;
             }
         }
 
-        return $totalHours;
+        return round($totalMinutes / 60, 1);
     }
 
     public function getShiftSummary($shopId, $date)

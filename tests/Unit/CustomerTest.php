@@ -218,18 +218,30 @@ class CustomerTest extends TestCase
     public function it_can_search_customers_by_name()
     {
         // RED: Customer search functionality needed
-        $customer1 = Customer::factory()->create(['name' => 'Alice Johnson']);
-        $customer2 = Customer::factory()->create(['name' => 'Bob Smith']);
-        $customer3 = Customer::factory()->create(['name' => 'Charlie Brown']);
-        
+        $customer1 = Customer::factory()->create([
+            'name' => 'Alice Johnson',
+            'first_name' => null,
+            'last_name' => null
+        ]);
+        $customer2 = Customer::factory()->create([
+            'name' => 'Bob Jones',
+            'first_name' => null,
+            'last_name' => null
+        ]);
+        $customer3 = Customer::factory()->create([
+            'name' => 'Charlie Brown',
+            'first_name' => null,
+            'last_name' => null
+        ]);
+
         $aliceResults = Customer::search('Alice')->get();
         $johnResults = Customer::search('Johnson')->get();
-        $allResults = Customer::search('J')->get();
-        
+        $jResults = Customer::search('J')->get();
+
         $this->assertCount(1, $aliceResults);
         $this->assertEquals($customer1->id, $aliceResults->first()->id);
         $this->assertCount(1, $johnResults); // Alice Johnson only
-        $this->assertCount(3, $allResults); // All contain 'j' or 'J'
+        $this->assertCount(2, $jResults); // Alice Johnson and Bob Jones only
     }
 
     /** @test */
@@ -293,18 +305,18 @@ class CustomerTest extends TestCase
             'customer_id' => $customer->id,
             'total_amount' => 25.00,
             'state' => 'preparing',
-            'type' => 'dine-in',
+            'type' => 'delivery',
             'created_at' => now()->subDays(1),
         ]);
-        
+
         $history = $customer->getOrderHistorySummary();
-        
+
         $this->assertCount(3, $history['orders']);
         $this->assertEquals(150.00, $history['total_amount']);
         $this->assertEquals(50.00, $history['average_amount']);
         $this->assertEquals(1, $history['dine_in_count']);
         $this->assertEquals(1, $history['take_away_count']);
-        $this->assertEquals(1, $history['delivery_count'] ?? 0);
+        $this->assertEquals(1, $history['delivery_count']);
     }
 
     /** @test */
@@ -415,8 +427,8 @@ class CustomerTest extends TestCase
         $this->assertEquals(13, $stats['total_orders']);
         $this->assertEquals(10, $stats['completed_orders']);
         $this->assertEquals(3, $stats['pending_orders']);
-        $this->assertEquals(600.00, $stats['total_spent']); // (10 * 50) + (3 * 25)
-        $this->assertEquals(46.15, $stats['average_order_value']); // 600 / 13
+        $this->assertEquals(575.00, $stats['total_spent']); // (10 * 50) + (3 * 25) = 575
+        $this->assertEquals(44.23, $stats['average_order_value']); // 575 / 13
     }
 
     /** @test */
@@ -426,8 +438,8 @@ class CustomerTest extends TestCase
         $regularCustomer = Customer::factory()->create();
         $vipCustomer = Customer::factory()->create();
         
-        // Give VIP customer high-value orders
-        Order::factory()->count(5)->create([
+        // Give VIP customer high-value orders (total > $1000 to qualify as VIP)
+        Order::factory()->count(6)->create([
             'customer_id' => $vipCustomer->id,
             'total_amount' => 200.00,
         ]);

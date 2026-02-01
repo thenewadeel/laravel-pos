@@ -266,6 +266,42 @@ class OrderController extends Controller
         return view('orders.edit', compact('order', 'shops', 'customers', 'users', 'discounts', 'products'));
     }
 
+    /**
+     * Show Vue-based order edit interface
+     */
+    public function vueEdit(Order $order)
+    {
+        if ($order->state == 'closed') {
+            return back()->with('message', 'Order is already closed');
+        }
+        
+        $order = $order->load(['items.product', 'payments', 'customer', 'shop.categories']);
+        $discounts = Discount::orderBy('type')->get();
+        $customers = Customer::select('id', 'name', 'membership_number')->get();
+        
+        // Prepare categories with products for Vue component
+        $categories = Category::with(['entries' => function($query) {
+            $query->where('is_available', true);
+        }])->get()->map(function($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'products' => $category->entries(Product::class)->get()->map(function($product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'price' => $product->price,
+                        'quantity' => $product->quantity,
+                        'is_available' => $product->is_available,
+                        'low_stock_threshold' => $product->low_stock_threshold ?? 10
+                    ];
+                })
+            ];
+        });
+        
+        return view('orders.vue.edit', compact('order', 'categories', 'discounts', 'customers'));
+    }
+
     public function makeNew(OrderNewRequest $request)
     {
         // dd($request->all());

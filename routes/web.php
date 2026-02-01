@@ -41,6 +41,10 @@ Route::middleware('auth')->group(function () {
         'expenses'    => ExpenseController::class,
         'discounts' => DiscountController::class
     ]);
+    
+    // Vue-based order edit
+    Route::get('/orders/{order}/vue-edit', [OrderController::class, 'vueEdit'])
+        ->name('orders.vue-edit');
 
     // Route::get('/createNeworder', [OrderController::class, 'newEdit'])->name('createNeworder');
     Route::post('/makeNeworder', [OrderController::class, 'makeNew'])->name('makeNeworder');

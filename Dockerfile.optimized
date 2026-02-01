@@ -1,0 +1,58 @@
+# Laravel POS Docker Development Environment - Optimized Multi-stage Build
+FROM php:8.2-fpm-alpine as base
+
+# Install system dependencies (Alpine is much smaller)
+RUN apk add --no-cache \
+    git \
+    curl \
+    libpng-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    nodejs \
+    npm \
+    supervisor \
+    nginx \
+    imagemagick-dev \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath zip gd dom tokenizer xml opcache \
+    && pecl install imagick && docker-php-ext-enable imagick
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www
+
+# Copy composer files first to leverage Docker cache
+COPY composer.json composer.lock ./
+
+# Install PHP dependencies (production only for smaller image)
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev --no-progress --no-scripts
+
+# Copy package files first to leverage Docker cache
+COPY package.json package-lock.json ./
+
+# Install Node dependencies and build assets
+RUN npm install --prefer-offline --no-audit --progress=false && npm run build
+
+# Copy application files
+COPY . .
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 755 /var/www/storage \
+    && chmod -R 755 /var/www/bootstrap/cache
+
+# Copy supervisor configuration
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Copy nginx configuration
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+
+# Expose port
+EXPOSE 8000
+
+# Start supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

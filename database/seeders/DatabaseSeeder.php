@@ -25,5 +25,8 @@ class DatabaseSeeder extends Seeder
             // $this->call(ExpenseSeeder::class);
             $this->call(PaymentSeeder::class);
         }
+        
+        // Offline sync test data (optional - for development/testing)
+        // $this->call(OfflineSyncSeeder::class);
     }
 }

@@ -25,6 +25,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        
+        // Sync offline orders every 5 minutes
+        $schedule->command('orders:schedule-sync --max-orders=100')
+                 ->everyFiveMinutes()
+                 ->withoutOverlapping()
+                 ->appendOutputTo(storage_path('logs/offline-sync.log'));
     }
 
     /**

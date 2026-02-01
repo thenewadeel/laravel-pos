@@ -46,7 +46,12 @@ class Order extends Model
         'subtotal',
         'discount_amount',
         'tax_amount',
-        'total_amount'
+        'total_amount',
+        // Offline sync fields
+        'sync_status',
+        'local_order_id',
+        'device_id',
+        'synced_at',
     ];
     /**
      * The model's default values for attributes.

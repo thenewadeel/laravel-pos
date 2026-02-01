@@ -25,6 +25,11 @@ Auth::routes();
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/admin', [HomeController::class, 'index'])->name('admin');
+    
+    // Offline Sync Routes
+    Route::view('/tablet-order', 'offline-sync.tablet-order')->name('tablet.order');
+    Route::view('/sync-status', 'offline-sync.sync-status')->name('sync.status');
+    Route::view('/conflict-resolution', 'offline-sync.conflict-resolution')->name('conflict.resolution');
     Route::resources([
         'products'   => ProductController::class,
         'customers'   => CustomerController::class,

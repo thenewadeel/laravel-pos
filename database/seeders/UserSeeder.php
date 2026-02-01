@@ -14,29 +14,34 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
-            'email' => 'admin@wt.pos',
-            'first_name' => 'Zia',
-            'last_name' => 'Khan',
-            'type' => 'admin',
-            'password' => bcrypt('admin123')
-        ]);
+        // Create admin user
+        User::updateOrCreate(
+            ['email' => 'admin@wt.pos'],
+            [
+                'first_name' => 'Zia',
+                'last_name' => 'Khan',
+                'type' => 'admin',
+                'password' => bcrypt('admin123')
+            ]
+        );
 
-        // Make 3 cashiers
-        $types = ['cashier', 'accountant', 'order-taker'];
+        // Make 3 staff members with different roles
+        $types = ['cashier', 'accountant', 'stockBoy'];
         $firstNames = ['Faizan', 'Sameer', 'Ameen'];
         $lastNames = ['Ahmed', 'Ali', 'Shah'];
         $emails = ['ahmed@wt.pos', 'ali@wt.pos', 'shah@wt.pos'];
         $passwords = ['password123', 'password123', 'password123'];
 
         foreach (range(0, 2) as $index) {
-            User::updateOrCreate([
-                'email' => $emails[$index],
-                'first_name' => $firstNames[$index],
-                'last_name' => $lastNames[$index],
-                'type' => $types[$index],
-                'password' => bcrypt($passwords[$index])
-            ]);
+            User::updateOrCreate(
+                ['email' => $emails[$index]],
+                [
+                    'first_name' => $firstNames[$index],
+                    'last_name' => $lastNames[$index],
+                    'type' => $types[$index],
+                    'password' => bcrypt($passwords[$index])
+                ]
+            );
         }
     }
 }

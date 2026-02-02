@@ -280,13 +280,11 @@ class OrderController extends Controller
         $customers = Customer::select('id', 'name', 'membership_number')->get();
         
         // Prepare categories with products for Vue component
-        $categories = Category::with(['entries' => function($query) {
-            $query->where('is_available', true);
-        }])->get()->map(function($category) {
+        $categories = Category::all()->map(function($category) {
             return [
                 'id' => $category->id,
                 'name' => $category->name,
-                'products' => $category->entries(Product::class)->get()->map(function($product) {
+                'products' => $category->entries(Product::class)->where('is_available', true)->get()->map(function($product) {
                     return [
                         'id' => $product->id,
                         'name' => $product->name,

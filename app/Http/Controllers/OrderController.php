@@ -14,6 +14,8 @@ use App\Models\Payment;
 use App\Models\Discount;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Floor;
+use App\Models\RestaurantTable;
 // use App\Models\Category;
 use AliBayat\LaravelCategorizable\Category;
 use App\Http\Requests\OrderNewRequest;
@@ -351,44 +353,47 @@ class OrderController extends Controller
      */
     public function floorRestaurant()
     {
-        // Get floors with tables and current orders
-        $floors = Shop::with(['tables' => function($query) {
-            $query->orderBy('number');
-        }])->get()->map(function($shop) {
-            return [
-                'id' => $shop->id,
-                'name' => $shop->name,
-                'tables' => $shop->tables->map(function($table) {
-                    // Get current order for this table if any
-                    $currentOrder = Order::where('table_number', $table->number)
-                        ->where('state', '!=', 'closed')
-                        ->whereDate('created_at', today())
-                        ->with(['items'])
-                        ->first();
-                    
-                    return [
-                        'id' => $table->id,
-                        'number' => $table->number,
-                        'capacity' => $table->capacity ?? 4,
-                        'status' => $currentOrder ? 'occupied' : 'available',
-                        'currentOrder' => $currentOrder ? [
-                            'id' => $currentOrder->id,
-                            'total' => $currentOrder->total_amount,
-                            'status' => $currentOrder->state,
-                            'created_at' => $currentOrder->created_at,
-                            'items' => $currentOrder->items->map(function($item) {
-                                return [
-                                    'id' => $item->id,
-                                    'name' => $item->product_name,
-                                    'quantity' => $item->quantity,
-                                    'price' => $item->total_price
-                                ];
-                            })
-                        ] : null
-                    ];
-                })
-            ];
-        });
+        // Get floors with tables for the user's current shop
+        $shopId = auth()->user()->current_shop_id ?? auth()->user()->shops->first()->id ?? 1;
+        
+        $floors = Floor::with(['tables' => function($query) {
+                $query->where('is_active', true)->orderBy('table_number');
+            }])
+            ->where('shop_id', $shopId)
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get()
+            ->map(function($floor) {
+                return [
+                    'id' => $floor->id,
+                    'name' => $floor->name,
+                    'tables' => $floor->tables->map(function($table) {
+                        // Get active order for this table
+                        $activeOrder = $table->getActiveOrder();
+                        
+                        return [
+                            'id' => $table->id,
+                            'number' => $table->table_number,
+                            'capacity' => $table->capacity ?? 4,
+                            'status' => $table->status,
+                            'currentOrder' => $activeOrder ? [
+                                'id' => $activeOrder->id,
+                                'total' => $activeOrder->total_amount,
+                                'status' => $activeOrder->state,
+                                'created_at' => $activeOrder->created_at,
+                                'items' => $activeOrder->items->map(function($item) {
+                                    return [
+                                        'id' => $item->id,
+                                        'name' => $item->product_name,
+                                        'quantity' => $item->quantity,
+                                        'price' => $item->total_price
+                                    ];
+                                })
+                            ] : null
+                        ];
+                    })
+                ];
+            });
 
         // Get today's stats
         $dailyStats = [

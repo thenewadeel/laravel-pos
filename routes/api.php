@@ -21,8 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// API V1 Routes
-Route::prefix('v1')->middleware('auth')->group(function () {
+// API V1 Routes - using 'auth' middleware with web session
+// Note: Ensure your app handles API auth failures gracefully
+Route::prefix('v1')->middleware(['auth'])->group(function () {
     
     // Order API Endpoints
     Route::get('/orders', [OrderController::class, 'index']);

@@ -170,6 +170,32 @@ export default {
     const showSyncPanel = ref(false)
     const tempIdCounter = ref(1)
 
+    // Safe notification helper
+    const notify = {
+      success: (message) => {
+        if (typeof window.toastr !== 'undefined') {
+          window.notify.success(message)
+        } else {
+          console.log('✓ Success:', message)
+        }
+      },
+      error: (message) => {
+        if (typeof window.toastr !== 'undefined') {
+          window.notify.error(message)
+        } else {
+          console.error('✗ Error:', message)
+          alert('Error: ' + message)
+        }
+      },
+      warning: (message) => {
+        if (typeof window.toastr !== 'undefined') {
+          window.notify.warning(message)
+        } else {
+          console.warn('⚠ Warning:', message)
+        }
+      }
+    }
+
     // CSRF token
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || ''
 
@@ -303,9 +329,9 @@ export default {
       // Show success message if all synced
       const errors = orders.value.filter(o => o.syncStatus === 'error')
       if (errors.length === 0) {
-        toastr.success('All orders synced successfully!')
+        notify.success('All orders synced successfully!')
       } else {
-        toastr.warning(`${errors.length} orders failed to sync`)
+        notify.warning(`${errors.length} orders failed to sync`)
       }
     }
 

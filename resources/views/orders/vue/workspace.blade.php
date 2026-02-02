@@ -33,9 +33,6 @@
             :categories="{{ json_encode($categories) }}"
             :discounts="{{ json_encode($discounts) }}"
             :customers="{{ json_encode($customers) }}"
-            @print-order="handlePrintOrder"
-            @process-payment="handleProcessPayment"
-            @cancel-order="handleCancelOrder"
         />
     </div>
 @endsection

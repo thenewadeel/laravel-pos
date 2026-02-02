@@ -363,6 +363,32 @@ export default {
   setup(props, { emit }) {
     // Loading state
     const isLoading = ref(false)
+
+    // Safe notification helper (toastr may not be available in all contexts)
+    const notify = {
+      success: (message) => {
+        if (typeof window.toastr !== 'undefined') {
+          window.notify.success(message)
+        } else {
+          console.log('✓ Success:', message)
+        }
+      },
+      error: (message) => {
+        if (typeof window.toastr !== 'undefined') {
+          window.notify.error(message)
+        } else {
+          console.error('✗ Error:', message)
+          alert('Error: ' + message)
+        }
+      },
+      warning: (message) => {
+        if (typeof window.toastr !== 'undefined') {
+          window.notify.warning(message)
+        } else {
+          console.warn('⚠ Warning:', message)
+        }
+      }
+    }
     
     // Reactive state - order data section collapsed by default for compact view
     const showOrderData = ref(false)
@@ -522,14 +548,14 @@ export default {
         })
         
         if (data.success) {
-          toastr.success('Order updated successfully')
+          notify.success('Order updated successfully')
           emit('order-updated', data.data)
         } else {
-          toastr.error(data.error?.message || 'Failed to update order')
+          notify.error(data.error?.message || 'Failed to update order')
         }
       } catch (error) {
         console.error('Error:', error)
-        toastr.error('An error occurred while updating the order')
+        notify.error('An error occurred while updating the order')
       } finally {
         isLoading.value = false
       }
@@ -550,13 +576,13 @@ export default {
             item.quantity = quantity
             item.total_price = quantity * item.unit_price
           }
-          toastr.success('Quantity updated')
+          notify.success('Quantity updated')
         } else {
-          toastr.error(data.error?.message || 'Failed to update quantity')
+          notify.error(data.error?.message || 'Failed to update quantity')
         }
       } catch (error) {
         console.error('Error:', error)
-        toastr.error('An error occurred')
+        notify.error('An error occurred')
       } finally {
         isLoading.value = false
       }
@@ -574,13 +600,13 @@ export default {
         if (data.success) {
           // Remove from local array
           orderItems.value = orderItems.value.filter(i => i.id !== itemId)
-          toastr.success('Item removed')
+          notify.success('Item removed')
         } else {
-          toastr.error(data.error?.message || 'Failed to remove item')
+          notify.error(data.error?.message || 'Failed to remove item')
         }
       } catch (error) {
         console.error('Error:', error)
-        toastr.error('An error occurred')
+        notify.error('An error occurred')
       } finally {
         isLoading.value = false
       }
@@ -597,13 +623,13 @@ export default {
         if (data.success) {
           const item = orderItems.value.find(i => i.id === itemId)
           if (item) item.status = status
-          toastr.success('Status updated')
+          notify.success('Status updated')
         } else {
-          toastr.error(data.error?.message || 'Failed to update status')
+          notify.error(data.error?.message || 'Failed to update status')
         }
       } catch (error) {
         console.error('Error:', error)
-        toastr.error('An error occurred')
+        notify.error('An error occurred')
       } finally {
         isLoading.value = false
       }
@@ -620,13 +646,13 @@ export default {
         if (data.success) {
           const item = orderItems.value.find(i => i.id === itemId)
           if (item) item.notes = note
-          toastr.success('Note added')
+          notify.success('Note added')
         } else {
-          toastr.error(data.error?.message || 'Failed to add note')
+          notify.error(data.error?.message || 'Failed to add note')
         }
       } catch (error) {
         console.error('Error:', error)
-        toastr.error('An error occurred')
+        notify.error('An error occurred')
       } finally {
         isLoading.value = false
       }
@@ -650,13 +676,13 @@ export default {
         if (data.success) {
           orderItems.value.push(data.data)
           miscProduct.value = { name: '', price: null }
-          toastr.success('Item added')
+          notify.success('Item added')
         } else {
-          toastr.error(data.error?.message || 'Failed to add item')
+          notify.error(data.error?.message || 'Failed to add item')
         }
       } catch (error) {
         console.error('Error:', error)
-        toastr.error('An error occurred')
+        notify.error('An error occurred')
       } finally {
         isLoading.value = false
       }
@@ -685,13 +711,13 @@ export default {
         
         if (data.success) {
           orderItems.value.push(data.data)
-          toastr.success(`${product.name} added`)
+          notify.success(`${product.name} added`)
         } else {
-          toastr.error(data.error?.message || 'Failed to add item')
+          notify.error(data.error?.message || 'Failed to add item')
         }
       } catch (error) {
         console.error('Error:', error)
-        toastr.error('An error occurred')
+        notify.error('An error occurred')
       } finally {
         isLoading.value = false
       }
@@ -726,14 +752,14 @@ export default {
         })
         
         if (data.success) {
-          toastr.success('Order cancelled')
+          notify.success('Order cancelled')
           emit('cancel-order', props.order.id)
         } else {
-          toastr.error(data.error?.message || 'Failed to cancel order')
+          notify.error(data.error?.message || 'Failed to cancel order')
         }
       } catch (error) {
         console.error('Error:', error)
-        toastr.error('An error occurred')
+        notify.error('An error occurred')
       } finally {
         isLoading.value = false
       }

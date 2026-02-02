@@ -37,6 +37,9 @@
             :categories="{{ json_encode($categories) }}"
             :discounts="{{ json_encode($discounts) }}"
             :customers="{{ json_encode($customers) }}"
+            @print-order="handlePrintOrder"
+            @process-payment="handleProcessPayment"
+            @cancel-order="handleCancelOrder"
         />
     </div>
 @endsection
@@ -44,132 +47,10 @@
 @section('js')
     @vite(['resources/js/order-edit.js'])
     <script>
-        // Wait for Vue app to mount, then attach event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            const appContainer = document.getElementById('order-edit-app');
-            
-            // Attach event listeners to the container - events bubble up from Vue component
-            appContainer.addEventListener('update-order', handleOrderUpdate);
-            appContainer.addEventListener('add-item', handleAddItem);
-            appContainer.addEventListener('update-item', handleUpdateItem);
-            appContainer.addEventListener('delete-item', handleDeleteItem);
-            appContainer.addEventListener('toggle-discount', handleToggleDiscount);
-            appContainer.addEventListener('process-payment', handleProcessPayment);
-            appContainer.addEventListener('cancel-order', handleCancelOrder);
-            appContainer.addEventListener('print-order', handlePrintOrder);
-        });
-
-        // Event handlers for Vue component events
-        function handleOrderUpdate(event) {
-            const orderData = event.detail;
-            
-            fetch(`/api/v1/orders/${orderData.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify(orderData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    toastr.success('Order updated successfully');
-                } else {
-                    toastr.error(data.error?.message || 'Failed to update order');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('An error occurred while updating the order');
-            });
-        }
-
-        function handleAddItem(event) {
-            const itemData = event.detail;
-            
-            fetch(`/api/v1/orders/{{ $order->id }}/items`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify(itemData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    toastr.success('Item added successfully');
-                    window.location.reload();
-                } else {
-                    toastr.error(data.error?.message || 'Failed to add item');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('An error occurred while adding the item');
-            });
-        }
-
-        function handleUpdateItem(event) {
-            const detail = event.detail;
-            const itemId = detail.itemId;
-            delete detail.itemId;
-            
-            fetch(`/api/v1/orders/{{ $order->id }}/items/${itemId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify(detail)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    toastr.success('Item updated successfully');
-                    window.location.reload();
-                } else {
-                    toastr.error(data.error?.message || 'Failed to update item');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('An error occurred while updating the item');
-            });
-        }
-
-        function handleDeleteItem(event) {
-            const itemId = event.detail;
-            
-            fetch(`/api/v1/orders/{{ $order->id }}/items/${itemId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    toastr.success('Item removed successfully');
-                    window.location.reload();
-                } else {
-                    toastr.error(data.error?.message || 'Failed to remove item');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('An error occurred while removing the item');
-            });
-        }
-
-        function handleToggleDiscount(event) {
-            const discountId = event.detail;
-            
-            // Use existing Livewire component for discounts
-            if (typeof Livewire !== 'undefined') {
-                Livewire.emit('toggleDiscount', discountId);
-            }
+        // Simple handlers for navigation actions
+        function handlePrintOrder(event) {
+            const orderId = event.detail;
+            window.open(`/orders/${orderId}/print`, '_blank');
         }
 
         function handleProcessPayment(event) {
@@ -179,31 +60,15 @@
 
         function handleCancelOrder(event) {
             const orderId = event.detail;
-            
-            fetch(`/api/v1/orders/${orderId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    toastr.success('Order cancelled successfully');
-                    window.location.href = "{{ route('orders.index') }}";
-                } else {
-                    toastr.error(data.error?.message || 'Failed to cancel order');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toastr.error('An error occurred while cancelling the order');
-            });
+            window.location.href = "{{ route('orders.index') }}";
         }
 
-        function handlePrintOrder(event) {
-            const orderId = event.detail;
-            window.open(`/orders/${orderId}/print`, '_blank');
-        }
+        // Attach event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const appContainer = document.getElementById('order-edit-app');
+            appContainer.addEventListener('print-order', handlePrintOrder);
+            appContainer.addEventListener('process-payment', handleProcessPayment);
+            appContainer.addEventListener('cancel-order', handleCancelOrder);
+        });
     </script>
 @endsection

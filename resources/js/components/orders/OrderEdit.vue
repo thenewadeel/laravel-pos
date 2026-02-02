@@ -107,8 +107,9 @@
               ></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">
-              <i class="fas fa-save"></i> Update Order
+            <button type="submit" class="btn btn-primary btn-block" :disabled="isLoading">
+              <i class="fas fa-save"></i> 
+              {{ isLoading ? 'Saving...' : 'Update Order' }}
             </button>
           </form>
         </div>
@@ -128,6 +129,7 @@
             :item="item"
             :order-status="order.state"
             :user-type="userType"
+            :compact="true"
             @update-quantity="handleQuantityUpdate"
             @delete-item="handleDeleteItem"
             @update-status="handleItemStatusUpdate"
@@ -160,9 +162,10 @@
             <button 
               @click="addMiscProduct" 
               class="btn btn-primary"
-              :disabled="!miscProduct.name || !miscProduct.price"
+              :disabled="!miscProduct.name || !miscProduct.price || isLoading"
             >
-              <i class="fas fa-plus"></i> Add
+              <i class="fas fa-plus"></i> 
+              {{ isLoading ? '...' : 'Add' }}
             </button>
           </div>
         </div>
@@ -185,6 +188,7 @@
               :value="discount.id"
               v-model="selectedDiscounts"
               @change="toggleDiscount(discount.id)"
+              :disabled="isLoading"
             >
             <span class="discount-name">{{ discount.name }}</span>
             <span class="discount-value">{{ discount.percentage }}%</span>
@@ -218,6 +222,7 @@
           v-if="canPrint" 
           @click="printOrder"
           class="btn btn-secondary"
+          :disabled="isLoading"
         >
           <i class="fas fa-print"></i> Print
         </button>
@@ -225,6 +230,7 @@
           v-if="canProcessPayment && order.state === 'served'" 
           @click="processPayment"
           class="btn btn-success"
+          :disabled="isLoading"
         >
           <i class="fas fa-credit-card"></i> Pay
         </button>
@@ -232,6 +238,7 @@
           v-if="canCancel && order.state !== 'closed'" 
           @click="cancelOrder"
           class="btn btn-danger"
+          :disabled="isLoading"
         >
           <i class="fas fa-times"></i> Cancel
         </button>
@@ -269,7 +276,7 @@
             @click="toggleCategory(category.id)"
             :class="{ active: expandedCategories.includes(category.id) }"
           >
-            <span>{{ category.name }}</span>
+            <span>{{ category.name }} ({{ category.products.length }})</span>
             <i class="fas fa-chevron-down"></i>
           </div>
           
@@ -284,7 +291,7 @@
               v-for="product in category.products" 
               :key="product.id"
               class="product-card"
-              :class="{ 'out-of-stock': !product.is_available || product.quantity <= 0 }"
+              :class="{ 'out-of-stock': product.is_available === false || product.is_available === 0 || product.quantity <= 0 }"
               @click="addProductToOrder(product)"
             >
               <div class="product-info">
@@ -298,7 +305,7 @@
                   {{ product.quantity > 0 ? product.quantity + ' left' : 'Out of stock' }}
                 </span>
               </div>
-              <button class="btn-add" :disabled="!product.is_available || product.quantity <= 0">
+              <button class="btn-add" :disabled="product.is_available === false || product.is_available === 0 || product.quantity <= 0 || isLoading">
                 <i class="fas fa-plus"></i>
               </button>
             </div>
@@ -351,31 +358,11 @@ export default {
     }
   },
 
-  emits: [
-    'update-order', 
-    'add-item', 
-    'update-item', 
-    'delete-item',
-    'toggle-discount',
-    'process-payment',
-    'cancel-order',
-    'print-order'
-  ],
+  emits: ['order-updated', 'print-order', 'process-payment', 'cancel-order'],
 
-  setup(props, { emit: vueEmit }) {
-    // Helper to emit both Vue events and DOM events for external handlers
-    const emit = (eventName, payload) => {
-      // Emit Vue event
-      vueEmit(eventName, payload)
-      
-      // Dispatch DOM event for external JavaScript handlers
-      const domEvent = new CustomEvent(eventName, { 
-        detail: payload,
-        bubbles: true,
-        composed: true
-      })
-      document.getElementById('order-edit-app')?.dispatchEvent(domEvent)
-    }
+  setup(props, { emit }) {
+    // Loading state
+    const isLoading = ref(false)
     
     // Reactive state - order data section collapsed by default for compact view
     const showOrderData = ref(false)
@@ -395,6 +382,9 @@ export default {
     const miscProduct = ref({ name: '', price: null })
     const orderItems = ref([...props.order.items])
 
+    // CSRF token for API calls
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || ''
+
     // Computed properties
     const userType = computed(() => props.user.type)
 
@@ -410,7 +400,7 @@ export default {
       return ['admin', 'manager', 'cashier'].includes(userType.value)
     })
 
-    const canPrint = computed(() => true) // All users can print
+    const canPrint = computed(() => true)
 
     const canProcessPayment = computed(() => {
       return ['admin', 'manager', 'cashier'].includes(userType.value)
@@ -430,7 +420,7 @@ export default {
     })
 
     const itemsTotal = computed(() => {
-      return orderItems.value.reduce((sum, item) => sum + item.total_price, 0)
+      return orderItems.value.reduce((sum, item) => sum + (parseFloat(item.total_price) || 0), 0)
     })
 
     const discountAmount = computed(() => {
@@ -467,9 +457,6 @@ export default {
     })
 
     const filteredCategories = computed(() => {
-      console.log('Categories data:', props.categories)
-      console.log('First category products:', props.categories[0]?.products)
-      
       if (!productSearch.value) return props.categories
       const search = productSearch.value.toLowerCase()
       return props.categories.map(cat => ({
@@ -481,6 +468,19 @@ export default {
     })
 
     const availableDiscounts = computed(() => props.discounts)
+
+    // API Helper
+    const apiCall = async (url, options = {}) => {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': csrfToken,
+          ...options.headers
+        }
+      })
+      return response.json()
+    }
 
     // Methods
     const toggleOrderData = () => {
@@ -513,54 +513,188 @@ export default {
       showCustomerDropdown.value = false
     }
 
-    const updateOrderData = () => {
-      emit('update-order', {
-        id: props.order.id,
-        ...orderData.value
-      })
-    }
-
-    const handleQuantityUpdate = ({ itemId, quantity }) => {
-      emit('update-item', { itemId, quantity })
-    }
-
-    const handleDeleteItem = (itemId) => {
-      if (confirm('Remove this item from the order?')) {
-        emit('delete-item', itemId)
+    const updateOrderData = async () => {
+      isLoading.value = true
+      try {
+        const data = await apiCall(`/api/v1/orders/${props.order.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(orderData.value)
+        })
+        
+        if (data.success) {
+          toastr.success('Order updated successfully')
+          emit('order-updated', data.data)
+        } else {
+          toastr.error(data.error?.message || 'Failed to update order')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        toastr.error('An error occurred while updating the order')
+      } finally {
+        isLoading.value = false
       }
     }
 
-    const handleItemStatusUpdate = ({ itemId, status }) => {
-      emit('update-item', { itemId, status })
+    const handleQuantityUpdate = async ({ itemId, quantity }) => {
+      isLoading.value = true
+      try {
+        const data = await apiCall(`/api/v1/orders/${props.order.id}/items/${itemId}`, {
+          method: 'PUT',
+          body: JSON.stringify({ quantity })
+        })
+        
+        if (data.success) {
+          // Update local item
+          const item = orderItems.value.find(i => i.id === itemId)
+          if (item) {
+            item.quantity = quantity
+            item.total_price = quantity * item.unit_price
+          }
+          toastr.success('Quantity updated')
+        } else {
+          toastr.error(data.error?.message || 'Failed to update quantity')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        toastr.error('An error occurred')
+      } finally {
+        isLoading.value = false
+      }
     }
 
-    const handleItemNote = ({ itemId, note }) => {
-      emit('update-item', { itemId, notes: note })
-    }
-
-    const addMiscProduct = () => {
-      emit('add-item', {
-        product_name: miscProduct.value.name,
-        unit_price: miscProduct.value.price,
-        quantity: 1,
-        is_misc: true
-      })
-      miscProduct.value = { name: '', price: null }
-    }
-
-    const toggleDiscount = (discountId) => {
-      emit('toggle-discount', discountId)
-    }
-
-    const addProductToOrder = (product) => {
-      if (!product.is_available || product.quantity <= 0) return
+    const handleDeleteItem = async (itemId) => {
+      if (!confirm('Remove this item from the order?')) return
       
-      emit('add-item', {
-        product_id: product.id,
-        product_name: product.name,
-        unit_price: product.price,
-        quantity: 1
-      })
+      isLoading.value = true
+      try {
+        const data = await apiCall(`/api/v1/orders/${props.order.id}/items/${itemId}`, {
+          method: 'DELETE'
+        })
+        
+        if (data.success) {
+          // Remove from local array
+          orderItems.value = orderItems.value.filter(i => i.id !== itemId)
+          toastr.success('Item removed')
+        } else {
+          toastr.error(data.error?.message || 'Failed to remove item')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        toastr.error('An error occurred')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const handleItemStatusUpdate = async ({ itemId, status }) => {
+      isLoading.value = true
+      try {
+        const data = await apiCall(`/api/v1/orders/${props.order.id}/items/${itemId}`, {
+          method: 'PUT',
+          body: JSON.stringify({ status })
+        })
+        
+        if (data.success) {
+          const item = orderItems.value.find(i => i.id === itemId)
+          if (item) item.status = status
+          toastr.success('Status updated')
+        } else {
+          toastr.error(data.error?.message || 'Failed to update status')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        toastr.error('An error occurred')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const handleItemNote = async ({ itemId, note }) => {
+      isLoading.value = true
+      try {
+        const data = await apiCall(`/api/v1/orders/${props.order.id}/items/${itemId}`, {
+          method: 'PUT',
+          body: JSON.stringify({ notes: note })
+        })
+        
+        if (data.success) {
+          const item = orderItems.value.find(i => i.id === itemId)
+          if (item) item.notes = note
+          toastr.success('Note added')
+        } else {
+          toastr.error(data.error?.message || 'Failed to add note')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        toastr.error('An error occurred')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const addMiscProduct = async () => {
+      if (!miscProduct.value.name || !miscProduct.value.price) return
+      
+      isLoading.value = true
+      try {
+        const data = await apiCall(`/api/v1/orders/${props.order.id}/items`, {
+          method: 'POST',
+          body: JSON.stringify({
+            product_name: miscProduct.value.name,
+            unit_price: miscProduct.value.price,
+            quantity: 1,
+            is_misc: true
+          })
+        })
+        
+        if (data.success) {
+          orderItems.value.push(data.data)
+          miscProduct.value = { name: '', price: null }
+          toastr.success('Item added')
+        } else {
+          toastr.error(data.error?.message || 'Failed to add item')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        toastr.error('An error occurred')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const toggleDiscount = async (discountId) => {
+      // Use Livewire for discounts if available
+      if (typeof Livewire !== 'undefined') {
+        Livewire.emit('toggleDiscount', discountId)
+      }
+    }
+
+    const addProductToOrder = async (product) => {
+      if (product.is_available === false || product.is_available === 0 || product.quantity <= 0) return
+      
+      isLoading.value = true
+      try {
+        const data = await apiCall(`/api/v1/orders/${props.order.id}/items`, {
+          method: 'POST',
+          body: JSON.stringify({
+            product_id: product.id,
+            unit_price: product.price,
+            quantity: 1
+          })
+        })
+        
+        if (data.success) {
+          orderItems.value.push(data.data)
+          toastr.success(`${product.name} added`)
+        } else {
+          toastr.error(data.error?.message || 'Failed to add item')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        toastr.error('An error occurred')
+      } finally {
+        isLoading.value = false
+      }
     }
 
     const toggleCategory = (categoryId) => {
@@ -582,9 +716,26 @@ export default {
       }
     }
 
-    const cancelOrder = () => {
-      if (confirm('Are you sure you want to cancel this order?')) {
-        emit('cancel-order', props.order.id)
+    const cancelOrder = async () => {
+      if (!confirm('Are you sure you want to cancel this order?')) return
+      
+      isLoading.value = true
+      try {
+        const data = await apiCall(`/api/v1/orders/${props.order.id}`, {
+          method: 'DELETE'
+        })
+        
+        if (data.success) {
+          toastr.success('Order cancelled')
+          emit('cancel-order', props.order.id)
+        } else {
+          toastr.error(data.error?.message || 'Failed to cancel order')
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        toastr.error('An error occurred')
+      } finally {
+        isLoading.value = false
       }
     }
 
@@ -619,6 +770,7 @@ export default {
     })
 
     return {
+      isLoading,
       showOrderData,
       customerSearch,
       showCustomerDropdown,
@@ -925,24 +1077,25 @@ export default {
 /* Discounts */
 .discounts-section {
   border-top: 1px solid #dee2e6;
+  flex-shrink: 0;
 }
 
 .discounts-list {
-  padding: 12px 16px;
+  padding: 8px 12px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .discount-option {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
+  gap: 4px;
+  padding: 4px 8px;
   background: #d4edda;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 11px;
 }
 
 .discount-option.is-charge {
@@ -959,22 +1112,23 @@ export default {
 
 .discount-value {
   color: #6c757d;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 /* Order Totals */
 .order-totals {
-  padding: 16px;
+  padding: 10px 12px;
   background: #f8f9fa;
   border-top: 2px solid #dee2e6;
+  flex-shrink: 0;
 }
 
 .total-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
-  font-size: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
 }
 
 .total-row.discount {
@@ -982,38 +1136,42 @@ export default {
 }
 
 .total-row.grand-total {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
-  padding-top: 8px;
+  padding-top: 6px;
   border-top: 1px solid #dee2e6;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 /* Order Actions */
 .order-actions {
-  padding: 16px;
+  padding: 10px 12px;
   display: flex;
-  gap: 8px;
+  gap: 6px;
   border-top: 1px solid #dee2e6;
+  flex-shrink: 0;
 }
 
 .order-actions .btn {
   flex: 1;
+  padding: 8px 12px;
+  font-size: 13px;
 }
 
 /* Right Panel - Products */
 .products-header {
-  padding: 16px;
+  padding: 12px;
   background: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
+  flex-shrink: 0;
 }
 
 .products-header h3 {
-  margin: 0 0 12px 0;
-  font-size: 16px;
+  margin: 0 0 10px 0;
+  font-size: 15px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .search-box {
@@ -1022,39 +1180,43 @@ export default {
 
 .search-box i {
   position: absolute;
-  left: 12px;
+  left: 10px;
   top: 50%;
   transform: translateY(-50%);
   color: #6c757d;
+  font-size: 12px;
 }
 
 .search-box input {
   width: 100%;
-  padding: 8px 12px 8px 36px;
+  padding: 6px 10px 6px 30px;
+  height: 30px;
+  font-size: 13px;
 }
 
 /* Categories */
 .categories-list {
   flex: 1;
   overflow-y: auto;
-  padding: 8px;
+  padding: 6px;
 }
 
 .category-section {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   border: 1px solid #dee2e6;
-  border-radius: 6px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .category-header {
-  padding: 12px 16px;
+  padding: 8px 12px;
   background: #e9ecef;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
   font-weight: 600;
+  font-size: 13px;
   transition: background 0.2s;
 }
 
@@ -1069,51 +1231,51 @@ export default {
 
 .category-header i {
   transition: transform 0.3s;
+  font-size: 12px;
 }
 
 .category-header.active i {
   transform: rotate(180deg);
 }
 
+.category-products {
+  padding: 6px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px;
+}
+
 .no-categories,
 .no-products {
-  padding: 40px 20px;
+  padding: 30px 20px;
   text-align: center;
   color: #6c757d;
 }
 
 .no-categories i {
-  font-size: 48px;
-  margin-bottom: 16px;
+  font-size: 36px;
+  margin-bottom: 12px;
   display: block;
 }
 
 .no-categories p,
 .no-products p {
-  font-size: 14px;
+  font-size: 13px;
   margin: 0;
-}
-
-.category-products {
-  padding: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 }
 
 /* Product Cards */
 .product-card {
-  flex: 1 1 calc(50% - 8px);
-  min-width: 200px;
-  padding: 12px;
+  padding: 10px;
   background: #fff;
   border: 1px solid #dee2e6;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s;
+  min-height: 50px;
 }
 
 .product-card:hover {
@@ -1122,7 +1284,7 @@ export default {
 }
 
 .product-card.out-of-stock {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
   background: #f8f9fa;
 }
@@ -1130,23 +1292,29 @@ export default {
 .product-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
 }
 
 .product-name {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   color: #212529;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-price {
-  font-size: 13px;
+  font-size: 12px;
   color: #28a745;
   font-weight: 600;
 }
 
 .product-stock {
-  font-size: 11px;
+  font-size: 10px;
+  text-align: right;
 }
 
 .product-stock .low-stock {
@@ -1158,8 +1326,8 @@ export default {
 }
 
 .btn-add {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   border: none;
   background: #28a745;
   color: #fff;
@@ -1169,6 +1337,9 @@ export default {
   justify-content: center;
   cursor: pointer;
   transition: background 0.2s;
+  font-size: 12px;
+  margin-left: 8px;
+  flex-shrink: 0;
 }
 
 .btn-add:hover:not(:disabled) {
@@ -1182,16 +1353,16 @@ export default {
 
 /* Buttons */
 .btn {
-  padding: 10px 16px;
+  padding: 8px 12px;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  border-radius: 4px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   transition: all 0.2s;
 }
 
@@ -1246,8 +1417,8 @@ export default {
 }
 
 .btn-sm {
-  padding: 6px 12px;
-  font-size: 12px;
+  padding: 4px 8px;
+  font-size: 11px;
 }
 
 /* Responsive */
@@ -1263,8 +1434,8 @@ export default {
     max-width: 100%;
   }
 
-  .product-card {
-    flex: 1 1 100%;
+  .category-products {
+    grid-template-columns: 1fr;
   }
 }
 </style>

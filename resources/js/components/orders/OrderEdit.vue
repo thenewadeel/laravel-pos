@@ -255,6 +255,10 @@
 
       <!-- Categories Accordion -->
       <div class="categories-list">
+        <div v-if="filteredCategories.length === 0" class="no-categories">
+          <i class="fas fa-folder-open"></i>
+          <p>No categories available</p>
+        </div>
         <div 
           v-for="category in filteredCategories" 
           :key="category.id"
@@ -273,6 +277,9 @@
             v-show="expandedCategories.includes(category.id)"
             class="category-products"
           >
+            <div v-if="category.products.length === 0" class="no-products">
+              <p>No products in this category</p>
+            </div>
             <div 
               v-for="product in category.products" 
               :key="product.id"
@@ -461,6 +468,8 @@ export default {
 
     const filteredCategories = computed(() => {
       console.log('Categories data:', props.categories)
+      console.log('First category products:', props.categories[0]?.products)
+      
       if (!productSearch.value) return props.categories
       const search = productSearch.value.toLowerCase()
       return props.categories.map(cat => ({
@@ -1064,6 +1073,25 @@ export default {
 
 .category-header.active i {
   transform: rotate(180deg);
+}
+
+.no-categories,
+.no-products {
+  padding: 40px 20px;
+  text-align: center;
+  color: #6c757d;
+}
+
+.no-categories i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.no-categories p,
+.no-products p {
+  font-size: 14px;
+  margin: 0;
 }
 
 .category-products {

@@ -49,6 +49,12 @@ Route::middleware('auth')->group(function () {
     // Vue-based orders workspace (tabbed interface)
     Route::get('/orders/{order}/workspace', [OrderController::class, 'workspace'])
         ->name('orders.workspace');
+    
+    // Floor and Restaurant Management (Manager/Cashier only)
+    Route::get('/floor-restaurant', [OrderController::class, 'floorRestaurant'])
+        ->name('floor.restaurant')
+        ->middleware(['auth']);
+
 
     // Route::get('/createNeworder', [OrderController::class, 'newEdit'])->name('createNeworder');
     Route::post('/makeNeworder', [OrderController::class, 'makeNew'])->name('makeNeworder');

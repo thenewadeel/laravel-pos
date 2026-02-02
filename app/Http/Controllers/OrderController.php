@@ -346,6 +346,69 @@ class OrderController extends Controller
         return view('orders.vue.workspace', compact('order', 'categories', 'discounts', 'customers'));
     }
 
+    /**
+     * Show floor and restaurant management view
+     */
+    public function floorRestaurant()
+    {
+        // Get floors with tables and current orders
+        $floors = Shop::with(['tables' => function($query) {
+            $query->orderBy('number');
+        }])->get()->map(function($shop) {
+            return [
+                'id' => $shop->id,
+                'name' => $shop->name,
+                'tables' => $shop->tables->map(function($table) {
+                    // Get current order for this table if any
+                    $currentOrder = Order::where('table_number', $table->number)
+                        ->where('state', '!=', 'closed')
+                        ->whereDate('created_at', today())
+                        ->with(['items'])
+                        ->first();
+                    
+                    return [
+                        'id' => $table->id,
+                        'number' => $table->number,
+                        'capacity' => $table->capacity ?? 4,
+                        'status' => $currentOrder ? 'occupied' : 'available',
+                        'currentOrder' => $currentOrder ? [
+                            'id' => $currentOrder->id,
+                            'total' => $currentOrder->total_amount,
+                            'status' => $currentOrder->state,
+                            'created_at' => $currentOrder->created_at,
+                            'items' => $currentOrder->items->map(function($item) {
+                                return [
+                                    'id' => $item->id,
+                                    'name' => $item->product_name,
+                                    'quantity' => $item->quantity,
+                                    'price' => $item->total_price
+                                ];
+                            })
+                        ] : null
+                    ];
+                })
+            ];
+        });
+
+        // Get today's stats
+        $dailyStats = [
+            'total' => Order::whereDate('created_at', today())->sum('total_amount'),
+            'orders' => Order::whereDate('created_at', today())->count()
+        ];
+
+        // Get initial order for workspace link
+        $initialOrder = Order::whereDate('created_at', today())
+            ->where('state', '!=', 'closed')
+            ->first();
+
+        if (!$initialOrder) {
+            // Create a dummy order for the link
+            $initialOrder = new Order(['id' => 1]);
+        }
+
+        return view('floor.restaurant', compact('floors', 'dailyStats', 'initialOrder'));
+    }
+
     public function makeNew(OrderNewRequest $request)
     {
         // dd($request->all());

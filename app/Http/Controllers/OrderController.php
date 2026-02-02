@@ -281,21 +281,27 @@ class OrderController extends Controller
         
         // Prepare categories with products for Vue component
         $categories = Category::all()->map(function($category) {
+            $products = $category->entries(Product::class)->get()->filter(function($product) {
+                return $product->is_available !== false;
+            })->map(function($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => $product->quantity,
+                    'is_available' => $product->is_available,
+                    'low_stock_threshold' => $product->low_stock_threshold ?? 10
+                ];
+            });
+            
             return [
                 'id' => $category->id,
                 'name' => $category->name,
-                'products' => $category->entries(Product::class)->where('is_available', true)->get()->map(function($product) {
-                    return [
-                        'id' => $product->id,
-                        'name' => $product->name,
-                        'price' => $product->price,
-                        'quantity' => $product->quantity,
-                        'is_available' => $product->is_available,
-                        'low_stock_threshold' => $product->low_stock_threshold ?? 10
-                    ];
-                })
+                'products' => $products->values()->all()
             ];
-        });
+        })->filter(function($category) {
+            return count($category['products']) > 0;
+        })->values()->all();
         
         return view('orders.vue.edit', compact('order', 'categories', 'discounts', 'customers'));
     }

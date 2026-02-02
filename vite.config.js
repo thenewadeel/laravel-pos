@@ -10,6 +10,7 @@ export default defineConfig({
                         'resources/sass/app.scss',
                         'resources/js/app.js',
                         'resources/js/order-edit.js',
+                        'resources/js/orders-workspace.js',
                   ],
                   refresh: true,
             }),

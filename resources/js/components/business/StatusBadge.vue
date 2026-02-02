@@ -61,9 +61,11 @@ export default {
           failed: { color: 'red', icon: 'fa-times', label: 'Failed' }
         },
         sync: {
-          synced: { color: 'green', icon: 'fa-sync', label: 'Synced' },
-          pending: { color: 'orange', icon: 'fa-hourglass', label: 'Pending' },
-          conflict: { color: 'red', icon: 'fa-exclamation', label: 'Conflict' },
+          synced: { color: 'green', icon: 'fa-check-circle', label: 'Synced' },
+          pending: { color: 'orange', icon: 'fa-clock', label: 'Pending' },
+          syncing: { color: 'blue', icon: 'fa-sync', label: 'Syncing' },
+          error: { color: 'red', icon: 'fa-exclamation-circle', label: 'Error' },
+          conflict: { color: 'red', icon: 'fa-exclamation-triangle', label: 'Conflict' },
           failed: { color: 'red', icon: 'fa-times', label: 'Failed' }
         }
       }

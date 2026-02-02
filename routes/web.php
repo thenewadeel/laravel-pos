@@ -45,6 +45,10 @@ Route::middleware('auth')->group(function () {
     // Vue-based order edit
     Route::get('/orders/{order}/vue-edit', [OrderController::class, 'vueEdit'])
         ->name('orders.vue-edit');
+    
+    // Vue-based orders workspace (tabbed interface)
+    Route::get('/orders/{order}/workspace', [OrderController::class, 'workspace'])
+        ->name('orders.workspace');
 
     // Route::get('/createNeworder', [OrderController::class, 'newEdit'])->name('createNeworder');
     Route::post('/makeNeworder', [OrderController::class, 'makeNew'])->name('makeNeworder');

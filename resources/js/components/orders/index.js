@@ -2,11 +2,14 @@
 // Vue components for order management
 
 import OrderEdit from './OrderEdit.vue'
+import OrdersWorkspace from './OrdersWorkspace.vue'
 
 export {
-  OrderEdit
+  OrderEdit,
+  OrdersWorkspace
 }
 
 export default {
-  OrderEdit
+  OrderEdit,
+  OrdersWorkspace
 }

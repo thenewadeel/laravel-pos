@@ -52,6 +52,27 @@
 @section('js')
     @vite(['resources/js/order-edit.js'])
     <script>
+        // Wait for Vue app to mount, then attach event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const app = document.getElementById('order-edit-app');
+            
+            // Attach event listeners after Vue mounts
+            setTimeout(() => {
+                const orderEdit = app.querySelector('order-edit') || app.firstElementChild;
+                
+                if (orderEdit) {
+                    orderEdit.addEventListener('update-order', handleOrderUpdate);
+                    orderEdit.addEventListener('add-item', handleAddItem);
+                    orderEdit.addEventListener('update-item', handleUpdateItem);
+                    orderEdit.addEventListener('delete-item', handleDeleteItem);
+                    orderEdit.addEventListener('toggle-discount', handleToggleDiscount);
+                    orderEdit.addEventListener('process-payment', handleProcessPayment);
+                    orderEdit.addEventListener('cancel-order', handleCancelOrder);
+                    orderEdit.addEventListener('print-order', handlePrintOrder);
+                }
+            }, 500);
+        });
+
         // Event handlers for Vue component events
         function handleOrderUpdate(event) {
             const orderData = event.detail;
@@ -93,7 +114,6 @@
             .then(data => {
                 if (data.success) {
                     toastr.success('Item added successfully');
-                    // Refresh the page to show updated items
                     window.location.reload();
                 } else {
                     toastr.error(data.error?.message || 'Failed to add item');
@@ -106,7 +126,9 @@
         }
 
         function handleUpdateItem(event) {
-            const { itemId, ...updateData } = event.detail;
+            const detail = event.detail;
+            const itemId = detail.itemId;
+            delete detail.itemId;
             
             fetch(`/api/v1/orders/{{ $order->id }}/items/${itemId}`, {
                 method: 'PUT',
@@ -114,7 +136,7 @@
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 },
-                body: JSON.stringify(updateData)
+                body: JSON.stringify(detail)
             })
             .then(response => response.json())
             .then(data => {
@@ -159,7 +181,9 @@
             const discountId = event.detail;
             
             // Use existing Livewire component for discounts
-            Livewire.emit('toggleDiscount', discountId);
+            if (typeof Livewire !== 'undefined') {
+                Livewire.emit('toggleDiscount', discountId);
+            }
         }
 
         function handleProcessPayment(event) {

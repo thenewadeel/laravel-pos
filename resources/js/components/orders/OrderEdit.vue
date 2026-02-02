@@ -356,7 +356,7 @@ export default {
   ],
 
   setup(props, { emit }) {
-    // Reactive state
+    // Reactive state - order data section collapsed by default for compact view
     const showOrderData = ref(false)
     const customerSearch = ref('')
     const showCustomerDropdown = ref(false)
@@ -446,6 +446,7 @@ export default {
     })
 
     const filteredCategories = computed(() => {
+      console.log('Categories data:', props.categories)
       if (!productSearch.value) return props.categories
       const search = productSearch.value.toLowerCase()
       return props.categories.map(cat => ({
@@ -642,68 +643,73 @@ export default {
 </script>
 
 <style scoped>
+/* Optimized for 1920x1080 HD resolution */
 .order-edit-container {
   display: flex;
   flex-direction: row;
-  gap: 16px;
-  height: calc(100vh - 200px);
-  min-height: 600px;
+  gap: 12px;
+  height: calc(100vh - 180px);
+  min-height: 700px;
+  max-width: 1920px;
+  margin: 0 auto;
 }
 
 .order-panel {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .left-panel {
-  flex: 0 0 45%;
-  max-width: 500px;
+  flex: 0 0 40%;
+  max-width: 600px;
 }
 
 .right-panel {
   flex: 1;
 }
 
-/* Order Header */
+/* Order Header - Compact */
 .order-header {
-  padding: 16px;
+  padding: 10px 14px;
   background: #f8f9fa;
   border-bottom: 1px solid #dee2e6;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .order-meta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .order-title {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .order-title i {
   color: #007bff;
+  font-size: 14px;
 }
 
 .order-type-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 4px;
+  padding: 4px 10px;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -722,50 +728,54 @@ export default {
   color: #0c5460;
 }
 
-/* Section Headers */
+/* Section Headers - Compact */
 .section-header {
-  padding: 12px 16px;
+  padding: 8px 12px;
   background: #e9ecef;
   border-bottom: 1px solid #dee2e6;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .section-header i {
   transition: transform 0.3s;
+  font-size: 12px;
 }
 
 .section-header i.rotated {
   transform: rotate(180deg);
 }
 
-/* Order Form */
+/* Order Form - Compact */
 .order-form {
-  padding: 16px;
+  padding: 12px;
 }
 
 .form-row {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .form-row label {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #495057;
 }
 
 .form-control {
-  padding: 8px 12px;
+  padding: 6px 10px;
   border: 1px solid #ced4da;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 13px;
+  height: 32px;
 }
 
 .form-control:focus {
@@ -827,55 +837,66 @@ export default {
   font-size: 13px;
 }
 
-/* Order Items */
+/* Order Items - Compact for 10-15 items visibility */
 .order-items-section {
   flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .items-list {
-  padding: 8px;
+  padding: 4px;
+}
+
+.items-list > * {
+  margin-bottom: 4px;
 }
 
 .empty-items {
-  padding: 40px 20px;
+  padding: 30px 20px;
   text-align: center;
   color: #6c757d;
 }
 
 .empty-items i {
-  font-size: 48px;
-  margin-bottom: 16px;
+  font-size: 36px;
+  margin-bottom: 12px;
   color: #dee2e6;
 }
 
 .empty-items p {
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+  font-size: 14px;
 }
 
 .empty-items span {
-  font-size: 13px;
+  font-size: 12px;
 }
 
-/* Misc Product Form */
+/* Misc Product Form - Compact */
 .misc-product-form {
-  padding: 12px 16px;
+  padding: 8px 12px;
   border-top: 1px solid #dee2e6;
   background: #f8f9fa;
+  flex-shrink: 0;
 }
 
 .misc-product-form .form-row {
   flex-direction: row;
-  gap: 8px;
+  gap: 6px;
+  margin-bottom: 0;
 }
 
 .misc-product-form .form-row input {
   flex: 1;
+  height: 28px;
+  padding: 4px 8px;
+  font-size: 12px;
 }
 
 .misc-product-form .price-input {
-  flex: 0 0 100px;
+  flex: 0 0 80px;
 }
 
 /* Discounts */

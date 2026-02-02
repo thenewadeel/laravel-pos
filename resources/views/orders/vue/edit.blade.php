@@ -50,7 +50,7 @@
 @endsection
 
 @section('js')
-    <script src="{{ mix('js/order-edit.js') }}"></script>
+    @vite(['resources/js/order-edit.js'])
     <script>
         // Event handlers for Vue component events
         function handleOrderUpdate(event) {

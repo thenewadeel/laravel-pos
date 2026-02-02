@@ -14,7 +14,7 @@ export default {
 
   props: {
     amount: {
-      type: Number,
+      type: [Number, String],
       default: 0
     },
     currency: {

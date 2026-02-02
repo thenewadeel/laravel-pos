@@ -11,6 +11,7 @@ export default defineConfig({
                         'resources/js/app.js',
                         'resources/js/order-edit.js',
                         'resources/js/orders-workspace.js',
+                        'resources/js/floor-restaurant.js',
                   ],
                   refresh: true,
             }),

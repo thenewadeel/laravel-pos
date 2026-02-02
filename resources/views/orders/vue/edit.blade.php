@@ -37,14 +37,6 @@
             :categories="{{ json_encode($categories) }}"
             :discounts="{{ json_encode($discounts) }}"
             :customers="{{ json_encode($customers) }}"
-            @update-order="handleOrderUpdate"
-            @add-item="handleAddItem"
-            @update-item="handleUpdateItem"
-            @delete-item="handleDeleteItem"
-            @toggle-discount="handleToggleDiscount"
-            @process-payment="handleProcessPayment"
-            @cancel-order="handleCancelOrder"
-            @print-order="handlePrintOrder"
         />
     </div>
 @endsection
@@ -54,23 +46,17 @@
     <script>
         // Wait for Vue app to mount, then attach event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            const app = document.getElementById('order-edit-app');
+            const appContainer = document.getElementById('order-edit-app');
             
-            // Attach event listeners after Vue mounts
-            setTimeout(() => {
-                const orderEdit = app.querySelector('order-edit') || app.firstElementChild;
-                
-                if (orderEdit) {
-                    orderEdit.addEventListener('update-order', handleOrderUpdate);
-                    orderEdit.addEventListener('add-item', handleAddItem);
-                    orderEdit.addEventListener('update-item', handleUpdateItem);
-                    orderEdit.addEventListener('delete-item', handleDeleteItem);
-                    orderEdit.addEventListener('toggle-discount', handleToggleDiscount);
-                    orderEdit.addEventListener('process-payment', handleProcessPayment);
-                    orderEdit.addEventListener('cancel-order', handleCancelOrder);
-                    orderEdit.addEventListener('print-order', handlePrintOrder);
-                }
-            }, 500);
+            // Attach event listeners to the container - events bubble up from Vue component
+            appContainer.addEventListener('update-order', handleOrderUpdate);
+            appContainer.addEventListener('add-item', handleAddItem);
+            appContainer.addEventListener('update-item', handleUpdateItem);
+            appContainer.addEventListener('delete-item', handleDeleteItem);
+            appContainer.addEventListener('toggle-discount', handleToggleDiscount);
+            appContainer.addEventListener('process-payment', handleProcessPayment);
+            appContainer.addEventListener('cancel-order', handleCancelOrder);
+            appContainer.addEventListener('print-order', handlePrintOrder);
         });
 
         // Event handlers for Vue component events

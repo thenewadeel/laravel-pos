@@ -355,7 +355,21 @@ export default {
     'print-order'
   ],
 
-  setup(props, { emit }) {
+  setup(props, { emit: vueEmit }) {
+    // Helper to emit both Vue events and DOM events for external handlers
+    const emit = (eventName, payload) => {
+      // Emit Vue event
+      vueEmit(eventName, payload)
+      
+      // Dispatch DOM event for external JavaScript handlers
+      const domEvent = new CustomEvent(eventName, { 
+        detail: payload,
+        bubbles: true,
+        composed: true
+      })
+      document.getElementById('order-edit-app')?.dispatchEvent(domEvent)
+    }
+    
     // Reactive state - order data section collapsed by default for compact view
     const showOrderData = ref(false)
     const customerSearch = ref('')

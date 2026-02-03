@@ -25,21 +25,66 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // Make 3 staff members with different roles
-        $types = ['cashier', 'accountant', 'stockBoy'];
-        $firstNames = ['Faizan', 'Sameer', 'Ameen'];
-        $lastNames = ['Ahmed', 'Ali', 'Shah'];
-        $emails = ['ahmed@wt.pos', 'ali@wt.pos', 'shah@wt.pos'];
-        $passwords = ['password123', 'password123', 'password123'];
+        // Create all user types for comprehensive testing
+        $users = [
+            // Manager
+            [
+                'email' => 'manager@wt.pos',
+                'first_name' => 'Manager',
+                'last_name' => 'User',
+                'type' => 'admin', // Using admin as manager
+                'password' => 'manager123'
+            ],
+            // Cashier
+            [
+                'email' => 'cashier@wt.pos',
+                'first_name' => 'Cashier',
+                'last_name' => 'User',
+                'type' => 'cashier',
+                'password' => 'cashier123'
+            ],
+            // Accountant
+            [
+                'email' => 'accountant@wt.pos',
+                'first_name' => 'Accountant',
+                'last_name' => 'User',
+                'type' => 'accountant',
+                'password' => 'accountant123'
+            ],
+            // Chef
+            [
+                'email' => 'chef@wt.pos',
+                'first_name' => 'Chef',
+                'last_name' => 'User',
+                'type' => 'chef',
+                'password' => 'chef123'
+            ],
+            // Stock Boy
+            [
+                'email' => 'stock@wt.pos',
+                'first_name' => 'Stock',
+                'last_name' => 'Manager',
+                'type' => 'stockBoy',
+                'password' => 'stock123'
+            ],
+            // Waiter
+            [
+                'email' => 'waiter@wt.pos',
+                'first_name' => 'Waiter',
+                'last_name' => 'User',
+                'type' => 'cashier', // Using cashier as waiter for now
+                'password' => 'waiter123'
+            ]
+        ];
 
-        foreach (range(0, 2) as $index) {
+        foreach ($users as $userData) {
             User::updateOrCreate(
-                ['email' => $emails[$index]],
+                ['email' => $userData['email']],
                 [
-                    'first_name' => $firstNames[$index],
-                    'last_name' => $lastNames[$index],
-                    'type' => $types[$index],
-                    'password' => bcrypt($passwords[$index])
+                    'first_name' => $userData['first_name'],
+                    'last_name' => $userData['last_name'],
+                    'type' => $userData['type'],
+                    'password' => bcrypt($userData['password'])
                 ]
             );
         }

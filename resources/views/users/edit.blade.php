@@ -58,17 +58,18 @@
                 </div>
 
                 <div class="form-group">
-                    {{-- <label for="type">{{ __('user.Type') }}</label>
-                <textarea name="type" class="form-control @error('type') is-invalid @enderror"
-                    id="type" placeholder="{{ __('user.Type') }}">{{ old('type', $user->type) }}</textarea> --}}
+                    <label for="type">{{ __('user.Type') }}</label>
                     @include ('layouts.partials.selector', [
                         'name' => 'type',
                         'selected' => old('type', $user->type),
                         'options' => [
-                            'admin' => 'admin',
-                            'cashier' => 'cashier',
-                            'accountant' => 'accountant',
-                            'order-taker' => 'order-taker',
+                            'admin' => 'Admin',
+                            'manager' => 'Manager',
+                            'cashier' => 'Cashier',
+                            'accountant' => 'Accountant',
+                            'chef' => 'Chef',
+                            'stockBoy' => 'Stock Boy',
+                            'order-taker' => 'Order Taker',
                         ],
                     ])
                     @error('type')

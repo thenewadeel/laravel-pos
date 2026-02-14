@@ -54,6 +54,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/floor-restaurant', [OrderController::class, 'floorRestaurant'])
         ->name('floor.restaurant')
         ->middleware(['auth']);
+    
+    // Floor and Table Management (Admin/Manager only)
+    Route::get('/floor-management/{floor?}', [OrderController::class, 'floorManagement'])
+        ->name('floor.management')
+        ->middleware(['auth']);
+    Route::post('/floors', [\App\Http\Controllers\API\V1\FloorController::class, 'store'])
+        ->name('floor.store')
+        ->middleware(['auth']);
+    Route::put('/floors/{floor}', [\App\Http\Controllers\API\V1\FloorController::class, 'update'])
+        ->name('floor.update')
+        ->middleware(['auth']);
+    Route::post('/floors/{floor}/tables', [\App\Http\Controllers\API\V1\FloorController::class, 'storeTable'])
+        ->name('floor.table.store')
+        ->middleware(['auth']);
 
 
     // Route::get('/createNeworder', [OrderController::class, 'newEdit'])->name('createNeworder');
@@ -139,6 +153,10 @@ Route::middleware('auth')->group(function () {
             ->name('users.updateShops');
         Route::post('/shops/{shop}/updateCategories', [ShopController::class, 'updateCategories'])
             ->name('shop.updateCategories');
+        Route::get('/shops/{shop}/products', [ShopController::class, 'products'])
+            ->name('shops.products');
+        Route::post('/shops/{shop}/products', [ShopController::class, 'updateProducts'])
+            ->name('shops.products.update');
 
 
         // Route to get products filtered by categories

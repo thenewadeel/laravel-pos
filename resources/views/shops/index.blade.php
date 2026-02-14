@@ -43,6 +43,8 @@
                             <td>
                                 <a href="{{ route('shops.edit', $shop) }}" class="btn btn-primary"><i
                                         class="fas fa-edit"></i></a>
+                                <a href="{{ route('shops.products', $shop) }}" class="btn btn-info" title="Manage Products">
+                                    <i class="fas fa-boxes"></i></a>
                                 <button class="btn btn-danger btn-delete" data-url="{{ route('shops.destroy', $shop) }}"><i
                                         class="fas fa-trash"></i></button>
                             </td>

@@ -47,7 +47,7 @@ class Product extends Model
     // Relationships
     public function shops()
     {
-        return $this->hasMany(Shop::class);
+        return $this->belongsToMany(Shop::class, 'product_shop')->withTimestamps();
     }
 
     // Categories relationship is handled by Categorizable trait

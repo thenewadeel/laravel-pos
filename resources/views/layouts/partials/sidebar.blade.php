@@ -89,10 +89,31 @@
                                 </a>
                             </li>
                             <li class="nav-item has-treeview">
+                                <a href="{{ route('floor.management') }}"
+                                    class="nav-link {{ activeSegment('floor-management') }}">
+                                    <i class="nav-icon fas fa-layer-group"></i>
+                                    <p>{{ 'Floor Management' }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
                                 <a href="{{ route('activities.index') }}"
                                     class="nav-link {{ activeSegment('activities') }}">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>{{ 'Activities' }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('expenses.index') }}"
+                                    class="nav-link {{ activeSegment('expenses') }}">
+                                    <i class="nav-icon fas fa-wallet"></i>
+                                    <p>{{ 'Expenses' }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('discounts.index') }}"
+                                    class="nav-link {{ activeSegment('discounts') }}">
+                                    <i class="nav-icon fas fa-tags"></i>
+                                    <p>{{ 'Discounts' }}</p>
                                 </a>
                             </li>
             </ul>

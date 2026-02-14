@@ -29,7 +29,7 @@ class ItemSearch extends Component
     }
     public function getProducts()
     {
-        return $this->shop ?  $this->shop->products() : collect([]);
+        return $this->shop ? $this->shop->products : collect([]);
     }
     public function resetSearch()
     {

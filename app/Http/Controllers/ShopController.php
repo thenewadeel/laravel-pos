@@ -322,4 +322,37 @@ class ShopController extends Controller
             return redirect()->back()->with('failure', 'File err');
         }
     }
+
+    /**
+     * Show products management page for a shop
+     *
+     * @param  \App\Models\Shop  $shop
+     * @return \Illuminate\Http\Response
+     */
+    public function products(Shop $shop)
+    {
+        $products = \App\Models\Product::all();
+        $assignedProducts = $shop->products->pluck('id')->toArray();
+        
+        return view('shops.products', compact('shop', 'products', 'assignedProducts'));
+    }
+
+    /**
+     * Update products assigned to a shop
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Shop  $shop
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProducts(Request $request, Shop $shop)
+    {
+        $request->validate([
+            'products' => 'array',
+            'products.*' => 'exists:products,id',
+        ]);
+
+        $shop->products()->sync($request->products ?? []);
+
+        return redirect()->route('shops.products', $shop)->with('success', __('shop.success_updating_products'));
+    }
 }

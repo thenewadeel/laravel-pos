@@ -21,19 +21,16 @@ class Shop extends Model
 
     public function products()
     {
-        // $categories = Category::query();
+        return $this->belongsToMany(Product::class, 'product_shop')->withTimestamps();
+    }
+
+    public function getProductsByCategory()
+    {
         $category_ids = $this->categoriesIds();
-
-        // $categories = $categories->where('type', 'product');
-        // $categories = $categories->whereIn('id', $category_ids);
-        // Product::query('category_id', $category_ids);
-
-        $products =  Category::whereIn('id', $category_ids)->get()->map(function ($cat) {
+        $products = Category::whereIn('id', $category_ids)->get()->map(function ($cat) {
             return $cat->allEntries(Product::class)->get();
         })->flatten();
-
-        return $products; //= Category::whereIn('id', Shop::first()->categoriesIds())->get();
-        // return $this->hasMany(Product::class);
+        return $products;
     }
 
     public function users()

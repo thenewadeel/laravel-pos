@@ -133,7 +133,7 @@ class UsersController extends Controller
             'first_name' => 'sometimes|nullable|string|max:255',
             'last_name' => 'sometimes|nullable|string|max:255',
             'email' => 'sometimes|nullable|unique:users,email,' . $user->id,
-            'type' => 'sometimes|nullable|string|in:user,admin,cashier,accountant,order-taker,chef,stockBoy',
+            'type' => 'sometimes|nullable|string|in:user,admin,manager,cashier,accountant,order-taker,chef,stockBoy',
             'password' => 'sometimes|nullable|string|min:8|confirmed',
             'image' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Example image validation
         ]);

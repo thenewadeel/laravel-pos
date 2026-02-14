@@ -250,13 +250,13 @@ class OrderController extends Controller
         $shops = Shop::all();
         $customers = Customer::all();
         if (auth()->user()->type == 'admin') { //auth()->user()->type == 'cashier' ||
-            $products = $shops->map(function ($shop) {
-                return $shop->products();
-            })->flatten();
+            $products = $shops->flatMap(function ($shop) {
+                return $shop->products;
+            });
         } else {
-            $products = auth()->user()->shops->map(function ($shop) {
-                return $shop->products();
-            })->flatten();
+            $products = auth()->user()->shops->flatMap(function ($shop) {
+                return $shop->products;
+            });
             // dd($products);
             // $cats = auth()->user()->shops->map(function ($shop) {
             //     return $shop->categories;
@@ -412,6 +412,38 @@ class OrderController extends Controller
         }
 
         return view('floor.restaurant', compact('floors', 'dailyStats', 'initialOrder'));
+    }
+
+    /**
+     * Show floor and table management view (Admin/Manager only)
+     */
+    public function floorManagement($floorId = null)
+    {
+        // Get shop context
+        $shopId = auth()->user()->current_shop_id ?? auth()->user()->shops->first()->id ?? 1;
+        
+        // Get all floors for this shop
+        $floors = Floor::with(['tables' => function($query) {
+                $query->where('is_active', true)->orderBy('table_number');
+            }])
+            ->where('shop_id', $shopId)
+            ->orderBy('sort_order')
+            ->get();
+        
+        // Get current floor if specified, otherwise first floor
+        $currentFloor = null;
+        if ($floorId) {
+            $currentFloor = Floor::with(['tables' => function($query) {
+                    $query->where('is_active', true)->orderBy('table_number');
+                }])
+                ->where('shop_id', $shopId)
+                ->where('id', $floorId)
+                ->first();
+        } else {
+            $currentFloor = $floors->first();
+        }
+        
+        return view('floor.management', compact('floors', 'currentFloor'));
     }
 
     public function makeNew(OrderNewRequest $request)

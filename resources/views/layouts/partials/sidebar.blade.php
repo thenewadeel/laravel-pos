@@ -151,6 +151,15 @@
                         <p>{{ __('order.title') }}</p>
                     </a>
                 </li>
+                @if (auth()->user()->type == 'manager' || auth()->user()->type == 'cashier')
+                    <li class="nav-item has-treeview">
+                        <a href="{{ route('floor.restaurant') }}"
+                            class="nav-link {{ activeSegment('floor-restaurant') }}">
+                            <i class="nav-icon fas fa-utensils"></i>
+                            <p>{{ 'Floor & Restaurant' }}</p>
+                        </a>
+                    </li>
+                @endif
                 @if (auth()->user()->type == 'admin' || auth()->user()->type == 'accountant')
                     {{-- <li class="nav-header">Reports</li> --}}
                     <li class="nav-item">

@@ -81,13 +81,20 @@
                                     <p>{{ 'Users' }}</p>
                                 </a>
                             </li>
-<li class="nav-item has-treeview">
-                    <a href="{{ route('activities.index') }}"
-                        class="nav-link {{ activeSegment('activities') }}">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>{{ 'Activities' }}</p>
-                    </a>
-                </li>
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('floor.restaurant') }}"
+                                    class="nav-link {{ activeSegment('floor-restaurant') }}">
+                                    <i class="nav-icon fas fa-utensils"></i>
+                                    <p>{{ 'Floor & Restaurant' }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
+                                <a href="{{ route('activities.index') }}"
+                                    class="nav-link {{ activeSegment('activities') }}">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>{{ 'Activities' }}</p>
+                                </a>
+                            </li>
             </ul>
         </li>
         <li class="nav-item">

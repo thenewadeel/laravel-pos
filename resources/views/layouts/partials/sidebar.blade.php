@@ -82,14 +82,50 @@
                                 </a>
                             </li>
                             <li class="nav-item has-treeview">
+                                <a href="{{ route('floor.restaurant') }}"
+                                    class="nav-link {{ activeSegment('floor-restaurant') }}">
+                                    <i class="nav-icon fas fa-utensils"></i>
+                                    <p>{{ 'Floor & Restaurant' }}</p>
+                                </a>
+                            </li>
+                            <li class="nav-item has-treeview">
                                 <a href="{{ route('activities.index') }}"
                                     class="nav-link {{ activeSegment('activities') }}">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>{{ 'Activities' }}</p>
                                 </a>
                             </li>
-                        </ul>
-                    </li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-wifi"></i>
+                <p>
+                    Offline Sync
+                    <i class="fas fa-angle-left right"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview" style="display: none;">
+                <li class="nav-item">
+                    <a href="{{ route('tablet.order') }}" class="nav-link {{ activeSegment('tablet-order') }}">
+                        <i class="nav-icon fas fa-tablet-alt"></i>
+                        <p>Tablet Order</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('sync.status') }}" class="nav-link {{ activeSegment('sync-status') }}">
+                        <i class="nav-icon fas fa-sync"></i>
+                        <p>Sync Status</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('conflict.resolution') }}" class="nav-link {{ activeSegment('conflict-resolution') }}">
+                        <i class="nav-icon fas fa-exclamation-triangle"></i>
+                        <p>Conflicts</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
                     {{-- <li class="nav-item has-treeview">
                         <a href="{{ route('expenses.index') }}" class="nav-link {{ activeSegment('expenses') }}">
                             <i class="nav-icon fas fa-list"></i>
@@ -115,6 +151,15 @@
                         <p>{{ __('order.title') }}</p>
                     </a>
                 </li>
+                @if (auth()->user()->type == 'manager' || auth()->user()->type == 'cashier')
+                    <li class="nav-item has-treeview">
+                        <a href="{{ route('floor.restaurant') }}"
+                            class="nav-link {{ activeSegment('floor-restaurant') }}">
+                            <i class="nav-icon fas fa-utensils"></i>
+                            <p>{{ 'Floor & Restaurant' }}</p>
+                        </a>
+                    </li>
+                @endif
                 @if (auth()->user()->type == 'admin' || auth()->user()->type == 'accountant')
                     {{-- <li class="nav-header">Reports</li> --}}
                     <li class="nav-item">

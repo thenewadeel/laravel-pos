@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -9,7 +10,25 @@ use Spatie\Activitylog\LogOptions;
 
 class OrderItem extends Model
 {
-    use LogsActivity;
+    use HasFactory, LogsActivity;
+    
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($orderItem) {
+            $orderItem->order->updateTotalAmount();
+        });
+
+        static::updated(function ($orderItem) {
+            $orderItem->order->updateTotalAmount();
+        });
+
+        static::deleted(function ($orderItem) {
+            $orderItem->order->updateTotalAmount();
+        });
+    }
+    
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -26,6 +45,8 @@ class OrderItem extends Model
         'order_id',
         'product_name',
         'product_rate',
+        'unit_price',
+        'total_price',
     ];
 
     public function product()

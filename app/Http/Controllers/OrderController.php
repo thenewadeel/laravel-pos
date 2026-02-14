@@ -14,6 +14,8 @@ use App\Models\Payment;
 use App\Models\Discount;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Floor;
+use App\Models\RestaurantTable;
 // use App\Models\Category;
 use AliBayat\LaravelCategorizable\Category;
 use App\Http\Requests\OrderNewRequest;
@@ -266,6 +268,152 @@ class OrderController extends Controller
         return view('orders.edit', compact('order', 'shops', 'customers', 'users', 'discounts', 'products'));
     }
 
+    /**
+     * Show Vue-based order edit interface
+     */
+    public function vueEdit(Order $order)
+    {
+        if ($order->state == 'closed') {
+            return back()->with('message', 'Order is already closed');
+        }
+        
+        $order = $order->load(['items.product', 'payments', 'customer', 'shop.categories']);
+        $discounts = Discount::orderBy('type')->get();
+        $customers = Customer::select('id', 'name', 'membership_number')->get();
+        
+        // Prepare categories with products for Vue component
+        $categories = Category::all()->map(function($category) {
+            $products = $category->entries(Product::class)->get()->filter(function($product) {
+                return $product->is_available !== false;
+            })->map(function($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => $product->quantity,
+                    'is_available' => $product->is_available,
+                    'low_stock_threshold' => $product->low_stock_threshold ?? 10
+                ];
+            });
+            
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'products' => $products->values()->all()
+            ];
+        })->filter(function($category) {
+            return count($category['products']) > 0;
+        })->values()->all();
+        
+        return view('orders.vue.edit', compact('order', 'categories', 'discounts', 'customers'));
+    }
+
+    /**
+     * Show Vue-based orders workspace (tabbed interface)
+     */
+    public function workspace(Order $order)
+    {
+        if ($order->state == 'closed') {
+            return back()->with('message', 'Order is already closed');
+        }
+        
+        $order = $order->load(['items.product', 'payments', 'customer', 'shop.categories']);
+        $discounts = Discount::orderBy('type')->get();
+        $customers = Customer::select('id', 'name', 'membership_number')->get();
+        
+        // Prepare categories with products for Vue component
+        $categories = Category::all()->map(function($category) {
+            $products = $category->entries(Product::class)->get()->filter(function($product) {
+                return $product->is_available !== false;
+            })->map(function($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => $product->quantity,
+                    'is_available' => $product->is_available,
+                    'low_stock_threshold' => $product->low_stock_threshold ?? 10
+                ];
+            });
+            
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'products' => $products->values()->all()
+            ];
+        })->filter(function($category) {
+            return count($category['products']) > 0;
+        })->values()->all();
+        
+        return view('orders.vue.workspace', compact('order', 'categories', 'discounts', 'customers'));
+    }
+
+    /**
+     * Show floor and restaurant management view
+     */
+    public function floorRestaurant()
+    {
+        // Get floors with tables for the user's current shop
+        $shopId = auth()->user()->current_shop_id ?? auth()->user()->shops->first()->id ?? 1;
+        
+        $floors = Floor::with(['tables' => function($query) {
+                $query->where('is_active', true)->orderBy('table_number');
+            }])
+            ->where('shop_id', $shopId)
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get()
+            ->map(function($floor) {
+                return [
+                    'id' => $floor->id,
+                    'name' => $floor->name,
+                    'tables' => $floor->tables->map(function($table) {
+                        // Get active order for this table
+                        $activeOrder = $table->getActiveOrder();
+                        
+                        return [
+                            'id' => $table->id,
+                            'number' => $table->table_number,
+                            'capacity' => $table->capacity ?? 4,
+                            'status' => $table->status,
+                            'currentOrder' => $activeOrder ? [
+                                'id' => $activeOrder->id,
+                                'total' => $activeOrder->total_amount,
+                                'status' => $activeOrder->state,
+                                'created_at' => $activeOrder->created_at,
+                                'items' => $activeOrder->items->map(function($item) {
+                                    return [
+                                        'id' => $item->id,
+                                        'name' => $item->product_name,
+                                        'quantity' => $item->quantity,
+                                        'price' => $item->total_price
+                                    ];
+                                })
+                            ] : null
+                        ];
+                    })
+                ];
+            });
+
+        // Get today's stats
+        $dailyStats = [
+            'total' => Order::whereDate('created_at', today())->sum('total_amount'),
+            'orders' => Order::whereDate('created_at', today())->count()
+        ];
+
+        // Get initial order for workspace link
+        $initialOrder = Order::whereDate('created_at', today())
+            ->where('state', '!=', 'closed')
+            ->first();
+
+        if (!$initialOrder) {
+            // Create a dummy order for the link
+            $initialOrder = new Order(['id' => 1]);
+        }
+
+        return view('floor.restaurant', compact('floors', 'dailyStats', 'initialOrder'));
+    }
+
     public function makeNew(OrderNewRequest $request)
     {
         // dd($request->all());
@@ -482,14 +630,27 @@ class OrderController extends Controller
     }
     public function store(OrderStoreRequest $request)
     {
+        // Validate stock availability if items are provided in request
+        if ($request->has('items')) {
+            foreach ($request->items as $itemData) {
+                $product = Product::find($itemData['product_id']);
+                if (!$product) {
+                    return redirect()->back()->withErrors(['items' => 'Product not found']);
+                }
+                if ($product->quantity < $itemData['quantity']) {
+                    return redirect()->back()->withErrors(['items' => "Insufficient stock for product: {$product->name}"]);
+                }
+            }
+        }
+        
         // logger($request);
         $order = Order::create([
             'customer_id' => $request->customer_id,
             'user_id' => $request->user()->id,
             'shop_id' => $request->shop_id,
-            'table_number' => $request->table_number,
+            'table_number' => $request->table ?? $request->table_number,
             'waiter_name' => $request->waiter_name,
-            'type' => $request->order_type,
+            'type' => $request->type ?? $request->order_type ?? 'dine-in',
             'notes' => $request->notes,
         ]);
 
@@ -497,17 +658,44 @@ class OrderController extends Controller
         $orderHistoryController = new OrderHistoryController();
         $orderHistoryController->store($request, $order->id, 'created');
 
-        $cart = $request->user()->cart()->get();
-        foreach ($cart as $item) {
-            $order->items()->create([
-                'price' => $item->price * $item->pivot->quantity,
-                'quantity' => $item->pivot->quantity,
-                'product_id' => $item->id,
-            ]);
-            // $item->quantity = $item->quantity - $item->pivot->quantity;
-            // $item->save();
+        // Handle items from request or cart
+        if ($request->has('items')) {
+            foreach ($request->items as $itemData) {
+                $product = Product::find($itemData['product_id']);
+                $order->items()->create([
+                    'price' => $itemData['price'] * $itemData['quantity'],
+                    'quantity' => $itemData['quantity'],
+                    'product_id' => $itemData['product_id'],
+                    'unit_price' => $itemData['price'],
+                    'total_price' => $itemData['price'] * $itemData['quantity'],
+                    'product_name' => $product->name,
+                    'product_rate' => $product->price,
+                ]);
+                
+                // Deduct product quantity
+                $product->quantity -= $itemData['quantity'];
+                $product->save();
+            }
+        } else {
+            $cart = $request->user()->cart()->get();
+            foreach ($cart as $item) {
+                $order->items()->create([
+                    'price' => $item->price * $item->pivot->quantity,
+                    'quantity' => $item->pivot->quantity,
+                    'product_id' => $item->id,
+                    'unit_price' => $item->price,
+                    'total_price' => $item->price * $item->pivot->quantity,
+                    'product_name' => $item->name,
+                    'product_rate' => $item->price,
+                ]);
+                
+                // Deduct product quantity
+                $item->quantity -= $item->pivot->quantity;
+                $item->save();
+            }
+            $request->user()->cart()->detach();
         }
-        $request->user()->cart()->detach();
+        
         if ($request->amount) {
             $order->payments()->create([
                 'amount' => $request->amount,
@@ -517,8 +705,22 @@ class OrderController extends Controller
         if ($request->discountsToAdd) {
             $order->discounts()->sync($request->discountsToAdd);
         }
-        return ['message' => 'success', 'order' => $order];
+        
+        return redirect()->route('orders.show', $order)->with('success', 'Order created successfully');
     }
+
+    public function updateStatus(Request $request, Order $order)
+    {
+        $request->validate([
+            'state' => 'required|in:preparing,served,closed,wastage'
+        ]);
+
+        $order->state = $request->state;
+        $order->save();
+
+        return redirect()->route('orders.show', $order)->with('success', 'Order status updated successfully');
+    }
+
     public function printPdf($id)
     {
         // dd('printPdf', $id);

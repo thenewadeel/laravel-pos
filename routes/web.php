@@ -25,6 +25,11 @@ Auth::routes();
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/admin', [HomeController::class, 'index'])->name('admin');
+    
+    // Offline Sync Routes
+    Route::view('/tablet-order', 'offline-sync.tablet-order')->name('tablet.order');
+    Route::view('/sync-status', 'offline-sync.sync-status')->name('sync.status');
+    Route::view('/conflict-resolution', 'offline-sync.conflict-resolution')->name('conflict.resolution');
     Route::resources([
         'products'   => ProductController::class,
         'customers'   => CustomerController::class,
@@ -36,6 +41,20 @@ Route::middleware('auth')->group(function () {
         'expenses'    => ExpenseController::class,
         'discounts' => DiscountController::class
     ]);
+    
+    // Vue-based order edit
+    Route::get('/orders/{order}/vue-edit', [OrderController::class, 'vueEdit'])
+        ->name('orders.vue-edit');
+    
+    // Vue-based orders workspace (tabbed interface)
+    Route::get('/orders/{order}/workspace', [OrderController::class, 'workspace'])
+        ->name('orders.workspace');
+    
+    // Floor and Restaurant Management (Manager/Cashier only)
+    Route::get('/floor-restaurant', [OrderController::class, 'floorRestaurant'])
+        ->name('floor.restaurant')
+        ->middleware(['auth']);
+
 
     // Route::get('/createNeworder', [OrderController::class, 'newEdit'])->name('createNeworder');
     Route::post('/makeNeworder', [OrderController::class, 'makeNew'])->name('makeNeworder');
@@ -68,6 +87,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders/{order}/feedback', [OrderController::class, 'getFeedback'])->name('orders.getFeedback');
     Route::post('/orders/{order}/storefeedback', [OrderController::class, 'storeFeedback'])->name('orders.storeFeedback');
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::delete('/orders-deleteAllDrafts', [OrderController::class, 'destroyAllDrafts'])->name('orders.destroyAllDrafts');
 
     Route::get('/shops/{shop}/export', [ShopController::class, 'exportReport'])->name('shop.export');

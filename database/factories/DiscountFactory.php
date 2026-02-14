@@ -17,7 +17,11 @@ class DiscountFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->words(2, true),
+            'percentage' => $this->faker->randomFloat(2, 0, 50),
+            'amount' => $this->faker->randomFloat(2, 0, 100),
+            'method' => $this->faker->randomElement(['NATURAL', 'REVERSE']),
+            'type' => $this->faker->randomElement(['DISCOUNT', 'CHARGES']),
         ];
     }
 }

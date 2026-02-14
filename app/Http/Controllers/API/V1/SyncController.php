@@ -29,18 +29,14 @@ class SyncController extends Controller
     public function upload(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string',
+            'device_id' => 'required|string|min:1',
             'orders' => 'required|array|min:1',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'VALIDATION_ERROR',
-                    'message' => 'Validation failed',
-                    'details' => $validator->errors(),
-                ],
+                'message' => 'The given data was invalid.',
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -50,6 +46,7 @@ class SyncController extends Controller
 
         foreach ($orders as $orderData) {
             $orderData['device_id'] = $deviceId;
+            $orderData['user_id'] = $request->user()->id;
             
             try {
                 $order = $this->offlineOrderService->createOfflineOrder($orderData);
@@ -85,17 +82,13 @@ class SyncController extends Controller
     public function status(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'device_id' => 'required|string',
+            'device_id' => 'required|string|min:1',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'VALIDATION_ERROR',
-                    'message' => 'Validation failed',
-                    'details' => $validator->errors(),
-                ],
+                'message' => 'The given data was invalid.',
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -185,7 +178,7 @@ class SyncController extends Controller
         
         // Mark orders as acknowledged
         Order::whereIn('id', $orderIds)->update([
-            'acknowledged_at' => now(),
+            'synced_at' => now(),
         ]);
 
         return response()->json([
@@ -207,10 +200,13 @@ class SyncController extends Controller
 
         foreach ($conflicts as $conflictData) {
             OrderSyncQueue::create([
+                'order_id' => $conflictData['server_order_id'] ?? null,
                 'device_id' => $deviceId,
+                'local_order_id' => $conflictData['local_order_id'] ?? 'unknown',
+                'sync_type' => 'update',
                 'order_data' => json_encode($conflictData),
                 'status' => 'conflict',
-                'conflict_data' => json_encode($conflictData['details'] ?? []),
+                'conflict_data' => $conflictData['details'] ?? [],
             ]);
         }
 
@@ -237,13 +233,13 @@ class SyncController extends Controller
             ->get();
 
         $conflictsData = $conflicts->map(function ($conflict) {
-            $orderData = json_decode($conflict->order_data, true);
+            $conflictData = $conflict->conflict_data ?? [];
             return [
                 'id' => $conflict->id,
-                'type' => $orderData['type'] ?? 'unknown',
-                'local_order_id' => $orderData['local_order_id'] ?? null,
-                'server_order_id' => $orderData['server_order_id'] ?? null,
-                'details' => json_decode($conflict->conflict_data, true),
+                'type' => $conflictData['type'] ?? 'unknown',
+                'local_order_id' => $conflict->local_order_id,
+                'server_order_id' => $conflict->order_id,
+                'details' => $conflictData,
                 'created_at' => $conflict->created_at->toIso8601String(),
             ];
         });
@@ -266,25 +262,25 @@ class SyncController extends Controller
         $resolution = $request->resolution;
 
         // Apply resolution strategy
-        $orderData = json_decode($conflict->order_data, true);
-        
         if ($resolution === 'use_server') {
             // Keep server version, discard local
             $conflict->update([
-                'status' => 'resolved',
-                'conflict_data' => json_encode([
+                'status' => 'completed',
+                'conflict_data' => [
                     'resolution' => 'use_server',
                     'reason' => $request->reason,
-                ]),
+                    'resolved_at' => now()->toIso8601String(),
+                ],
             ]);
         } elseif ($resolution === 'update_server') {
             // Update server with local changes
             $conflict->update([
-                'status' => 'resolved',
-                'conflict_data' => json_encode([
+                'status' => 'completed',
+                'conflict_data' => [
                     'resolution' => 'update_server',
                     'reason' => $request->reason,
-                ]),
+                    'resolved_at' => now()->toIso8601String(),
+                ],
             ]);
         }
 
@@ -293,7 +289,7 @@ class SyncController extends Controller
             'data' => [
                 'conflict_id' => $id,
                 'resolution' => $resolution,
-                'status' => 'resolved',
+                'status' => 'completed',
             ],
             'message' => 'Conflict resolved successfully',
         ]);
@@ -307,14 +303,18 @@ class SyncController extends Controller
         $conflict = OrderSyncQueue::findOrFail($id);
         
         $conflict->update([
-            'status' => 'dismissed',
+            'status' => 'completed',
+            'conflict_data' => [
+                'resolution' => 'dismissed',
+                'dismissed_at' => now()->toIso8601String(),
+            ],
         ]);
 
         return response()->json([
             'success' => true,
             'data' => [
                 'conflict_id' => $id,
-                'status' => 'dismissed',
+                'status' => 'completed',
             ],
             'message' => 'Conflict dismissed successfully',
         ]);

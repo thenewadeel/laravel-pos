@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderSyncQueue;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -39,8 +40,8 @@ class OfflineOrderService
         return DB::transaction(function () use ($orderData) {
             // Create order
             $order = Order::create([
-                'shop_id' => $orderData['shop_id'],
-                'user_id' => $orderData['user_id'] ?? null,
+                'shop_id' => $orderData['shop_id'] ?? 1,
+                'user_id' => $orderData['user_id'] ?? Auth::id() ?? 1,
                 'customer_id' => $orderData['customer_id'] ?? null,
                 'table_number' => $orderData['table_number'] ?? null,
                 'waiter_name' => $orderData['waiter_name'] ?? null,

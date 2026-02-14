@@ -5,6 +5,7 @@ namespace Tests\Feature\API;
 use App\Models\Order;
 use App\Models\OrderSyncQueue;
 use App\Models\Product;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -21,6 +22,9 @@ class SyncControllerTest extends TestCase
         parent::setUp();
         
         $this->user = User::factory()->create();
+        $shop = Shop::factory()->create();
+        $this->user->shops()->attach($shop);
+        $this->user->current_shop_id = $shop->id;
         $this->actingAs($this->user);
     }
 
@@ -32,6 +36,7 @@ class SyncControllerTest extends TestCase
     {
         $product = Product::factory()->create(['quantity' => 100]);
         
+        $shop = $this->user->shops()->first();
         $offlineOrders = [
             [
                 'local_order_id' => 'tablet-order-001',
@@ -39,6 +44,7 @@ class SyncControllerTest extends TestCase
                 'waiter_name' => 'John Waiter',
                 'type' => 'dine-in',
                 'customer_id' => null,
+                'shop_id' => $shop->id,
                 'items' => [
                     [
                         'product_id' => $product->id,
@@ -309,7 +315,7 @@ class SyncControllerTest extends TestCase
                     'data' => [
                         'conflict_id' => $conflict->id,
                         'resolution' => 'use_server',
-                        'status' => 'resolved',
+                        'status' => 'completed',
                     ],
                 ]);
     }
@@ -340,7 +346,7 @@ class SyncControllerTest extends TestCase
                     'success' => true,
                     'data' => [
                         'conflict_id' => $conflict->id,
-                        'status' => 'dismissed',
+                        'status' => 'completed',
                     ],
                 ]);
     }

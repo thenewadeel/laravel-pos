@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\V1\FloorController;
 use App\Http\Controllers\API\V1\FloorSyncController;
 use App\Http\Controllers\API\V1\OrderController;
 use App\Http\Controllers\API\V1\SyncController;
@@ -17,13 +18,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// API V1 Routes - using 'auth' middleware with web session
-// Note: Ensure your app handles API auth failures gracefully
-Route::prefix('v1')->middleware(['auth'])->group(function () {
+// Debug route to check authentication
+Route::get('/debug-auth', function (Request $request) {
+    return [
+        'authenticated' => auth()->check(),
+        'user_id' => auth()->id(),
+        'guard' => config('auth.defaults.guard'),
+        'session' => $request->hasSession(),
+        'cookies' => $request->cookies->all(),
+    ];
+});
+
+// API V1 Routes - using 'auth:sanctum' middleware with session authentication
+Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     
     // Order API Endpoints
     Route::get('/orders', [OrderController::class, 'index']);
@@ -37,6 +48,16 @@ Route::prefix('v1')->middleware(['auth'])->group(function () {
     Route::post('/orders/{id}/items', [OrderController::class, 'addItem']);
     Route::put('/orders/{id}/items/{itemId}', [OrderController::class, 'updateItem']);
     Route::delete('/orders/{id}/items/{itemId}', [OrderController::class, 'deleteItem']);
+    
+    // Floor Management API Endpoints
+    Route::get('/floors', [FloorController::class, 'index']);
+    Route::post('/floors', [FloorController::class, 'store']);
+    Route::put('/floors/{id}', [FloorController::class, 'update']);
+    Route::delete('/floors/{id}', [FloorController::class, 'destroy']);
+    Route::post('/floors/{id}/tables', [FloorController::class, 'storeTable']);
+    Route::put('/tables/{id}', [FloorController::class, 'updateTable']);
+    Route::delete('/tables/{id}', [FloorController::class, 'destroyTable']);
+    Route::patch('/tables/{id}/status', [FloorController::class, 'updateTableStatus']);
     
     // Offline Sync API Endpoints
     Route::post('/sync/upload', [SyncController::class, 'upload']);
@@ -53,5 +74,5 @@ Route::prefix('v1')->middleware(['auth'])->group(function () {
     Route::post('/sync/tables/upload', [FloorSyncController::class, 'uploadAssignments']);
     Route::get('/sync/floors/status', [FloorSyncController::class, 'getSyncStatus']);
     Route::get('/sync/tables/download', [FloorSyncController::class, 'downloadUpdates']);
-    Route::post('/sync/acknowledge', [FloorSyncController::class, 'acknowledge']);
+    Route::post('/sync/floors/acknowledge', [FloorSyncController::class, 'acknowledge']);
 });

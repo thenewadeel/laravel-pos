@@ -338,9 +338,11 @@ export default {
     const createOrderOnServer = async (order) => {
       const response = await fetch('/api/v1/orders', {
         method: 'POST',
+        credentials: 'same-origin', // Include cookies for authentication
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
           table_number: order.table_number,
@@ -374,9 +376,11 @@ export default {
       // Sync any changes to existing order
       const response = await fetch(`/api/v1/orders/${order.id}`, {
         method: 'PUT',
+        credentials: 'same-origin', // Include cookies for authentication
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
+          'X-CSRF-TOKEN': csrfToken,
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
           table_number: order.table_number,

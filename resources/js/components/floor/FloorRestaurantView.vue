@@ -28,15 +28,32 @@
         class="floor-section"
       >
         <div class="floor-header">
-          <h3>{{ floor.name }}</h3>
-          <div class="floor-actions" v-if="canManageFloors">
-            <button @click="editFloor(floor)" class="btn-icon" title="Edit Floor">
-              <i class="fas fa-edit"></i>
+          <div v-if="editingFloor?.id === floor.id" class="inline-edit-form">
+            <input 
+              v-model="editingFloor.name" 
+              type="text" 
+              class="form-control"
+              placeholder="Floor name"
+              @keyup.enter="saveFloorEdit"
+            >
+            <button @click="saveFloorEdit" class="btn-icon success" title="Save">
+              <i class="fas fa-check"></i>
             </button>
-            <button @click="deleteFloor(floor)" class="btn-icon danger" title="Delete Floor">
-              <i class="fas fa-trash"></i>
+            <button @click="cancelFloorEdit" class="btn-icon" title="Cancel">
+              <i class="fas fa-times"></i>
             </button>
           </div>
+          <template v-else>
+            <h3>{{ floor.name }}</h3>
+            <div class="floor-actions" v-if="canManageFloors">
+              <button @click="startEditFloor(floor)" class="btn-icon" title="Edit Floor">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button @click="deleteFloor(floor)" class="btn-icon danger" title="Delete Floor">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </template>
         </div>
 
         <div class="tables-grid">
@@ -68,11 +85,41 @@
             </div>
           </div>
 
+          <!-- Inline Add Table Form -->
+          <div v-if="addingTableFloor?.id === floor.id" class="inline-add-form table-add-form">
+            <div class="form-group">
+              <label>Table #</label>
+              <input 
+                v-model="newTable.number" 
+                type="text" 
+                class="form-control"
+                placeholder="e.g., 12A"
+              >
+            </div>
+            <div class="form-group">
+              <label>Capacity</label>
+              <input 
+                v-model.number="newTable.capacity" 
+                type="number" 
+                min="1"
+                class="form-control"
+              >
+            </div>
+            <div class="form-actions">
+              <button @click="saveNewTable(floor)" class="btn-icon success" title="Save">
+                <i class="fas fa-check"></i>
+              </button>
+              <button @click="cancelAddTable" class="btn-icon" title="Cancel">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+
           <!-- Add Table Button (Manager only) -->
           <button 
-            v-if="canManageFloors"
+            v-else-if="canManageFloors"
             class="add-table-btn"
-            @click="addTable(floor)"
+            @click="startAddTable(floor)"
           >
             <i class="fas fa-plus"></i>
             <span>Add Table</span>
@@ -80,11 +127,32 @@
         </div>
       </div>
 
+      <!-- Inline Add Floor Form -->
+      <div v-if="isAddingFloor" class="inline-add-form floor-add-form">
+        <div class="form-group">
+          <label>Floor Name</label>
+          <input 
+            v-model="newFloor.name" 
+            type="text" 
+            class="form-control"
+            placeholder="e.g., Second Floor"
+          >
+        </div>
+        <div class="form-actions">
+          <button @click="saveNewFloor" class="btn success" :disabled="!newFloor.name">
+            <i class="fas fa-check"></i> Save
+          </button>
+          <button @click="cancelAddFloor" class="btn secondary">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </div>
+
       <!-- Add Floor Button (Manager only) -->
       <button 
-        v-if="canManageFloors && floors.length < 5"
+        v-else-if="canManageFloors && floors.length < 5"
         class="add-floor-btn"
-        @click="addFloor"
+        @click="startAddFloor"
       >
         <i class="fas fa-plus-circle"></i>
         <span>Add New Floor</span>
@@ -95,21 +163,57 @@
     <div class="quick-actions">
       <h4>Quick Actions</h4>
       <div class="actions-grid">
-        <button @click="showNewOrderModal = true" class="action-btn primary">
+        <!-- Inline New Order Form -->
+        <div v-if="isCreatingOrder" class="inline-action-form">
+          <div class="form-group">
+            <label>Table</label>
+            <select v-model="newOrder.tableId" class="form-control">
+              <option value="">Select table...</option>
+              <optgroup v-for="floor in floors" :key="floor.id" :label="floor.name">
+                <option 
+                  v-for="table in getAvailableTables(floor)" 
+                  :key="table.id" 
+                  :value="table.id"
+                >
+                  Table {{ table.number }}
+                </option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Type</label>
+            <select v-model="newOrder.type" class="form-control">
+              <option value="dine-in">Dine-in</option>
+              <option value="take-away">Take-away</option>
+              <option value="delivery">Delivery</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button @click="createNewOrder" class="btn primary" :disabled="!newOrder.tableId">
+              <i class="fas fa-check"></i> Create
+            </button>
+            <button @click="cancelCreateOrder" class="btn secondary">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <button 
+          v-else 
+          @click="startCreateOrder" 
+          class="action-btn primary"
+        >
           <i class="fas fa-plus"></i>
           <span>New Order</span>
         </button>
-        <button @click="showReservationModal = true" class="action-btn">
-          <i class="fas fa-calendar-check"></i>
-          <span>Reservation</span>
-        </button>
-        <button @click="showTransferModal = true" class="action-btn">
+
+        <button @click="showTransfer = true" class="action-btn">
           <i class="fas fa-exchange-alt"></i>
           <span>Transfer</span>
         </button>
-        <button @click="showMergeModal = true" class="action-btn">
+        <button @click="showMerge = true" class="action-btn">
           <i class="fas fa-object-group"></i>
-          <span>Merge Tables</span>
+          <span>Merge</span>
         </button>
       </div>
     </div>
@@ -171,13 +275,6 @@
           <button @click="createOrder(selectedTable.id)" class="btn primary btn-block">
             <i class="fas fa-plus"></i> Create Order
           </button>
-          <button 
-            v-if="canReserveTable"
-            @click="reserveTable(selectedTable.id)" 
-            class="btn btn-block"
-          >
-            <i class="fas fa-calendar"></i> Reserve Table
-          </button>
         </div>
 
         <div class="table-management-actions" v-if="canManageTables">
@@ -191,104 +288,12 @@
         </div>
       </div>
     </div>
-
-    <!-- Modals -->
-    <Teleport to="body">
-      <!-- New Order Modal -->
-      <div v-if="showNewOrderModal" class="modal-overlay" @click.self="showNewOrderModal = false">
-        <div class="modal-content">
-          <h3>New Order</h3>
-          <div class="form-group">
-            <label>Select Table</label>
-            <select v-model="newOrder.tableId" class="form-control">
-              <option value="">Choose a table...</option>
-              <optgroup v-for="floor in floors" :key="floor.id" :label="floor.name">
-                <option 
-                  v-for="table in getAvailableTables(floor)" 
-                  :key="table.id" 
-                  :value="table.id"
-                >
-                  Table {{ table.number }} (Capacity: {{ table.capacity }})
-                </option>
-              </optgroup>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Order Type</label>
-            <select v-model="newOrder.type" class="form-control">
-              <option value="dine-in">Dine-in</option>
-              <option value="take-away">Take-away</option>
-              <option value="delivery">Delivery</option>
-            </select>
-          </div>
-          <div class="form-group" v-if="newOrder.type === 'dine-in'">
-            <label>Waiter</label>
-            <input v-model="newOrder.waiterName" type="text" class="form-control" placeholder="Waiter name">
-          </div>
-          <div class="modal-actions">
-            <button @click="showNewOrderModal = false" class="btn secondary">Cancel</button>
-            <button @click="createNewOrder" class="btn primary" :disabled="!newOrder.tableId">
-              Create Order
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Reservation Modal -->
-      <div v-if="showReservationModal" class="modal-overlay" @click.self="showReservationModal = false">
-        <div class="modal-content">
-          <h3>New Reservation</h3>
-          <div class="form-group">
-            <label>Customer Name</label>
-            <input v-model="reservation.customerName" type="text" class="form-control" placeholder="Customer name">
-          </div>
-          <div class="form-group">
-            <label>Phone</label>
-            <input v-model="reservation.phone" type="tel" class="form-control" placeholder="Phone number">
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Date</label>
-              <input v-model="reservation.date" type="date" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Time</label>
-              <input v-model="reservation.time" type="time" class="form-control">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Party Size</label>
-            <input v-model.number="reservation.partySize" type="number" min="1" class="form-control">
-          </div>
-          <div class="form-group">
-            <label>Preferred Table</label>
-            <select v-model="reservation.tableId" class="form-control">
-              <option value="">Any available table</option>
-              <optgroup v-for="floor in floors" :key="floor.id" :label="floor.name">
-                <option 
-                  v-for="table in getAvailableTables(floor)" 
-                  :key="table.id" 
-                  :value="table.id"
-                >
-                  Table {{ table.number }} ({{ table.capacity }} seats)
-                </option>
-              </optgroup>
-            </select>
-          </div>
-          <div class="modal-actions">
-            <button @click="showReservationModal = false" class="btn secondary">Cancel</button>
-            <button @click="createReservation" class="btn primary" :disabled="!reservation.customerName">
-              Create Reservation
-            </button>
-          </div>
-        </div>
-      </div>
-    </Teleport>
   </div>
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
+import axios from 'axios'
 import StatusBadge from '../business/StatusBadge.vue'
 
 export default {
@@ -299,7 +304,7 @@ export default {
   },
 
   props: {
-    floors: {
+    initialFloors: {
       type: Array,
       default: () => []
     },
@@ -316,15 +321,33 @@ export default {
     }
   },
 
-  emits: ['create-order', 'view-order', 'process-payment', 'update-table', 'create-reservation'],
+  emits: ['create-order', 'view-order', 'process-payment'],
 
   setup(props, { emit }) {
+    // Get CSRF token from meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || ''
+    
+    // Configure axios defaults
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken
+    axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
+
     // State
+    const floors = ref(props.initialFloors || [])
     const selectedTable = ref(null)
-    const showNewOrderModal = ref(false)
-    const showReservationModal = ref(false)
-    const showTransferModal = ref(false)
-    const showMergeModal = ref(false)
+    const isAddingFloor = ref(false)
+    const isCreatingOrder = ref(false)
+    const addingTableFloor = ref(null)
+    const editingFloor = ref(null)
+    const showTransfer = ref(false)
+    const showMerge = ref(false)
+    const isLoading = ref(false)
+
+    const newFloor = ref({ name: '' })
+    
+    const newTable = ref({
+      number: '',
+      capacity: 4
+    })
 
     const newOrder = ref({
       tableId: '',
@@ -332,14 +355,46 @@ export default {
       waiterName: props.user?.first_name + ' ' + props.user?.last_name || ''
     })
 
-    const reservation = ref({
-      customerName: '',
-      phone: '',
-      date: new Date().toISOString().split('T')[0],
-      time: '19:00',
-      partySize: 2,
-      tableId: ''
-    })
+    // Helper function to show notifications
+    const showNotification = (message, type = 'success') => {
+      if (typeof window.toastr !== 'undefined') {
+        if (type === 'success') {
+          window.toastr.success(message)
+        } else if (type === 'error') {
+          window.toastr.error(message)
+        } else {
+          window.toastr.info(message)
+        }
+      } else {
+        if (type === 'error') {
+          alert('Error: ' + message)
+        } else {
+          alert(message)
+        }
+      }
+    }
+
+    // Helper function to refresh floors data
+    const refreshFloors = async () => {
+      try {
+        isLoading.value = true
+        const response = await axios.get('/api/v1/floors')
+        if (response.data.success) {
+          floors.value = response.data.data.map(floor => ({
+            ...floor,
+            tables: floor.tables.map(table => ({
+              ...table,
+              number: table.table_number
+            }))
+          }))
+        }
+      } catch (error) {
+        console.error('Failed to refresh floors:', error)
+        showNotification('Failed to refresh floor data', 'error')
+      } finally {
+        isLoading.value = false
+      }
+    }
 
     // RBAC Computed
     const userType = computed(() => props.user?.type || 'cashier')
@@ -356,25 +411,21 @@ export default {
       return ['admin', 'manager', 'cashier'].includes(userType.value)
     })
 
-    const canReserveTable = computed(() => {
-      return ['admin', 'manager', 'cashier'].includes(userType.value)
-    })
-
     // Stats Computed
     const availableTables = computed(() => {
-      return props.floors.reduce((count, floor) => {
+      return floors.value.reduce((count, floor) => {
         return count + floor.tables.filter(t => t.status === 'available').length
       }, 0)
     })
 
     const occupiedTables = computed(() => {
-      return props.floors.reduce((count, floor) => {
+      return floors.value.reduce((count, floor) => {
         return count + floor.tables.filter(t => t.status === 'occupied').length
       }, 0)
     })
 
     const reservedTables = computed(() => {
-      return props.floors.reduce((count, floor) => {
+      return floors.value.reduce((count, floor) => {
         return count + floor.tables.filter(t => t.status === 'reserved').length
       }, 0)
     })
@@ -388,6 +439,260 @@ export default {
 
     const getAvailableTables = (floor) => {
       return floor.tables.filter(t => t.status === 'available' || t.status === 'reserved')
+    }
+
+    // Floor Management
+    const startAddFloor = () => {
+      isAddingFloor.value = true
+      newFloor.value = { name: '' }
+    }
+
+    const cancelAddFloor = () => {
+      isAddingFloor.value = false
+      newFloor.value = { name: '' }
+    }
+
+    const saveNewFloor = async () => {
+      if (!newFloor.value.name || isLoading.value) return
+      
+      try {
+        isLoading.value = true
+        const response = await axios.post('/api/v1/floors', {
+          name: newFloor.value.name
+        })
+        
+        if (response.data.success) {
+          showNotification('Floor created successfully')
+          await refreshFloors()
+          isAddingFloor.value = false
+          newFloor.value = { name: '' }
+        } else {
+          showNotification(response.data.error?.message || 'Failed to create floor', 'error')
+        }
+      } catch (error) {
+        console.error('Error creating floor:', error)
+        const message = error.response?.data?.error?.message || 'Failed to create floor'
+        showNotification(message, 'error')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const startEditFloor = (floor) => {
+      editingFloor.value = { ...floor }
+    }
+
+    const saveFloorEdit = async () => {
+      if (!editingFloor.value?.name || isLoading.value) return
+      
+      try {
+        isLoading.value = true
+        const response = await axios.put(`/api/v1/floors/${editingFloor.value.id}`, {
+          name: editingFloor.value.name
+        })
+        
+        if (response.data.success) {
+          showNotification('Floor updated successfully')
+          await refreshFloors()
+          editingFloor.value = null
+        } else {
+          showNotification(response.data.error?.message || 'Failed to update floor', 'error')
+        }
+      } catch (error) {
+        console.error('Error updating floor:', error)
+        const message = error.response?.data?.error?.message || 'Failed to update floor'
+        showNotification(message, 'error')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const cancelFloorEdit = () => {
+      editingFloor.value = null
+    }
+
+    const deleteFloor = async (floor) => {
+      if (!confirm(`Delete floor "${floor.name}"? This will also delete all tables on this floor.`)) {
+        return
+      }
+      
+      if (isLoading.value) return
+      
+      try {
+        isLoading.value = true
+        const response = await axios.delete(`/api/v1/floors/${floor.id}`)
+        
+        if (response.data.success) {
+          showNotification('Floor deleted successfully')
+          await refreshFloors()
+        } else {
+          showNotification(response.data.error?.message || 'Failed to delete floor', 'error')
+        }
+      } catch (error) {
+        console.error('Error deleting floor:', error)
+        const message = error.response?.data?.error?.message || 'Failed to delete floor'
+        showNotification(message, 'error')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    // Table Management
+    const startAddTable = (floor) => {
+      addingTableFloor.value = floor
+      newTable.value = { number: '', capacity: 4 }
+    }
+
+    const cancelAddTable = () => {
+      addingTableFloor.value = null
+      newTable.value = { number: '', capacity: 4 }
+    }
+
+    const saveNewTable = async (floor) => {
+      if (!newTable.value.number || isLoading.value) return
+      
+      try {
+        isLoading.value = true
+        const response = await axios.post(`/api/v1/floors/${floor.id}/tables`, {
+          table_number: newTable.value.number,
+          capacity: newTable.value.capacity
+        })
+        
+        if (response.data.success) {
+          showNotification('Table created successfully')
+          await refreshFloors()
+          addingTableFloor.value = null
+          newTable.value = { number: '', capacity: 4 }
+        } else {
+          showNotification(response.data.error?.message || 'Failed to create table', 'error')
+        }
+      } catch (error) {
+        console.error('Error creating table:', error)
+        const message = error.response?.data?.error?.message || 'Failed to create table'
+        showNotification(message, 'error')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const editTable = async (table) => {
+      const newNumber = prompt('Edit table number:', table.number)
+      if (!newNumber || newNumber === table.number) return
+      if (isLoading.value) return
+      
+      try {
+        isLoading.value = true
+        const response = await axios.put(`/api/v1/tables/${table.id}`, {
+          table_number: newNumber
+        })
+        
+        if (response.data.success) {
+          showNotification('Table updated successfully')
+          await refreshFloors()
+        } else {
+          showNotification(response.data.error?.message || 'Failed to update table', 'error')
+        }
+      } catch (error) {
+        console.error('Error updating table:', error)
+        const message = error.response?.data?.error?.message || 'Failed to update table'
+        showNotification(message, 'error')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const deleteTable = async (table) => {
+      if (!confirm(`Delete table ${table.number}?`)) return
+      if (isLoading.value) return
+      
+      try {
+        isLoading.value = true
+        const response = await axios.delete(`/api/v1/tables/${table.id}`)
+        
+        if (response.data.success) {
+          showNotification('Table deleted successfully')
+          await refreshFloors()
+          if (selectedTable.value?.id === table.id) {
+            selectedTable.value = null
+          }
+        } else {
+          showNotification(response.data.error?.message || 'Failed to delete table', 'error')
+        }
+      } catch (error) {
+        console.error('Error deleting table:', error)
+        const message = error.response?.data?.error?.message || 'Failed to delete table'
+        showNotification(message, 'error')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    const changeTableStatus = async (table) => {
+      if (isLoading.value) return
+      
+      const statuses = ['available', 'occupied', 'reserved', 'cleaning']
+      const currentIndex = statuses.indexOf(table.status)
+      const nextStatus = statuses[(currentIndex + 1) % statuses.length]
+      
+      try {
+        isLoading.value = true
+        const response = await axios.patch(`/api/v1/tables/${table.id}/status`, {
+          status: nextStatus
+        })
+        
+        if (response.data.success) {
+          showNotification(`Table status changed to ${nextStatus}`)
+          await refreshFloors()
+          // Update selected table if it's the one being changed
+          if (selectedTable.value?.id === table.id) {
+            selectedTable.value = { ...selectedTable.value, status: nextStatus }
+          }
+        } else {
+          showNotification(response.data.error?.message || 'Failed to update table status', 'error')
+        }
+      } catch (error) {
+        console.error('Error updating table status:', error)
+        const message = error.response?.data?.error?.message || 'Failed to update table status'
+        showNotification(message, 'error')
+      } finally {
+        isLoading.value = false
+      }
+    }
+
+    // Order Management
+    const startCreateOrder = () => {
+      isCreatingOrder.value = true
+      newOrder.value = {
+        tableId: '',
+        type: 'dine-in',
+        waiterName: props.user?.first_name + ' ' + props.user?.last_name || ''
+      }
+    }
+
+    const cancelCreateOrder = () => {
+      isCreatingOrder.value = false
+      newOrder.value = {
+        tableId: '',
+        type: 'dine-in',
+        waiterName: props.user?.first_name + ' ' + props.user?.last_name || ''
+      }
+    }
+
+    const createNewOrder = () => {
+      if (!newOrder.value.tableId) return
+      
+      emit('create-order', {
+        tableId: newOrder.value.tableId,
+        type: newOrder.value.type,
+        waiterName: newOrder.value.waiterName
+      })
+      
+      isCreatingOrder.value = false
+      newOrder.value = {
+        tableId: '',
+        type: 'dine-in',
+        waiterName: props.user?.first_name + ' ' + props.user?.last_name || ''
+      }
     }
 
     const createOrder = (tableId) => {
@@ -406,36 +711,7 @@ export default {
       emit('process-payment', orderId)
     }
 
-    const createNewOrder = () => {
-      if (!newOrder.value.tableId) return
-      
-      emit('create-order', {
-        tableId: newOrder.value.tableId,
-        type: newOrder.value.type,
-        waiterName: newOrder.value.waiterName
-      })
-      
-      showNewOrderModal.value = false
-      newOrder.value = {
-        tableId: '',
-        type: 'dine-in',
-        waiterName: props.user?.first_name + ' ' + props.user?.last_name || ''
-      }
-    }
-
-    const createReservation = () => {
-      emit('create-reservation', { ...reservation.value })
-      showReservationModal.value = false
-      reservation.value = {
-        customerName: '',
-        phone: '',
-        date: new Date().toISOString().split('T')[0],
-        time: '19:00',
-        partySize: 2,
-        tableId: ''
-      }
-    }
-
+    // Formatters
     const formatCurrency = (amount) => {
       return parseFloat(amount).toFixed(2)
     }
@@ -446,80 +722,50 @@ export default {
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
 
-    // Placeholder methods for manager actions
-    const editFloor = (floor) => {
-      console.log('Edit floor:', floor)
-    }
-
-    const deleteFloor = (floor) => {
-      if (confirm(`Delete floor "${floor.name}"?`)) {
-        console.log('Delete floor:', floor)
-      }
-    }
-
-    const addFloor = () => {
-      console.log('Add new floor')
-    }
-
-    const addTable = (floor) => {
-      console.log('Add table to floor:', floor)
-    }
-
-    const editTable = (table) => {
-      console.log('Edit table:', table)
-    }
-
-    const changeTableStatus = (table) => {
-      const statuses = ['available', 'occupied', 'reserved', 'cleaning']
-      const currentIndex = statuses.indexOf(table.status)
-      const nextStatus = statuses[(currentIndex + 1) % statuses.length]
-      
-      emit('update-table', { 
-        tableId: table.id, 
-        status: nextStatus 
-      })
-    }
-
-    const reserveTable = (tableId) => {
-      emit('update-table', { 
-        tableId, 
-        status: 'reserved' 
-      })
-    }
-
     return {
+      floors,
       selectedTable,
-      showNewOrderModal,
-      showReservationModal,
-      showTransferModal,
-      showMergeModal,
+      isAddingFloor,
+      isCreatingOrder,
+      isLoading,
+      addingTableFloor,
+      editingFloor,
+      showTransfer,
+      showMerge,
+      newFloor,
+      newTable,
       newOrder,
-      reservation,
       canManageFloors,
       canManageTables,
       canProcessPayment,
-      canReserveTable,
       availableTables,
       occupiedTables,
       reservedTables,
       dailyTotal,
       handleTableClick,
       getAvailableTables,
+      startAddFloor,
+      cancelAddFloor,
+      saveNewFloor,
+      startEditFloor,
+      saveFloorEdit,
+      cancelFloorEdit,
+      deleteFloor,
+      startAddTable,
+      cancelAddTable,
+      saveNewTable,
+      editTable,
+      deleteTable,
+      changeTableStatus,
+      startCreateOrder,
+      cancelCreateOrder,
+      createNewOrder,
       createOrder,
       viewOrder,
       addToOrder,
       processPayment,
-      createNewOrder,
-      createReservation,
       formatCurrency,
-      formatTime,
-      editFloor,
-      deleteFloor,
-      addFloor,
-      addTable,
-      editTable,
-      changeTableStatus,
-      reserveTable
+      formatTime
     }
   }
 }
@@ -606,6 +852,7 @@ export default {
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 2px solid #e9ecef;
+  min-height: 44px;
 }
 
 .floor-header h3 {
@@ -618,6 +865,19 @@ export default {
 .floor-actions {
   display: flex;
   gap: 8px;
+}
+
+/* Inline Edit Form */
+.inline-edit-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.inline-edit-form input {
+  flex: 1;
+  max-width: 300px;
 }
 
 /* Tables Grid */
@@ -713,6 +973,53 @@ export default {
   color: #6c757d;
 }
 
+/* Inline Add Forms */
+.inline-add-form {
+  background: #f8f9fa;
+  border: 2px dashed #adb5bd;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.table-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.floor-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+}
+
+.inline-add-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inline-add-form label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.inline-add-form input,
+.inline-add-form select {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
 /* Add Buttons */
 .add-table-btn,
 .add-floor-btn {
@@ -804,6 +1111,37 @@ export default {
 .action-btn span {
   font-size: 12px;
   font-weight: 500;
+}
+
+/* Inline Action Form */
+.inline-action-form {
+  grid-column: 1 / -1;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.inline-action-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inline-action-form label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #495057;
+}
+
+.inline-action-form select {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 /* Table Detail Panel */
@@ -1019,6 +1357,15 @@ export default {
   background: #dee2e6;
 }
 
+.btn-icon.success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.btn-icon.success:hover {
+  background: #c3e6cb;
+}
+
 .btn-icon.danger {
   background: #f8d7da;
   color: #721c24;
@@ -1028,47 +1375,7 @@ export default {
   background: #f5c6cb;
 }
 
-/* Modals */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-
-.modal-content {
-  background: #fff;
-  border-radius: 8px;
-  padding: 24px;
-  width: 100%;
-  max-width: 480px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-content h3 {
-  margin: 0 0 20px 0;
-  font-size: 20px;
-}
-
-.form-group {
-  margin-bottom: 16px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #495057;
-}
-
+/* Form Controls */
 .form-control {
   width: 100%;
   padding: 10px 12px;
@@ -1081,21 +1388,6 @@ export default {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #e9ecef;
 }
 
 /* Responsive */

@@ -13,13 +13,16 @@ class FloorController extends Controller
     /**
      * List all floors with their tables
      */
-    public function index()
+    public function index(Request $request)
     {
+        $shopId = $request->user()->current_shop_id ?? $request->user()->shops->first()->id ?? 1;
+        
         $floors = Floor::with(['tables' => function ($query) {
-            $query->orderBy('table_number', 'asc');
+            $query->where('is_active', true)->orderBy('table_number', 'asc');
         }])
-            ->active()
-            ->ordered()
+            ->where('shop_id', $shopId)
+            ->where('is_active', true)
+            ->orderBy('sort_order', 'asc')
             ->get();
 
         $floorsData = $floors->map(function ($floor) {
@@ -75,8 +78,10 @@ class FloorController extends Controller
             ], 422);
         }
 
+        $shopId = $request->user()->current_shop_id ?? $request->user()->shops->first()->id ?? 1;
+        
         $floor = Floor::create([
-            'shop_id' => $request->user()->shop_id ?? 1,
+            'shop_id' => $shopId,
             'name' => $request->name,
             'description' => $request->description,
             'sort_order' => $request->sort_order ?? 0,

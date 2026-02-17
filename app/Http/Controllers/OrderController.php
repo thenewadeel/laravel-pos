@@ -322,13 +322,90 @@ class OrderController extends Controller
     /**
      * Show Vue-based orders workspace (tabbed interface)
      */
-    public function workspace(Order $order)
+    public function workspace(?Order $order = null)
     {
-        if ($order->state == 'closed') {
+        // Handle order passed as query parameter (from route 'orders.workspace')
+        if (!$order && request()->has('order')) {
+            $order = Order::find(request()->order);
+        }
+        
+        $user = auth()->user();
+        $userType = $user->type;
+        $userId = $user->id;
+        
+        // Get user's assigned floors based on role
+        $floorIds = [];
+        
+        if ($userType == 'admin') {
+            // Admin sees ALL floors from ALL shops
+            $floorIds = \App\Models\Floor::pluck('id')->toArray();
+        } else {
+            // Get floors from user's assigned shops
+            $shopIds = [];
+            if (in_array($userType, ['manager', 'cashier'])) {
+                $userModel = \App\Models\User::with('shops')->find($userId);
+                $shopIds = $userModel ? $userModel->shops()->pluck('shops.id')->toArray() : [];
+            } else {
+                // Waiter - current shop only
+                $shopIds = [$user->current_shop_id ?? $user->shops->first()->id ?? 1];
+            }
+            
+            $floorIds = \App\Models\Floor::whereIn('shop_id', $shopIds)->pluck('id')->toArray();
+            
+            // If still empty (no assigned shops), use all floors as fallback
+            if (empty($floorIds)) {
+                $floorIds = \App\Models\Floor::pluck('id')->toArray();
+            }
+        }
+        
+        // Get table IDs from these floors
+        $tableIds = \App\Models\RestaurantTable::whereIn('floor_id', $floorIds)
+            ->where('is_active', true)
+            ->pluck('id')
+            ->toArray();
+        
+        // Fetch ALL today's open orders (preparing, served) for the user's tables
+        $ordersQuery = Order::with(['items.product', 'customer', 'table.floor'])
+            ->where(function($q) use ($tableIds) {
+                $q->whereIn('table_id', $tableIds)
+                  ->orWhereNotNull('table_id');
+            })
+            ->whereIn('state', ['preparing', 'served'])
+            ->whereDate('created_at', today())
+            ->orderBy('created_at', 'asc');
+        
+        // If a specific order was requested and is closed, redirect back
+        if ($order && $order->state == 'closed') {
             return back()->with('message', 'Order is already closed');
         }
         
-        $order = $order->load(['items.product', 'payments', 'customer', 'shop.categories']);
+        // If a specific order was requested and is valid, prioritize it
+        if ($order && $order->state != 'closed') {
+            $requestedOrderId = $order->id;
+            $ordersQuery = $ordersQuery->orderByRaw("CASE WHEN id = ? THEN 0 ELSE 1 END", [$requestedOrderId]);
+        }
+        
+        $ordersList = $ordersQuery->get();
+        
+        // If no orders found, show empty state
+        if ($ordersList->isEmpty()) {
+            $order = null;
+            $categories = [];
+            $discounts = Discount::orderBy('type')->get()->toArray();
+            $customers = Customer::select('id', 'name', 'membership_number')->get()->toArray();
+            $tables = collect([]);
+            return view('orders.vue.workspace', compact('order', 'ordersList', 'categories', 'discounts', 'customers', 'tables'))->with('info', 'No active orders for today');
+        }
+
+        
+        // Use the first order (or the requested one) as the primary order
+        $primaryOrder = $order && $order->state != 'closed' 
+            ? $ordersList->firstWhere('id', $order->id) 
+            : $ordersList->first();
+        
+        // Load relations for primary order
+        $order = $primaryOrder->load(['items.product', 'payments', 'customer', 'table.floor']);
+        
         $discounts = Discount::orderBy('type')->get();
         $customers = Customer::select('id', 'name', 'membership_number')->get();
         
@@ -356,7 +433,21 @@ class OrderController extends Controller
             return count($category['products']) > 0;
         })->values()->all();
         
-        return view('orders.vue.workspace', compact('order', 'categories', 'discounts', 'customers'));
+        // Get available tables for dropdown - scoped to user's floors
+        // Include ALL tables (not just active) so admins can see all
+        $tables = \App\Models\RestaurantTable::whereIn('floor_id', $floorIds)
+            ->orderBy('table_number')
+            ->get(['id', 'table_number', 'name', 'floor_id', 'status']);
+        
+        // Also include the current table if this order is already assigned to one
+        if ($order && $order->table_id) {
+            $currentTable = \App\Models\RestaurantTable::find($order->table_id);
+            if ($currentTable && !$tables->contains('id', $currentTable->id)) {
+                $tables->push($currentTable);
+            }
+        }
+        
+        return view('orders.vue.workspace', compact('order', 'ordersList', 'categories', 'discounts', 'customers', 'tables', 'floorIds'));
     }
 
     /**
@@ -492,6 +583,7 @@ class OrderController extends Controller
             if ($table && $table->status == 'available') {
                 $request->merge([
                     'table_number' => $table->table_number,
+                    'table_id' => $table->id,
                     'type' => 'dine-in'
                 ]);
             }
@@ -512,7 +604,7 @@ class OrderController extends Controller
         $orderHistoryController = new OrderHistoryController();
         $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'created');
 
-        return redirect()->route('orders.workspace', $order)->with('success', 'Order created successfully');
+        return redirect("/orders/{$order->id}/workspace")->with('success', 'Order created successfully');
     }
 
 
@@ -805,7 +897,9 @@ class OrderController extends Controller
 
         $pdf = Pdf::loadView('pdf.order80mm2', compact('order', 'orderStatus'));
         $pdf->set_option('dpi', 72);
-        $pdf->setPaper([0, 0, 204, 400 + 25 * $order->items->count()], 'portrait'); // 80mm thermal paper
+        $items = $order->items()->get();
+        $itemCount = $items ? count($items) : 0;
+        $pdf->set_option('paper', [0, 0, 204, 400 + 25 * $itemCount]);
 
         // Save a copy of generated pdf in storage
         $path = storage_path('app/public/order_pdfs');
@@ -840,7 +934,8 @@ class OrderController extends Controller
 
             $pdf = Pdf::loadView('pdf.order80mm2', compact('order', 'orderStatus'));
             $pdf->set_option('dpi', 72);
-            $pdf->setPaper([0, 0, 204, 400 + 25 * $order->items->count()], 'portrait'); // 80mm thermal paper
+            $items = $order->items()->get();
+            $pdf->setPaper([0, 0, 204, 400 + 25 * count($items)], 'portrait'); // 80mm thermal paper
             $filename = preg_replace('/[^a-zA-Z0-9_-]/', '_', $order->POS_number);
             if (empty($filename)) {
                 $filename = $order->id;
@@ -1138,27 +1233,36 @@ class OrderController extends Controller
         $userType = auth()->user()->type;
         $userId = auth()->id();
         
-        $orderQuery = Order::where('state', '!=', 'closed')
-            ->whereDate('created_at', today());
-        
-        // Scope by user role
-        if ($userType == 'waiter') {
-            // Waiters see only their own open orders
-            $orderQuery->where('user_id', $userId);
-        } elseif (in_array($userType, ['cashier', 'manager'])) {
-            // Cashiers and managers see orders from their shops
-            $shopIds = \App\Models\User::with('shops')->find($userId)->shops()->pluck('shops.id')->toArray();
-            $orderQuery->whereIn('shop_id', $shopIds);
+        // Get user's assigned floors based on role
+        if ($userType == 'admin') {
+            $floorIds = \App\Models\Floor::pluck('id')->toArray();
+        } else {
+            $shopIds = [];
+            if (in_array($userType, ['manager', 'cashier'])) {
+                $shopIds = \App\Models\User::with('shops')->find($userId)->shops()->pluck('shops.id')->toArray();
+            } else {
+                $shopIds = [auth()->user()->current_shop_id ?? auth()->user()->shops->first()->id ?? 1];
+            }
+            $floorIds = \App\Models\Floor::whereIn('shop_id', $shopIds)->pluck('id')->toArray();
         }
-        // Admin sees all orders (no additional filtering)
         
-        $order = $orderQuery->latest()->first();
+        // Get table IDs from these floors
+        $tableIds = \App\Models\RestaurantTable::whereIn('floor_id', $floorIds)
+            ->pluck('id')
+            ->toArray();
+        
+        // Get the latest open order (preparing or served) from these tables
+        $order = Order::whereIn('table_id', $tableIds)
+            ->whereIn('state', ['preparing', 'served'])
+            ->whereDate('created_at', today())
+            ->latest()
+            ->first();
         
         if ($order) {
-            return redirect()->route('orders.workspace', $order);
+            return redirect("/orders/{$order->id}/workspace");
         }
         
-        // No open orders, redirect to orders list
-        return redirect()->route('orders.index')->with('info', 'No active orders. Start a new order from Floor & Tables.');
+        // No open orders, redirect to workspace list
+        return redirect("/orders/workspace")->with('info', 'No active orders. Start a new order from Floor & Tables.');
     }
 }

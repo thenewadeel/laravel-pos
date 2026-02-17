@@ -143,12 +143,23 @@ class OrderController extends Controller
         $this->handleOrderFilters($request, orderQuery: $orders);
 
         // dd($request);
-        if (auth()->user()->type == 'admin') {
-            // $orders = Order::query();
+        // Role-based order scoping
+        $userType = auth()->user()->type;
+        $userId = auth()->id();
+        
+        if ($userType == 'admin') {
+            // Admin sees everything - no additional filtering
+        } elseif ($userType == 'manager') {
+            // Manager sees all orders in their assigned shops
+            $shopIds = \App\Models\User::with('shops')->find($userId)->shops()->pluck('shops.id')->toArray();
+            $orders = $orders->whereIn('shop_id', $shopIds);
+        } elseif ($userType == 'cashier') {
+            // Cashier sees orders in their assigned shops
+            $shopIds = \App\Models\User::with('shops')->find($userId)->shops()->pluck('shops.id')->toArray();
+            $orders = $orders->whereIn('shop_id', $shopIds);
         } else {
-            $shops = User::with('shops')->find(auth()->id())->shops()->pluck('shops.id')->toArray();
-            // dd($shops);
-            $orders = $orders->whereIn('shop_id', $shops);
+            // Waiters and other staff see only their own orders
+            $orders = $orders->where('user_id', $userId);
         }
         //->with(['payments', 'customer', 'shop'])
         $orders = $orders
@@ -415,20 +426,36 @@ class OrderController extends Controller
     }
 
     /**
-     * Show floor and table management view (Admin/Manager only)
+     * Show floor and table management view (All staff based on role)
      */
     public function floorManagement($floorId = null)
     {
-        // Get shop context
-        $shopId = auth()->user()->current_shop_id ?? auth()->user()->shops->first()->id ?? 1;
+        $user = auth()->user();
+        $userType = $user->type;
+        $userId = $user->id;
         
-        // Get all floors for this shop
+        // Get shop context based on role
+        if ($userType == 'admin') {
+            // Admin sees all floors from all shops
+            $shopIds = \App\Models\Shop::pluck('id')->toArray();
+        } elseif (in_array($userType, ['manager', 'cashier'])) {
+            // Managers and cashiers see floors from their assigned shops
+            $shopIds = \App\Models\User::with('shops')->find($userId)->shops()->pluck('shops.id')->toArray();
+        } else {
+            // Waiters see only their current shop floors
+            $shopIds = [$user->current_shop_id ?? $user->shops->first()->id ?? 1];
+        }
+        
+        // Get all floors for allowed shops
         $floors = Floor::with(['tables' => function($query) {
                 $query->where('is_active', true)->orderBy('table_number');
             }])
-            ->where('shop_id', $shopId)
+            ->whereIn('shop_id', $shopIds)
             ->orderBy('sort_order')
             ->get();
+        
+        // Get current shop for the view
+        $shopId = $user->current_shop_id ?? $shopIds[0] ?? 1;
         
         // Get current floor if specified, otherwise first floor
         $currentFloor = null;
@@ -436,40 +463,56 @@ class OrderController extends Controller
             $currentFloor = Floor::with(['tables' => function($query) {
                     $query->where('is_active', true)->orderBy('table_number');
                 }])
-                ->where('shop_id', $shopId)
+                ->whereIn('shop_id', $shopIds)
                 ->where('id', $floorId)
                 ->first();
         } else {
             $currentFloor = $floors->first();
         }
         
-        return view('floor.management', compact('floors', 'currentFloor'));
+        return view('floor.management', compact('floors', 'currentFloor', 'shopId'));
     }
 
     public function makeNew(OrderNewRequest $request)
     {
-        // dd($request->all());
+        // Handle customer creation if needed
         if ($request->has('customer_id') && $request->customer_id == null) {
-            // } else {
             $customer = Customer::firstOrCreate(
                 [
                     "name" => $request->searchCustomer,
                     "membership_number" => 555,
-                    // "address" => $request->customer_address,
-                    // "email" => $request->customer_email,
-                    // "user_id" => $request->customer_id
                 ]
             );
             $request['customer_id'] = $customer->id;
         }
+
+        // Handle table assignment
+        if ($request->has('table_id') && $request->table_id) {
+            $table = RestaurantTable::find($request->table_id);
+            if ($table && $table->status == 'available') {
+                $request->merge([
+                    'table_number' => $table->table_number,
+                    'type' => 'dine-in'
+                ]);
+            }
+        }
+
         $request->merge(['user_id' => auth()->id()]);
         $order = Order::create($request->all());
+
+        // Assign table to order if table_id provided
+        if ($request->has('table_id') && $request->table_id) {
+            $table = RestaurantTable::find($request->table_id);
+            if ($table) {
+                $table->assignOrder($order->id);
+            }
+        }
 
         // Create order history
         $orderHistoryController = new OrderHistoryController();
         $orderHistoryController->store($request = null, orderId: $order->id, actionType: 'created');
 
-        return redirect()->route('orders.edit', $order)->with('success', 'Order created successfully');
+        return redirect()->route('orders.workspace', $order)->with('success', 'Order created successfully');
     }
 
 
@@ -937,5 +980,185 @@ class OrderController extends Controller
         Feedback::create($request->all());
         // return redirect()->back()->with('message', 'Thanks for your feedback');
         return redirect()->route('orders.index')->with('message', 'Thanks for your feedback');
+    }
+
+    /**
+     * Web: Create a new floor
+     */
+    public function storeFloor(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'description' => 'nullable|string|max:255',
+            'sort_order' => 'nullable|integer|min:0',
+        ]);
+
+        $shopId = auth()->user()->current_shop_id ?? auth()->user()->shops->first()->id ?? 1;
+        
+        Floor::create([
+            'shop_id' => $shopId,
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'sort_order' => $validated['sort_order'] ?? 0,
+            'is_active' => true,
+        ]);
+
+        return redirect()->route('floor.management')->with('success', 'Floor created successfully');
+    }
+
+    /**
+     * Web: Update a floor
+     */
+    public function updateFloor(Request $request, Floor $floor)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'description' => 'nullable|string|max:255',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $floor->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? $floor->description,
+            'sort_order' => $validated['sort_order'] ?? $floor->sort_order,
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return redirect()->route('floor.management', ['floor' => $floor->id])->with('success', 'Floor updated successfully');
+    }
+
+    /**
+     * Web: Delete a floor
+     */
+    public function destroyFloor(Floor $floor)
+    {
+        // Check if floor has active tables with orders
+        $hasActiveTables = $floor->tables()->where('status', 'occupied')->exists();
+        
+        if ($hasActiveTables) {
+            return redirect()->route('floor.management')->with('error', 'Cannot delete floor with active orders');
+        }
+
+        // Soft delete the floor and its tables
+        $floor->tables()->delete();
+        $floor->delete();
+
+        return redirect()->route('floor.management')->with('success', 'Floor deleted successfully');
+    }
+
+    /**
+     * Web: Create a new table for a floor
+     */
+    public function storeTable(Request $request, Floor $floor)
+    {
+        $validated = $request->validate([
+            'table_number' => 'required|string|max:50',
+            'name' => 'nullable|string|max:100',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        // Check if table number already exists on this floor
+        $exists = $floor->tables()->where('table_number', $validated['table_number'])->exists();
+        
+        if ($exists) {
+            return redirect()->route('floor.management', ['floor' => $floor->id])->with('error', 'Table number already exists on this floor');
+        }
+
+        $floor->tables()->create([
+            'table_number' => $validated['table_number'],
+            'name' => $validated['name'] ?? null,
+            'capacity' => $validated['capacity'],
+            'status' => 'available',
+            'position_x' => 0,
+            'position_y' => 0,
+            'width' => 100,
+            'height' => 100,
+            'shape' => 'rectangle',
+            'is_active' => true,
+        ]);
+
+        return redirect()->route('floor.management', ['floor' => $floor->id])->with('success', 'Table created successfully');
+    }
+
+    /**
+     * Web: Update a table
+     */
+    public function updateTableWeb(Request $request, RestaurantTable $table)
+    {
+        $validated = $request->validate([
+            'table_number' => 'required|string|max:50',
+            'name' => 'nullable|string|max:100',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        // Check for duplicate table number if changing
+        if ($validated['table_number'] !== $table->table_number) {
+            $exists = RestaurantTable::where('floor_id', $table->floor_id)
+                ->where('table_number', $validated['table_number'])
+                ->where('id', '!=', $table->id)
+                ->exists();
+            
+            if ($exists) {
+                return redirect()->route('floor.management', ['floor' => $table->floor_id])->with('error', 'Table number already exists on this floor');
+            }
+        }
+
+        $table->update([
+            'table_number' => $validated['table_number'],
+            'name' => $validated['name'] ?? null,
+            'capacity' => $validated['capacity'],
+        ]);
+
+        return redirect()->route('floor.management', ['floor' => $table->floor_id])->with('success', 'Table updated successfully');
+    }
+
+    /**
+     * Web: Delete a table
+     */
+    public function destroyTableWeb(RestaurantTable $table)
+    {
+        $floorId = $table->floor_id;
+
+        // Check if table has active orders
+        if ($table->status === 'occupied') {
+            return redirect()->route('floor.management', ['floor' => $floorId])->with('error', 'Cannot delete table with active orders');
+        }
+
+        $table->delete();
+
+        return redirect()->route('floor.management', ['floor' => $floorId])->with('success', 'Table deleted successfully');
+    }
+
+    /**
+     * Workspace entry point - redirects to latest open order or orders list
+     */
+    public function workspaceEntry()
+    {
+        $userType = auth()->user()->type;
+        $userId = auth()->id();
+        
+        $orderQuery = Order::where('state', '!=', 'closed')
+            ->whereDate('created_at', today());
+        
+        // Scope by user role
+        if ($userType == 'waiter') {
+            // Waiters see only their own open orders
+            $orderQuery->where('user_id', $userId);
+        } elseif (in_array($userType, ['cashier', 'manager'])) {
+            // Cashiers and managers see orders from their shops
+            $shopIds = \App\Models\User::with('shops')->find($userId)->shops()->pluck('shops.id')->toArray();
+            $orderQuery->whereIn('shop_id', $shopIds);
+        }
+        // Admin sees all orders (no additional filtering)
+        
+        $order = $orderQuery->latest()->first();
+        
+        if ($order) {
+            return redirect()->route('orders.workspace', $order);
+        }
+        
+        // No open orders, redirect to orders list
+        return redirect()->route('orders.index')->with('info', 'No active orders. Start a new order from Floor & Tables.');
     }
 }

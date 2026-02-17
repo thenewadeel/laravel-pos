@@ -59,14 +59,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/floor-management/{floor?}', [OrderController::class, 'floorManagement'])
         ->name('floor.management')
         ->middleware(['auth']);
-    Route::post('/floors', [\App\Http\Controllers\API\V1\FloorController::class, 'store'])
+    Route::post('/floors', [OrderController::class, 'storeFloor'])
         ->name('floor.store')
         ->middleware(['auth']);
-    Route::put('/floors/{floor}', [\App\Http\Controllers\API\V1\FloorController::class, 'update'])
+    Route::put('/floors/{floor}', [OrderController::class, 'updateFloor'])
         ->name('floor.update')
         ->middleware(['auth']);
-    Route::post('/floors/{floor}/tables', [\App\Http\Controllers\API\V1\FloorController::class, 'storeTable'])
+    Route::delete('/floors/{floor}', [OrderController::class, 'destroyFloor'])
+        ->name('floor.destroy')
+        ->middleware(['auth']);
+    Route::post('/floors/{floor}/tables', [OrderController::class, 'storeTable'])
         ->name('floor.table.store')
+        ->middleware(['auth']);
+    Route::put('/tables/{table}', [OrderController::class, 'updateTableWeb'])
+        ->name('floor.table.update')
+        ->middleware(['auth']);
+    Route::delete('/tables/{table}', [OrderController::class, 'destroyTableWeb'])
+        ->name('floor.table.destroy')
+        ->middleware(['auth']);
+    
+    // Workspace entry point
+    Route::get('/workspace', [OrderController::class, 'workspaceEntry'])
+        ->name('workspace.entry')
         ->middleware(['auth']);
 
 

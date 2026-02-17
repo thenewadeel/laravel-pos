@@ -47,8 +47,11 @@ Route::middleware('auth')->group(function () {
         ->name('orders.vue-edit');
     
     // Vue-based orders workspace (tabbed interface)
-    Route::get('/orders/{order}/workspace', [OrderController::class, 'workspace'])
+    // IMPORTANT: /orders-workspace must come BEFORE /orders/{order}/workspace
+    Route::get('/orders-workspace', [OrderController::class, 'workspace'])
         ->name('orders.workspace');
+    Route::get('/orders/{order}/workspace', [OrderController::class, 'workspace'])
+        ->name('orders.workspace.view');
     
     // Floor and Restaurant Management (Manager/Cashier only)
     Route::get('/floor-restaurant', [OrderController::class, 'floorRestaurant'])

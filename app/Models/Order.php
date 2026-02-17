@@ -19,22 +19,15 @@ class Order extends Model
         'POS_number',
         // The ID of the customer who placed the order
         'customer_id',
-        // The ID of the shop where the order was placed
+        // The ID of the shop where the order was placed (optional - can be derived from table)
         'shop_id',
         // The ID of the user who placed the order
         'user_id',
+        // The table this order is assigned to
+        'table_id',
         // The state of the order. Possible values: 'preparing', 'served', 'wastage', 'closed'
-        // Possible states:
-        // - 'preparing': The order is being prepared by the staff
-        // - 'served': The order is ready to be delivered to the customer
-        // - 'wastage': The order is not collected by the customer
-        // - 'closed': The order is already delivered to the customer
         'state',
         // The type of order. Possible values: 'dine-in', 'take-away', 'delivery'
-        // Possible types:
-        // - 'dine-in': The order is placed at the shop's counter
-        // - 'take-away': The order is collected by the customer outside the shop
-        // - 'delivery': The order is delivered to the customer at their specified location
         'type',
         // The table number where the order is placed
         'table_number',
@@ -59,10 +52,6 @@ class Order extends Model
      * @var array
      */
     protected $attributes = [
-        // 'user_id' => auth()->id(),
-        'customer_id' => '122',
-        // 'shop_id' => '',
-        'table_number' => '1',
         'state' => 'preparing',
         'type' => 'dine-in',
     ];
@@ -222,6 +211,11 @@ class Order extends Model
         return $this->belongsTo(Shop::class);
     }
 
+    public function table()
+    {
+        return $this->belongsTo(RestaurantTable::class, 'table_id');
+    }
+
     public function getCustomerName()
     {
         // Log::info($this->customer);
@@ -241,9 +235,7 @@ class Order extends Model
 
     public function total()
     {
-        return $this->items->map(function ($i) {
-            return $i->price;
-        })->sum();
+        return $this->items->sum('total_price');
     }
     public function discountedTotal() //final amount after discounting
     {

@@ -33,22 +33,6 @@
                 <div class="section-body" v-show="showOrderData">
                     <form @submit.prevent="updateOrderData" class="order-form">
                         <div class="form-row">
-                            <label>Shop:</label>
-                            <select
-                                v-model="orderData.shop_id"
-                                class="form-control"
-                            >
-                                <option
-                                    v-for="shop in userShops"
-                                    :key="shop.id"
-                                    :value="shop.id"
-                                >
-                                    {{ shop.name }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="form-row">
                             <label>Type:</label>
                             <select
                                 v-model="orderData.type"
@@ -66,12 +50,19 @@
                             v-show="orderData.type === 'dine-in'"
                         >
                             <label>Table #:</label>
-                            <input
+                            <select
                                 v-model="orderData.table_number"
-                                type="text"
                                 class="form-control"
-                                placeholder="Table number"
-                            />
+                            >
+                                <option value="">Select table</option>
+                                <option
+                                    v-for="table in tables"
+                                    :key="table.id"
+                                    :value="table.table_number"
+                                >
+                                    {{ table.table_number }} {{ table.name ? '(' + table.name + ')' : '' }}
+                                </option>
+                            </select>
                         </div>
 
                         <div
@@ -271,20 +262,70 @@
                     <i class="fas fa-print"></i> Print
                 </button>
                 <button
-                    v-if="canProcessPayment && order.state === 'served'"
-                    @click="processPayment"
+                    v-if="!orderId"
+                    @click="saveOrder"
+                    class="btn btn-primary"
+                    :disabled="isLoading || !orderData.table_number"
+                >
+                    <i class="fas fa-save"></i> Save Order
+                </button>
+                <button
+                    v-if="canProcessPayment && orderItems.length > 0 && orderState === 'served' && orderId"
+                    @click="showPaymentModal = true"
                     class="btn btn-success"
                     :disabled="isLoading"
                 >
-                    <i class="fas fa-credit-card"></i> Pay
+                    <i class="fas fa-credit-card"></i> Pay & Close
                 </button>
                 <button
-                    v-if="canCancel && order.state !== 'closed'"
+                    v-if="canClose && orderState === 'preparing' && orderId"
+                    @click="markAsServed"
+                    class="btn btn-info"
+                    :disabled="isLoading"
+                >
+                    <i class="fas fa-check"></i> Mark Served
+                </button>
+                <button
+                    v-if="canClose && orderState === 'served' && orderId"
+                    @click="closeOrder"
+                    class="btn btn-warning"
+                    :disabled="isLoading"
+                >
+                    <i class="fas fa-door-closed"></i> Close Order
+                </button>
+                <button
+                    v-if="canCancel && orderState !== 'closed'"
                     @click="cancelOrder"
                     class="btn btn-danger"
                     :disabled="isLoading"
                 >
                     <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+            
+            <!-- Debug Info (remove in production) -->
+            <div v-if="true" class="debug-info" style="margin-top: 10px; padding: 10px; background: #f0f0f0; font-size: 11px; border: 1px solid #ccc;">
+                <strong>Debug:</strong><br>
+                Order ID: {{ orderId || 'null' }}<br>
+                Order State: {{ orderState }}<br>
+                Items Count: {{ orderItems.length }}<br>
+                Can Close: {{ canClose }}<br>
+                Can Process Payment: {{ canProcessPayment }}<br>
+                Can Cancel: {{ canCancel }}<br>
+                User Type: {{ userType }}
+            </div>
+            
+            <!-- TEMPORARY: Always show buttons for debugging -->
+            <div v-if="true" class="debug-actions" style="margin-top: 10px; padding: 10px; background: #e8f4f8; border: 2px dashed #2196F3;">
+                <strong style="color: #2196F3;">DEBUG BUTTONS (Temporary):</strong><br>
+                <button v-if="orderState === 'preparing' && orderId" @click="markAsServed" class="btn btn-info" style="margin: 5px;">
+                    DEBUG: Mark Served
+                </button>
+                <button v-if="orderState === 'served' && orderId" @click="closeOrder" class="btn btn-warning" style="margin: 5px;">
+                    DEBUG: Close Order
+                </button>
+                <button v-if="orderState === 'served' && orderItems.length > 0 && orderId" @click="showPaymentModal = true" class="btn btn-success" style="margin: 5px;">
+                    DEBUG: Pay & Close
                 </button>
             </div>
         </div>
@@ -399,6 +440,83 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Payment Modal -->
+        <div v-if="showPaymentModal" class="modal-overlay" @click.self="showPaymentModal = false">
+            <div class="modal-content payment-modal">
+                <div class="modal-header">
+                    <h3><i class="fas fa-credit-card"></i> Payment</h3>
+                    <button class="close-btn" @click="showPaymentModal = false">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="payment-summary">
+                        <div class="summary-row">
+                            <span>Total Amount:</span>
+                            <span class="amount">{{ formatCurrency(netTotal) }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Payment Method:</label>
+                        <div class="payment-methods">
+                            <label class="method-option" :class="{ active: paymentMethod === 'cash' }">
+                                <input type="radio" v-model="paymentMethod" value="cash">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Cash</span>
+                            </label>
+                            <label class="method-option" :class="{ active: paymentMethod === 'card' }">
+                                <input type="radio" v-model="paymentMethod" value="card">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Card</span>
+                            </label>
+                            <label class="method-option" :class="{ active: paymentMethod === 'bank_transfer' }">
+                                <input type="radio" v-model="paymentMethod" value="bank_transfer">
+                                <i class="fas fa-university"></i>
+                                <span>Bank Transfer</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Amount Received:</label>
+                        <input 
+                            type="number" 
+                            v-model.number="paymentAmount" 
+                            class="form-control"
+                            :min="netTotal"
+                            step="0.01"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes (Optional):</label>
+                        <textarea 
+                            v-model="paymentNotes" 
+                            class="form-control"
+                            rows="2"
+                            placeholder="Payment notes..."
+                        ></textarea>
+                    </div>
+                    
+                    <div class="payment-change" v-if="paymentAmount >= netTotal">
+                        <span>Change:</span>
+                        <span class="change-amount">{{ formatCurrency(paymentAmount - netTotal) }}</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @click="showPaymentModal = false">
+                        Cancel
+                    </button>
+                    <button 
+                        class="btn btn-success btn-lg" 
+                        @click="processPayment"
+                        :disabled="paymentAmount < netTotal || isLoading"
+                    >
+                        <i class="fas fa-check"></i> Complete Payment & Close Order
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -442,6 +560,10 @@ export default {
             type: Array,
             default: () => [],
         },
+        tables: {
+            type: Array,
+            default: () => [],
+        },
     },
 
     emits: ["order-updated", "print-order", "process-payment", "cancel-order"],
@@ -478,21 +600,29 @@ export default {
 
         // Reactive state - order data section collapsed by default for compact view
         const showOrderData = ref(false);
+        const showPaymentModal = ref(false);
         const customerSearch = ref("");
         const showCustomerDropdown = ref(false);
         const productSearch = ref("");
         const expandedCategories = ref([]);
         const selectedDiscounts = ref([]);
+        
+        // Payment state
+        const paymentMethod = ref('cash');
+        const paymentAmount = ref(0);
+        const paymentNotes = ref('');
+        
         const orderData = ref({
-            shop_id: props.order.shop_id,
-            type: props.order.type,
+            // shop_id is intentionally NOT included - it's derived from table's floor in backend
+            type: props.order.type || 'dine-in',
             table_number: props.order.table_number,
-            waiter_name: props.order.waiter_name,
+            waiter_name: props.order.waiter_name || (props.user.first_name + ' ' + props.user.last_name),
             notes: props.order.notes,
             customer_id: props.order.customer_id,
         });
         const miscProduct = ref({ name: "", price: null });
-        const orderItems = ref([...props.order.items]);
+        // Deep copy items to prevent sharing between tabs/orders
+        const orderItems = ref(props.order.items ? JSON.parse(JSON.stringify(props.order.items)) : []);
 
 
 
@@ -521,8 +651,21 @@ export default {
             return ["admin", "manager", "cashier"].includes(userType.value);
         });
 
+        const canClose = computed(() => {
+            return ["admin", "manager", "cashier"].includes(userType.value);
+        });
+
         const canCancel = computed(() => {
             return ["admin", "manager"].includes(userType.value);
+        });
+
+        // Track order state reactively
+        const orderState = computed(() => {
+            return props.order?.state || 'preparing';
+        });
+
+        const orderId = computed(() => {
+            return props.order?.id || localOrderId;
         });
 
         const typeIcon = computed(() => {
@@ -602,36 +745,69 @@ export default {
         let csrfInitialized = false;
         const initCsrf = async () => {
             if (csrfInitialized) return;
-            await fetch('/sanctum/csrf-cookie', {
-                credentials: 'include',
-            });
+            try {
+                const response = await fetch('/sanctum/csrf-cookie', {
+                    credentials: 'include',
+                });
+                if (!response.ok) {
+                    console.warn('CSRF cookie fetch failed:', response.status);
+                }
+            } catch (error) {
+                console.warn('CSRF cookie fetch error:', error.message);
+                // Continue anyway - API might still work with existing session
+            }
             csrfInitialized = true;
         };
 
         // API Helper
         const apiCall = async (url, options = {}) => {
-            const response = await fetch(url, {
-                ...options,
-                credentials: "include", // Include cookies for authentication
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                    ...options.headers,
-                },
+            // Initialize CSRF before each API call
+            await initCsrf();
+            
+            // Get CSRF token from meta tag or fallback
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+            
+            // Ensure URL is absolute
+            const fullUrl = url.startsWith('http') ? url : window.location.origin + url;
+            
+            console.log('API Call:', options.method || 'GET', fullUrl);
+            
+            try {
+                const response = await fetch(fullUrl, {
+                    ...options,
+                    credentials: "include", // Include cookies for authentication
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN": csrfToken,
+                        Referer: window.location.origin,
+                        ...options.headers,
+                    },
 
-                // Methods
-            });
+                    // Methods
+                });
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(
-                    error.error?.message ||
+                console.log('API Response status:', response.status);
+
+                const data = await response.json();
+                
+                console.log('API Response data:', data);
+                
+                // Check for API-level errors (success: false)
+                if (!response.ok || (data.success === false)) {
+                    throw new Error(
+                        data.error?.message ||
+                        data.message ||
                         `HTTP ${response.status}: ${response.statusText}`,
-                );
-            }
+                    );
+                }
 
-            return response.json();
+                return data;
+            } catch (error) {
+                console.error('API Call failed:', error);
+                throw error;
+            }
         };
 
         // Methods
@@ -648,10 +824,22 @@ export default {
             return types[type] || type;
         };
 
+        const formatCurrency = (amount) => {
+            return new Intl.NumberFormat('en-US', { 
+                style: 'currency', 
+                currency: 'USD' 
+            }).format(amount || 0);
+        };
+
         const handleTypeChange = () => {
             if (orderData.value.type !== "dine-in") {
                 orderData.value.table_number = null;
                 orderData.value.waiter_name = null;
+            } else {
+                // When switching to dine-in, auto-fill waiter name if empty
+                if (!orderData.value.waiter_name) {
+                    orderData.value.waiter_name = props.user.first_name + ' ' + props.user.last_name;
+                }
             }
         };
 
@@ -668,28 +856,85 @@ export default {
         const updateOrderData = async () => {
             isLoading.value = true;
             try {
-                const data = await apiCall(`/api/v1/orders/${props.order.id}`, {
-                    method: "PUT",
-                    body: JSON.stringify(orderData.value),
-                });
-
-                if (data.success) {
-                    notify.success("Order updated successfully");
-                    emit("order-updated", data.data);
+                const orderId = props.order?.id;
+                const isNewOrder = !orderId;
+                
+                if (isNewOrder) {
+                    // For new orders, we need to create them first via API
+                    // But we need at least a table selected
+                    if (!orderData.value.table_number) {
+                        notify.error("Please select a table before saving the order");
+                        return;
+                    }
+                    
+                    // Build create data - don't send empty items
+                    const createData = {
+                        ...orderData.value,
+                    };
+                    
+                    // Only add items if there are actual items
+                    if (orderItems.value.length > 0) {
+                        createData.items = orderItems.value.map(item => ({
+                            product_id: item.product_id,
+                            quantity: item.quantity
+                        }));
+                    }
+                    
+                    const createResponse = await apiCall('/api/v1/orders', {
+                        method: 'POST',
+                        body: JSON.stringify(createData),
+                    });
+                    
+                    if (createResponse.success) {
+                        notify.success("Order created! You can now add items.");
+                        // Emit with a flag to indicate new order was created
+                        emit("order-updated", {
+                            ...createResponse.data,
+                            isNew: true
+                        });
+                        // For new orders, we need to reload to get proper order context
+                        // or continue adding items
+                    } else {
+                        notify.error(createResponse.error?.message || "Failed to create order");
+                    }
                 } else {
-                    notify.error(
-                        data.error?.message || "Failed to update order",
-                    );
+                    // Existing order - just update
+                    const data = await apiCall(`/api/v1/orders/${orderId}`, {
+                        method: "PUT",
+                        body: JSON.stringify(orderData.value),
+                    });
+
+                    if (data.success) {
+                        notify.success("Order updated successfully");
+                        emit("order-updated", data.data);
+                    } else {
+                        notify.error(
+                            data.error?.message || "Failed to update order",
+                        );
+                    }
                 }
             } catch (error) {
                 console.error("Error:", error);
-                notify.error("An error occurred while updating the order");
+                notify.error("An error occurred while saving the order: " + error.message);
             } finally {
                 isLoading.value = false;
             }
         };
 
         const handleQuantityUpdate = async ({ itemId, quantity }) => {
+            // Update locally first
+            const item = orderItems.value.find((i) => i.id === itemId);
+            if (item) {
+                item.quantity = quantity;
+                item.total_price = quantity * item.unit_price;
+            }
+            
+            // Only sync to server if order exists
+            if (!props.order.id) {
+                notify.success("Quantity updated");
+                return;
+            }
+            
             isLoading.value = true;
             try {
                 const data = await apiCall(
@@ -701,12 +946,6 @@ export default {
                 );
 
                 if (data.success) {
-                    // Update local item
-                    const item = orderItems.value.find((i) => i.id === itemId);
-                    if (item) {
-                        item.quantity = quantity;
-                        item.total_price = quantity * item.unit_price;
-                    }
                     notify.success("Quantity updated");
                 } else {
                     notify.error(
@@ -724,6 +963,17 @@ export default {
         const handleDeleteItem = async (itemId) => {
             if (!confirm("Remove this item from the order?")) return;
 
+            // Remove locally first
+            orderItems.value = orderItems.value.filter(
+                (i) => i.id !== itemId,
+            );
+            
+            // Only sync to server if order exists
+            if (!props.order.id) {
+                notify.success("Item removed");
+                return;
+            }
+
             isLoading.value = true;
             try {
                 const data = await apiCall(
@@ -734,10 +984,6 @@ export default {
                 );
 
                 if (data.success) {
-                    // Remove from local array
-                    orderItems.value = orderItems.value.filter(
-                        (i) => i.id !== itemId,
-                    );
                     notify.success("Item removed");
                 } else {
                     notify.error(
@@ -753,6 +999,16 @@ export default {
         };
 
         const handleItemStatusUpdate = async ({ itemId, status }) => {
+            // Update locally first
+            const item = orderItems.value.find((i) => i.id === itemId);
+            if (item) item.status = status;
+            
+            // Only sync to server if order exists
+            if (!props.order.id) {
+                notify.success("Status updated");
+                return;
+            }
+            
             isLoading.value = true;
             try {
                 const data = await apiCall(
@@ -764,8 +1020,6 @@ export default {
                 );
 
                 if (data.success) {
-                    const item = orderItems.value.find((i) => i.id === itemId);
-                    if (item) item.status = status;
                     notify.success("Status updated");
                 } else {
                     notify.error(
@@ -781,6 +1035,16 @@ export default {
         };
 
         const handleItemNote = async ({ itemId, note }) => {
+            // Update locally first
+            const item = orderItems.value.find((i) => i.id === itemId);
+            if (item) item.notes = note;
+            
+            // Only sync to server if order exists
+            if (!props.order.id) {
+                notify.success("Note added");
+                return;
+            }
+            
             isLoading.value = true;
             try {
                 const data = await apiCall(
@@ -792,8 +1056,6 @@ export default {
                 );
 
                 if (data.success) {
-                    const item = orderItems.value.find((i) => i.id === itemId);
-                    if (item) item.notes = note;
                     notify.success("Note added");
                 } else {
                     notify.error(data.error?.message || "Failed to add note");
@@ -811,8 +1073,16 @@ export default {
 
             isLoading.value = true;
             try {
+                // Check if order exists, create if needed
+                const orderCheck = await ensureOrderExists();
+                if (!orderCheck.success) {
+                    isLoading.value = false;
+                    return;
+                }
+                
+                // Use the returned order ID
                 const data = await apiCall(
-                    `/api/v1/orders/${props.order.id}/items`,
+                    `/api/v1/orders/${orderCheck.orderId}/items`,
                     {
                         method: "POST",
                         body: JSON.stringify({
@@ -846,6 +1116,69 @@ export default {
             }
         };
 
+        // Store the order ID locally after creation to avoid prop timing issues
+        let localOrderId = null;
+        
+        const getOrderId = () => {
+            return localOrderId || props.order.id;
+        };
+
+        const ensureOrderExists = async () => {
+            // Check if we already have an order ID
+            const currentOrderId = getOrderId();
+            
+            if (currentOrderId) {
+                return { success: true, orderId: currentOrderId };
+            }
+            
+            if (!props.order.tempId?.startsWith('temp-')) {
+                // Order is already being created/synced
+                return { success: false, error: 'Order sync in progress' };
+            }
+            
+            // Draft order - need to create it first
+            if (!orderData.value.table_number) {
+                notify.error("Please select a table before adding items");
+                return { success: false, error: 'No table selected' };
+            }
+            
+            try {
+                const createData = {
+                    ...orderData.value,
+                    items: orderItems.value.map(item => ({
+                        product_id: item.product_id,
+                        quantity: item.quantity,
+                        unit_price: item.unit_price
+                    }))
+                };
+                
+                const createResponse = await apiCall('/api/v1/orders', {
+                    method: 'POST',
+                    body: JSON.stringify(createData),
+                });
+                
+                if (createResponse.success) {
+                    // Store the order ID locally
+                    localOrderId = createResponse.data.id;
+                    
+                    // Update the order with the new ID
+                    emit("order-updated", {
+                        ...createResponse.data,
+                        isNew: true
+                    });
+                    
+                    return { success: true, orderId: localOrderId };
+                } else {
+                    notify.error(createResponse.error?.message || "Failed to create order");
+                    return { success: false, error: createResponse.error?.message };
+                }
+            } catch (error) {
+                console.error("Error creating order:", error);
+                notify.error("Failed to create order: " + error.message);
+                return { success: false, error: error.message };
+            }
+        };
+
         const addProductToOrder = async (product) => {
             if (
                 product.is_available === false ||
@@ -856,8 +1189,16 @@ export default {
 
             isLoading.value = true;
             try {
+                // Check if order exists, create if needed
+                const orderCheck = await ensureOrderExists();
+                if (!orderCheck.success) {
+                    isLoading.value = false;
+                    return;
+                }
+                
+                // Use the returned order ID, not props.order.id
                 const data = await apiCall(
-                    `/api/v1/orders/${props.order.id}/items`,
+                    `/api/v1/orders/${orderCheck.orderId}/items`,
                     {
                         method: "POST",
                         body: JSON.stringify({
@@ -892,27 +1233,151 @@ export default {
         };
 
         const printOrder = () => {
-            emit("print-order", props.order.id);
+            const orderId = getOrderId();
+            if (!orderId) {
+                notify.error("Cannot print draft order. Please save the order first.");
+                return;
+            }
+            emit("print-order", orderId);
         };
 
-        const processPayment = () => {
-            if (confirm("Process payment for this order?")) {
-                emit("process-payment", props.order.id);
+        const saveOrder = async () => {
+            if (!orderData.value.table_number) {
+                notify.error("Please select a table before saving");
+                return;
+            }
+            
+            isLoading.value = true;
+            try {
+                const orderCheck = await ensureOrderExists();
+                if (orderCheck.success) {
+                    notify.success("Order saved successfully!");
+                }
+            } catch (error) {
+                console.error("Error saving order:", error);
+                notify.error("Failed to save order: " + error.message);
+            } finally {
+                isLoading.value = false;
+            }
+        };
+
+        const processPayment = async () => {
+            const orderId = getOrderId();
+            if (!orderId) {
+                notify.error("No order to process payment for");
+                return;
+            }
+            
+            isLoading.value = true;
+            try {
+                // Create payment record and close order in one go
+                const closeData = {
+                    payment_amount: netTotal.value,
+                    payment_method: paymentMethod.value,
+                    notes: paymentNotes.value,
+                };
+                
+                const data = await apiCall(`/api/v1/orders/${orderId}/close`, {
+                    method: "POST",
+                    body: JSON.stringify(closeData),
+                });
+
+                if (data.success) {
+                    notify.success("Payment processed and order closed!");
+                    // Redirect to order show page
+                    window.location.href = `/orders/${orderId}`;
+                } else {
+                    notify.error(data.error?.message || "Failed to process payment");
+                }
+            } catch (error) {
+                console.error("Payment error:", error);
+                notify.error("An error occurred while processing payment: " + error.message);
+            } finally {
+                isLoading.value = false;
+                showPaymentModal.value = false;
+            }
+        };
+        
+        const closeOrder = async () => {
+            const orderId = getOrderId();
+            if (!orderId) return;
+            
+            try {
+                const data = await apiCall(`/api/v1/orders/${orderId}/close`, {
+                    method: "POST",
+                });
+                
+                if (data.success) {
+                    notify.success("Order closed successfully!");
+                    // Redirect to order show page
+                    window.location.href = `/orders/${orderId}`;
+                } else {
+                    notify.error(data.error?.message || "Failed to close order");
+                }
+            } catch (error) {
+                console.error("Close order error:", error);
+                // Still redirect even if API fails
+                window.location.href = `/orders/${orderId}`;
+            }
+        };
+        
+        const markAsServed = async () => {
+            const orderId = getOrderId();
+            if (!orderId) {
+                notify.error("Cannot mark draft order as served. Please save the order first.");
+                return;
+            }
+            
+            if (!confirm("Mark this order as served?")) return;
+            
+            isLoading.value = true;
+            try {
+                console.log('Marking order as served:', orderId);
+                const data = await apiCall(`/api/v1/orders/${orderId}`, {
+                    method: "PUT",
+                    body: JSON.stringify({ state: 'served' }),
+                });
+                
+                console.log('Mark served response:', data);
+                
+                if (data.success) {
+                    notify.success("Order marked as served!");
+                    // Only reload on success
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                } else {
+                    notify.error(data.error?.message || "Failed to update order");
+                }
+            } catch (error) {
+                console.error("Mark served error:", error);
+                notify.error("Failed to mark as served: " + error.message);
+            } finally {
+                isLoading.value = false;
             }
         };
 
         const cancelOrder = async () => {
+            const orderId = getOrderId();
+            if (!orderId) {
+                // Draft order - just cancel locally
+                if (confirm("Cancel this draft order?")) {
+                    emit("cancel-order", null);
+                }
+                return;
+            }
+            
             if (!confirm("Are you sure you want to cancel this order?")) return;
 
             isLoading.value = true;
             try {
-                const data = await apiCall(`/api/v1/orders/${props.order.id}`, {
+                const data = await apiCall(`/api/v1/orders/${orderId}`, {
                     method: "DELETE",
                 });
 
                 if (data.success) {
                     notify.success("Order cancelled");
-                    emit("cancel-order", props.order.id);
+                    emit("cancel-order", orderId);
                 } else {
                     notify.error(
                         data.error?.message || "Failed to cancel order",
@@ -962,6 +1427,10 @@ export default {
         return {
             isLoading,
             showOrderData,
+            showPaymentModal,
+            paymentMethod,
+            paymentAmount,
+            paymentNotes,
             customerSearch,
             showCustomerDropdown,
             productSearch,
@@ -976,7 +1445,10 @@ export default {
             canApplyDiscounts,
             canPrint,
             canProcessPayment,
+            canClose,
             canCancel,
+            orderState,
+            orderId,
             typeIcon,
             itemsTotal,
             discountAmount,
@@ -1000,8 +1472,15 @@ export default {
             addProductToOrder,
             toggleCategory,
             printOrder,
+            saveOrder,
             processPayment,
+            closeOrder,
             cancelOrder,
+            markAsServed,
+            formatCurrency,
+            ensureOrderExists,
+            getOrderId,
+            localOrderId,
         };
     },
 };
@@ -1627,5 +2106,146 @@ export default {
     .category-products {
         grid-template-columns: 1fr;
     }
+}
+
+/* Payment Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.payment-modal {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.payment-modal .modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.payment-modal .modal-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.payment-modal .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.payment-modal .modal-body {
+    padding: 20px;
+}
+
+.payment-summary {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.summary-row .amount {
+    color: #28a745;
+    font-size: 22px;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.method-option {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.method-option:hover {
+    border-color: #007bff;
+}
+
+.method-option.active {
+    border-color: #28a745;
+    background: #d4edda;
+}
+
+.method-option input {
+    display: none;
+}
+
+.method-option i {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.payment-change {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: #d4edda;
+    border-radius: 6px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.change-amount {
+    color: #28a745;
+    font-size: 18px;
+}
+
+.payment-modal .modal-footer {
+    padding: 20px;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 16px;
 }
 </style>

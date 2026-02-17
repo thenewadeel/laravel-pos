@@ -253,7 +253,7 @@ class OrdersWorkspaceTest extends TestCase
         $this->order->update(['state' => 'closed']);
         
         $response = $this->actingAs($this->user)
-            ->get(route('orders.workspace', $this->order));
+            ->get(route('orders.workspace', ['order' => $this->order->id]));
 
         $response->assertRedirect();
         $response->assertSessionHas('message', 'Order is already closed');

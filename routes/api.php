@@ -34,7 +34,8 @@ Route::get('/debug-auth', function (Request $request) {
 });
 
 // API V1 Routes - using 'auth:sanctum' middleware with session authentication
-Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
+// EnsureFrontendRequestsAreStateful middleware allows Sanctum to use session cookies
+Route::prefix('v1')->middleware(['auth:sanctum', \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class])->group(function () {
     
     // Order API Endpoints
     Route::get('/orders', [OrderController::class, 'index']);
@@ -48,6 +49,10 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/orders/{id}/items', [OrderController::class, 'addItem']);
     Route::put('/orders/{id}/items/{itemId}', [OrderController::class, 'updateItem']);
     Route::delete('/orders/{id}/items/{itemId}', [OrderController::class, 'deleteItem']);
+    
+    // Order Payment API Endpoints
+    Route::post('/orders/{id}/payment', [OrderController::class, 'processPayment']);
+    Route::post('/orders/{id}/close', [OrderController::class, 'closeOrder']);
     
     // Floor Management API Endpoints
     Route::get('/floors', [FloorController::class, 'index']);

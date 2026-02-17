@@ -122,7 +122,7 @@
                                                 @elseif($table->status == 'occupied')
                                                     @php $activeOrder = $table->getActiveOrder(); @endphp
                                                     @if($activeOrder)
-                                                        <a href="{{ route('orders.workspace', $activeOrder) }}" class="btn btn-info btn-sm">
+                                                        <a href="{{ route('orders.workspace.view', $activeOrder) }}" class="btn btn-info btn-sm">
                                                             <i class="fas fa-edit"></i> {{ __('Continue') }}
                                                         </a>
                                                     @endif

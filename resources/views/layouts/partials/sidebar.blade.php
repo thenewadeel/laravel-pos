@@ -45,7 +45,7 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="{{ route('workspace.entry') }}" class="nav-link {{ activeSegment('workspace') }}">
+                    <a href="{{ route('orders.workspace') }}" class="nav-link {{ activeSegment('workspace') }}">
                         <i class="nav-icon fas fa-window-restore"></i>
                         <p>Orders Workspace</p>
                     </a>

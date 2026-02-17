@@ -25,14 +25,25 @@
     @include('layouts.partials.alert.error', ['errors' => $errors])
 
     {{-- Vue Orders Workspace Component --}}
+    @php
+        $tablesCollection = is_array($tables) ? collect($tables) : ($tables ?? collect([]));
+        $tablesJson = $tablesCollection->toArray();
+    @endphp
     <div id="orders-workspace-app">
+        @if(empty($tablesJson))
+        <div class="alert alert-warning m-3">
+            No tables found (floorIds: {{ json_encode($floorIds ?? []) }}). Please create floors and tables first.
+        </div>
+        @endif
         <orders-workspace
-            :initial-order="{{ json_encode($order->load(['items.product', 'customer', 'discounts', 'shop.categories'])) }}"
+            :orders-list="{{ json_encode($ordersList->toArray()) }}"
+            :initial-order="{{ json_encode($order ? $order->load(['items.product', 'customer', 'discounts', 'shop.categories']) : null) }}"
             :user="{{ json_encode(auth()->user()) }}"
             :user-shops="{{ json_encode(auth()->user()->shops) }}"
             :categories="{{ json_encode($categories) }}"
             :discounts="{{ json_encode($discounts) }}"
             :customers="{{ json_encode($customers) }}"
+            :tables="{{ json_encode($tablesCollection->toArray()) }}"
         />
     </div>
 @endsection

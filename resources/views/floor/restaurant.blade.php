@@ -24,7 +24,7 @@
             <i class="nav-icon fas fa-list"></i>
             All Orders
         </a>
-        <a href="{{ route('orders.workspace', $initialOrder->id ?? 1) }}" class="btn btn-info btn-sm">
+        <a href="{{ route('orders.workspace.view', $initialOrder->id ?? 1) }}" class="btn btn-info btn-sm">
             <i class="nav-icon fas fa-th-large"></i>
             Orders Workspace
         </a>

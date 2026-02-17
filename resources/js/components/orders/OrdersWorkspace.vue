@@ -1,5 +1,8 @@
 <template>
   <div class="orders-workspace">
+    <!-- Network Status Bar -->
+    <NetworkStatus :pending-count="offlinePendingCount" />
+    
     <!-- Orders Tabs Header -->
     <div class="orders-tabs-header">
       <div class="tabs-container">
@@ -62,12 +65,14 @@
     <div class="order-edit-wrapper">
       <order-edit
         v-if="activeOrder"
+        :key="activeOrder.id || activeOrder.tempId"
         :order="activeOrder"
         :user="user"
         :user-shops="userShops"
         :categories="categories"
         :discounts="discounts"
         :customers="customers"
+        :tables="tables"
         @order-updated="handleOrderUpdated"
         @print-order="handlePrintOrder"
         @process-payment="handleProcessPayment"
@@ -121,22 +126,29 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import OrderEdit from './OrderEdit.vue'
 import StatusBadge from '../business/StatusBadge.vue'
+import NetworkStatus from './NetworkStatus.vue'
+import offlineManager from '../../offline-manager'
 
 export default {
   name: 'OrdersWorkspace',
 
   components: {
     OrderEdit,
-    StatusBadge
+    StatusBadge,
+    NetworkStatus
   },
 
   props: {
+    ordersList: {
+      type: Array,
+      default: () => []
+    },
     initialOrder: {
       type: Object,
-      required: true
+      default: null
     },
     user: {
       type: Object,
@@ -157,6 +169,10 @@ export default {
     customers: {
       type: Array,
       default: () => []
+    },
+    tables: {
+      type: Array,
+      default: () => []
     }
   },
 
@@ -169,6 +185,8 @@ export default {
     const isSyncing = ref(false)
     const showSyncPanel = ref(false)
     const tempIdCounter = ref(1)
+    const isOnline = ref(offlineManager.getNetworkStatus())
+    let networkUnsubscribe = null
 
     // Safe notification helper
     const notify = {
@@ -193,6 +211,13 @@ export default {
         } else {
           console.warn('⚠ Warning:', message)
         }
+      },
+      info: (message) => {
+        if (typeof window.toastr !== 'undefined') {
+          window.notify.info(message)
+        } else {
+          console.log('ℹ Info:', message)
+        }
       }
     }
 
@@ -210,10 +235,115 @@ export default {
       return orders.value.filter(o => o.syncStatus === 'synced').length
     })
 
-    // Initialize with the initial order
+    const offlinePendingCount = computed(() => {
+      return offlineManager.getPendingCount()
+    })
+
+    // Watch for order changes and save to offline storage
+    const saveOrdersToStorage = () => {
+      offlineManager.saveOrders(orders.value)
+    }
+
+    // Initialize with all today's orders
     onMounted(() => {
-      const initial = { ...props.initialOrder, syncStatus: 'synced', tempId: null }
-      orders.value = [initial]
+      // Subscribe to network status changes
+      networkUnsubscribe = offlineManager.subscribe((online) => {
+        isOnline.value = online
+        if (online) {
+          notify.success('Connection restored. You can now sync orders.')
+        } else {
+          notify.warning('You are offline. Orders will be saved locally.')
+        }
+      })
+
+      // First try to load from offline storage
+      const storedOrders = offlineManager.loadOrders()
+      
+      if (storedOrders && storedOrders.length > 0) {
+        // Filter out closed/cancelled orders from storage first
+        const activeStoredOrders = storedOrders.filter(o => o.state !== 'closed' && o.state !== 'cancelled')
+        
+        // Start with stored orders, but update with fresh server data for synced orders
+        const mergedOrders = [...activeStoredOrders]
+        
+        if (props.ordersList && props.ordersList.length > 0) {
+          // Update existing orders with fresh data from server
+          props.ordersList.forEach(serverOrder => {
+            const index = mergedOrders.findIndex(o => o.id === serverOrder.id)
+            if (index !== -1) {
+              // Always update with server data (server is source of truth for state)
+              mergedOrders[index] = { 
+                ...serverOrder, 
+                syncStatus: 'synced', 
+                tempId: null 
+              }
+            } else if (index === -1) {
+              // Add new orders from server that aren't in storage
+              mergedOrders.push({ 
+                ...serverOrder, 
+                syncStatus: 'synced', 
+                tempId: null 
+              })
+            }
+          })
+        }
+        
+        // Remove closed orders from local storage (server filters them out)
+        const activeOrders = mergedOrders.filter(o => o.state !== 'closed' && o.state !== 'cancelled')
+        
+        orders.value = activeOrders
+        saveOrdersToStorage()
+        notify.info(`${activeOrders.length} orders loaded (merged with offline storage)`)
+      } else if (props.ordersList && props.ordersList.length > 0) {
+        // Filter out closed/cancelled orders and convert to local format
+        orders.value = props.ordersList
+          .filter(order => order.state !== 'closed' && order.state !== 'cancelled')
+          .map(order => ({
+            ...order,
+            syncStatus: 'synced',
+            tempId: null
+          }))
+        
+        // Set active order to the initialOrder if provided, otherwise first
+        if (props.initialOrder && props.initialOrder.id) {
+          const index = orders.value.findIndex(o => o.id === props.initialOrder.id)
+          if (index >= 0) {
+            activeOrderIndex.value = index
+          } else {
+            activeOrderIndex.value = 0
+          }
+        } else {
+          activeOrderIndex.value = 0
+        }
+        
+        // Save to offline storage
+        saveOrdersToStorage()
+      } else if (props.initialOrder && props.initialOrder.id) {
+        // Fallback to single initial order - only if not closed/cancelled
+        if (props.initialOrder.state !== 'closed' && props.initialOrder.state !== 'cancelled') {
+          const initial = { ...props.initialOrder, syncStatus: 'synced', tempId: null }
+          orders.value = [initial]
+          saveOrdersToStorage()
+        }
+      }
+      
+      // Try to sync any pending orders if online
+      if (offlineManager.getNetworkStatus()) {
+        offlineManager.syncPendingOrders().then(result => {
+          if (result.synced > 0) {
+            notify.success(`${result.synced} offline orders synced successfully`)
+          }
+        })
+      }
+    })
+    
+    // Cleanup on unmount
+    onUnmounted(() => {
+      if (networkUnsubscribe) {
+        networkUnsubscribe()
+      }
+      // Save orders before leaving
+      saveOrdersToStorage()
     })
 
     // Methods
@@ -234,7 +364,7 @@ export default {
         items: [],
         customer: null,
         customer_id: null,
-        shop_id: props.user.current_shop_id || props.userShops[0]?.id,
+        // shop_id is intentionally NOT set - it's derived from table's floor in backend
         user_id: props.user.id,
         syncStatus: 'pending',
         lastSyncError: null,
@@ -243,6 +373,27 @@ export default {
       
       orders.value.push(newOrder)
       activeOrderIndex.value = orders.value.length - 1
+      
+      // Save to offline storage
+      saveOrdersToStorage()
+      
+      // If offline, queue for later sync
+      if (!isOnline.value) {
+        offlineManager.queueOperation({
+          type: 'create_order',
+          url: '/api/v1/orders',
+          method: 'POST',
+          data: {
+            table_number: newOrder.table_number,
+            waiter_name: newOrder.waiter_name,
+            type: newOrder.type,
+            customer_id: newOrder.customer_id,
+            notes: newOrder.notes,
+            items: []
+          }
+        })
+        notify.info('Order saved offline. Will sync when connection is restored.')
+      }
     }
 
     const switchOrder = (index) => {
@@ -277,19 +428,56 @@ export default {
     }
 
     const handleOrderUpdated = (updatedOrder) => {
-      // Update the order in our local array
-      const index = orders.value.findIndex(o => 
-        (o.id && o.id === updatedOrder.id) || 
-        (o.tempId && o.tempId === updatedOrder.tempId)
-      )
+      // Check if this is a new order being created (has isNew flag or no matching id/tempId)
+      let index = -1;
+      
+      if (updatedOrder.id) {
+        // First try to find by id
+        index = orders.value.findIndex(o => o.id === updatedOrder.id);
+      }
+      
+      // If not found by id, try tempId (for orders created locally)
+      if (index === -1 && updatedOrder.tempId) {
+        index = orders.value.findIndex(o => o.tempId === updatedOrder.tempId);
+      }
+      
+      // If still not found and this is a new order, update the active order
+      if (index === -1 && updatedOrder.isNew) {
+        index = activeOrderIndex.value;
+      }
       
       if (index !== -1) {
-        orders.value[index] = { ...orders.value[index], ...updatedOrder }
-        
-        // Mark as pending sync if it's a server order
-        if (orders.value[index].id && orders.value[index].syncStatus === 'synced') {
-          orders.value[index].syncStatus = 'pending'
+        // Check if order is being closed/cancelled - remove it from workspace
+        if (updatedOrder.state === 'closed' || updatedOrder.state === 'cancelled') {
+          orders.value.splice(index, 1)
+          // Adjust active index if needed
+          if (activeOrderIndex.value >= orders.value.length) {
+            activeOrderIndex.value = orders.value.length - 1
+          }
+          if (activeOrderIndex.value < 0) {
+            activeOrderIndex.value = 0
+          }
+          saveOrdersToStorage()
+          return
         }
+        
+        // Merge the updated data, preserving local tempId if it exists
+        orders.value[index] = { 
+          ...orders.value[index], 
+          ...updatedOrder,
+          // Ensure we keep the original tempId if it was a local order
+          tempId: orders.value[index].tempId || null,
+          syncStatus: 'synced'
+        };
+        
+        // If this was a new order, clear the tempId and set syncStatus
+        if (updatedOrder.isNew) {
+          orders.value[index].tempId = null;
+          orders.value[index].syncStatus = 'synced';
+        }
+        
+        // Save to offline storage after any update
+        saveOrdersToStorage()
       }
     }
 
@@ -309,11 +497,11 @@ export default {
         
         try {
           if (order.id) {
-            // Update existing order
-            await syncExistingOrder(order)
+            // Update existing order - queue for sync
+            await queueOrderUpdate(order)
           } else {
-            // Create new order
-            await createOrderOnServer(order)
+            // Create new order - queue for sync
+            await queueOrderCreate(order)
           }
           
           order.syncStatus = 'synced'
@@ -324,77 +512,58 @@ export default {
         }
       }
       
+      // Now execute the sync through offline manager
+      const result = await offlineManager.syncPendingOrders()
+      
       isSyncing.value = false
       
-      // Show success message if all synced
-      const errors = orders.value.filter(o => o.syncStatus === 'error')
-      if (errors.length === 0) {
+      // Show success message based on results
+      if (result.failed === 0) {
         notify.success('All orders synced successfully!')
       } else {
-        notify.warning(`${errors.length} orders failed to sync`)
+        notify.warning(`${result.failed} orders failed to sync`)
       }
     }
 
-    const createOrderOnServer = async (order) => {
-      const response = await fetch('/api/v1/orders', {
+    const queueOrderCreate = async (order) => {
+      // Queue order creation for sync
+      offlineManager.queueOperation({
+        type: 'create_order',
+        url: '/api/v1/orders',
         method: 'POST',
-        credentials: 'same-origin', // Include cookies for authentication
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken,
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
+        data: {
           table_number: order.table_number,
           waiter_name: order.waiter_name,
           type: order.type,
           customer_id: order.customer_id,
-          shop_id: order.shop_id,
           notes: order.notes,
           items: order.items.map(item => ({
             product_id: item.product_id,
             quantity: item.quantity,
             unit_price: item.unit_price
           }))
-        })
+        }
       })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error?.message || 'Failed to create order')
-      }
-
-      const data = await response.json()
       
-      // Update local order with server data
-      order.id = data.data.id
-      order.POS_number = data.data.POS_number
-      order.items = data.data.items
+      // Simulate immediate success for better UX
+      // The actual sync happens in the background
+      order.tempId = `queued-${Date.now()}`
     }
 
-    const syncExistingOrder = async (order) => {
-      // Sync any changes to existing order
-      const response = await fetch(`/api/v1/orders/${order.id}`, {
+    const queueOrderUpdate = async (order) => {
+      // Queue order update for sync
+      offlineManager.queueOperation({
+        type: 'update_order',
+        url: `/api/v1/orders/${order.id}`,
         method: 'PUT',
-        credentials: 'same-origin', // Include cookies for authentication
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken,
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
+        data: {
           table_number: order.table_number,
           waiter_name: order.waiter_name,
           type: order.type,
           customer_id: order.customer_id,
           notes: order.notes
-        })
+        }
       })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error?.message || 'Failed to update order')
-      }
     }
 
     const handlePrintOrder = (orderId) => {
@@ -422,6 +591,8 @@ export default {
       showSyncPanel,
       pendingCount,
       syncedCount,
+      isOnline,
+      offlinePendingCount,
       createNewOrder,
       switchOrder,
       closeOrder,
